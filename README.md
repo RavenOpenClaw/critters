@@ -29,11 +29,20 @@ On WSL the path to this project is `/mnt/c/Users/Sean/Desktop/dev/kiro/critters`
 
 ## 🚀 Getting Started
 
-1. Install Dependencies: Refer to the doc/dependencies.md file for required libraries. Run the installation commands listed there.
+1. Install Dependencies: Refer to the `doc/dependencies.md` file for required libraries. Run the installation commands listed there.
 
 1. Run the Prototype:
 ```bash
-python src/critters_game.py
+# If you created a virtual environment in the project:
+source venv/bin/activate   # On Linux/macOS
+# venv\Scripts\activate   # On Windows PowerShell
+
+python src/main.py
+```
+
+1. Run Tests:
+```bash
+PYTHONPATH=src pytest tst/
 ```
 
 ## 🤖 Agent Workflow (Mandatory)
