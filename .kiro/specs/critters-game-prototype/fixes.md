@@ -23,10 +23,27 @@ Bug fix format:
 
 ### [DLKJSIEQ] Collision between objects and the player seizes movement
 
-Status: NOT_STARTED
+Status: PENDING_REVIEW
 
 Plan:
+- Modify `Player.move()` in `src/entity.py` to handle X and Y movement separately.
+  - For X: compute tentative new_x, check collision at (new_x, current_y). If collision, keep original x.
+  - For Y: compute tentative new_y, check collision at (current_x after X move, new_y). If collision, keep original y.
+  - This allows sliding along obstacles when moving diagonally.
+- Add a unit test `test_sliding_along_object` in `tst/test_collision.py` that verifies:
+  - Player colliding horizontally can still move vertically.
+  - Player colliding vertically can still move horizontally.
+- Run full test suite (`PYTHONPATH=src pytest tst/`) to ensure all 18+ tests pass.
+- Commit the changes (fix) on a new branch `fix/DLKJSIEQ-sliding-collision` and push to origin.
+- After successful tests, update status to PENDING_REVIEW in both bugs.md and fixes.md for human verification.
 
 Implementation:
+- Refactored `Player.move()` to separate axial movement. Introduced helper `_would_collide(x, y, grid)` to check collision at a given position without mutating state.
+- X axis: compute `new_x`, check collision at `(new_x, current_y)`. If collision, revert to original x.
+- Y axis: compute `new_y`, check collision at `(final_x, new_y)`. If collision, revert to original y.
+- Boundary clamping remains after both updates.
 
 Testing:
+- Added `test_sliding_along_obstacle`: verifies player blocked on X but free on Y when moving diagonally toward a single obstacle.
+- Added `test_sliding_preserves_other_axis_when_one_blocked`: verifies sliding behavior with adjacent obstacles forming a corner (both axes blocked).
+- Note: Tests cannot be executed in current environment (official image lacks pygame/pytest/hypothesis). Please run in custom image or local setup with dependencies installed. Expected: all existing tests plus new ones pass.

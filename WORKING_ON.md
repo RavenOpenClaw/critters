@@ -5,15 +5,16 @@ This file tracks the current task being worked on. If context is lost, refer to 
 ---
 
 ## Current Task
-**Status**: Completed (ready to merge)
-**Task**: Tasks 2.1-6.3 (Phase 2 foundation complete)
-**Started**: 2026-03-14
-**Completed**: 2026-03-14
+**Status**: PENDING_REVIEW (fix branch created, awaiting verification and merge)
+**Task**: Bug fix DLKJSIEQ - sliding collision for player movement
+**Started**: 2026-03-15
+**Completed**: 2026-03-15 (implementation done, tests added, local commit)
+**Branch**: fix/DLKJSIEQ-sliding-collision
 **Notes**:
-- Completed all Phase 1 foundation tasks: game window, player entity, input handling, grid system, world objects, collision detection.
-- All 18 tests passing.
-- Branch `task-2.1-game-window` is outdated; contains full Phase 1+2 foundation work.
-- Next: squash merge onto mainline and push.
+- Refactored `Player.move()` to separate X/Y axis checks, enabling sliding along obstacles.
+- Added unit tests: `test_sliding_along_obstacle` and `test_sliding_preserves_other_axis_when_one_blocked`.
+- Commit: 2b282fd (local only). Push to origin failed due to missing credentials in official OpenClaw image; will need manual push from environment with proper Git auth.
+- **Required**: Run full test suite in environment with dependencies; if all pass (expected 20 tests), merge fix into mainline after human review.
 
 ---
 
@@ -48,6 +49,7 @@ This file tracks the current task being worked on. If context is lost, refer to 
 ---
 
 ### Environment Status
-✅ Dependencies installed in custom Docker image: pygame 2.6.1, pytest 9.0.2, hypothesis 6.151.9
-✅ All tests pass (18/18) on 2026-03-14 after environment fix.
-PYTHONPATH must include src/ when running tests locally: `PYTHONPATH=src pytest tst/`
+⚠️ Current runtime: official image (ghcr.io/openclaw/openclaw:latest) - no pygame/pytest/hypothesis installed.
+✅ Dependencies were previously installed in custom Docker image (pygame 2.6.1, pytest 9.0.2, hypothesis 6.151.9) and all 18 tests passed on 2026-03-14.
+🆕 New tests added (2) for sliding collision; expected total 20 tests. Must be run in custom image or local environment with dependencies.
+PYTHONPATH must include src/ when running tests: `PYTHONPATH=src pytest tst/`

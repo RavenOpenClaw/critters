@@ -20,24 +20,20 @@ class Player(Entity):
         """Move the player with collision detection and boundary clamping.
 
         If a GridSystem is provided, movement that would cause the player's circular
-        boundary to overlap any occupied grid cell is blocked.
+        boundary to overlap any occupied grid cell is blocked per-axis, allowing
+        sliding along obstacles.
         """
+        # X axis movement
         new_x = self.x + dx * self.speed * dt
-        new_y = self.y + dy * self.speed * dt
-
         if grid is not None:
-            # Determine grid cells overlapped by the player's circle at the new position
-            left = new_x - self.radius
-            right = new_x + self.radius
-            top = new_y - self.radius
-            bottom = new_y + self.radius
-            gx_min, gy_min = grid.world_to_grid(left, top)
-            gx_max, gy_max = grid.world_to_grid(right, bottom)
-            # Check all cells the circle may cover
-            for gx in range(gx_min, gx_max + 1):
-                for gy in range(gy_min, gy_max + 1):
-                    if grid.is_occupied(gx, gy):
-                        return  # Collision detected; block movement
+            if self._would_collide(new_x, self.y, grid):
+                new_x = self.x  # Block X movement
+
+        # Y axis movement
+        new_y = self.y + dy * self.speed * dt
+        if grid is not None:
+            if self._would_collide(new_x, new_y, grid):
+                new_y = self.y  # Block Y movement
 
         self.x = new_x
         self.y = new_y
@@ -45,3 +41,17 @@ class Player(Entity):
         if self.world_rect:
             self.x = max(self.radius, min(self.x, self.world_rect.width - self.radius))
             self.y = max(self.radius, min(self.y, self.world_rect.height - self.radius))
+
+    def _would_collide(self, x, y, grid):
+        """Check if player at (x,y) would collide with any occupied grid cell."""
+        left = x - self.radius
+        right = x + self.radius
+        top = y - self.radius
+        bottom = y + self.radius
+        gx_min, gy_min = grid.world_to_grid(left, top)
+        gx_max, gy_max = grid.world_to_grid(right, bottom)
+        for gx in range(gx_min, gx_max + 1):
+            for gy in range(gy_min, gy_max + 1):
+                if grid.is_occupied(gx, gy):
+                    return True
+        return False
