@@ -224,7 +224,7 @@ Key principles:
     - Verify GatheringHut has width=3 and height=3
     - _Requirements: 6.1_
 
-- [ ] 10. Checkpoint - Ensure all tests pass
+- [x] 10. Checkpoint - Ensure all tests pass
   - Run all unit tests and property tests
   - Verify player can move, collide, interact, and place buildings
   - Ask user if questions arise before proceeding to Phase 2
