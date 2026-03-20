@@ -24,6 +24,14 @@ class GatheringHut(Building):
         # Gathering radius in world units (10 grid cells)
         self.gathering_radius = 10.0 * cell_size
 
+    def assign_critter(self, critter):
+        """Assign a critter to this hut.
+
+        Adds critter to the assigned_critters list and sets its assigned_hut reference.
+        """
+        self.assigned_critters.append(critter)
+        critter.assigned_hut = self
+
     def render(self, screen):
         """Render the Gathering Hut as a brown rectangle."""
         import pygame

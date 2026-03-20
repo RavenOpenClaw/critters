@@ -10,6 +10,7 @@ from grid_system import GridSystem
 from world import World
 from build_menu import BuildMenu
 from entity import Player
+from critter import Critter
 
 class TestBuilding(unittest.TestCase):
     def test_can_place_with_sufficient_resources(self):
@@ -99,6 +100,28 @@ class TestGatheringHut(unittest.TestCase):
         """GatheringHut gathering_radius equals 10.0 * cell_size."""
         hut = GatheringHut(0, 0, cell_size=32.0)
         self.assertEqual(hut.gathering_radius, 320.0)
+
+class TestCritterAssignment(unittest.TestCase):
+    """Tests for Task 12: Critter assignment to Gathering Hut."""
+
+    def test_assign_critter_establishes_home_reference(self):
+        """Property 10: Assigning a critter sets hut reference on critter and adds to hut's list."""
+        hut = GatheringHut(0, 0, cell_size=32)
+        critter = Critter(100, 100, cell_size=32)
+        hut.assign_critter(critter)
+        self.assertIn(critter, hut.assigned_critters)
+        self.assertIs(critter.assigned_hut, hut)
+
+    @given(n=st.integers(min_value=1, max_value=100))
+    def test_gathering_hut_unbounded_assignment(self, n):
+        """Property 11: Gathering Hut can have any number of critters assigned."""
+        hut = GatheringHut(0, 0, cell_size=32)
+        critters = [Critter(i*10, i*10, cell_size=32) for i in range(n)]
+        for c in critters:
+            hut.assign_critter(c)
+        self.assertEqual(len(hut.assigned_critters), n)
+        for c in critters:
+            self.assertIs(c.assigned_hut, hut)
 
 if __name__ == '__main__':
     unittest.main()
