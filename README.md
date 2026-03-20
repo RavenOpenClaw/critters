@@ -70,17 +70,20 @@ PYTHONPATH=src venv/bin/python -m pytest tst/
 
 Agents must follow this strict workflow to maintain code quality and visibility:
 
-1. Task Selection: Choose a task from doc/TASKS.md. Update status to "In Progress."
-1. Branching: Create a new feature branch from mainline.
-1. Development: Implement the feature in src/.
-1. Testing:
-    1. Run all existing tests in tst/.
-    1. Add new tests for the current feature.
-    1. Ensure all tests pass before merging.
-1. Merging: Merge the branch into main.
-1. Updating Docs: - Update tasks.md to "Completed."
-    1. If new libraries were added, update doc/dependencies.md.
+1. Task Selection: Choose a task from the **primary task list** (`.kiro/specs/critters-game-prototype/tasks.md`). Optionally cross-check with `doc/HIGH_LEVEL_TASKS.md` for guardrails. Update status to "In Progress."
+2. Branching: Create a new feature branch from `mainline`.
+3. Development: Implement the feature in `src/`.
+4. Testing:
+   - Run all existing tests in `tst/`.
+   - Add new tests for the current feature.
+   - Ensure all tests pass before merging.
+5. Merging: Merge the branch into `mainline`.
+6. Updating Docs:
+   - Update both task files to mark completed items (checkboxes in `.kiro/specs/.../tasks.md` and `doc/HIGH_LEVEL_TASKS.md`).
+   - If new libraries were added, update `doc/dependencies.md`.
 
 ## 📜 Source of Truth
 
-For the original vision and philosophy behind this setup, refer to /doc/INITIAL_DIRECTIVES.md.
+- **Detailed implementation plan**: `.kiro/specs/critters-game-prototype/tasks.md` (the Kiro task file) is the authoritative source for what to build next.
+- **High-level vision and guardrails**: `doc/HIGH_LEVEL_TASKS.md` outlines major phases and should be used to avoid misalignment with the overall project goals.
+- **Initial directives**: `doc/INITIAL_DIRECTIVES.md` contains the original philosophy and constraints.
