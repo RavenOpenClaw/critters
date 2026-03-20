@@ -11,6 +11,7 @@ from input_handler import InputHandler
 from grid_system import GridSystem
 from world import World
 from berry_bush import BerryBush
+from build_menu import BuildMenu
 
 # Constants
 WINDOW_WIDTH = 800
@@ -41,6 +42,9 @@ def main():
     # Set world bounds for player
     player.world_rect = screen.get_rect()
 
+    # Build menu for building system
+    build_menu = BuildMenu(cell_size)
+
     running = True
     while running:
         # Calculate delta time (seconds since last frame)
@@ -58,6 +62,20 @@ def main():
         if input_handler.interact:
             player.interact(world)
             input_handler.interact = False  # Consume the flag
+
+        # Build menu toggle and selection
+        if input_handler.build_toggle:
+            build_menu.toggle()
+        if input_handler.select_gathering_hut and build_menu.visible:
+            build_menu.select_gathering_hut()
+
+        # Building placement on mouse click
+        if input_handler.mouse_clicked and build_menu.visible and build_menu.selected_building_class is not None:
+            mx, my = input_handler.mouse_pos
+            gx, gy = grid.world_to_grid(mx, my)
+            success = build_menu.attempt_placement(player, world, grid, gx, gy)
+            # For now, could add debug message if fails; we'll just ignore
+            # Optionally, reset selection or close menu after placement? Keep simple: stay open, selection remains
 
         # Rendering
         screen.fill(BACKGROUND_COLOR)
@@ -79,6 +97,9 @@ def main():
             pos_surface = font.render(f"Player: ({int(player.x)}, {int(player.y)})", True, (0, 0, 0))
             screen.blit(fps_surface, (10, 10))
             screen.blit(pos_surface, (10, 40))
+
+        # Build menu overlay
+        build_menu.render(screen, font)
 
         pygame.display.flip()
 

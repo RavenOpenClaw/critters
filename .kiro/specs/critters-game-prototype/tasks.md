@@ -187,20 +187,20 @@ Key principles:
     - Test that player inventory never fails due to capacity
     - _Requirements: 2.5_
 
-- [ ] 9. Implement building system and Gathering Hut
-  - [ ] 9.1 Create Building base class
+- [x] 9. Implement building system and Gathering Hut
+  - [x] 9.1 Create Building base class
     - Extend WorldObject with cost dictionary
     - Implement can_place() validation method
     - _Requirements: 5.5, 5.7_
   
-  - [ ] 9.2 Create GatheringHut class
+  - [x] 9.2 Create GatheringHut class
     - Set dimensions to 3×3 grid cells
     - Initialize storage inventory
     - Add assigned_critters list
     - Set gathering_radius to 10.0 grid cells
     - _Requirements: 6.1, 6.2, 6.3, 6.5_
   
-  - [ ] 9.3 Implement building placement UI
+  - [x] 9.3 Implement building placement UI
     - Create BuildMenu class to display available buildings
     - Handle 'B' key to toggle build menu
     - Implement building selection (keyboard shortcuts)
@@ -208,19 +208,19 @@ Key principles:
     - Validate placement location and resources
     - _Requirements: 5.1, 5.2, 5.3, 5.4_
   
-  - [ ] 9.4 Implement resource deduction on building placement
+  - [x] 9.4 Implement resource deduction on building placement
     - Check player inventory for required resources
     - Deduct cost from player inventory on successful placement
     - Display error message if insufficient resources
     - _Requirements: 5.7_
   
-  - [ ]* 9.5 Write property test for building placement resource deduction
+  - [x] 9.5 Write property test for building placement resource deduction
     - **Property 9: Building Placement Resource Deduction**
     - **Validates: Requirements 5.7, 14.4**
     - Test that inventory decreases by exactly building cost
     - _Requirements: 5.7, 14.4_
   
-  - [ ]* 9.6 Write unit test for gathering hut dimensions
+  - [x] 9.6 Write unit test for gathering hut dimensions
     - Verify GatheringHut has width=3 and height=3
     - _Requirements: 6.1_
 

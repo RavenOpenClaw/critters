@@ -6,19 +6,23 @@ This file tracks the current task being worked on. If context is lost, refer to 
 
 ## Current Task
 **Status**: COMPLETED (merged)
-**Task**: Task 8 - Inventory system (formalize Player and WorldObject inventory)
+**Task**: Task 9 - Building system and Gathering Hut
 **Started**: 2026-03-20
 **Completed**: 2026-03-20
-**Branch**: feature/inventory-system (merged into mainline)
-**Commit**: dc6f852
+**Branch**: feature/building-system (merged into mainline)
+**Commit**: 181d0b4 (plus earlier inventory commits)
 **Notes**:
-- Created Inventory class with add, remove, has, get_item_count.
-- Replaced dict inventory in Player and WorldObject with Inventory instance.
-- Updated BerryBush.interact to use Inventory methods.
-- Updated tests to use Inventory API.
-- Added comprehensive unit and property tests for Inventory (8 tests).
-- All 31 tests passing.
+- Created Building base class (cost, can_place validation).
+- Implemented GatheringHut (3x3, storage inventory, assigned_critters list, gathering_radius = 10×cell_size).
+- Added BuildMenu with 'B' toggle, 'G' selection, mouse placement, and resource deduction.
+- Added 9 test cases:
+  - Building.can_place unit tests (4)
+  - Building placement property test (resource deduction) (1)
+  - GatheringHut unit tests (dimensions, storage, assigned_critters, radius) (4)
+- All 40 tests passing.
 - Merged to mainline and pushed.
+
+---
 
 ---
 
@@ -43,6 +47,9 @@ This file tracks the current task being worked on. If context is lost, refer to 
 - Task 6.3: Property test for movement collision response (covered in tests)
 - Task 7.1-7.5: Player interaction (interact method, BerryBush resource transfer, tests) – merged to mainline (commit 8cef0dc).
 - Task 8.1-8.3: Inventory class, integration, and tests – merged to mainline (commit dc6f852).
+- Task 9.1-9.6: Building system and Gathering Hut – merged to mainline (commit 181d0b4).
+  - Building base class, GatheringHut, BuildMenu UI, resource deduction, property & unit tests.
+  - Checkpoint 10 (all tests) passed with 40/40.
 
 ---
 
@@ -57,4 +64,4 @@ This file tracks the current task being worked on. If context is lost, refer to 
 ### Environment Status
 ✅ Virtual environment set up with pygame, pytest, hypothesis.
 Run tests via: `PYTHONPATH=src venv/bin/python -m pytest tst/ -v`
-All tests: 31/31 passing.
+All tests: 40/40 passing.
