@@ -20,8 +20,8 @@ class Player(Entity):
 
     @property
     def interaction_radius(self):
-        """Distance within which the player can interact with objects (2 × radius)."""
-        return 2 * self.radius
+        """Distance within which the player can interact with objects (fixed 45 pixels)."""
+        return 45.0
 
     def move(self, dx, dy, dt, grid=None):
         """Move the player with collision detection and boundary clamping.

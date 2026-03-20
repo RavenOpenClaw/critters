@@ -103,7 +103,7 @@ def main():
                     text = obj.get_interaction_text()
                     if text:
                         text_surface = font.render(text, True, (0, 0, 0))
-                        text_rect = text_surface.get_rect(center=(ox, oy - 20))
+                        text_rect = text_surface.get_rect(center=(ox, oy - 30))  # raised by 10px
                         screen.blit(text_surface, text_rect)
 
         # Draw player as a blue circle

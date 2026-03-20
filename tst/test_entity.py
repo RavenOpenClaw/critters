@@ -36,11 +36,11 @@ class TestPlayer(unittest.TestCase):
         self.assertAlmostEqual(p.y, 50.0)
 
     def test_player_interaction_radius_constant(self):
-        """7.5: Verify player.interaction_radius equals 2 × player.radius."""
+        """7.5: Verify player.interaction_radius equals 45.0."""
         p = Player(0, 0, radius=20)
-        self.assertEqual(p.interaction_radius, 40.0)
+        self.assertEqual(p.interaction_radius, 45.0)
         p = Player(0, 0, radius=10)
-        self.assertEqual(p.interaction_radius, 20.0)
+        self.assertEqual(p.interaction_radius, 45.0)
 
 if __name__ == '__main__':
     unittest.main()
