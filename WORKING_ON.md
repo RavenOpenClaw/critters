@@ -10,17 +10,18 @@ This file tracks the current task being worked on. If context is lost, refer to 
 **Started**: 2026-03-20
 **Completed**: 2026-03-20
 **Branch**: feature/building-system (merged into mainline)
-**Commit**: 181d0b4 (plus earlier inventory commits)
+**Commit**: c77c06f (tracking) + 978578a (docs)
 **Notes**:
 - Created Building base class (cost, can_place validation).
 - Implemented GatheringHut (3x3, storage inventory, assigned_critters list, gathering_radius = 10×cell_size).
 - Added BuildMenu with 'B' toggle, 'G' selection, mouse placement, and resource deduction.
-- Added 9 test cases:
-  - Building.can_place unit tests (4)
-  - Building placement property test (resource deduction) (1)
-  - GatheringHut unit tests (dimensions, storage, assigned_critters, radius) (4)
-- All 40 tests passing.
+- Added 9 test cases (40 total tests).
 - Merged to mainline and pushed.
+- Checkpoint 10 completed.
+
+**Next**: Task 11 (Critter entity) – Phase 2 begins.
+
+---
 
 ---
 
