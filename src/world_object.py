@@ -2,6 +2,7 @@
 WorldObject base class: Extends Entity with grid-aligned placement, inventory, and occupancy.
 """
 from entity import Entity
+from inventory import Inventory
 
 class WorldObject(Entity):
     def __init__(self, gx, gy, width, height, cell_size, inventory=None):
@@ -14,7 +15,10 @@ class WorldObject(Entity):
         self.width = width   # in grid cells
         self.height = height # in grid cells
         self.cell_size = cell_size
-        self.inventory = inventory if inventory is not None else {}
+        if inventory is None:
+            self.inventory = Inventory()
+        else:
+            self.inventory = inventory
 
     def get_occupied_cells(self):
         """Return list of grid cells occupied by this object."""

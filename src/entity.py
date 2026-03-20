@@ -1,6 +1,7 @@
 """
 Entity base class and Player class.
 """
+from inventory import Inventory
 
 class Entity:
     """Base entity with position and radius."""
@@ -15,7 +16,7 @@ class Player(Entity):
         super().__init__(x, y, radius)
         self.speed = speed  # pixels per second
         self.world_rect = None  # pygame.Rect for clamping; set externally
-        self.inventory = {}  # simple inventory: resource_type -> count
+        self.inventory = Inventory()
 
     @property
     def interaction_radius(self):

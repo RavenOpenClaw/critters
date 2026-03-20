@@ -103,25 +103,25 @@ class TestResourceTransferConservation(unittest.TestCase):
         bush = BerryBush(gx=0, gy=0, cell_size=1, berries=bush_berries)
         # Create a player with given berries in inventory
         player = Player(0, 0, radius=20)
-        player.inventory['berry'] = player_berries
+        player.inventory.add('berry', player_berries)
 
-        total_before = bush.inventory.get('berry', 0) + player.inventory.get('berry', 0)
+        total_before = bush.inventory.get_item_count('berry') + player.inventory.get_item_count('berry')
 
         # Perform interaction (bush.interact(player))
         bush.interact(player)
 
-        total_after = bush.inventory.get('berry', 0) + player.inventory.get('berry', 0)
+        total_after = bush.inventory.get_item_count('berry') + player.inventory.get_item_count('berry')
 
         self.assertEqual(total_after, total_before, "Total berry count should be conserved during transfer")
 
         # Additionally, if bush had berries, exactly one transferred
         if bush_berries > 0:
-            self.assertEqual(bush.inventory.get('berry', 0), bush_berries - 1)
-            self.assertEqual(player.inventory.get('berry', 0), player_berries + 1)
+            self.assertEqual(bush.inventory.get_item_count('berry'), bush_berries - 1)
+            self.assertEqual(player.inventory.get_item_count('berry'), player_berries + 1)
         else:
             # No transfer occurred; inventories unchanged
-            self.assertEqual(bush.inventory.get('berry', 0), 0)
-            self.assertEqual(player.inventory.get('berry', 0), player_berries)
+            self.assertEqual(bush.inventory.get_item_count('berry'), 0)
+            self.assertEqual(player.inventory.get_item_count('berry'), player_berries)
 
 if __name__ == '__main__':
     unittest.main()

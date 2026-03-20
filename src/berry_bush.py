@@ -3,10 +3,12 @@ BerryBush: A 1x1 world object with berries that can be harvested.
 """
 import pygame
 from world_object import WorldObject
+from inventory import Inventory
 
 class BerryBush(WorldObject):
     def __init__(self, gx, gy, cell_size, berries=3):
-        inventory = {'berry': berries}
+        inventory = Inventory()
+        inventory.add('berry', berries)
         super().__init__(gx, gy, width=1, height=1, cell_size=cell_size, inventory=inventory)
 
     def render(self, screen):
@@ -21,6 +23,6 @@ class BerryBush(WorldObject):
 
     def interact(self, player):
         """Transfer one berry from this bush to the player's inventory."""
-        if self.inventory.get('berry', 0) > 0:
-            self.inventory['berry'] -= 1
-            player.inventory['berry'] = player.inventory.get('berry', 0) + 1
+        if self.inventory.has('berry', 1):
+            self.inventory.remove('berry', 1)
+            player.inventory.add('berry', 1)
