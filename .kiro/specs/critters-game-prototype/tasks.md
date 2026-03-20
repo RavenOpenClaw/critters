@@ -280,20 +280,20 @@ Key principles:
     - Verify Critter has strength, speed, endurance attributes
     - _Requirements: 8.1_
 
-- [ ] 12. Implement Critter assignment to Gathering Hut
-  - [ ] 12.1 Implement GatheringHut.assign_critter() method
+- [x] 12. Implement Critter assignment to Gathering Hut
+  - [x] 12.1 Implement GatheringHut.assign_critter() method
     - Add critter to assigned_critters list
     - Set critter.assigned_hut reference to this hut
     - Support unlimited assignments
     - _Requirements: 6.3, 6.4_
   
-  - [ ]* 12.2 Write property test for critter assignment establishes home reference
+  - [x]* 12.2 Write property test for critter assignment establishes home reference
     - **Property 10: Critter Assignment Establishes Home Reference**
     - **Validates: Requirements 6.4**
     - Test that assigned critter references the hut
     - _Requirements: 6.4_
   
-  - [ ]* 12.3 Write property test for gathering hut unbounded assignment
+  - [x]* 12.3 Write property test for gathering hut unbounded assignment
     - **Property 11: Gathering Hut Unbounded Assignment**
     - **Validates: Requirements 6.3**
     - Test that any number of critters can be assigned
