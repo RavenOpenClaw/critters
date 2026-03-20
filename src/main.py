@@ -33,7 +33,11 @@ def main():
     grid = GridSystem(cell_size=cell_size)
     world = World(grid)
     # Add test berry bushes at various positions for collision and interaction testing
-    test_positions = [(5, 5), (10, 5), (5, 10), (15, 5), (5, 15), (12, 12), (8, 14), (3, 8), (18, 7)]
+    test_positions = [
+        (5, 5), (10, 5), (5, 10), (15, 5), (5, 15),
+        (12, 12), (8, 14), (3, 8), (18, 7),
+        (12, 9)  # right near player start (384, 288) – within interaction radius
+    ]
     for gx, gy in test_positions:
         bush = BerryBush(gx, gy, cell_size=cell_size, berries=5)
         world.add_object(bush)
@@ -117,6 +121,14 @@ def main():
             pos_surface = font.render(f"Player: ({int(player.x)}, {int(player.y)})", True, (0, 0, 0))
             screen.blit(fps_surface, (10, 10))
             screen.blit(pos_surface, (10, 40))
+            # Draw interaction radius
+            pygame.draw.circle(
+                screen,
+                (0, 255, 0),  # Green
+                (int(player.x), int(player.y)),
+                int(player.interaction_radius),
+                1  # line thickness
+            )
 
         # Build menu overlay
         build_menu.render(screen, font)
