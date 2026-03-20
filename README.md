@@ -29,21 +29,42 @@ On WSL the path to this project is `/mnt/c/Users/Sean/Desktop/dev/kiro/critters`
 
 ## 🚀 Getting Started
 
-1. Install Dependencies: Refer to the `doc/dependencies.md` file for required libraries. Run the installation commands listed there.
-
-1. Run the Prototype:
+### Option A: Using Make (simplest)
 ```bash
-# If you created a virtual environment in the project:
+make setup   # First time only: creates venv and installs deps
+make test    # Run the test suite
+```
+
+### Option B: Manual Setup
+Refer to `doc/dependencies.md` for required libraries.
+
+1. Create virtual environment:
+```bash
+python3 -m venv venv
+```
+
+2. Install dependencies:
+```bash
+venv/bin/pip install pygame pytest hypothesis
+```
+
+3. Run the prototype:
+```bash
+# Activate the venv first (optional but convenient):
 source venv/bin/activate   # On Linux/macOS
 # venv\Scripts\activate   # On Windows PowerShell
-
 python src/main.py
 ```
 
-1. Run Tests:
+4. Run tests:
 ```bash
-PYTHONPATH=src pytest tst/
+PYTHONPATH=src venv/bin/python -m pytest tst/
 ```
+
+## 📦 Notes
+- The project includes a `Makefile` to automate setup (`make setup`), testing (`make test`), and cleanup (`make clean`).
+- If you prefer not to use Make, follow the manual steps above.
+- The `venv/` directory is gitignored; dependencies are not committed.
 
 ## 🤖 Agent Workflow (Mandatory)
 
