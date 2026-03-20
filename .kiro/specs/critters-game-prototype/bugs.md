@@ -22,7 +22,7 @@ Bug report format:
 
 ### [DLKJSIEQ] Collision between objects and the player seizes movement
 
-Status: PENDING_REVIEW
+Status: FIXED
 
 Expected: As a player, if I'm moving to the right and colide with a world object like a bush, I should stop. While still moving to the right, I should be able to press "down" (the S key) to move diagonally down and to the right. The object prevents the movement to the right due to collision, but should not prevent the movement downwards. In other words, the player slides along the edge of the bush until clear of the collision box.
 

@@ -23,7 +23,7 @@ Bug fix format:
 
 ### [DLKJSIEQ] Collision between objects and the player seizes movement
 
-Status: PENDING_REVIEW
+Status: FIXED
 
 Plan:
 - Modify `Player.move()` in `src/entity.py` to handle X and Y movement separately.
