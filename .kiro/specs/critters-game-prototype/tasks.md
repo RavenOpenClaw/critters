@@ -232,12 +232,12 @@ Key principles:
 
 ## Phase 2: The First Critter
 
-- [ ] 11. Implement Critter entity with stats
-  - [ ] 11.1 Create CritterState enum
+- [x] 11. Implement Critter entity with stats
+  - [x] 11.1 Create CritterState enum
     - Define IDLE, GATHER, and RETURN states
     - _Requirements: 7.1_
   
-  - [ ] 11.2 Create Critter class with base stats
+  - [x] 11.2 Create Critter class with base stats
     - Extend Entity with radius=0.4
     - Add strength, speed_stat, endurance attributes (1-100 range)
     - Add state attribute (default IDLE)
@@ -246,19 +246,19 @@ Key principles:
     - Render as red circle
     - _Requirements: 7.1, 8.1, 8.2, 16.2_
   
-  - [ ] 11.3 Implement stat-based behavior methods
+  - [x] 11.3 Implement stat-based behavior methods
     - Implement get_movement_speed() based on speed_stat
     - Implement get_gather_speed() based on strength
     - Apply 1.1× multiplier when is_well_fed is True
     - _Requirements: 8.3, 8.4, 8.6_
   
-  - [ ]* 11.4 Write property test for stat bounds
+  - [x]* 11.4 Write property test for stat bounds
     - **Property 17: Stat Bounds**
     - **Validates: Requirements 8.2**
     - Test that all stats remain in [1, 100] range
     - _Requirements: 8.2_
   
-  - [ ]* 11.5 Write property tests for stat monotonicity
+  - [x]* 11.5 Write property tests for stat monotonicity
     - **Property 18: Strength Affects Gather Speed Monotonically**
     - **Property 19: Speed Stat Affects Movement Speed Monotonically**
     - **Property 20: Endurance Affects Idle Duration Monotonically**
@@ -266,17 +266,17 @@ Key principles:
     - Test that higher stats produce higher performance
     - _Requirements: 8.3, 8.4, 8.5_
   
-  - [ ]* 11.6 Write property test for well-fed buff multiplier
+  - [x]* 11.6 Write property test for well-fed buff multiplier
     - **Property 21: Well-Fed Buff Multiplier**
     - **Validates: Requirements 8.6**
     - Test that well-fed applies 1.1× multiplier, capped at 100
     - _Requirements: 8.6_
   
-  - [ ]* 11.7 Write unit test for critter state machine states
+  - [x]* 11.7 Write unit test for critter state machine states
     - Verify CritterState enum has IDLE, GATHER, RETURN
     - _Requirements: 7.1_
   
-  - [ ]* 11.8 Write unit test for critter stat attributes
+  - [x]* 11.8 Write unit test for critter stat attributes
     - Verify Critter has strength, speed, endurance attributes
     - _Requirements: 8.1_
 
