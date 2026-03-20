@@ -93,6 +93,13 @@ def main():
             player.radius
         )
 
+        # Inventory display (always show resources)
+        inv_y = 10
+        for resource, count in sorted(player.inventory.items.items()):
+            inv_surface = font.render(f"{resource}: {count}", True, (0, 0, 0))
+            screen.blit(inv_surface, (WINDOW_WIDTH - inv_surface.get_width() - 10, inv_y))
+            inv_y += 20
+
         # Debug display (F3 toggle)
         if input_handler.show_debug:
             fps_surface = font.render(f"FPS: {clock.get_fps():.1f}", True, (0, 0, 0))

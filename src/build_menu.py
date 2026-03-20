@@ -1,6 +1,7 @@
 """
 Build Menu system for selecting and placing buildings.
 """
+import pygame
 from gathering_hut import GatheringHut
 
 class BuildMenu:
