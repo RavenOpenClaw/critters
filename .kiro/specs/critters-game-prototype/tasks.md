@@ -299,19 +299,19 @@ Key principles:
     - Test that any number of critters can be assigned
     - _Requirements: 6.3_
 
-- [ ] 13. Implement A* pathfinding system
-  - [ ] 13.1 Create PathfindingSystem class
+- [x] 13. Implement A* pathfinding system
+  - [x] 13.1 Create PathfindingSystem class
     - Implement A* algorithm with Manhattan heuristic
     - Use grid occupancy for obstacle detection
     - Return list of grid coordinates as path
     - _Requirements: 3.7_
   
-  - [ ] 13.2 Add path caching for performance
+  - [x] 13.2 Add path caching for performance
     - Cache paths by (start, goal) tuple
     - Implement invalidate_cache() for world changes
     - _Requirements: N/A (performance optimization)_
   
-  - [ ]* 13.3 Write unit tests for pathfinding
+  - [x]* 13.3 Write unit tests for pathfinding
     - Test path finding with no obstacles
     - Test path finding around obstacles
     - Test pathfinding failure when no path exists
