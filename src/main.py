@@ -93,12 +93,23 @@ def main():
             player.radius
         )
 
-        # Inventory display (always show resources)
+        # Inventory display (top-right corner)
+        inv_x = WINDOW_WIDTH - 200
         inv_y = 10
-        for resource, count in sorted(player.inventory.items.items()):
-            inv_surface = font.render(f"{resource}: {count}", True, (0, 0, 0))
-            screen.blit(inv_surface, (WINDOW_WIDTH - inv_surface.get_width() - 10, inv_y))
-            inv_y += 20
+        # Title
+        inv_title = font.render("Inventory", True, (0, 0, 0))
+        screen.blit(inv_title, (inv_x, inv_y))
+        inv_y += 25
+        # List items
+        items = player.inventory.items
+        if not items:
+            empty_surface = font.render("(empty)", True, (80, 80, 80))
+            screen.blit(empty_surface, (inv_x, inv_y))
+        else:
+            for resource, count in sorted(items.items()):
+                inv_surface = font.render(f"{resource}: {count}", True, (0, 0, 0))
+                screen.blit(inv_surface, (inv_x, inv_y))
+                inv_y += 20
 
         # Debug display (F3 toggle)
         if input_handler.show_debug:

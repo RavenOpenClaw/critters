@@ -60,14 +60,22 @@ class BuildMenu:
         if not building.can_place(player.inventory):
             return False
 
-        # Check if the building footprint fits within the world bounds? (optional; skip for now)
+        # Pre-check occupancy: ensure all cells in the building footprint are unoccupied
+        for cell in building.get_occupied_cells():
+            if grid.is_occupied(*cell):
+                return False
 
-        # Deduct resources
+        # Add building to world (this registers it with the grid)
+        try:
+            world.add_object(building)
+        except ValueError:
+            # Overlap or invalid placement; do not deduct resources
+            return False
+
+        # Deduct resources only after successful placement
         for resource, amount in building.cost.items():
             player.inventory.remove(resource, amount)
 
-        # Add building to world (this registers it with the grid)
-        world.add_object(building)
         return True
 
     def render(self, screen, font):
