@@ -10,11 +10,17 @@ class Entity:
         self.radius = radius
 
 class Player(Entity):
-    """Player entity with movement speed and world bounds."""
+    """Player entity with movement speed, world bounds, and interaction capabilities."""
     def __init__(self, x, y, radius=20, speed=200):
         super().__init__(x, y, radius)
         self.speed = speed  # pixels per second
         self.world_rect = None  # pygame.Rect for clamping; set externally
+        self.inventory = {}  # simple inventory: resource_type -> count
+
+    @property
+    def interaction_radius(self):
+        """Distance within which the player can interact with objects (1.5 × radius)."""
+        return 1.5 * self.radius
 
     def move(self, dx, dy, dt, grid=None):
         """Move the player with collision detection and boundary clamping.
@@ -55,3 +61,27 @@ class Player(Entity):
                 if grid.is_occupied(gx, gy):
                     return True
         return False
+
+    def interact(self, world):
+        """Interact with the nearest world object within interaction_radius.
+
+        Finds the closest object in world.objects whose center is within
+        self.interaction_radius, and calls its interact(player) method.
+        """
+        nearest = None
+        min_dist_sq = float('inf')
+        for obj in getattr(world, 'objects', []):
+            # Use object's center for distance
+            if hasattr(obj, 'get_center'):
+                ox, oy = obj.get_center()
+            else:
+                ox, oy = obj.x, obj.y
+            dx = ox - self.x
+            dy = oy - self.y
+            dist_sq = dx*dx + dy*dy
+            radius_sq = self.interaction_radius ** 2
+            if dist_sq <= radius_sq and dist_sq < min_dist_sq:
+                min_dist_sq = dist_sq
+                nearest = obj
+        if nearest is not None:
+            nearest.interact(self)

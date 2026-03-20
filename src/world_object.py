@@ -24,6 +24,12 @@ class WorldObject(Entity):
                 cells.append((self.gx + i, self.gy + j))
         return cells
 
+    def get_center(self):
+        """Return the world coordinate of the object's center."""
+        center_x = self.x + (self.width * self.cell_size) / 2.0
+        center_y = self.y + (self.height * self.cell_size) / 2.0
+        return (center_x, center_y)
+
     def interact(self, other):
         """To be overridden by subclasses."""
         raise NotImplementedError

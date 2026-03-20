@@ -5,17 +5,20 @@ This file tracks the current task being worked on. If context is lost, refer to 
 ---
 
 ## Current Task
-**Status**: MERGED (awaiting human verification)
-**Task**: Bug fix DLKJSIEQ - sliding collision for player movement
-**Started**: 2026-03-15
-**Completed**: 2026-03-15 (implementation, tests, commit, merge)
-**Branch**: fix/DLKJSIEQ-sliding-collision (merged into mainline)
-**Commit**: 3f37a4d on mainline
+**Status**: IN PROGRESS
+**Task**: Task 7 - Player interaction with world objects (inventory, BerryBush harvesting)
+**Started**: 2026-03-20
+**Branch**: feature/player-interaction
+**Commit**: (working)
 **Notes**:
-- Refactored `Player.move()` to separate X/Y axis checks, enabling sliding along obstacles.
-- Added unit tests: `test_sliding_along_obstacle` and `test_sliding_preserves_other_axis_when_one_blocked`.
-- Changes amended to include `bugs.md` status update and `WORKING_ON.md` update, then pushed and fast-forward merged into `mainline` using `GITHUB_TOKEN`.
-- **Required**: Human to run tests and verify fix works; then mark bug as FIXED in bugs.md.
+- Fixed sliding collision test corner case (test_sliding_preserves_other_axis_when_one_blocked) and merged to mainline.
+- Now implementing Task 7 subtasks:
+  - 7.1 Player.interact() with nearest-object targeting
+  - 7.2 BerryBush.interact() resource transfer
+  - 7.3 Property test for interaction targeting nearest object
+  - 7.4 Property test for resource transfer conservation
+  - 7.5 Unit test for interaction_radius constant
+- This requires adding basic inventory to Player, interaction handling in InputHandler, and game loop integration.
 
 ---
 

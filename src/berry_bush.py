@@ -20,5 +20,7 @@ class BerryBush(WorldObject):
         pygame.draw.rect(screen, (0, 200, 0), rect)  # Green
 
     def interact(self, player):
-        # Placeholder: will implement resource transfer later (Task 7.2)
-        pass
+        """Transfer one berry from this bush to the player's inventory."""
+        if self.inventory.get('berry', 0) > 0:
+            self.inventory['berry'] -= 1
+            player.inventory['berry'] = player.inventory.get('berry', 0) + 1

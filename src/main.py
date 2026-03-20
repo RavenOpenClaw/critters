@@ -54,6 +54,11 @@ def main():
         # Player movement (with collision detection)
         player.move(input_handler.move_x, input_handler.move_y, dt, grid=grid)
 
+        # Player interaction
+        if input_handler.interact:
+            player.interact(world)
+            input_handler.interact = False  # Consume the flag
+
         # Rendering
         screen.fill(BACKGROUND_COLOR)
 
