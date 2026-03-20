@@ -6,19 +6,16 @@ This file tracks the current task being worked on. If context is lost, refer to 
 
 ## Current Task
 **Status**: IN PROGRESS
-**Task**: Task 7 - Player interaction with world objects (inventory, BerryBush harvesting)
+**Task**: Task 8 - Inventory system (formalize Player and WorldObject inventory)
 **Started**: 2026-03-20
-**Branch**: feature/player-interaction
+**Branch**: feature/inventory-system
 **Commit**: (working)
 **Notes**:
-- Fixed sliding collision test corner case (test_sliding_preserves_other_axis_when_one_blocked) and merged to mainline.
-- Now implementing Task 7 subtasks:
-  - 7.1 Player.interact() with nearest-object targeting
-  - 7.2 BerryBush.interact() resource transfer
-  - 7.3 Property test for interaction targeting nearest object
-  - 7.4 Property test for resource transfer conservation
-  - 7.5 Unit test for interaction_radius constant
-- This requires adding basic inventory to Player, interaction handling in InputHandler, and game loop integration.
+- Task 7 (player interaction) completed and merged to mainline (commit 8cef0dc).
+- Implemented basic inventory as dict in Player; BerryBush.interact transfers berries.
+- All 23 tests passing (including interaction property tests).
+- Now starting Task 8: Create Inventory class with add/remove/has methods, integrate into Player and WorldObject.
+- This will replace simple dicts with a proper class, improving encapsulation and testing.
 
 ---
 
@@ -41,6 +38,7 @@ This file tracks the current task being worked on. If context is lost, refer to 
 - Task 6.1: Collision detection (circular player vs grid obstacles) – implemented and unit-tested
 - Task 6.2: Property test for collision circularity (written; via unit tests coverage)
 - Task 6.3: Property test for movement collision response (covered in tests)
+- Task 7.1-7.5: Player interaction (interact method, BerryBush resource transfer, tests) – merged to mainline (commit 8cef0dc).
 
 ---
 
@@ -55,4 +53,4 @@ This file tracks the current task being worked on. If context is lost, refer to 
 ### Environment Status
 ✅ Virtual environment set up with pygame, pytest, hypothesis.
 Run tests via: `PYTHONPATH=src venv/bin/python -m pytest tst/ -v`
-All tests: 19/20 passing (one sliding corner test under investigation).
+All tests: 23/23 passing.
