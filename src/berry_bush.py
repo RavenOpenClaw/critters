@@ -26,3 +26,7 @@ class BerryBush(WorldObject):
         if self.inventory.has('berry', 1):
             self.inventory.remove('berry', 1)
             player.inventory.add('berry', 1)
+
+    def get_interaction_text(self):
+        """Return prompt for interaction."""
+        return "Gather: E"

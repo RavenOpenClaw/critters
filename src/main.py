@@ -35,8 +35,8 @@ def main():
     # Add test berry bushes at various positions for collision and interaction testing
     test_positions = [
         (5, 5), (10, 5), (5, 10), (15, 5), (5, 15),
-        (12, 12), (8, 14), (3, 8), (18, 7),
-        (12, 9)  # right near player start (384, 288) – within interaction radius
+        (12, 12), (8, 14), (3, 8), (18, 7)
+        # No bush at player start to avoid spawn collision
     ]
     for gx, gy in test_positions:
         bush = BerryBush(gx, gy, cell_size=cell_size, berries=5)
@@ -88,6 +88,23 @@ def main():
 
         # Draw world objects
         world.draw(screen)
+
+        # Draw interaction prompts for nearby objects
+        for obj in world.objects:
+            # Get object center
+            if hasattr(obj, 'get_center'):
+                ox, oy = obj.get_center()
+            else:
+                ox, oy = obj.x, obj.y
+            dx = ox - player.x
+            dy = oy - player.y
+            if dx*dx + dy*dy <= player.interaction_radius ** 2:
+                if hasattr(obj, 'get_interaction_text'):
+                    text = obj.get_interaction_text()
+                    if text:
+                        text_surface = font.render(text, True, (0, 0, 0))
+                        text_rect = text_surface.get_rect(center=(ox, oy - 20))
+                        screen.blit(text_surface, text_rect)
 
         # Draw player as a blue circle
         pygame.draw.circle(

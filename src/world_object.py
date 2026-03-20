@@ -37,3 +37,10 @@ class WorldObject(Entity):
     def interact(self, other):
         """To be overridden by subclasses."""
         raise NotImplementedError
+
+    def get_interaction_text(self):
+        """
+        Return text to display when a player is within interaction range,
+        or None if no prompt.
+        """
+        return None
