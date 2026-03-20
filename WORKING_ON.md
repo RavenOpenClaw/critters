@@ -5,17 +5,20 @@ This file tracks the current task being worked on. If context is lost, refer to 
 ---
 
 ## Current Task
-**Status**: IN PROGRESS
+**Status**: COMPLETED (merged)
 **Task**: Task 8 - Inventory system (formalize Player and WorldObject inventory)
 **Started**: 2026-03-20
-**Branch**: feature/inventory-system
-**Commit**: (working)
+**Completed**: 2026-03-20
+**Branch**: feature/inventory-system (merged into mainline)
+**Commit**: dc6f852
 **Notes**:
-- Task 7 (player interaction) completed and merged to mainline (commit 8cef0dc).
-- Implemented basic inventory as dict in Player; BerryBush.interact transfers berries.
-- All 23 tests passing (including interaction property tests).
-- Now starting Task 8: Create Inventory class with add/remove/has methods, integrate into Player and WorldObject.
-- This will replace simple dicts with a proper class, improving encapsulation and testing.
+- Created Inventory class with add, remove, has, get_item_count.
+- Replaced dict inventory in Player and WorldObject with Inventory instance.
+- Updated BerryBush.interact to use Inventory methods.
+- Updated tests to use Inventory API.
+- Added comprehensive unit and property tests for Inventory (8 tests).
+- All 31 tests passing.
+- Merged to mainline and pushed.
 
 ---
 
@@ -39,6 +42,7 @@ This file tracks the current task being worked on. If context is lost, refer to 
 - Task 6.2: Property test for collision circularity (written; via unit tests coverage)
 - Task 6.3: Property test for movement collision response (covered in tests)
 - Task 7.1-7.5: Player interaction (interact method, BerryBush resource transfer, tests) – merged to mainline (commit 8cef0dc).
+- Task 8.1-8.3: Inventory class, integration, and tests – merged to mainline (commit dc6f852).
 
 ---
 
@@ -53,4 +57,4 @@ This file tracks the current task being worked on. If context is lost, refer to 
 ### Environment Status
 ✅ Virtual environment set up with pygame, pytest, hypothesis.
 Run tests via: `PYTHONPATH=src venv/bin/python -m pytest tst/ -v`
-All tests: 23/23 passing.
+All tests: 31/31 passing.
