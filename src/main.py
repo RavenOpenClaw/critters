@@ -32,9 +32,11 @@ def main():
     cell_size = 32
     grid = GridSystem(cell_size=cell_size)
     world = World(grid)
-    # Add a test berry bush at grid position (5, 5)
-    bush = BerryBush(5, 5, cell_size=cell_size, berries=5)
-    world.add_object(bush)
+    # Add test berry bushes at various positions for collision and interaction testing
+    test_positions = [(5, 5), (10, 5), (5, 10), (15, 5), (5, 15), (12, 12), (8, 14), (3, 8), (18, 7)]
+    for gx, gy in test_positions:
+        bush = BerryBush(gx, gy, cell_size=cell_size, berries=5)
+        world.add_object(bush)
 
     # Create input handler and player
     input_handler = InputHandler()
