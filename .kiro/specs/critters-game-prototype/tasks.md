@@ -138,50 +138,50 @@ Key principles:
     - Test that player stops when colliding with obstacles
     - _Requirements: 1.4_
 
-- [ ] 7. Implement player interaction with world objects
-  - [ ] 7.1 Implement Player.interact() method
+- [x] 7. Implement player interaction with world objects
+  - [x] 7.1 Implement Player.interact() method
     - Find nearest object within interaction radius (1.5 × player radius)
     - Call object's interact() method
     - Handle 'E' key press for interaction
     - _Requirements: 2.1, 2.2_
   
-  - [ ] 7.2 Implement BerryBush.interact() to transfer resources
+  - [x] 7.2 Implement BerryBush.interact() to transfer resources
     - Transfer one berry from bush to player inventory
     - Remove berry from bush inventory
     - Return success/failure status
     - _Requirements: 2.3_
   
-  - [ ]* 7.3 Write property test for interaction targeting nearest object
+  - [x] 7.3 Write property test for interaction targeting nearest object
     - **Property 6: Interaction Targets Nearest Object**
     - **Validates: Requirements 2.1**
     - Test that interact() selects minimum distance object
     - _Requirements: 2.1_
   
-  - [ ]* 7.4 Write property test for resource transfer conservation
+  - [x] 7.4 Write property test for resource transfer conservation
     - **Property 7: Resource Transfer Conservation**
     - **Validates: Requirements 2.3**
     - Test that total resources remain constant during transfer
     - _Requirements: 2.3_
   
-  - [ ]* 7.5 Write unit test for interaction radius constant
+  - [x] 7.5 Write unit test for interaction radius constant
     - Verify player.interaction_radius == 1.5 × player.radius
     - _Requirements: 2.2_
 
-- [ ] 8. Implement inventory system
-  - [ ] 8.1 Create Inventory class with resource management
+- [x] 8. Implement inventory system
+  - [x] 8.1 Create Inventory class with resource management
     - Implement add() method for adding resources
     - Implement remove() method with validation
     - Implement has() method to check availability
     - Support optional capacity limits (None for infinite)
     - _Requirements: 2.5_
   
-  - [ ] 8.2 Integrate Inventory into Player and WorldObject
+  - [x] 8.2 Integrate Inventory into Player and WorldObject
     - Replace dictionary with Inventory instance
     - Set player inventory to infinite capacity
     - Update resource transfer to use Inventory methods
     - _Requirements: 2.5_
   
-  - [ ]* 8.3 Write property test for inventory unbounded capacity
+  - [x] 8.3 Write property test for inventory unbounded capacity
     - **Property 8: Inventory Unbounded Capacity**
     - **Validates: Requirements 2.5**
     - Test that player inventory never fails due to capacity
