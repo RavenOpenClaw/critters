@@ -10,6 +10,10 @@ test:
 	@echo "Running tests..."
 	PYTHONPATH=src venv/bin/python -m pytest tst/ -v
 
+play:
+	@echo "Lauching Critters..."
+	python3 src/main.py
+
 clean:
 	@echo "Cleaning up virtual environment and caches..."
 	rm -rf venv
