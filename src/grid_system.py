@@ -4,9 +4,11 @@ Uses a dictionary to map grid coordinates to occupied objects for fast lookup.
 """
 
 class GridSystem:
-    def __init__(self, cell_size=1.0):
+    def __init__(self, cell_size=1.0, width=None, height=None):
         self.cell_size = cell_size
         self.occupied = {}  # (gx, gy) -> object
+        self.width = width
+        self.height = height
 
     def world_to_grid(self, x, y):
         """Convert world coordinates to grid cell indices."""
@@ -28,13 +30,18 @@ class GridSystem:
         return self.is_occupied(gx, gy)
 
     def get_neighbors(self, gx, gy):
-        """Return the 4-directional adjacent grid cells."""
-        return [
+        """Return the 4-directional adjacent grid cells within bounds if set."""
+        candidates = [
             (gx + 1, gy),
             (gx - 1, gy),
             (gx, gy + 1),
             (gx, gy - 1)
         ]
+        if self.width is not None and self.height is not None:
+            # Bounds: 0 <= nx < width, 0 <= ny < height
+            return [(nx, ny) for (nx, ny) in candidates if 0 <= nx < self.width and 0 <= ny < self.height]
+        else:
+            return candidates
 
     def register(self, obj):
         """Register an object. Raises ValueError if any cell is already occupied."""

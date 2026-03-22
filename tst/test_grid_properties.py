@@ -34,7 +34,7 @@ class TestGridOccupation(unittest.TestCase):
     )
     def test_grid_occupation_by_dimensions(self, gx, gy, width, height, cell_size):
         """Property 5.4: An object occupies exactly width*height cells within its bounding rectangle."""
-        grid = GridSystem(cell_size=cell_size)
+        grid = GridSystem(cell_size=cell_size, width=1000, height=1000)
         obj = MockWorldObject(gx, gy, width, height, cell_size)
         grid.register(obj)
         occupied_cells = obj.get_occupied_cells()
@@ -60,7 +60,7 @@ class TestGridMutualExclusion(unittest.TestCase):
     )
     def test_mutual_exclusion(self, gx, gy, width, height, cell_size):
         """Property 5.5: Overlapping placements should be prevented."""
-        grid = GridSystem(cell_size=cell_size)
+        grid = GridSystem(cell_size=cell_size, width=1000, height=1000)
         obj1 = MockWorldObject(gx, gy, width, height, cell_size)
         grid.register(obj1)
         # Second object with the exact same grid footprint

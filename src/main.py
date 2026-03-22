@@ -30,7 +30,10 @@ def main():
 
     # Grid and world setup
     cell_size = 32
-    grid = GridSystem(cell_size=cell_size)
+    # Compute grid dimensions that cover the window
+    grid_width = (WINDOW_WIDTH + cell_size - 1) // cell_size
+    grid_height = (WINDOW_HEIGHT + cell_size - 1) // cell_size
+    grid = GridSystem(cell_size=cell_size, width=grid_width, height=grid_height)
     world = World(grid)
     # Add test berry bushes at various positions for collision and interaction testing
     test_positions = [

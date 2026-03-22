@@ -11,7 +11,7 @@ class MockObject:
 
 class TestGridSystem(unittest.TestCase):
     def setUp(self):
-        self.grid = GridSystem(cell_size=1.0)
+        self.grid = GridSystem(cell_size=1.0, width=100, height=100)
 
     def test_world_to_grid(self):
         self.assertEqual(self.grid.world_to_grid(10.4, 20.9), (10, 20))

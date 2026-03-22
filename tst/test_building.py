@@ -54,7 +54,7 @@ class TestBuildingPlacement(unittest.TestCase):
     def test_placement_deducts_resources(self, wood, stone):
         """Property 9.5: Placing a building deducts exactly its cost from player inventory."""
         cell_size = 1.0
-        grid = GridSystem(cell_size=cell_size)
+        grid = GridSystem(cell_size=cell_size, width=20, height=20)
         world = World(grid)
         # Define a test building class with fixed cost and size (1x1) that matches BuildMenu signature
         class TestBuilding(Building):

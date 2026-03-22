@@ -6,7 +6,7 @@ from entity import Player
 class TestCollisionDetection(unittest.TestCase):
     def test_player_collision_blocks_movement(self):
         """Player should not move into a cell occupied by a world object."""
-        grid = GridSystem(cell_size=1.0)
+        grid = GridSystem(cell_size=1.0, width=10, height=10)
         obj = WorldObject(2, 0, width=1, height=1, cell_size=1.0)
         grid.register(obj)
         player = Player(1.4, 0.5, radius=0.6, speed=1.0)
@@ -16,14 +16,14 @@ class TestCollisionDetection(unittest.TestCase):
 
     def test_player_free_movement(self):
         """Player should move freely when no collision."""
-        grid = GridSystem(cell_size=1.0)  # No objects registered
+        grid = GridSystem(cell_size=1.0, width=10, height=10)  # No objects registered
         player = Player(0.5, 0.5, radius=0.4, speed=2.0)
         player.move(1, 0, 1.0, grid=grid)
         self.assertEqual(player.x, 2.5)  # Moved 2 units
 
     def test_collision_respects_circle(self):
         """Collision should consider player radius; moving so circle overlaps occupied cell should block."""
-        grid = GridSystem(cell_size=1.0)
+        grid = GridSystem(cell_size=1.0, width=10, height=10)
         obj = WorldObject(2, 0, width=1, height=1, cell_size=1.0)
         grid.register(obj)
         player = Player(1.2, 0.5, radius=0.3, speed=1.0)
@@ -33,7 +33,7 @@ class TestCollisionDetection(unittest.TestCase):
 
     def test_boundary_clamping_after_collision(self):
         """Even if movement blocked, player should still respect world_rect clamping."""
-        grid = GridSystem(cell_size=1.0)
+        grid = GridSystem(cell_size=1.0, width=10, height=10)
         obj = WorldObject(2, 0, width=1, height=1, cell_size=1.0)
         grid.register(obj)
         player = Player(1.4, 0.5, radius=0.6, speed=1.0)
@@ -47,7 +47,7 @@ class TestCollisionDetection(unittest.TestCase):
 
     def test_sliding_along_obstacle(self):
         """When moving diagonally into an obstacle, player should slide along it (one axis blocked, other free)."""
-        grid = GridSystem(cell_size=1.0)
+        grid = GridSystem(cell_size=1.0, width=10, height=10)
         obj = WorldObject(2, 0, width=1, height=1, cell_size=1.0)
         grid.register(obj)
         player = Player(1.3, 0.5, radius=0.6, speed=1.0)
@@ -59,7 +59,7 @@ class TestCollisionDetection(unittest.TestCase):
 
     def test_sliding_preserves_other_axis_when_one_blocked(self):
         """If Y movement would collide after X movement, Y should be blocked and X preserved."""
-        grid = GridSystem(cell_size=1.0)
+        grid = GridSystem(cell_size=1.0, width=10, height=10)
         # Obstacle to the right blocks X; obstacle below the player blocks Y after X is blocked
         obj1 = WorldObject(2, 0, width=1, height=1, cell_size=1.0)  # blocks X
         obj2 = WorldObject(1, 1, width=1, height=1, cell_size=1.0)  # blocks Y

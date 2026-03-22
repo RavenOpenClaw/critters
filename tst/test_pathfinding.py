@@ -7,7 +7,8 @@ from pathfinding import PathfindingSystem
 
 class TestPathfinding(unittest.TestCase):
     def setUp(self):
-        self.grid = GridSystem(cell_size=1.0)
+        # Small bounds to keep no-path test fast (prevents infinite expansion)
+        self.grid = GridSystem(cell_size=1.0, width=5, height=5)
         self.pathfinder = PathfindingSystem()
 
     def test_pathfinding_no_obstacles(self):
