@@ -62,15 +62,16 @@ def main():
         # Input handling
         if not input_handler.handle_events():
             running = False
+        input_handler.update(dt)
         input_handler.update_movement()
 
         # Player movement (with collision detection)
         player.move(input_handler.move_x, input_handler.move_y, dt, grid=grid)
 
-        # Player interaction
-        if input_handler.interact:
+        # Player interaction (tap = 1, hold = auto-repeat at base rate)
+        for _ in range(input_handler.interact_count):
             player.interact(world)
-            input_handler.interact = False  # Consume the flag
+        input_handler.interact_count = 0
 
         # Build menu toggle and selection
         if input_handler.build_toggle:
