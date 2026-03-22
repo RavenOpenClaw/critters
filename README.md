@@ -35,7 +35,14 @@ make setup   # First time only: creates venv and installs deps
 make test    # Run the test suite
 ```
 
-### Option B: Manual Setup
+### Option B: Quick play script
+On Linux/macOS you can run the game directly:
+```bash
+./PLAY.sh
+```
+(Ensure the script is executable: `chmod +x PLAY.sh`)
+
+### Option C: Manual Setup
 Refer to `doc/dependencies.md` for required libraries.
 
 1. Create virtual environment:
@@ -65,6 +72,17 @@ PYTHONPATH=src venv/bin/python -m pytest tst/
 - The project includes a `Makefile` to automate setup (`make setup`), testing (`make test`), and cleanup (`make clean`).
 - If you prefer not to use Make, follow the manual steps above.
 - The `venv/` directory is gitignored; dependencies are not committed.
+
+## 🎮 Controls
+
+- **WASD**: Move player
+- **E**: Interact with nearby objects (tap once, or hold for auto-repeat)
+  - Hold threshold: 0.5 s before auto-repeat begins
+  - Base auto-repeat rate: 2 interactions per second (configurable via code)
+- **F3**: Toggle debug overlay (FPS, position, interaction radius)
+- **B**: Toggle build menu
+- **G**: Select Gathering Hut (when build menu is open)
+- **Mouse Click**: Place selected building (when build menu is open)
 
 ## 🤖 Agent Workflow (Mandatory)
 
