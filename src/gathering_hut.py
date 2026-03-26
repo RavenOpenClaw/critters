@@ -32,6 +32,40 @@ class GatheringHut(Building):
         self.assigned_critters.append(critter)
         critter.assigned_hut = self
 
+    def find_resource_in_radius(self, world, critter):
+        """
+        Find a random resource-bearing world object within gathering radius of the hut.
+        Resources are world objects with a non-empty inventory.
+
+        Args:
+            world: World instance containing objects.
+            critter: The critter requesting (used for distance check relative to critter's current position?).
+
+        Returns:
+            A random resource object, or None if none found.
+        """
+        # Gather all resource objects within radius of hut center
+        hut_cx = self.x + (self.width * self.cell_size) / 2
+        hut_cy = self.y + (self.height * self.cell_size) / 2
+        radius_sq = self.gathering_radius ** 2
+
+        candidates = []
+        for obj in world.objects:
+            if hasattr(obj, 'inventory') and obj.inventory.items:
+                # Compute distance from hut center to object center
+                obj_cx = obj.x + (getattr(obj, 'width', 0) * getattr(obj, 'cell_size', 0)) / 2
+                obj_cy = obj.y + (getattr(obj, 'height', 0) * getattr(obj, 'cell_size', 0)) / 2
+                dx = obj_cx - hut_cx
+                dy = obj_cy - hut_cy
+                if dx*dx + dy*dy <= radius_sq:
+                    candidates.append(obj)
+
+        if not candidates:
+            return None
+        # Return a random choice
+        import random
+        return random.choice(candidates)
+
     def render(self, screen):
         """Render the Gathering Hut as a brown rectangle."""
         import pygame

@@ -43,6 +43,12 @@ class GridSystem:
         else:
             return candidates
 
+    def is_within_bounds(self, gx, gy):
+        """Check if grid coordinates are within bounds (if bounds are set)."""
+        if self.width is None or self.height is None:
+            return True  # No bounds set, assume always within
+        return 0 <= gx < self.width and 0 <= gy < self.height
+
     def register(self, obj):
         """Register an object. Raises ValueError if any cell is already occupied."""
         cells = obj.get_occupied_cells()

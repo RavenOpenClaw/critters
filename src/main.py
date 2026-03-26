@@ -12,6 +12,9 @@ from grid_system import GridSystem
 from world import World
 from berry_bush import BerryBush
 from build_menu import BuildMenu
+from gathering_hut import GatheringHut
+from critter import Critter
+from pathfinding import PathfindingSystem
 
 # Constants
 WINDOW_WIDTH = 800
@@ -54,6 +57,25 @@ def main():
     # Build menu for building system
     build_menu = BuildMenu(cell_size)
 
+    # Pathfinding system
+    pathfinding = PathfindingSystem()
+
+    # Create a GatheringHut and place it
+    hut_gx, hut_gy = grid_width // 2, grid_height // 2
+    hut = GatheringHut(hut_gx, hut_gy, cell_size)
+    world.add_object(hut)
+
+    # Create some critters and assign them to the hut
+    critters = []
+    for i in range(3):
+        # Spawn critters just outside the hut to the right, each offset vertically
+        critter_x = hut.x + (hut.width + 1) * cell_size + (i * cell_size)
+        critter_y = hut.y + (i * cell_size * 0.5)
+        critter = Critter(critter_x, critter_y, cell_size=cell_size)
+        hut.assign_critter(critter)
+        world.objects.append(critter)  # Add to world objects for rendering
+        critters.append(critter)
+
     running = True
     while running:
         # Calculate delta time (seconds since last frame)
@@ -87,6 +109,10 @@ def main():
             # For now, could add debug message if fails; we'll just ignore
             # Optionally, reset selection or close menu after placement? Keep simple: stay open, selection remains
 
+        # Update critters
+        for critter in critters:
+            critter.update(dt, world, pathfinding)
+
         # Rendering
         screen.fill(BACKGROUND_COLOR)
 
@@ -117,6 +143,20 @@ def main():
             (int(player.x), int(player.y)),
             player.radius
         )
+
+        # Draw critters (red circles) with state labels
+        for critter in critters:
+            pygame.draw.circle(
+                screen,
+                (255, 0, 0),  # Red
+                (int(critter.x), int(critter.y)),
+                int(critter.radius)
+            )
+            # Render state label above critter
+            label = critter.state.name
+            label_surface = font.render(label, True, (0, 0, 0))
+            label_rect = label_surface.get_rect(center=(int(critter.x), int(critter.y) - int(critter.radius) - 10))
+            screen.blit(label_surface, label_rect)
 
         # Inventory display (top-right corner)
         inv_x = WINDOW_WIDTH - 200

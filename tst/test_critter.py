@@ -11,6 +11,11 @@ These tests cover:
 import pytest
 from hypothesis import given, strategies as st
 from critter import Critter, CritterState
+from grid_system import GridSystem
+from world import World
+from gathering_hut import GatheringHut
+from berry_bush import BerryBush
+from pathfinding import PathfindingSystem
 
 # Feature: critters-game-prototype
 
@@ -146,3 +151,181 @@ def test_well_fed_buff_multiplier_and_cap():
     c4.is_well_fed = True
     assert c4.get_movement_speed() == pytest.approx(50 + 100 * 2)  # still 250 since cap on stat
     # So it's consistent.
+
+
+# Additional tests for Task 14 (Critter AI state machine)
+
+def test_idle_state_spatial_constraint():
+    """
+    Property 12: IDLE State Spatial Constraint – IDLE critters stay near their hut.
+    We'll test that after calling start_idle(), the critter's position remains within a small
+    radius of the hut's center (or exactly at the hut position if not moving).
+    """
+    cell_size = 32
+    grid = GridSystem(cell_size=cell_size, width=50, height=50)
+    world = World(grid)
+    hut = GatheringHut(10, 10, cell_size)
+    world.add_object(hut)
+    critter = Critter(hut.x, hut.y, cell_size=cell_size)
+    hut.assign_critter(critter)
+    # Critter should enter IDLE automatically
+    assert critter.state == CritterState.IDLE
+
+    # Simulate several updates; position should not change significantly
+    initial_x, initial_y = critter.x, critter.y
+    for _ in range(10):
+        critter.update(0.1, world, None)  # pathfinding not needed for IDLE
+
+    # Critter should still be very close to initial position (within epsilon)
+    assert abs(critter.x - initial_x) < 1e-6
+    assert abs(critter.y - initial_y) < 1e-6
+
+
+def test_gather_target_within_radius():
+    """
+    Property 13: GATHER Target Within Radius – selected targets are within gathering radius.
+    """
+    cell_size = 32
+    grid = GridSystem(cell_size=cell_size, width=50, height=50)
+    world = World(grid)
+    hut = GatheringHut(10, 10, cell_size)
+    world.add_object(hut)
+
+    # Create berry bush within gathering radius, placed to the right of hut without overlap.
+    # Hut occupies cells (10-12, 10-12). Place bush at (13,10).
+    bush = BerryBush(13, 10, cell_size=cell_size, berries=5)
+    world.add_object(bush)
+
+    # Place critter at a free cell adjacent to hut, e.g., (9,10) left of hut
+    critter = Critter(9 * cell_size, 10 * cell_size, cell_size=cell_size, endurance=1)
+    hut.assign_critter(critter)
+
+    # Use a real pathfinding system
+    pathfinding = PathfindingSystem()
+
+    # Simulate updates until critter enters GATHER with a target selected
+    max_steps = 500
+    for i in range(max_steps):
+        critter.update(0.05, world, pathfinding)
+        if critter.state == CritterState.GATHER and critter.target_resource is not None:
+            break
+    else:
+        pytest.fail("Critter did not enter GATHER with target")
+
+    # Verify target is within hut's gathering radius
+    hut_x = hut.x + (hut.width * cell_size) / 2
+    hut_y = hut.y + (hut.height * cell_size) / 2
+    tr = critter.target_resource
+    tr_cx = tr.x + (getattr(tr, 'width', 0) * getattr(tr, 'cell_size', 0)) / 2
+    tr_cy = tr.y + (getattr(tr, 'height', 0) * getattr(tr, 'cell_size', 0)) / 2
+    dx = tr_cx - hut_x
+    dy = tr_cy - hut_y
+    dist = (dx*dx + dy*dy) ** 0.5
+    assert dist <= hut.gathering_radius + 1e-6
+
+
+def test_resource_collection_triggers_return():
+    """
+    Property 14: Resource Collection Triggers RETURN – collecting resource transitions to RETURN.
+    """
+    cell_size = 32
+    grid = GridSystem(cell_size=cell_size, width=50, height=50)
+    world = World(grid)
+    hut = GatheringHut(10, 10, cell_size)
+    world.add_object(hut)
+
+    # Place a berry bush not overlapping the hut, within gathering radius.
+    # Hut occupies cells (10-12, 10-12). Place bush at (13,10).
+    bush = BerryBush(13, 10, cell_size=cell_size, berries=5)
+    world.add_object(bush)
+
+    # Place critter at a free cell to the left of the hut, e.g., (9,10)
+    critter = Critter(9 * cell_size, 10 * cell_size, cell_size=cell_size, endurance=1)
+    hut.assign_critter(critter)
+
+    # Use a pathfinding system to enable movement
+    pathfinding = PathfindingSystem()
+
+    # Simulate updates until state becomes RETURN
+    max_steps = 2000
+    for i in range(max_steps):
+        critter.update(0.05, world, pathfinding)
+        if critter.state == CritterState.RETURN:
+            break
+    else:
+        pytest.fail("Critter did not reach RETURN state")
+
+    assert critter.state == CritterState.RETURN
+
+
+def test_return_navigation_to_hut():
+    """
+    Property 15: RETURN Navigation to Hut – distance to hut decreases over time.
+    """
+    cell_size = 32
+    grid = GridSystem(cell_size=cell_size, width=50, height=50)
+    world = World(grid)
+    hut = GatheringHut(10, 10, cell_size)
+    world.add_object(hut)
+
+    # Place a bush far enough that the critter will actually need to move
+    bush = BerryBush(20, 20, cell_size=cell_size, berries=5)
+    world.add_object(bush)
+
+    critter = Critter(hut.x, hut.y, cell_size=cell_size)
+    hut.assign_critter(critter)
+
+    # Force critter into RETURN state directly to test navigation
+    # We'll set held_resource and then call start_return()
+    critter.held_resource = 'berry'
+    critter.start_return()
+
+    pathfinding = PathfindingSystem()
+
+    # Record initial distance to hut center
+    hut_cx = hut.x + (hut.width * hut.cell_size)/2
+    hut_cy = hut.y + (hut.height * hut.cell_size)/2
+    dx0 = critter.x - hut_cx
+    dy0 = critter.y - hut_cy
+    dist0 = (dx0*dx0 + dy0*dy0) ** 0.5
+
+    # Simulate several updates
+    for _ in range(100):
+        critter.update(0.05, world, pathfinding)
+        # If it reaches IDLE again, deposit completed; stop early
+        if critter.state == CritterState.IDLE:
+            break
+
+    dx1 = critter.x - hut_cx
+    dy1 = critter.y - hut_cy
+    dist1 = (dx1*dx1 + dy1*dy1) ** 0.5
+
+    # Distance should have decreased (or reached zero and become IDLE)
+    assert dist1 <= dist0 + 1e-6, f"Distance did not decrease: {dist0} -> {dist1}"
+
+
+def test_deposit_completes_cycle():
+    """
+    Property 16: Deposit Completes Cycle – deposit transfers resource and returns to IDLE.
+    """
+    cell_size = 32
+    grid = GridSystem(cell_size=cell_size, width=50, height=50)
+    world = World(grid)
+    hut = GatheringHut(10, 10, cell_size)
+    world.add_object(hut)
+
+    critter = Critter(hut.x, hut.y, cell_size=cell_size)
+    hut.assign_critter(critter)
+
+    # Directly simulate a deposit without moving: place critter at hut center and set state to RETURN with held resource
+    critter.x = hut.x + (hut.width * hut.cell_size)/2
+    critter.y = hut.y + (hut.height * hut.cell_size)/2
+    critter.held_resource = 'berry'
+    critter.start_return()
+
+    # Run one update; should detect arrival and deposit
+    critter.update(0.05, world, None)
+
+    assert critter.state == CritterState.IDLE
+    assert critter.held_resource is None
+    assert hut.storage.has('berry', 1)
