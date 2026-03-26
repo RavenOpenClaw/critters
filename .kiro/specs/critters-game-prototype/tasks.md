@@ -317,14 +317,14 @@ Key principles:
     - Test pathfinding failure when no path exists
     - _Requirements: 3.7_
 
-- [ ] 14. Implement Critter AI state machine
-  - [ ] 14.1 Implement IDLE state behavior
+- [x] 14. Implement Critter AI state machine
+  - [x] 14.1 Implement IDLE state behavior
     - Critter remains at assigned hut position
     - After idle duration, transition to GATHER
     - Display "IDLE" label above critter
     - _Requirements: 7.2_
   
-  - [ ] 14.2 Implement GATHER state behavior
+  - [x] 14.2 Implement GATHER state behavior
     - Select random resource within gathering radius on entry
     - Pathfind to target resource
     - Move along path toward resource
@@ -333,7 +333,7 @@ Key principles:
     - Display "GATHER" label above critter
     - _Requirements: 7.3, 7.4, 7.5_
 
-  - [ ] 14.3 Implement RETURN state behavior
+  - [x] 14.3 Implement RETURN state behavior
     - Pathfind back to assigned hut
     - Move along path toward hut
     - Deposit held resource to hut storage on arrival
@@ -341,53 +341,53 @@ Key principles:
     - Display "RETURN" label above critter
     - _Requirements: 7.6, 7.7, 6.2_
   
-  - [ ] 14.4 Implement Critter.update() to run state machine
+  - [x] 14.4 Implement Critter.update() to run state machine
     - Call appropriate state handler based on current state
     - Update movement along path
     - Handle state transitions
     - _Requirements: 7.1_
   
-  - [ ] 14.5 Implement GatheringHut.find_resource_in_radius()
+  - [x] 14.5 Implement GatheringHut.find_resource_in_radius()
     - Search world objects within gathering_radius
     - Return random resource-bearing object
     - _Requirements: 6.5, 7.3_
   
-  - [ ]* 14.6 Write property test for IDLE state spatial constraint
+  - [x]* 14.6 Write property test for IDLE state spatial constraint
     - **Property 12: IDLE State Spatial Constraint**
     - **Validates: Requirements 7.2**
     - Test that IDLE critters stay near their hut
     - _Requirements: 7.2_
   
-  - [ ]* 14.7 Write property test for GATHER target within radius
+  - [x]* 14.7 Write property test for GATHER target within radius
     - **Property 13: GATHER Target Within Radius**
     - **Validates: Requirements 7.3**
     - Test that selected targets are within gathering radius
     - _Requirements: 7.3_
   
-  - [ ]* 14.8 Write property test for resource collection triggers RETURN
+  - [x]* 14.8 Write property test for resource collection triggers RETURN
     - **Property 14: Resource Collection Triggers RETURN**
     - **Validates: Requirements 7.5**
     - Test that collecting resource transitions to RETURN
     - _Requirements: 7.5_
   
-  - [ ]* 14.9 Write property test for RETURN navigation to hut
+  - [x]* 14.9 Write property test for RETURN navigation to hut
     - **Property 15: RETURN Navigation to Hut**
     - **Validates: Requirements 7.6**
     - Test that distance to hut decreases over time
     - _Requirements: 7.6_
   
-  - [ ]* 14.10 Write property test for deposit completes cycle
+  - [x]* 14.10 Write property test for deposit completes cycle
     - **Property 16: Deposit Completes Cycle**
     - **Validates: Requirements 7.7, 6.2**
     - Test that deposit transfers resource and returns to IDLE
     - _Requirements: 7.7, 6.2_
 
-- [ ] 15. Add UI for state labels above critters
+- [x] 15. Add UI for state labels above critters
   - Render current state text above each critter
   - Use different colors for different states
   - _Requirements: 7.8_
 
-- [ ] 16. Checkpoint - Ensure all tests pass
+- [x] 16. Checkpoint - Ensure all tests pass
   - Run all unit tests and property tests
   - Verify critters can be assigned and autonomously gather resources
   - Test complete IDLE→GATHER→RETURN cycle

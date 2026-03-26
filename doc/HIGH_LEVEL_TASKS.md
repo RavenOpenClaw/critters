@@ -18,10 +18,10 @@ NOTE: this file was created initially, but is less detailed than `.kiro/specs/cr
 
 ## **Phase 2: The First Critter**
 
-* [ ] **Task 2.1:** Implement the Critter class with Base Stats (Strength, Speed, Endurance). Critter should just be a red circle for now to keep rendering basic.
-* [ ] **Task 2.2:** Implement the State Machine AI loop (IDLE, GATHER, RETURN).
-* [ ] **Task 2.3:** Add UI labels above Critters showing their current State.
-* [ ] **Task 2.4:** Implement "Assignment" logic (Link a Critter to a Gathering Hut).
+* [x] **Task 2.1:** Implement the Critter class with Base Stats (Strength, Speed, Endurance). Critter should just be a red circle for now to keep rendering basic.
+* [x] **Task 2.2:** Implement the State Machine AI loop (IDLE, GATHER, RETURN).
+* [x] **Task 2.3:** Add UI labels above Critters showing their current State.
+* [x] **Task 2.4:** Implement "Assignment" logic (Link a Critter to a Gathering Hut).
 
 ## **Phase 3: World Simulation & Growth**
 

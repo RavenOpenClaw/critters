@@ -13,7 +13,7 @@ from world import World
 from berry_bush import BerryBush
 from build_menu import BuildMenu
 from gathering_hut import GatheringHut
-from critter import Critter
+from critter import Critter, CritterState
 from pathfinding import PathfindingSystem
 
 # Constants
@@ -21,6 +21,13 @@ WINDOW_WIDTH = 800
 WINDOW_HEIGHT = 600
 BACKGROUND_COLOR = (200, 200, 200)  # Light gray
 TARGET_FPS = 60
+
+# Colors for critter state labels
+STATE_COLORS = {
+    CritterState.IDLE: (80, 80, 80),       # Dark gray
+    CritterState.GATHER: (0, 150, 0),      # Dark green
+    CritterState.RETURN: (0, 0, 200),      # Dark blue
+}
 
 def main():
     """Initialize Pygame and run the main game loop."""
@@ -152,9 +159,10 @@ def main():
                 (int(critter.x), int(critter.y)),
                 int(critter.radius)
             )
-            # Render state label above critter
+            # Render state label above critter with color based on state
             label = critter.state.name
-            label_surface = font.render(label, True, (0, 0, 0))
+            color = STATE_COLORS.get(critter.state, (0, 0, 0))
+            label_surface = font.render(label, True, color)
             label_rect = label_surface.get_rect(center=(int(critter.x), int(critter.y) - int(critter.radius) - 10))
             screen.blit(label_surface, label_rect)
 
