@@ -396,98 +396,98 @@ Key principles:
 
 ## Phase 3: World Simulation & Growth
 
-- [ ] 17. Implement resource regeneration system
-  - [ ] 17.1 Add regeneration timer to resource objects
+- [x] 17. Implement resource regeneration system
+  - [x] 17.1 Add regeneration timer to resource objects
     - Add depleted flag and respawn_timer to WorldObject
     - Track time since depletion
     - _Requirements: 9.1_
   
-  - [ ] 17.2 Implement tree regrowth logic
+  - [x] 17.2 Implement tree regrowth logic
     - When tree inventory reaches zero, mark as depleted
     - Start respawn timer (configurable duration)
     - Replenish inventory when timer expires
     - _Requirements: 9.1_
   
-  - [ ]* 17.3 Write property test for tree regeneration after depletion
+  - [x]* 17.3 Write property test for tree regeneration after depletion
     - **Property 22: Tree Regeneration After Depletion**
     - **Validates: Requirements 9.1**
     - Test that depleted trees eventually respawn
     - _Requirements: 9.1_
 
-- [ ] 18. Implement grass propagation system
-  - [ ] 18.1 Create Grass world object type
+- [x] 18. Implement grass propagation system
+  - [x] 18.1 Create Grass world object type
     - Extend WorldObject with 1×1 dimensions
     - Implement spread logic to adjacent cells
     - _Requirements: 9.2_
   
-  - [ ] 18.2 Implement grass spreading over time
+  - [x] 18.2 Implement grass spreading over time
     - Check adjacent empty cells periodically
     - Create new grass in random empty neighbor
     - _Requirements: 9.2_
   
-  - [ ]* 18.3 Write property test for grass propagation to empty neighbors
+  - [x]* 18.3 Write property test for grass propagation to empty neighbors
     - **Property 23: Grass Propagation to Empty Neighbors**
     - **Validates: Requirements 9.2**
     - Test that grass spreads to adjacent empty cells
     - _Requirements: 9.2_
 
-- [ ] 19. Implement path trampling system
-  - [ ] 19.1 Track traversal frequency in World
+- [x] 19. Implement path trampling system
+  - [x] 19.1 Track traversal frequency in World
     - Add trampled_cells set to MapData
     - Increment traversal counter when entities move through cells
     - Mark cells as trampled above threshold
     - _Requirements: 9.3_
   
-  - [ ] 19.2 Prevent grass growth on trampled cells
+  - [x] 19.2 Prevent grass growth on trampled cells
     - Check trampled status before grass spreading
     - Block grass creation on trampled cells
     - _Requirements: 9.4_
   
-  - [ ] 19.3 Implement trampled status decay
+  - [x] 19.3 Implement trampled status decay
     - Decrease traversal counter over time
     - Remove trampled status when counter reaches zero
     - _Requirements: 9.5_
   
-  - [ ]* 19.4 Write property test for trampling prevents grass growth
+  - [x]* 19.4 Write property test for trampling prevents grass growth
     - **Property 24: Trampling Prevents Grass Growth**
     - **Validates: Requirements 9.4**
     - Test that trampled cells block grass growth
     - _Requirements: 9.4_
 
-- [ ] 20. Implement work obstacles
-  - [ ] 20.1 Create Obstacle class
+- [x] 20. Implement work obstacles
+  - [x] 20.1 Create Obstacle class
     - Extend WorldObject with work_units attribute
     - Track remaining work required to clear
     - Block movement while work_units > 0
     - _Requirements: 10.1, 10.5_
   
-  - [ ] 20.2 Implement work application from critters
+  - [x] 20.2 Implement work application from critters
     - Calculate work applied based on critter strength
     - Decrease obstacle work_units on interaction
     - Remove obstacle when work_units reaches zero
     - _Requirements: 10.2, 10.3_
   
-  - [ ] 20.3 Display remaining work units on obstacles
+  - [x] 20.3 Display remaining work units on obstacles
     - Render work_units value above obstacle
     - _Requirements: 10.4_
   
-  - [ ]* 20.4 Write property test for obstacle work unit depletion
+  - [x]* 20.4 Write property test for obstacle work unit depletion
     - **Property 25: Obstacle Work Unit Depletion**
     - **Validates: Requirements 10.2**
     - Test that work_units decrease by strength-based function
     - _Requirements: 10.2_
   
-  - [ ]* 20.5 Write property test for obstacle removal at zero work units
+  - [x]* 20.5 Write property test for obstacle removal at zero work units
     - **Property 26: Obstacle Removal at Zero Work Units**
     - **Validates: Requirements 10.3, 10.5**
     - Test that obstacles are removed and unblock movement
     - _Requirements: 10.3, 10.5_
   
-  - [ ]* 20.6 Write unit test for obstacle work units attribute
+  - [x]* 20.6 Write unit test for obstacle work units attribute
     - Verify Obstacle has work_units attribute
     - _Requirements: 10.1_
 
-- [ ] 21. Checkpoint - Ensure all tests pass
+- [x] 21. Checkpoint - Ensure all tests pass
   - Run all unit tests and property tests
   - Verify resource regeneration, grass spreading, trampling, and obstacles work
   - Ask user if questions arise before proceeding to Phase 4

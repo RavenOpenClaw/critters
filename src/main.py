@@ -11,6 +11,7 @@ from input_handler import InputHandler
 from grid_system import GridSystem
 from world import World
 from berry_bush import BerryBush
+from grass import Grass
 from build_menu import BuildMenu
 from gathering_hut import GatheringHut
 from critter import Critter, CritterState
@@ -119,6 +120,29 @@ def main():
         # Update critters
         for critter in critters:
             critter.update(dt, world, pathfinding)
+
+        # Mark trampled cells by player and critters
+        entities = [player] + critters
+        for ent in entities:
+            gx, gy = grid.world_to_grid(ent.x, ent.y)
+            if grid.is_within_bounds(gx, gy):
+                world.mark_trampled(gx, gy)
+        # Decay trampled status over time
+        world.update_trampled(dt)
+
+        # Update world objects that have an update method (regeneration, grass spreading, etc.)
+        # Collect any new objects created during updates (e.g., grass spreading)
+        new_objects = []
+        for obj in world.objects:
+            # Only call update on objects that explicitly define it and are not Critters
+            # (Critter.update requires additional arguments)
+            if isinstance(obj, (BerryBush, Grass)):
+                result = obj.update(dt)
+                if result is not None:
+                    new_objects.append(result)
+        # Add new objects to the world after the update loop
+        if new_objects:
+            world.objects.extend(new_objects)
 
         # Rendering
         screen.fill(BACKGROUND_COLOR)
