@@ -82,3 +82,28 @@ class TestTrampling:
         assert not world.is_trampled(new_grass.gx, new_grass.gy)
         # Verify it's adjacent to original
         assert abs(new_grass.gx - 5) + abs(new_grass.gy - 5) == 1
+
+    def test_trampled_status_decays_over_time(self):
+        """Trampled cells should decay and be removed after the trample duration elapses."""
+        cell_size = 1
+        grid = GridSystem(cell_size=cell_size, width=10, height=10)
+        world = World(grid)
+        # Mark a cell as trampled; default trample_duration is 5.0
+        world.mark_trampled(5, 5)
+        assert world.is_trampled(5, 5)
+        # Initially, trampled dict should have entry with remaining = 5.0
+        assert (5, 5) in world.trampled
+        assert world.trampled[(5, 5)] == world.trample_duration
+
+        # Advance time by half duration
+        world.update_trampled(world.trample_duration / 2)
+        assert world.is_trampled(5, 5)
+        # Remaining should be roughly half (exactly half if no rounding)
+        expected_remaining = world.trample_duration / 2
+        assert world.trampled[(5, 5)] == expected_remaining
+
+        # Advance time by the remaining duration plus a bit
+        world.update_trampled(expected_remaining + 0.01)
+        # Should have been removed
+        assert not world.is_trampled(5, 5)
+        assert (5, 5) not in world.trampled
