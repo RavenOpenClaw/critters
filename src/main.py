@@ -69,9 +69,14 @@ def main():
     pathfinding = PathfindingSystem()
 
     # Create a GatheringHut and place it
-    hut_gx, hut_gy = grid_width // 2, grid_height // 2
+    hut_gx, hut_gy = grid_width // 2 + 4, grid_height // 2 + 3
     hut = GatheringHut(hut_gx, hut_gy, cell_size)
     world.add_object(hut)
+
+    # Create a Grass and place it # GRASS NOT VISIBLE? And I collide with it???
+    grass_gx, grass_gy = grid_width // 2 - 1, grid_height // 2 - 2
+    grass = Grass(grass_gx, grass_gy, cell_size)
+    world.add_object(grass)
 
     # Create some critters and assign them to the hut
     critters = []
