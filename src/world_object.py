@@ -19,6 +19,8 @@ class WorldObject(Entity):
             self.inventory = Inventory()
         else:
             self.inventory = inventory
+        # By default, objects block movement. Override in subclasses (e.g., Grass) to disable.
+        self.blocks_movement = True
 
     def get_occupied_cells(self):
         """Return list of grid cells occupied by this object."""

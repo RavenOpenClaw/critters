@@ -40,6 +40,24 @@ class BerryBush(WorldObject):
         )
         pygame.draw.rect(screen, (0, 200, 0), rect)  # Green
 
+        # Draw berries as small red circles if present
+        berry_count = self.inventory.get_item_count('berry')
+        if berry_count > 0:
+            # Determine positions: up to 5 berries arranged in a small pattern within the cell
+            cell_size = self.cell_size
+            # Offsets for up to 5 berries (relative to bush top-left)
+            offsets = [
+                (0.25, 0.25), (0.75, 0.25),
+                (0.5, 0.5),
+                (0.25, 0.75), (0.75, 0.75)
+            ]
+            radius = max(2, cell_size // 8)
+            for i in range(min(berry_count, len(offsets))):
+                ox, oy = offsets[i]
+                cx = self.x + ox * cell_size
+                cy = self.y + oy * cell_size
+                pygame.draw.circle(screen, (200, 0, 0), (int(cx), int(cy)), radius)
+
     def interact(self, player):
         """Transfer one berry from this bush to the player's inventory."""
         if self.inventory.has('berry', 1):

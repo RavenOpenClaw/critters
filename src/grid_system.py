@@ -50,8 +50,11 @@ class GridSystem:
         return 0 <= gx < self.width and 0 <= gy < self.height
 
     def register(self, obj):
-        """Register an object. Raises ValueError if any cell is already occupied."""
+        """Register an object. Raises ValueError if any cell is already occupied (by another blocking object)."""
         cells = obj.get_occupied_cells()
+        # Only check/register if object blocks movement
+        if not getattr(obj, 'blocks_movement', True):
+            return
         # Check for any existing occupation
         for cell in cells:
             if cell in self.occupied:

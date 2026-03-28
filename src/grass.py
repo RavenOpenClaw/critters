@@ -2,6 +2,7 @@
 Grass: A 1x1 world object that spreads to adjacent empty cells over time.
 """
 import random
+import pygame
 from world_object import WorldObject
 
 class Grass(WorldObject):
@@ -10,10 +11,17 @@ class Grass(WorldObject):
         super().__init__(gx, gy, width=1, height=1, cell_size=cell_size, inventory=None)
         self.spread_threshold = spread_threshold
         self.time_accumulator = 0.0
+        # Grass does not block movement; critters can walk over it
+        self.blocks_movement = False
         # Note: world reference will be set by World.add_object
 
+    def get_occupied_cells(self):
+        """Grass does not block movement; return empty list."""
+        return []
+
     def interact(self, player):
-        """Do nothing when player interacts"""
+        """Do nothing when player interacts."""
+        pass
 
     def update(self, dt):
         """
@@ -46,3 +54,13 @@ class Grass(WorldObject):
                 self.time_accumulator = 0.0
                 return new_grass
         return None
+
+    def render(self, screen):
+        """Render grass as a light green square."""
+        rect = pygame.Rect(
+            self.x,
+            self.y,
+            self.width * self.cell_size,
+            self.height * self.cell_size
+        )
+        pygame.draw.rect(screen, (144, 238, 144), rect)  # Light green

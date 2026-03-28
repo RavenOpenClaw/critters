@@ -188,9 +188,11 @@ def main():
                 (int(critter.x), int(critter.y)),
                 int(critter.radius)
             )
-            # Render state label above critter with color based on state
+            # Render state label above critter with color based on state; optionally add debug info
             label = critter.state.name
             color = STATE_COLORS.get(critter.state, (0, 0, 0))
+            if input_handler.show_debug and critter.is_calculating:
+                label += " (CALC)"
             label_surface = font.render(label, True, color)
             label_rect = label_surface.get_rect(center=(int(critter.x), int(critter.y) - int(critter.radius) - 10))
             screen.blit(label_surface, label_rect)
