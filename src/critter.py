@@ -39,6 +39,9 @@ class Critter(Entity):
         # Initialize state machine state
         self.start_idle()
 
+    def interact(self, player):
+        """Do nothing when player interacts. TODO: do something like purr or bark when pet"""
+
     def _effective_stat(self, stat):
         """Return the stat value after applying well-fed multiplier, capped at 100."""
         if self.is_well_fed:

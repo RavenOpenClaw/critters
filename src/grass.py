@@ -12,6 +12,9 @@ class Grass(WorldObject):
         self.time_accumulator = 0.0
         # Note: world reference will be set by World.add_object
 
+    def interact(self, player):
+        """Do nothing when player interacts"""
+
     def update(self, dt):
         """
         Accumulate time; when threshold reached, attempt to spread to a random empty adjacent cell.
