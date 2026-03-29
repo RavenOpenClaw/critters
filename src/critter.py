@@ -93,6 +93,7 @@ class Critter(Entity):
         self.target_resource = None
         # Loiter movement: wait a random interval before making a small move
         self.loiter_timer = random.uniform(3.0, 5.0)
+        self.loiter_target = None  # (wx, wy) if currently moving during loiter
 
     def start_gather(self, resource_obj):
         """Enter GATHER state: set target resource and compute path to it."""
@@ -127,12 +128,37 @@ class Critter(Entity):
             self._update_return(dt, world, pathfinding_system)
 
     def _update_idle(self, dt, world):
-        """IDLE behavior: loiter near hut, wait for idle duration, then transition to GATHER."""
-        # Loiter movement: every 3-5 seconds take a small step
-        self.loiter_timer -= dt
-        if self.loiter_timer <= 0:
-            self._perform_loiter_move(world)
-            self.loiter_timer = random.uniform(3.0, 5.0)
+        """IDLE behavior: loiter near hut with smooth movement, wait for idle duration, then transition to GATHER."""
+        # If we have a loiter_target, move towards it smoothly
+        if self.loiter_target is not None:
+            tx, ty = self.loiter_target
+            dx = tx - self.x
+            dy = ty - self.y
+            dist_sq = dx*dx + dy*dy
+            if dist_sq < 1.0:
+                # Reached target
+                self.x, self.y = self.loiter_target
+                self.loiter_target = None
+                self.loiter_timer = random.uniform(3.0, 5.0)
+            else:
+                speed = self.get_movement_speed()
+                move_dist = speed * dt
+                dist = dist_sq ** 0.5
+                if move_dist >= dist:
+                    self.x, self.y = self.loiter_target
+                    self.loiter_target = None
+                    self.loiter_timer = random.uniform(3.0, 5.0)
+                else:
+                    self.x += (dx / dist) * move_dist
+                    self.y += (dy / dist) * move_dist
+        else:
+            # Loiter timer counts down to trigger a new loiter move
+            self.loiter_timer -= dt
+            if self.loiter_timer <= 0:
+                self._perform_loiter_move(world)
+                # _perform_loiter_move sets loiter_target if a valid target exists
+                # Reset timer regardless to stagger attempts; if no target, we'll try again later
+                self.loiter_timer = random.uniform(3.0, 5.0)
 
         # Idle timer counts down to transition to GATHER
         self.idle_timer -= dt
@@ -171,6 +197,11 @@ class Critter(Entity):
             start_gx, start_gy = grid.world_to_grid(self.x, self.y)
             self.is_calculating = True
             self.path = pathfinding_system.find_path((start_gx, start_gy), goal_cell, grid)
+            # Debug: log computed path
+            if self.path is not None:
+                print(f"[DEBUG] Critter {id(self)} GATHER path to {goal_cell} len={len(self.path)} path={self.path}")
+            else:
+                print(f"[DEBUG] Critter {id(self)} GATHER no path to {goal_cell}")
             self.path_index = 0
             if self.path is None:
                 self.start_idle()
@@ -213,6 +244,11 @@ class Critter(Entity):
             start_gx, start_gy = critter_gx, critter_gy
             self.is_calculating = True
             self.path = pathfinding_system.find_path((start_gx, start_gy), goal_cell, world.grid)
+            # Debug: log computed path
+            if self.path is not None:
+                print(f"[DEBUG] Critter {id(self)} RETURN path to {goal_cell} len={len(self.path)} path={self.path}")
+            else:
+                print(f"[DEBUG] Critter {id(self)} RETURN no path to {goal_cell}")
             self.path_index = 0
             if self.path is None:
                 self.start_idle()
@@ -234,7 +270,7 @@ class Critter(Entity):
         return False
 
     def _perform_loiter_move(self, world):
-        """Make a small random step (1-2 grid cells in a cardinal direction) while staying within bounds and avoiding static obstacles."""
+        """Pick a nearby free cell (1-2 steps) and set loiter_target to its center; movement happens in _update_idle."""
         if self.assigned_hut is None:
             return
         grid = world.grid
@@ -243,15 +279,15 @@ class Critter(Entity):
         dx, dy = random.choice(directions)
         # Choose step count: 1 or 2
         steps = random.choice([1, 2])
-        dx *= steps
-        dy *= steps
-        # Compute new world position
-        new_x = self.x + dx * self.cell_size
-        new_y = self.y + dy * self.cell_size
-        gx, gy = grid.world_to_grid(new_x, new_y)
+        tx = self.x + dx * steps * self.cell_size
+        ty = self.y + dy * steps * self.cell_size
+        gx, gy = grid.world_to_grid(tx, ty)
         if grid.is_within_bounds(gx, gy) and not grid.is_occupied(gx, gy):
-            self.x = new_x
-            self.y = new_y
+            # Target cell center
+            target_wx = gx * self.cell_size + self.cell_size / 2
+            target_wy = gy * self.cell_size + self.cell_size / 2
+            self.loiter_target = (target_wx, target_wy)
+        # else: no valid target; loiter_target stays None; timer will retry later
 
     def _deposit_at_hut(self):
         """Deposit held resource at the assigned hut and transition to IDLE."""
