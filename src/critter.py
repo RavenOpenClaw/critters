@@ -13,6 +13,7 @@ class CritterState(Enum):
 
 class Critter(Entity):
     """Critter entity with attributes and stat-based behavior."""
+    blocks_movement = False
 
     def __init__(self, x, y, cell_size=32, strength=50, speed_stat=50, endurance=50):
         """
@@ -149,26 +150,29 @@ class Critter(Entity):
             self.start_idle()
             return
 
-        # If we don't have a path yet, compute it to a free cell near the resource
+        # If we don't have a path yet, compute it to a free cell adjacent to the resource
         if not hasattr(self, 'path') or not self.path:
-            # Compute target grid coordinate of the resource's top-left
-            target_gx, target_gy = world.grid.world_to_grid(self.target_resource.x, self.target_resource.y)
-            # Add a small random offset to the target to spread critters
-            offset_gx = target_gx + random.randint(-2, 2)
-            offset_gy = target_gy + random.randint(-2, 2)
-            # Find a free cell near the offset target
-            goal_cell = self._find_free_cell_near(world.grid, offset_gx, offset_gy, max_radius=3)
-            if goal_cell is None:
-                # No reachable free cell near target; go idle
-                self.start_idle()
-                return
-            start_gx, start_gy = world.grid.world_to_grid(self.x, self.y)
-            # Mark that we are performing pathfinding (for debug display)
+            grid = world.grid
+            target_gx, target_gy = grid.world_to_grid(self.target_resource.x, self.target_resource.y)
+            # Collect adjacent cells (Manhattan distance 1)
+            candidates = []
+            for dx, dy in [(1,0), (-1,0), (0,1), (0,-1)]:
+                cx, cy = target_gx + dx, target_gy + dy
+                if grid.is_within_bounds(cx, cy) and not grid.is_occupied(cx, cy):
+                    candidates.append((cx, cy))
+            if not candidates:
+                # Fallback: broader search up to radius 3
+                goal_cell = self._find_free_cell_near(grid, target_gx, target_gy, max_radius=3)
+                if goal_cell is None:
+                    self.start_idle()
+                    return
+            else:
+                goal_cell = random.choice(candidates)
+            start_gx, start_gy = grid.world_to_grid(self.x, self.y)
             self.is_calculating = True
-            self.path = pathfinding_system.find_path((start_gx, start_gy), goal_cell, world.grid)
+            self.path = pathfinding_system.find_path((start_gx, start_gy), goal_cell, grid)
             self.path_index = 0
             if self.path is None:
-                # No path; go idle for now
                 self.start_idle()
                 return
 
