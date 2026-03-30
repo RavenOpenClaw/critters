@@ -1,6 +1,7 @@
 """
 Entity base class and Player class.
 """
+import math
 from inventory import Inventory
 
 class Entity:
@@ -63,25 +64,50 @@ class Player(Entity):
                     return True
         return False
 
-    def interact(self, world):
-        """Interact with the nearest world object within interaction_radius.
+    def _circle_intersects_rect(self, circle_x, circle_y, circle_r, rect_x, rect_y, rect_w, rect_h):
+        """Check if a circle intersects an axis-aligned rectangle."""
+        # Find the closest point on the rectangle to the circle center
+        closest_x = max(rect_x, min(circle_x, rect_x + rect_w))
+        closest_y = max(rect_y, min(circle_y, rect_y + rect_h))
+        dx = circle_x - closest_x
+        dy = circle_y - closest_y
+        return dx*dx + dy*dy <= circle_r*circle_r
 
-        Finds the closest object in world.objects whose center is within
-        self.interaction_radius, and calls its interact(player) method.
+    def interact(self, world):
+        """Interact with the nearest world object whose collision shape intersects
+        the player's interaction circle (radius 45). The nearest is determined by
+        Euclidean distance to the object's center (for deterministic selection).
         """
         nearest = None
         min_dist_sq = float('inf')
         for obj in getattr(world, 'objects', []):
-            # Use object's center for distance
-            if hasattr(obj, 'get_center'):
-                ox, oy = obj.get_center()
+            # Determine object's collision bounds (AABB) and center
+            if hasattr(obj, 'width') and hasattr(obj, 'height') and hasattr(obj, 'cell_size'):
+                rect_x = obj.x
+                rect_y = obj.y
+                rect_w = obj.width * obj.cell_size
+                rect_h = obj.height * obj.cell_size
+                # Check if player's interaction circle intersects this rectangle
+                if not self._circle_intersects_rect(self.x, self.y, self.interaction_radius, rect_x, rect_y, rect_w, rect_h):
+                    continue  # Skip objects outside interaction range
+                # Use rectangle center for distance ordering
+                center_x = rect_x + rect_w / 2.0
+                center_y = rect_y + rect_h / 2.0
             else:
-                ox, oy = obj.x, obj.y
-            dx = ox - self.x
-            dy = oy - self.y
+                # Fallback for objects without rectangular bounds (e.g., point-like)
+                if hasattr(obj, 'get_center'):
+                    center_x, center_y = obj.get_center()
+                else:
+                    center_x, center_y = obj.x, obj.y
+                dx = center_x - self.x
+                dy = center_y - self.y
+                if dx*dx + dy*dy > self.interaction_radius**2:
+                    continue
+            # Compute distance to center for nearest selection
+            dx = center_x - self.x
+            dy = center_y - self.y
             dist_sq = dx*dx + dy*dy
-            radius_sq = self.interaction_radius ** 2
-            if dist_sq <= radius_sq and dist_sq < min_dist_sq:
+            if dist_sq < min_dist_sq:
                 min_dist_sq = dist_sq
                 nearest = obj
         if nearest is not None:

@@ -22,7 +22,6 @@ RESOURCE_COLORS = {
     "food": (255, 0, 0),      # Red square for berries/food
     # Future: add wood, stone, plant, etc.
 }
-from hud import ResourceHUD
 
 # Constants
 WINDOW_WIDTH = 800
