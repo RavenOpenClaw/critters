@@ -3,6 +3,7 @@ GatheringHut: A 3x3 building that serves as a base for critter gathering assignm
 """
 from building import Building
 from inventory import Inventory
+from entity import Player
 
 class GatheringHut(Building):
     """Gathering Hut building (3x3) with storage and critter assignment."""
@@ -65,6 +66,22 @@ class GatheringHut(Building):
         # Return a random choice
         import random
         return random.choice(candidates)
+
+    def get_interaction_text(self):
+        """Return prompt text if hut has resources to collect."""
+        if self.storage.items:
+            return "Press E to collect resources"
+        return None
+
+    def interact(self, other):
+        """Transfer all storage contents to the interacting entity's inventory."""
+        if not isinstance(other, Player):
+            return  # Only player can withdraw
+        # Transfer all items from hut storage to player inventory
+        for item_name, count in list(self.storage.items.items()):
+            other.inventory.add(item_name, count)
+            # Remove from storage
+            del self.storage.items[item_name]
 
     def render(self, screen):
         """Render the Gathering Hut as a brown rectangle."""

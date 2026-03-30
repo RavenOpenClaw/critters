@@ -17,6 +17,13 @@ from gathering_hut import GatheringHut
 from critter import Critter, CritterState
 from pathfinding import PathfindingSystem
 
+# Resource icon colors (for HUD)
+RESOURCE_COLORS = {
+    "food": (255, 0, 0),      # Red square for berries/food
+    # Future: add wood, stone, plant, etc.
+}
+from hud import ResourceHUD
+
 # Constants
 WINDOW_WIDTH = 800
 WINDOW_HEIGHT = 600
@@ -30,6 +37,24 @@ STATE_COLORS = {
     CritterState.RETURN: (0, 0, 200),      # Dark blue
 }
 
+def render_hud(screen, player, font, margin=10, icon_size=12):
+    """Render resource HUD at top-left corner, left-aligned.
+
+    Shows icons and counts for each resource in player inventory.
+    """
+    x = margin
+    y = margin
+    # Sort resources alphabetically for consistent display
+    for resource, count in sorted(player.inventory.items.items()):
+        color = RESOURCE_COLORS.get(resource, (100, 100, 100))  # Gray fallback
+        # Draw small square icon
+        pygame.draw.rect(screen, color, (x, y, icon_size, icon_size))
+        # Draw resource name and count to the right
+        text = f"{resource}: {count}"
+        text_surface = font.render(text, True, (0, 0, 0))
+        screen.blit(text_surface, (x + icon_size + 5, y))
+        y += icon_size + 5  # Move down for next line
+
 def main():
     """Initialize Pygame and run the main game loop."""
     pygame.init()
@@ -38,6 +63,9 @@ def main():
     pygame.display.set_caption("Critters Prototype")
     clock = pygame.time.Clock()
     font = pygame.font.SysFont(None, 24)
+
+    # Initialize HUD for resource display
+    resource_hud = ResourceHUD()
 
     # Grid and world setup
     cell_size = 32
@@ -151,6 +179,9 @@ def main():
 
         # Rendering
         screen.fill(BACKGROUND_COLOR)
+
+        # Draw HUD (top-left)
+        render_hud(screen, player, font)
 
         # Draw world objects
         world.draw(screen)
