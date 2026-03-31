@@ -12,12 +12,14 @@ class Entity:
         self.radius = radius
 
 class Player(Entity):
-    """Player entity with movement speed, world bounds, and interaction capabilities."""
+    """Player entity with movement speed, world bounds, interaction, and buff system."""
     def __init__(self, x, y, radius=20, speed=200):
         super().__init__(x, y, radius)
-        self.speed = speed  # pixels per second
-        self.world_rect = None  # pygame.Rect for clamping; set externally
+        self.base_speed = speed  # Base speed in pixels per second (without buffs)
+        self.speed = speed       # Current effective speed (updated by buffs)
+        self.world_rect = None   # pygame.Rect for clamping; set externally
         self.inventory = Inventory()
+        self.active_buffs = []   # List of active Buff instances
 
     @property
     def interaction_radius(self):
@@ -112,3 +114,32 @@ class Player(Entity):
                 nearest = obj
         if nearest is not None:
             nearest.interact(self)
+
+    def update(self, dt):
+        """Update player state: refresh buffs, recalc effective speed, remove expired buffs."""
+        # Update all active buffs; remove expired ones
+        still_active = []
+        for buff in self.active_buffs:
+            if buff.update(dt):
+                still_active.append(buff)
+        self.active_buffs = still_active
+
+        # Recompute effective speed based on speed multipliers from active buffs
+        speed_mult = self._get_speed_multiplier()
+        self.speed = self.base_speed * speed_mult
+
+    def _get_speed_multiplier(self):
+        """Calculate total speed multiplier from all active buffs (multiplicative)."""
+        mult = 1.0
+        for buff in self.active_buffs:
+            if 'speed' in buff.multipliers:
+                mult *= buff.multipliers['speed']
+        return mult
+
+    def get_gather_multiplier(self):
+        """Calculate gather multiplier from all active buffs."""
+        mult = 1.0
+        for buff in self.active_buffs:
+            if 'gather' in buff.multipliers:
+                mult *= buff.multipliers['gather']
+        return mult

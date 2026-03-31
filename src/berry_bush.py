@@ -59,10 +59,15 @@ class BerryBush(WorldObject):
                 pygame.draw.circle(screen, (200, 0, 0), (int(cx), int(cy)), radius)
 
     def interact(self, player):
-        """Transfer one berry from this bush to the player's inventory."""
+        """Transfer berries from this bush to the player's inventory, affected by gather buffs."""
         if self.inventory.has('berry', 1):
-            self.inventory.remove('berry', 1)
-            player.inventory.add('berry', 1)
+            # Determine quantity based on player's gather multiplier
+            mult = player.get_gather_multiplier()
+            qty = max(1, int(round(mult)))
+            available = self.inventory.get_item_count('berry')
+            taken = min(qty, available)
+            self.inventory.remove('berry', taken)
+            player.inventory.add('berry', taken)
 
     def get_interaction_text(self):
         """Return prompt for interaction."""

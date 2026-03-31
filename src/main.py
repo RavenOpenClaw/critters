@@ -14,6 +14,8 @@ from berry_bush import BerryBush
 from grass import Grass
 from build_menu import BuildMenu
 from gathering_hut import GatheringHut
+from chair import Chair
+from campfire import Campfire
 from critter import Critter, CritterState
 from pathfinding import PathfindingSystem
 
@@ -53,6 +55,24 @@ def render_hud(screen, player, font, margin=10, icon_size=12):
         text_surface = font.render(text, True, (0, 0, 0))
         screen.blit(text_surface, (x + icon_size + 5, y))
         y += icon_size + 5  # Move down for next line
+
+def render_active_buffs(screen, player, font):
+    """Render active buffs in the top-right corner above the inventory."""
+    x = WINDOW_WIDTH - 200
+    y = 10
+    # Title
+    title = font.render("Buffs", True, (0, 0, 0))
+    screen.blit(title, (x, y))
+    y += 20
+    if not player.active_buffs:
+        none_surface = font.render("(none)", True, (80, 80, 80))
+        screen.blit(none_surface, (x, y))
+    else:
+        for buff in player.active_buffs:
+            text = f"{buff.name}: {buff.remaining:.1f}s"
+            buff_surface = font.render(text, True, (0, 0, 0))
+            screen.blit(buff_surface, (x, y))
+            y += 20
 
 def main():
     """Initialize Pygame and run the main game loop."""
@@ -126,6 +146,9 @@ def main():
             running = False
         input_handler.update(dt)
         input_handler.update_movement()
+
+        # Update player state (buffs, speed recalculation)
+        player.update(dt)
 
         # Player movement (with collision detection)
         player.move(input_handler.move_x, input_handler.move_y, dt, grid=grid)
@@ -226,6 +249,9 @@ def main():
             label_surface = font.render(label, True, color)
             label_rect = label_surface.get_rect(center=(int(critter.x), int(critter.y) - int(critter.radius) - 10))
             screen.blit(label_surface, label_rect)
+
+        # Buffs display (top-right corner)
+        render_active_buffs(screen, player, font)
 
         # Inventory display (top-right corner)
         inv_x = WINDOW_WIDTH - 200
