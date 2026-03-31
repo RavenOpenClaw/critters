@@ -620,28 +620,28 @@ Key principles:
     - Test that equipped tools improve gathering speed
     - _Requirements: 13.3_
 
-- [ ] 28. Implement crafting system
-  - [ ] 28.1 Create Recipe data class
+- [x] 28. Implement crafting system
+  - [x] 28.1 Create Recipe data class
     - Define name, result, cost, unlocks_equipment attributes
     - _Requirements: 14.2_
 
-  - [ ] 28.2 Create CraftingMenu UI
+  - [x] 28.2 Create CraftingMenu UI
     - Display available recipes
     - Show required resources for each recipe
-    - Handle recipe selection
+    - Handle recipe selection via number keys (1-9)
+    - Render overlay and craft result messages
     - _Requirements: 14.1, 14.2_
 
-  - [ ] 28.3 Implement crafting logic
+  - [x] 28.3 Implement crafting logic
     - Validate player has sufficient resources
     - Deduct resources from player inventory
-    - Create crafted item or unlock equipment
-    - Display error if insufficient resources
+    - Unlocks equipment when recipe.unlocks_equipment is True
+    - Display success or error message
     - _Requirements: 14.3, 14.4_
 
-  - [ ]* 28.4 Write property test for crafting success with sufficient resources
-    - **Property 33: Crafting Success with Sufficient Resources**
-    - **Validates: Requirements 14.3**
+  - [x]* 28.4 Write property test for crafting success with sufficient resources (Property 33)
     - Test that crafting succeeds when resources available
+    - Includes hypothesis property test for sufficiency condition
     - _Requirements: 14.3_
 
 - [ ] 29. Checkpoint - Ensure all tests pass

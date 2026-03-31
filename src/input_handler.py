@@ -19,6 +19,8 @@ class InputHandler:
         self.interact_count = 0  # Number of interactions to fire this frame
         self.build_toggle = False  # Toggle build menu on 'B' key press
         self.select_gathering_hut = False  # Select GatheringHut on 'G' key press
+        self.crafting_toggle = False  # Toggle crafting menu on 'R' key press
+        self.craft_slot = None  # Selected recipe slot (1-9) when crafting menu is open
         self.mouse_clicked = False
         self.mouse_pos = (0, 0)
 
@@ -48,6 +50,13 @@ class InputHandler:
                     self.build_toggle = True
                 if event.key == pygame.K_g:
                     self.select_gathering_hut = True
+                if event.key == pygame.K_r:
+                    self.crafting_toggle = True
+                # Number keys 1-9 for crafting selection
+                number_keys = [pygame.K_1, pygame.K_2, pygame.K_3, pygame.K_4, pygame.K_5,
+                               pygame.K_6, pygame.K_7, pygame.K_8, pygame.K_9]
+                if event.key in number_keys:
+                    self.craft_slot = number_keys.index(event.key) + 1  # 1-indexed
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_e:
                     self._e_held = False

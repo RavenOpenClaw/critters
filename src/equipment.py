@@ -18,3 +18,8 @@ class Equipment:
         self.gather_multiplier = gather_multiplier
         # Auto-register on creation
         EQUIPMENT_REGISTRY[id] = self
+
+# Define some basic gathering equipment
+Equipment("wooden_gatherer", "Wooden Gatherer", gather_multiplier=1.5)
+Equipment("steel_gatherer", "Steel Gatherer", gather_multiplier=2.0)
+Equipment("magic_gatherer", "Magic Gatherer", gather_multiplier=3.0)

@@ -18,6 +18,8 @@ from chair import Chair
 from campfire import Campfire
 from critter import Critter, CritterState
 from pathfinding import PathfindingSystem
+from crafting_menu import CraftingMenu
+from recipes import RECIPES
 
 # Resource icon colors (for HUD)
 RESOURCE_COLORS = {
@@ -112,6 +114,9 @@ def main():
     # Build menu for building system
     build_menu = BuildMenu(cell_size)
 
+    # Crafting menu for equipment recipes
+    crafting_menu = CraftingMenu(RECIPES)
+
     # Pathfinding system
     pathfinding = PathfindingSystem()
 
@@ -164,6 +169,17 @@ def main():
         if input_handler.select_gathering_hut and build_menu.visible:
             build_menu.select_gathering_hut()
 
+        # Crafting menu toggle and crafting
+        if input_handler.crafting_toggle:
+            crafting_menu.toggle()
+        # If menu open and slot selected, craft that recipe
+        if crafting_menu.visible and input_handler.craft_slot is not None:
+            idx = input_handler.craft_slot - 1
+            if 0 <= idx < len(crafting_menu.recipes):
+                recipe = crafting_menu.recipes[idx]
+                crafting_menu.craft_selected(player, recipe)
+            input_handler.craft_slot = None
+
         # Building placement on mouse click
         if input_handler.mouse_clicked and build_menu.visible and build_menu.selected_building_class is not None:
             mx, my = input_handler.mouse_pos
@@ -171,6 +187,9 @@ def main():
             success = build_menu.attempt_placement(player, world, grid, gx, gy)
             # For now, could add debug message if fails; we'll just ignore
             # Optionally, reset selection or close menu after placement? Keep simple: stay open, selection remains
+
+        # Update crafting menu (for message timer, etc.)
+        crafting_menu.update(dt)
 
         # Update critters
         for critter in critters:
@@ -288,6 +307,9 @@ def main():
 
         # Build menu overlay
         build_menu.render(screen, font)
+
+        # Crafting menu overlay
+        crafting_menu.render(screen, font)
 
         pygame.display.flip()
 
