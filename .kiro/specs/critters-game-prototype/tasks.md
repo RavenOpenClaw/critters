@@ -533,35 +533,33 @@ Key principles:
     - Test that offspring start in IDLE at hut center location
     - _Requirements: 11.6_
 
-- [ ] 24. Implement building buff system
-  - [ ] 24.1 Create Buff data class
+- [x] 24. Implement building buff system
+  - [x] 24.1 Create Buff data class
     - Add name, stat_multiplier, duration, remaining attributes
     - Implement update() method to decrease timer
     - _Requirements: 12.3_
 
-  - [ ] 24.2 Create Chair and Campfire buildings
+  - [x] 24.2 Create Chair and Campfire buildings
     - Implement Chair with Rested buff (movement speed)
     - Implement Campfire with Strength buff
     - _Requirements: 12.1, 12.2_
 
-  - [ ] 24.3 Implement buff application on interaction
+  - [x] 24.3 Implement buff application on interaction
     - Add active_buffs list to Player
     - Apply buff when interacting with Chair/Campfire
     - Update buffs each frame to decrease timers
     - Remove expired buffs
     - _Requirements: 12.1, 12.2, 12.3_
 
-  - [ ] 24.4 Display active buffs to player
+  - [x] 24.4 Display active buffs to player
     - Render buff names and remaining time
     - _Requirements: 12.4_
 
-  - [ ]* 24.5 Write property test for buff expiration
-    - **Property 30: Buff Expiration**
-    - **Validates: Requirements 12.3**
+  - [x]* 24.5 Write property test for buff expiration (Property 30)
     - Test that buffs expire after duration
     - _Requirements: 12.3_
 
-  - [ ]* 24.6 Write unit tests for Chair and Campfire buff application
+  - [x]* 24.6 Write unit tests for Chair and Campfire buff application
     - Test Chair adds Rested buff
     - Test Campfire adds Strength buff
     - _Requirements: 12.1, 12.2_
