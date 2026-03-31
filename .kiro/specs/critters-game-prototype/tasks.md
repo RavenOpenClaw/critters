@@ -495,13 +495,13 @@ Key principles:
 
 ## Phase 4: Breeding & Scaling
 
-- [ ] 22. Implement Mating Hut building
-  - [ ] 22.1 Create MatingHut class
+- [x] 22. Implement Mating Hut building
+  - [x] 22.1 Create MatingHut class
     - Extend Building with 2×2 dimensions
     - Add assigned_critters list
     - _Requirements: 11.1_
 
-  - [ ] 22.2 Implement critter assignment to Mating Hut
+  - [x] 22.2 Implement critter assignment to Mating Hut
     - Reuse assignment pattern from Gathering Hut
     - Support multiple critter assignments
     - _Requirements: 11.1_

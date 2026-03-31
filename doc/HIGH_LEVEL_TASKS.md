@@ -31,6 +31,6 @@ NOTE: this file was created initially, but is less detailed than `.kiro/specs/cr
 
 ## **Phase 4: Breeding & Scaling**
 
-* [ ] **Task 4.1:** Create the Mating Hut building.
+* [x] **Task 4.1:** Create the Mating Hut building.
 * [ ] **Task 4.2:** Implement inheritance logic for Critter breeding.
 * [ ] **Task 4.3:** Add "Buff" systems from buildings (Chair/Campfire).
