@@ -506,36 +506,31 @@ Key principles:
     - Support multiple critter assignments
     - _Requirements: 11.1_
 
-- [ ] 23. Implement critter breeding mechanics
-  - [ ] 23.1 Implement MatingHut.breed() method
+- [x] 23. Implement critter breeding mechanics
+  - [x] 23.1 Implement MatingHut.breed() method
     - Require at least two assigned critters
     - Calculate offspring stats from parent averages
-    - Apply random mutations to offspring stats
+    - Apply random mutations to offspring stats ( ±5 )
     - Clamp offspring stats to [1, 100] range
     - _Requirements: 11.2, 11.3, 11.4, 11.5_
 
-  - [ ] 23.2 Initialize offspring at Mating Hut
-    - Set offspring position to hut location
+  - [x] 23.2 Initialize offspring at Mating Hut
+    - Set offspring position to hut center
     - Set offspring state to IDLE
     - Add offspring to world
+    - Set assigned_hut reference
     - _Requirements: 11.6_
 
-  - [ ]* 23.3 Write property test for offspring stat inheritance
-    - **Property 27: Offspring Stat Inheritance**
-    - **Validates: Requirements 11.2, 11.3**
-    - Test that offspring stats derive from parent stats
+  - [x]* 23.3 Write property test for offspring stat inheritance (Property 27)
+    - Test that offspring stats equal rounded parent averages plus mutation
     - _Requirements: 11.2, 11.3_
 
-  - [ ]* 23.4 Write property test for offspring stat bounds after mutation
-    - **Property 28: Offspring Stat Bounds After Mutation**
-    - **Validates: Requirements 11.5**
-    - Test that mutated stats remain in [1, 100]
+  - [x]* 23.4 Write property test for offspring stat bounds after mutation (Property 28)
+    - Test that mutated stats remain within [1, 100]
     - _Requirements: 11.5_
 
-  - [ ]* 23.5 Write property test for offspring initial state
-    - **Property 29: Offspring Initial State**
-    - **Validates: Requirements 11.6**
-    - Test that offspring start in IDLE at hut location
+  - [x]* 23.5 Write property test for offspring initial state (Property 29)
+    - Test that offspring start in IDLE at hut center location
     - _Requirements: 11.6_
 
 - [ ] 24. Implement building buff system
