@@ -927,6 +927,22 @@ grid_coords = st.tuples(
 - [ ] Map transitions work smoothly
 - [ ] Debug display shows accurate information
 
+## Future Optimization: Offline Building Simulation
+
+To avoid simulating all maps when only one is active, we can approximate resource generation for suspended maps:
+
+- Each building measures its **average resource production rate** over a sliding window (e.g., last 3 minutes).
+- When a map is **suspended** (player leaves), store:
+  - `last_update_time` (game time or real time)
+  - `accumulated_production` since last update
+- When the map is **restored**, compute:
+  - `elapsed = restore_time - suspend_time`
+  - `added = min(rate * elapsed, building_capacity - current_storage)`
+  - Increase building storage by `added`
+- This allows buildings to generate resources while the player is away without running full simulation on inactive maps.
+- Benefits: performance, lower CPU usage; Downsides: less precise; acceptable for incremental gameplay.
+- Implementation note: `Building` could gain `get_production_rate()` and `suspend()`/`resume()` methods. The `World` would call these on map switches.
+
 **Edge Case Testing**:
 - [ ] Game handles 0 resources gracefully
 - [ ] Game handles 100+ critters without performance issues
