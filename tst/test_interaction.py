@@ -79,9 +79,9 @@ class TestInteractionTargeting(unittest.TestCase):
             for obj in objects:
                 self.assertFalse(obj.interact_called, f"Object {obj.label} should not have been interacted with")
         else:
-            # Find the candidate with minimal distance; if ties, the first in iteration order (list order)
+            # Find the candidate with minimal distance; if ties (exact equality), the first in iteration order (list order)
             min_dist = min(dist for dist, _ in candidates)
-            expected_objs = [obj for dist, obj in candidates if abs(dist - min_dist) < 1e-9]
+            expected_objs = [obj for dist, obj in candidates if dist == min_dist]
             expected_obj = expected_objs[0]  # first among minima
             # Only the expected object should have interact_called=True
             for obj in objects:
