@@ -571,7 +571,7 @@ Key principles:
     - Test Campfire adds Strength buff
     - _Requirements: 12.1, 12.2_
        
-- [ ] 25. Implement Berry Economy UI
+- [x] 25. Implement Berry Economy UI
   - [ ] 25.1 Design HUD layout for resources
     - Plan top-left corner, left-aligned horizontal layout for multiple resources
     - Each resource shows: icon (colored square for now) + count
@@ -596,7 +596,7 @@ Key principles:
     - Test that HUD displays player.inventory.get("food") correctly
     - Simulate inventory changes (add/remove) and verify HUD updates
     - _Requirements: UI consistency_
-  - [ ]* 25.5 Write property test for HUD reflects only player inventory
+  - [ ]* 25.6 Write property test for HUD reflects only player inventory
     - Validate HUD does NOT reflect critter or building inventories
     - _Requirements: scope clarity_
        
@@ -608,54 +608,54 @@ Key principles:
 
 ## Phase 5: Equipment & Crafting
 
-- [ ] 26. Implement equipment system
-  - [ ] 26.1 Create Equipment tracking in Player
+- [ ] 27. Implement equipment system
+  - [ ] 27.1 Create Equipment tracking in Player
     - Add unlocked_equipment set to track unlocked items
     - Add equipped set to track currently equipped items
     - _Requirements: 13.1, 13.2_
 
-  - [ ] 26.2 Implement equipment effects on gathering
+  - [ ] 27.2 Implement equipment effects on gathering
     - Modify gathering speed when equipment is equipped
     - Apply multiplier to player gather actions
     - _Requirements: 13.3_
 
-  - [ ]* 26.3 Write property test for equipment unlock enables equipping
+  - [ ]* 27.3 Write property test for equipment unlock enables equipping
     - **Property 31: Equipment Unlock Enables Equipping**
     - **Validates: Requirements 13.2**
     - Test that unlocked equipment can be equipped
     - _Requirements: 13.2_
 
-  - [ ]* 26.4 Write property test for equipped gathering tool increases speed
+  - [ ]* 27.4 Write property test for equipped gathering tool increases speed
     - **Property 32: Equipped Gathering Tool Increases Speed**
     - **Validates: Requirements 13.3**
     - Test that equipped tools improve gathering speed
     - _Requirements: 13.3_
 
-- [ ] 27. Implement crafting system
-  - [ ] 27.1 Create Recipe data class
+- [ ] 28. Implement crafting system
+  - [ ] 28.1 Create Recipe data class
     - Define name, result, cost, unlocks_equipment attributes
     - _Requirements: 14.2_
 
-  - [ ] 27.2 Create CraftingMenu UI
+  - [ ] 28.2 Create CraftingMenu UI
     - Display available recipes
     - Show required resources for each recipe
     - Handle recipe selection
     - _Requirements: 14.1, 14.2_
 
-  - [ ] 27.3 Implement crafting logic
+  - [ ] 28.3 Implement crafting logic
     - Validate player has sufficient resources
     - Deduct resources from player inventory
     - Create crafted item or unlock equipment
     - Display error if insufficient resources
     - _Requirements: 14.3, 14.4_
 
-  - [ ]* 27.4 Write property test for crafting success with sufficient resources
+  - [ ]* 28.4 Write property test for crafting success with sufficient resources
     - **Property 33: Crafting Success with Sufficient Resources**
     - **Validates: Requirements 14.3**
     - Test that crafting succeeds when resources available
     - _Requirements: 14.3_
 
-- [ ] 28. Checkpoint - Ensure all tests pass
+- [ ] 29. Checkpoint - Ensure all tests pass
   - Run all unit tests and property tests
   - Verify equipment and crafting systems work correctly
   - Ask user if questions arise before proceeding to Phase 6
@@ -663,69 +663,69 @@ Key principles:
 
 ## Phase 6: Multi-Map World & Persistence
 
-- [ ] 29. Implement multi-map world system
-  - [ ] 29.1 Extend World to support multiple maps
+- [ ] 30. Implement multi-map world system
+  - [ ] 30.1 Extend World to support multiple maps
     - Create MapData class for individual map regions
     - Store maps in dictionary by name
     - Track current_map
     - _Requirements: 3.5, 18.1_
 
-  - [ ] 29.2 Implement map transitions
+  - [ ] 30.2 Implement map transitions
     - Detect when player reaches map boundary
     - Transition to adjacent map
     - Update current_map reference
     - _Requirements: 18.2_
 
-  - [ ] 29.3 Implement entity state preservation across maps
+  - [ ] 30.3 Implement entity state preservation across maps
     - Only update entities in current map
     - Preserve entity state when switching maps
     - _Requirements: 18.3, 18.4_
 
-  - [ ]* 29.4 Write property test for map transition at boundary
+  - [ ]* 30.4 Write property test for map transition at boundary
     - **Property 35: Map Transition at Boundary**
     - **Validates: Requirements 18.2**
     - Test that crossing boundary changes current_map
     - _Requirements: 18.2_
 
-  - [ ]* 29.5 Write property test for inactive map entity preservation
+  - [ ]* 30.5 Write property test for inactive map entity preservation
     - **Property 36: Inactive Map Entity Preservation**
     - **Validates: Requirements 18.4**
     - Test that entities maintain state across map transitions
     - _Requirements: 18.4_
 
-- [ ] 30. Implement save/load system
-  - [ ] 30.1 Create SaveData class
+- [ ] 31. Implement save/load system
+  - [ ] 31.1 Create SaveData class
     - Define structure for complete game state
     - Include version field for compatibility
     - _Requirements: 17.1, 17.2, 17.3, 17.4_
 
-  - [ ] 30.2 Implement serialization methods
+  - [ ] 31.2 Implement serialization methods
     - Implement to_dict() for all entity classes
     - Implement from_dict() class methods for deserialization
     - Implement SaveData.to_json() for file writing
     - _Requirements: 17.1, 17.2, 17.3, 17.4_
 
-  - [ ] 30.3 Implement save functionality
+  - [ ] 31.3 Implement save functionality
     - Collect all game state into SaveData
     - Serialize to JSON
     - Write to save file
     - Handle file system errors gracefully
     - _Requirements: 17.1, 17.2, 17.3, 17.4_
 
-  - [ ] 30.4 Implement load functionality
+  - [ ] 31.4 Implement load functionality
     - Read save file
     - Parse JSON to SaveData
     - Restore all game state
     - Handle missing/corrupted save files
     - _Requirements: 17.5_
 
-  - [ ]* 30.5 Write property test for save/load round trip preservation
+  - [ ]* 31.5 Write property test for save/load round trip preservation
     - **Property 34: Save/Load Round Trip Preservation**
     - **Validates: Requirements 17.1, 17.2, 17.3, 17.4**
     - Test that save→load preserves all game state
     - _Requirements: 17.1, 17.2, 17.3, 17.4_
 
-- [ ] 31. Final checkpoint - Ensure all tests pass
+- [ ] 32. Final checkpoint - Ensure all tests pass
   - Run complete test suite (all unit and property tests)
   - Verify multi-map transitions work correctly
   - Verify save/load preserves game state
@@ -734,48 +734,48 @@ Key principles:
 
 ## Phase 7: Polish & Additional Content
 
-- [ ] 32. Add additional world object types
-  - [ ] 32.1 Create Tree world object
+- [ ] 33. Add additional world object types
+  - [ ] 33.1 Create Tree world object
     - Extend WorldObject with appropriate dimensions
     - Initialize with wood resources
     - Implement interaction to harvest wood
     - _Requirements: 4.6_
 
-  - [ ] 32.2 Create Rock world object
+  - [ ] 33.2 Create Rock world object
     - Extend WorldObject with appropriate dimensions
     - Initialize with stone resources
     - Implement interaction to harvest stone
     - _Requirements: 4.6_
 
-  - [ ] 32.3 Create Stick world object
+  - [ ] 33.3 Create Stick world object
     - Extend WorldObject as small collectible
     - Initialize with plant resources
     - _Requirements: 4.6_
 
-  - [ ]* 32.4 Write unit test for object type instantiation
+  - [ ]* 33.4 Write unit test for object type instantiation
     - Verify all object types can be instantiated
     - _Requirements: 4.6_
 
-- [ ] 33. Enhance rendering with simple animations
-  - [ ] 33.1 Implement 2-frame sprite animation for critters
+- [ ] 34. Enhance rendering with simple animations
+  - [ ] 34.1 Implement 2-frame sprite animation for critters
     - Create idle animation (2 frames)
     - Create action animation (2 frames)
     - Alternate frames based on state
     - _Requirements: 16.5_
 
-- [ ] 34. Add additional UI and polish
-  - [ ] 34.1 Implement inventory display UI
+- [ ] 35. Add additional UI and polish
+  - [ ] 35.1 Implement inventory display UI
     - Show player resources
     - Update in real-time
     - _Requirements: N/A (UI enhancement)_
 
-  - [ ] 34.2 Enhance debug display
+  - [ ] 35.2 Enhance debug display
     - Add critter count
     - Add building count
     - Add performance metrics
     - _Requirements: 15.4_
 
-- [ ] 35. Final integration and testing
+- [ ] 36. Final integration and testing
   - Run complete test suite one final time
   - Perform manual playtesting of all features
   - Verify all requirements are met
