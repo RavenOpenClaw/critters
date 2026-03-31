@@ -10,6 +10,7 @@ from entity import Player
 from input_handler import InputHandler
 from grid_system import GridSystem
 from world import World
+from map_data import MapData
 from berry_bush import BerryBush
 from grass import Grass
 from build_menu import BuildMenu
@@ -88,13 +89,13 @@ def main():
     # Initialize HUD for resource display
     resource_hud = ResourceHUD()
 
-    # Grid and world setup
+    # Grid and world setup (multi-map)
     cell_size = 32
-    # Compute grid dimensions that cover the window
     grid_width = (WINDOW_WIDTH + cell_size - 1) // cell_size
     grid_height = (WINDOW_HEIGHT + cell_size - 1) // cell_size
-    grid = GridSystem(cell_size=cell_size, width=grid_width, height=grid_height)
-    world = World(grid)
+    initial_map = MapData(name="main", width=grid_width, height=grid_height, cell_size=cell_size)
+    world = World(initial_map)
+    grid = world.grid  # alias to current grid for convenience
     # Add test berry bushes at various positions for collision and interaction testing
     test_positions = [
         (5, 5), (10, 5), (5, 10), (15, 5), (5, 15),
@@ -131,15 +132,13 @@ def main():
     world.add_object(grass)
 
     # Create some critters and assign them to the hut
-    critters = []
     for i in range(3):
         # Spawn critters just outside the hut to the right, each offset vertically
         critter_x = hut.x + (hut.width + 1) * cell_size + (i * cell_size)
         critter_y = hut.y + (i * cell_size * 0.5)
         critter = Critter(critter_x, critter_y, cell_size=cell_size)
         hut.assign_critter(critter)
-        world.objects.append(critter)  # Add to world objects for rendering
-        critters.append(critter)
+        world.add_object(critter)  # Add to world objects and to current_map.critters
 
     running = True
     while running:
@@ -157,6 +156,11 @@ def main():
 
         # Player movement (with collision detection)
         player.move(input_handler.move_x, input_handler.move_y, dt, grid=grid)
+
+        # Handle map transitions
+        world.handle_map_transition(player)
+        # Keep grid alias in sync with current map's grid
+        grid = world.grid
 
         # Player interaction (tap = 1, hold = auto-repeat at base rate)
         for _ in range(input_handler.interact_count):
@@ -192,11 +196,11 @@ def main():
         crafting_menu.update(dt)
 
         # Update critters
-        for critter in critters:
+        for critter in world.current_map.critters:
             critter.update(dt, world, pathfinding)
 
         # Mark trampled cells by player and critters
-        entities = [player] + critters
+        entities = [player] + world.current_map.critters
         for ent in entities:
             gx, gy = grid.world_to_grid(ent.x, ent.y)
             if grid.is_within_bounds(gx, gy):
@@ -205,18 +209,14 @@ def main():
         world.update_trampled(dt)
 
         # Update world objects that have an update method (regeneration, grass spreading, etc.)
-        # Collect any new objects created during updates (e.g., grass spreading)
         new_objects = []
-        for obj in world.objects:
-            # Only call update on objects that explicitly define it and are not Critters
-            # (Critter.update requires additional arguments)
+        for obj in list(world.current_map.objects):
             if isinstance(obj, (BerryBush, Grass)):
                 result = obj.update(dt)
                 if result is not None:
                     new_objects.append(result)
-        # Add new objects to the world after the update loop
-        if new_objects:
-            world.objects.extend(new_objects)
+        for new_obj in new_objects:
+            world.add_object(new_obj)
 
         # Rendering
         screen.fill(BACKGROUND_COLOR)
@@ -228,7 +228,7 @@ def main():
         world.draw(screen)
 
         # Draw interaction prompts for nearby objects
-        for obj in world.objects:
+        for obj in world.current_map.objects:
             # Get object center
             if hasattr(obj, 'get_center'):
                 ox, oy = obj.get_center()

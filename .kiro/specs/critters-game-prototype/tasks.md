@@ -652,31 +652,31 @@ Key principles:
 
 ## Phase 6: Multi-Map World & Persistence
 
-- [ ] 30. Implement multi-map world system
-  - [ ] 30.1 Extend World to support multiple maps
+- [x] 30. Implement multi-map world system
+  - [x] 30.1 Extend World to support multiple maps
     - Create MapData class for individual map regions
     - Store maps in dictionary by name
     - Track current_map
     - _Requirements: 3.5, 18.1_
 
-  - [ ] 30.2 Implement map transitions
+  - [x] 30.2 Implement map transitions
     - Detect when player reaches map boundary
     - Transition to adjacent map
     - Update current_map reference
     - _Requirements: 18.2_
 
-  - [ ] 30.3 Implement entity state preservation across maps
+  - [x] 30.3 Implement entity state preservation across maps
     - Only update entities in current map
     - Preserve entity state when switching maps
     - _Requirements: 18.3, 18.4_
 
-  - [ ]* 30.4 Write property test for map transition at boundary
+  - [x]* 30.4 Write property test for map transition at boundary
     - **Property 35: Map Transition at Boundary**
     - **Validates: Requirements 18.2**
     - Test that crossing boundary changes current_map
     - _Requirements: 18.2_
 
-  - [ ]* 30.5 Write property test for inactive map entity preservation
+  - [x]* 30.5 Write property test for inactive map entity preservation
     - **Property 36: Inactive Map Entity Preservation**
     - **Validates: Requirements 18.4**
     - Test that entities maintain state across map transitions

@@ -10,6 +10,14 @@ from entity import Player
 from world_object import WorldObject
 from berry_bush import BerryBush
 
+def _circle_intersects_rect(circle_x, circle_y, circle_r, rect_x, rect_y, rect_w, rect_h):
+    """Check if a circle intersects an axis-aligned rectangle."""
+    closest_x = max(rect_x, min(circle_x, rect_x + rect_w))
+    closest_y = max(rect_y, min(circle_y, rect_y + rect_h))
+    dx = circle_x - closest_x
+    dy = circle_y - closest_y
+    return dx*dx + dy*dy <= circle_r*circle_r
+
 # Simple mock interactable object for testing interaction targeting
 class MockInteractable(WorldObject):
     def __init__(self, x, y, cell_size=1.0, label="obj"):
@@ -63,16 +71,31 @@ class TestInteractionTargeting(unittest.TestCase):
 
         player.interact(world)
 
-        # Determine expected target
-        radius_sq = player.interaction_radius ** 2
+        # Determine expected target using same intersection logic as Player.interact
         candidates = []
         for obj in objects:
-            cx, cy = obj.get_center()
-            dx = cx - player_x
-            dy = cy - player_y
-            dist_sq = dx*dx + dy*dy
-            if dist_sq <= radius_sq:
-                candidates.append((dist_sq, obj))
+            # For objects with width/height/cell_size (WorldObject), use rectangle intersection
+            if hasattr(obj, 'width') and hasattr(obj, 'height') and hasattr(obj, 'cell_size'):
+                rect_x = obj.x
+                rect_y = obj.y
+                rect_w = obj.width * obj.cell_size
+                rect_h = obj.height * obj.cell_size
+                if _circle_intersects_rect(player_x, player_y, player.interaction_radius, rect_x, rect_y, rect_w, rect_h):
+                    # Use rectangle center for distance ordering
+                    center_x = rect_x + rect_w / 2.0
+                    center_y = rect_y + rect_h / 2.0
+                    dx = center_x - player_x
+                    dy = center_y - player_y
+                    dist_sq = dx*dx + dy*dy
+                    candidates.append((dist_sq, obj))
+            else:
+                # Fallback to point check using get_center()
+                cx, cy = obj.get_center()
+                dx = cx - player_x
+                dy = cy - player_y
+                dist_sq = dx*dx + dy*dy
+                if dist_sq <= player.interaction_radius ** 2:
+                    candidates.append((dist_sq, obj))
 
         if not candidates:
             # No objects within radius: expect no interact called on any object
