@@ -12,7 +12,7 @@ class Entity:
         self.radius = radius
 
 class Player(Entity):
-    """Player entity with movement speed, world bounds, interaction, and buff system."""
+    """Player entity with movement speed, world bounds, interaction, buffs, and equipment."""
     def __init__(self, x, y, radius=20, speed=200):
         super().__init__(x, y, radius)
         self.base_speed = speed  # Base speed in pixels per second (without buffs)
@@ -20,6 +20,8 @@ class Player(Entity):
         self.world_rect = None   # pygame.Rect for clamping; set externally
         self.inventory = Inventory()
         self.active_buffs = []   # List of active Buff instances
+        self.unlocked_equipment = set()  # Set of equipment IDs that have been unlocked
+        self.equipped = set()            # Set of equipped equipment IDs
 
     @property
     def interaction_radius(self):
@@ -137,9 +139,35 @@ class Player(Entity):
         return mult
 
     def get_gather_multiplier(self):
-        """Calculate gather multiplier from all active buffs."""
+        """Calculate total gather multiplier from active buffs and equipped gear."""
         mult = 1.0
+        # Buff multipliers
         for buff in self.active_buffs:
             if 'gather' in buff.multipliers:
                 mult *= buff.multipliers['gather']
+        # Equipment multipliers (requires import of EQUIPMENT_REGISTRY)
+        from equipment import EQUIPMENT_REGISTRY
+        for eq_id in self.equipped:
+            eq = EQUIPMENT_REGISTRY.get(eq_id)
+            if eq and eq.gather_multiplier:
+                mult *= eq.gather_multiplier
         return mult
+
+    def unlock_equipment(self, equipment):
+        """Unlock an equipment item (by id string or Equipment object)."""
+        equipment_id = getattr(equipment, 'id', equipment)
+        self.unlocked_equipment.add(equipment_id)
+
+    def equip(self, equipment_id):
+        """Equip an item by its ID. Requires that it is unlocked."""
+        if equipment_id in self.unlocked_equipment:
+            self.equipped.add(equipment_id)
+            return True
+        return False
+
+    def unequip(self, equipment_id):
+        """Unequip an item if it is currently equipped."""
+        if equipment_id in self.equipped:
+            self.equipped.remove(equipment_id)
+            return True
+        return False

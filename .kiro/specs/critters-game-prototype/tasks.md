@@ -593,7 +593,7 @@ Key principles:
     - Validate HUD does NOT reflect critter or building inventories
     - _Requirements: scope clarity_
        
-- [ ] 26. Checkpoint - Ensure all tests pass
+- [x] 26. Checkpoint - Ensure all tests pass
   - Run all unit tests and property tests
   - Verify breeding mechanics, buff system, and berry economy UI work correctly
   - Ask user if questions arise before proceeding to Phase 5
@@ -601,26 +601,22 @@ Key principles:
 
 ## Phase 5: Equipment & Crafting
 
-- [ ] 27. Implement equipment system
-  - [ ] 27.1 Create Equipment tracking in Player
+- [x] 27. Implement equipment system
+  - [x] 27.1 Create Equipment tracking in Player
     - Add unlocked_equipment set to track unlocked items
     - Add equipped set to track currently equipped items
     - _Requirements: 13.1, 13.2_
 
-  - [ ] 27.2 Implement equipment effects on gathering
+  - [x] 27.2 Implement equipment effects on gathering
     - Modify gathering speed when equipment is equipped
     - Apply multiplier to player gather actions
     - _Requirements: 13.3_
 
-  - [ ]* 27.3 Write property test for equipment unlock enables equipping
-    - **Property 31: Equipment Unlock Enables Equipping**
-    - **Validates: Requirements 13.2**
+  - [x]* 27.3 Write property test for equipment unlock enables equipping (Property 31)
     - Test that unlocked equipment can be equipped
     - _Requirements: 13.2_
 
-  - [ ]* 27.4 Write property test for equipped gathering tool increases speed
-    - **Property 32: Equipped Gathering Tool Increases Speed**
-    - **Validates: Requirements 13.3**
+  - [x]* 27.4 Write property test for equipped gathering tool increases speed (Property 32)
     - Test that equipped tools improve gathering speed
     - _Requirements: 13.3_
 
