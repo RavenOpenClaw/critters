@@ -6,18 +6,15 @@ This file tracks the current task being worked on. If context is lost, refer to 
 
 ## Current Task
 **Status**: COMPLETED
-**Task**: Task 37 - Title Screen
+**Task**: Task 39 - Add mouse support to Build Menu (plus Task 38: keybinds)
 **Completed**: 2026-04-02
-**Branch**: feature/task-37-title-screen (merged into mainline)
-**Commit**: (will be added)
+**Branch**: mainline
 **Notes**:
-- Created TitleScreen class with New Game and Continue buttons.
-- New Game shows overwrite confirmation when save exists.
-- Continue loads existing save or falls back to New Game if load fails.
-- Integrated into main.py before game loop; uses existing save/load functions.
-- All 168 tests passing; no regressions.
+- Task 38: Changed save/load from S/L to F5/F6 in InputHandler.
+- Task 39: BuildMenu mouse support – clickable buttons, HUD Build toggle, refined placement logic.
+- All 168 tests pass; merged to mainline (commit 77d53d1).
 
-**Next**: Deconstruction feature (additional task) and Code Index documentation.
+**Project Status**: Core prototype complete. Additional tasks pending: Deconstruction feature, Code Index/Architecture documentation.
 
 ---
 
@@ -65,6 +62,8 @@ Core prototype complete. Additional tasks pending: Deconstruction feature, Code 
 - Task 35: Add additional UI and polish – merged; 168 tests passing.
 - Task 36: Final integration and testing – completed; all tests passing; code verified and clean; project complete.
 - Task 37: Title Screen – implemented TitleScreen with New Game/Continue, overwrite confirmation, integrated into main; all 168 tests passing; merged.
+- Task 38: Changed save/load keybinds S/L → F5/F6 in InputHandler; merged (77d53d1).
+- Task 39: Build menu mouse support – clickable buttons, HUD Build toggle; refined placement; merged (77d53d1).
 
 ---
 
