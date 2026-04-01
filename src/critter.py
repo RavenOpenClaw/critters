@@ -43,6 +43,10 @@ class Critter(Entity):
         self.is_calculating = False
         # Loiter movement timer (for idle wandering)
         self.loiter_timer = 0.0
+        # Animation: 2-frame sprite animation
+        self.animation_timer = 0.0
+        self.animation_interval = 0.2  # seconds per frame (5 FPS)
+        self.animation_frame = 0  # 0 or 1
         # Initialize state machine state
         self.start_idle()
 
@@ -130,6 +134,12 @@ class Critter(Entity):
             self._update_gather(dt, world, pathfinding_system)
         elif self.state == CritterState.RETURN:
             self._update_return(dt, world, pathfinding_system)
+
+        # Animation update: toggle frame based on interval
+        self.animation_timer += dt
+        if self.animation_timer >= self.animation_interval:
+            self.animation_timer -= self.animation_interval
+            self.animation_frame = 1 - self.animation_frame
 
     def _update_idle(self, dt, world):
         """IDLE behavior: loiter near hut with smooth movement, wait for idle duration, then transition to GATHER."""
@@ -405,6 +415,14 @@ class Critter(Entity):
         # If harvesting failed (no resource), clear target and reset path
         self.target_resource = None
         self.path = None
+
+    def get_render_offset(self):
+        """Return (dx, dy) offset for animation based on state and current frame."""
+        if self.state in (CritterState.GATHER, CritterState.RETURN):
+            # Action: left/right wobble (1-pixel shift)
+            return (-1, 0) if self.animation_frame == 0 else (1, 0)
+        else:  # IDLE (and any others)
+            return (0, -2) if self.animation_frame == 1 else (0, 0)
 
 
 

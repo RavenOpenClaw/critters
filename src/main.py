@@ -296,10 +296,13 @@ def main():
 
         # Draw critters (red circles) with state labels
         for critter in critters:
+            dx, dy = critter.get_render_offset()
+            rx = int(critter.x + dx)
+            ry = int(critter.y + dy)
             pygame.draw.circle(
                 screen,
                 (255, 0, 0),  # Red
-                (int(critter.x), int(critter.y)),
+                (rx, ry),
                 int(critter.radius)
             )
             # Render state label above critter with color based on state; optionally add debug info
@@ -308,7 +311,7 @@ def main():
             if input_handler.show_debug and critter.is_calculating:
                 label += " (CALC)"
             label_surface = font.render(label, True, color)
-            label_rect = label_surface.get_rect(center=(int(critter.x), int(critter.y) - int(critter.radius) - 10))
+            label_rect = label_surface.get_rect(center=(rx, ry - int(critter.radius) - 10))
             screen.blit(label_surface, label_rect)
 
         # Buffs display (top-right corner)

@@ -12,6 +12,9 @@ from gathering_hut import GatheringHut
 from critter import Critter
 from grass import Grass
 from obstacle import Obstacle
+from tree import Tree
+from rock import Rock
+from stick import Stick
 # No MatingHut needed for current tests
 
 def make_test_world():
@@ -145,3 +148,48 @@ def test_critter_assignment_preserved_after_load():
     assert critter_after.y == critter_before.y
     assert critter_after.strength == critter_before.strength
     assert critter_after.state == critter_before.state
+
+def test_tree_serialization_roundtrip():
+    cell_size = 32
+    tree = Tree(5, 5, cell_size=cell_size, wood=10, respawn_duration=20.0)
+    map_data = MapData(name="test", width=20, height=15, cell_size=cell_size)
+    world = World(map_data)
+    world.add_object(tree)
+    data = serialize_world(world)
+    new_world = deserialize_world(data)
+    trees = [o for o in new_world.current_map.objects if isinstance(o, Tree)]
+    assert len(trees) == 1
+    t = trees[0]
+    assert t.gx == 5 and t.gy == 5
+    assert t.inventory.get_item_count('wood') == 10
+    assert t.max_wood == 10
+    assert t.respawn_duration == 20.0
+    assert not t.depleted
+
+def test_rock_serialization_roundtrip():
+    cell_size = 32
+    rock = Rock(3, 4, cell_size=cell_size, stone=5)
+    map_data = MapData(name="test", width=20, height=15, cell_size=cell_size)
+    world = World(map_data)
+    world.add_object(rock)
+    data = serialize_world(world)
+    new_world = deserialize_world(data)
+    rocks = [o for o in new_world.current_map.objects if isinstance(o, Rock)]
+    assert len(rocks) == 1
+    r = rocks[0]
+    assert r.gx == 3 and r.gy == 4
+    assert r.inventory.get_item_count('stone') == 5
+
+def test_stick_serialization_roundtrip():
+    cell_size = 32
+    stick = Stick(2, 2, cell_size=cell_size, sticks=3)
+    map_data = MapData(name="test", width=20, height=15, cell_size=cell_size)
+    world = World(map_data)
+    world.add_object(stick)
+    data = serialize_world(world)
+    new_world = deserialize_world(data)
+    sticks = [o for o in new_world.current_map.objects if isinstance(o, Stick)]
+    assert len(sticks) == 1
+    s = sticks[0]
+    assert s.gx == 2 and s.gy == 2
+    assert s.inventory.get_item_count('stick') == 3

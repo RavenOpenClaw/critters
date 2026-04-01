@@ -20,6 +20,9 @@ from gathering_hut import GatheringHut
 from mating_hut import MatingHut
 from obstacle import Obstacle
 from grass import Grass
+from tree import Tree
+from rock import Rock
+from stick import Stick
 from world import World
 
 
@@ -187,6 +190,11 @@ def _serialize_world_object(obj: WorldObject) -> Dict[str, Any]:
     if isinstance(obj, Grass):
         data["spread_threshold"] = obj.spread_threshold
         data["time_accumulator"] = obj.time_accumulator
+    if isinstance(obj, Tree):
+        data["max_wood"] = obj.max_wood
+        data["respawn_duration"] = obj.respawn_duration
+        data["depleted"] = obj.depleted
+        data["time_depleted"] = obj.time_depleted
     return data
 
 def _deserialize_world_object(data: Dict[str, Any]) -> WorldObject:
@@ -234,6 +242,25 @@ def _deserialize_world_object(data: Dict[str, Any]) -> WorldObject:
         time_accumulator = data["time_accumulator"]
         obj = Grass(gx, gy, cell_size, spread_threshold=spread_threshold)
         obj.time_accumulator = time_accumulator
+        obj.inventory = inventory
+        obj.blocks_movement = blocks_movement
+        return obj
+    elif classname == "Tree":
+        max_wood = data.get("max_wood", 10)
+        respawn_duration = data.get("respawn_duration", 30.0)
+        obj = Tree(gx, gy, cell_size, wood=max_wood, respawn_duration=respawn_duration)
+        obj.inventory = inventory
+        obj.blocks_movement = blocks_movement
+        obj.depleted = data.get("depleted", False)
+        obj.time_depleted = data.get("time_depleted", 0.0)
+        return obj
+    elif classname == "Rock":
+        obj = Rock(gx, gy, cell_size)  # default stone count, will override inventory
+        obj.inventory = inventory
+        obj.blocks_movement = blocks_movement
+        return obj
+    elif classname == "Stick":
+        obj = Stick(gx, gy, cell_size)  # default sticks count, will override inventory
         obj.inventory = inventory
         obj.blocks_movement = blocks_movement
         return obj

@@ -6,24 +6,21 @@ This file tracks the current task being worked on. If context is lost, refer to 
 
 ## Current Task
 **Status**: COMPLETED (merged)
-**Task**: Task 9 - Building system and Gathering Hut
-**Started**: 2026-03-20
-**Completed**: 2026-03-20
-**Branch**: feature/building-system (merged into mainline)
-**Commit**: c77c06f (tracking) + 978578a (docs)
+**Task**: Task 33 - Additional World Object Types (Tree, Rock, Stick)
+**Started**: 2026-04-01
+**Completed**: 2026-04-01
+**Branch**: feature/task-33-additional-world-objects (merged into mainline)
+**Commit**: c4cdc32
 **Notes**:
-- Created Building base class (cost, can_place validation).
-- Implemented GatheringHut (3x3, storage inventory, assigned_critters list, gathering_radius = 10×cell_size).
-- Added BuildMenu with 'B' toggle, 'G' selection, mouse placement, and resource deduction.
-- Added 9 test cases (40 total tests).
-- Merged to mainline and pushed.
-- Checkpoint 10 completed.
+- Implemented Tree (2x2, wood resource, regeneration after depletion)
+- Implemented Rock (1x1, stone, non-renewable)
+- Implemented Stick (1x1, sticks, non-renewable)
+- Created comprehensive unit tests and property-based tests (17 new tests)
+- Integrated objects into main.py with test placements on map
+- Updated HUD to display new resources with appropriate colors
+- All 157 tests passing before merge
 
-**Next**: Task 11 (Critter entity) – Phase 2 begins.
-
----
-
----
+**Next**: Task 34 - Enhance rendering with simple animations (2-frame sprite animation for critters)
 
 ---
 
@@ -49,20 +46,23 @@ This file tracks the current task being worked on. If context is lost, refer to 
 - Task 7.1-7.5: Player interaction (interact method, BerryBush resource transfer, tests) – merged to mainline (commit 8cef0dc).
 - Task 8.1-8.3: Inventory class, integration, and tests – merged to mainline (commit dc6f852).
 - Task 9.1-9.6: Building system and Gathering Hut – merged to mainline (commit 181d0b4).
-  - Building base class, GatheringHut, BuildMenu UI, resource deduction, property & unit tests.
   - Checkpoint 10 (all tests) passed with 40/40.
+- Task 11-16: Critter entity, assignment, pathfinding, AI state machine, labels – merged; 85 tests passing.
+- Task 17-21: Resource regeneration, grass propagation, path trampling, work obstacles – merged; 96 tests passing.
+- Task 22: Mating Hut – merged; breeding with inheritance.
+- Task 23: Critter breeding implementation – merged.
+- Task 24: Buff system (Chair, Campfire) – merged.
+- Task 25-25.6: Berry Economy UI & HUD, Gathering Hut withdraw – merged; 101 tests passing.
+- Task 27: Equipment system (unlock/equip) – merged.
+- Task 28: Crafting system (recipes, menu) – merged.
+- Task 29: Checkpoint (post-crafting) – merged.
+- Task 30: Multi-Map World System – merged; 135 tests passing.
+- Task 31: Save/Load System – merged; 140 tests passing.
+- Task 33: Additional World Object Types (Tree, Rock, Stick) – merged; 157 tests passing.
 
 ---
 
-## Workflow Reminders
-1. Update this file when starting or completing a task.
-2. Log actions in `memory/YYYY-MM-DD.md`.
-3. Follow repo documentation for implementation and testing.
-4. Commit changes to `mainline` with clear, concise messages.
-
----
-
-### Environment Status
+## Environment Status
 ✅ Virtual environment set up with pygame, pytest, hypothesis.
 Run tests via: `PYTHONPATH=src venv/bin/python -m pytest tst/ -v`
-All tests: 40/40 passing.
+All tests: 157/157 passing.
