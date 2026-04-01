@@ -13,6 +13,9 @@ from world import World
 from map_data import MapData
 from berry_bush import BerryBush
 from grass import Grass
+from tree import Tree
+from rock import Rock
+from stick import Stick
 from build_menu import BuildMenu
 from gathering_hut import GatheringHut
 from chair import Chair
@@ -26,7 +29,10 @@ from save_system import save_game, load_game
 # Resource icon colors (for HUD)
 RESOURCE_COLORS = {
     "food": (255, 0, 0),      # Red square for berries/food
-    # Future: add wood, stone, plant, etc.
+    "wood": (101, 67, 33),    # Brown for wood
+    "stone": (128, 128, 128), # Gray for stone
+    "stick": (210, 180, 140), # Tan for sticks
+    "plant": (144, 238, 144), # Light green for plants
 }
 
 # Constants
@@ -106,6 +112,24 @@ def main():
     for gx, gy in test_positions:
         bush = BerryBush(gx, gy, cell_size=cell_size, berries=5)
         world.add_object(bush)
+
+    # Add Trees (2x2) - renewable wood source
+    tree_positions = [(2, 5), (8, 3), (14, 8), (20, 12)]
+    for gx, gy in tree_positions:
+        tree = Tree(gx, gy, cell_size=cell_size, wood=10, respawn_duration=30.0)
+        world.add_object(tree)
+
+    # Add Rocks (1x1) - non-renewable stone source
+    rock_positions = [(4, 8), (12, 2), (18, 10), (6, 15)]
+    for gx, gy in rock_positions:
+        rock = Rock(gx, gy, cell_size=cell_size, stone=5)
+        world.add_object(rock)
+
+    # Add Sticks (1x1) - small collectibles
+    stick_positions = [(7, 6), (15, 4), (10, 16), (3, 12)]
+    for gx, gy in stick_positions:
+        stick = Stick(gx, gy, cell_size=cell_size, sticks=3)
+        world.add_object(stick)
 
     # Create input handler and player
     input_handler = InputHandler()
