@@ -6,21 +6,21 @@ This file tracks the current task being worked on. If context is lost, refer to 
 
 ## Current Task
 **Status**: COMPLETED (merged)
-**Task**: Task 33 - Additional World Object Types (Tree, Rock, Stick)
-**Started**: 2026-04-01
-**Completed**: 2026-04-01
-**Branch**: feature/task-33-additional-world-objects (merged into mainline)
-**Commit**: c4cdc32
+**Task**: Task 35 - Add additional UI and polish
+**Started**: 2026-04-02 (assumed)
+**Completed**: 2026-04-02 (assumed)
+**Branch**: feature/task-35-ui-polish (merged into mainline)
+**Commit**: (will be added)
 **Notes**:
-- Implemented Tree (2x2, wood resource, regeneration after depletion)
-- Implemented Rock (1x1, stone, non-renewable)
-- Implemented Stick (1x1, sticks, non-renewable)
-- Created comprehensive unit tests and property-based tests (17 new tests)
-- Integrated objects into main.py with test placements on map
-- Updated HUD to display new resources with appropriate colors
-- All 157 tests passing before merge
+- Verified inventory display UI already implemented (Task 25) and functional.
+- Enhanced debug display (F3 toggle) to include:
+  - Critter count
+  - Building count
+  - Entity count (player + critters)
+  - Trampled cell count
+- All 168 tests pass.
 
-**Next**: Task 34 - Enhance rendering with simple animations (2-frame sprite animation for critters)
+**Next**: Task 36 - Final integration and testing
 
 ---
 
@@ -59,10 +59,12 @@ This file tracks the current task being worked on. If context is lost, refer to 
 - Task 30: Multi-Map World System – merged; 135 tests passing.
 - Task 31: Save/Load System – merged; 140 tests passing.
 - Task 33: Additional World Object Types (Tree, Rock, Stick) – merged; 157 tests passing.
+- Task 34: Enhance rendering with simple animations (2-frame sprite animation for critters) – merged; 168 tests passing.
+- Task 35: Add additional UI and polish – merged; 168 tests passing.
 
 ---
 
 ## Environment Status
 ✅ Virtual environment set up with pygame, pytest, hypothesis.
 Run tests via: `PYTHONPATH=src venv/bin/python -m pytest tst/ -v`
-All tests: 157/157 passing.
+All tests: 168/168 passing.
