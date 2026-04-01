@@ -26,6 +26,7 @@ from pathfinding import PathfindingSystem
 from crafting_menu import CraftingMenu
 from recipes import RECIPES
 from save_system import save_game, load_game
+from title_screen import TitleScreen
 
 # Resource icon colors (for HUD)
 RESOURCE_COLORS = {
@@ -94,49 +95,143 @@ def main():
     clock = pygame.time.Clock()
     font = pygame.font.SysFont(None, 24)
 
-    # Initialize HUD for resource display
-    resource_hud = ResourceHUD()
+    # Title screen
+    title = TitleScreen(WINDOW_WIDTH, WINDOW_HEIGHT)
+    # Title screen loop
+    while title.selected_action is None:
+        dt = clock.tick(TARGET_FPS) / 1000.0
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            title.handle_event(event)
+        title.render(screen)
+        pygame.display.flip()
 
-    # Grid and world setup (multi-map)
-    cell_size = 32
-    grid_width = (WINDOW_WIDTH + cell_size - 1) // cell_size
-    grid_height = (WINDOW_HEIGHT + cell_size - 1) // cell_size
-    initial_map = MapData(name="main", width=grid_width, height=grid_height, cell_size=cell_size)
-    world = World(initial_map)
-    grid = world.grid  # alias to current grid for convenience
-    # Add test berry bushes at various positions for collision and interaction testing
-    test_positions = [
-        (5, 5), (10, 5), (5, 10), (15, 5), (5, 15),
-        (12, 12), (8, 14), (3, 8), (18, 7)
-        # No bush at player start to avoid spawn collision
-    ]
-    for gx, gy in test_positions:
-        bush = BerryBush(gx, gy, cell_size=cell_size, berries=5)
-        world.add_object(bush)
+    action = title.selected_action
+    if action == "quit":
+        pygame.quit()
+        sys.exit()
 
-    # Add Trees (2x2) - renewable wood source
-    tree_positions = [(2, 5), (8, 3), (14, 8), (20, 12)]
-    for gx, gy in tree_positions:
-        tree = Tree(gx, gy, cell_size=cell_size, wood=10, respawn_duration=30.0)
-        world.add_object(tree)
+    # World and player setup based on action
+    if action == "continue":
+        try:
+            world, player = load_game("saves/save.json")
+            grid = world.grid
+            player.world_rect = screen.get_rect()
+            # Derive grid parameters from loaded map
+            cell_size = world.current_map.cell_size
+            grid_width = world.current_map.width
+            grid_height = world.current_map.height
+        except Exception as e:
+            print(f"Load failed: {e}")
+            # Fallback to new game
+            action = "new_game"
 
-    # Add Rocks (1x1) - non-renewable stone source
-    rock_positions = [(4, 8), (12, 2), (18, 10), (6, 15)]
-    for gx, gy in rock_positions:
-        rock = Rock(gx, gy, cell_size=cell_size, stone=5)
-        world.add_object(rock)
+    if action == "new_game":
+        # Grid and world setup (multi-map)
+        cell_size = 32
+        grid_width = (WINDOW_WIDTH + cell_size - 1) // cell_size
+        grid_height = (WINDOW_HEIGHT + cell_size - 1) // cell_size
+        initial_map = MapData(name="main", width=grid_width, height=grid_height, cell_size=cell_size)
+        world = World(initial_map)
+        grid = world.grid  # alias to current grid for convenience
+        # Add test berry bushes at various positions for collision and interaction testing
+        test_positions = [
+            (5, 5), (10, 5), (5, 10), (15, 5), (5, 15),
+            (12, 12), (8, 14), (3, 8), (18, 7)
+            # No bush at player start to avoid spawn collision
+        ]
+        for gx, gy in test_positions:
+            bush = BerryBush(gx, gy, cell_size=cell_size, berries=5)
+            world.add_object(bush)
 
-    # Add Sticks (1x1) - small collectibles
-    stick_positions = [(7, 6), (15, 4), (10, 16), (3, 12)]
-    for gx, gy in stick_positions:
-        stick = Stick(gx, gy, cell_size=cell_size, sticks=3)
-        world.add_object(stick)
+        # Add Trees (2x2) - renewable wood source
+        tree_positions = [(2, 5), (8, 3), (14, 8), (20, 12)]
+        for gx, gy in tree_positions:
+            tree = Tree(gx, gy, cell_size=cell_size, wood=10, respawn_duration=30.0)
+            world.add_object(tree)
 
-    # Create input handler and player
+        # Add Rocks (1x1) - non-renewable stone source
+        rock_positions = [(4, 8), (12, 2), (18, 10), (6, 15)]
+        for gx, gy in rock_positions:
+            rock = Rock(gx, gy, cell_size=cell_size, stone=5)
+            world.add_object(rock)
+
+        # Add Sticks (1x1) - small collectibles
+        stick_positions = [(7, 6), (15, 4), (10, 16), (3, 12)]
+        for gx, gy in stick_positions:
+            stick = Stick(gx, gy, cell_size=cell_size, sticks=3)
+            world.add_object(stick)
+
+        # Create player
+        player = Player(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2, radius=20, speed=200)
+        # Set world bounds for player
+        player.world_rect = screen.get_rect()
+    else:
+        # Should not happen, but default to new game if unknown action
+        raise ValueError(f"Unknown title screen action: {action}")
+
+    # Create input handler (common to both paths)
     input_handler = InputHandler()
-    player = Player(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2, radius=20, speed=200)
-    # Set world bounds for player
-    player.world_rect = screen.get_rect()
+
+    # For a new game, add hut, grass, and starting critters
+    if action == "new_game":
+        # Build menu for building system
+        build_menu = BuildMenu(cell_size)
+
+        # Create a GatheringHut and place it
+        hut_gx, hut_gy = grid_width // 2 + 4, grid_height // 2 + 3
+        hut = GatheringHut(hut_gx, hut_gy, cell_size)
+        world.add_object(hut)
+
+        # Create a Grass and place it # GRASS NOT VISIBLE? And I collide with it???
+        grass_gx, grass_gy = grid_width // 2 - 1, grid_height // 2 - 2
+        grass = Grass(grass_gx, grass_gy, cell_size)
+        world.add_object(grass)
+
+        # Create some critters and assign them to the hut
+        for i in range(3):
+            # Spawn critters just outside the hut to the right, each offset vertically
+            critter_x = hut.x + (hut.width + 1) * cell_size + (i * cell_size)
+            critter_y = hut.y + (i * cell_size * 0.5)
+            critter = Critter(critter_x, critter_y, cell_size=cell_size)
+            hut.assign_critter(critter)
+            world.add_object(critter)  # Add to world objects and to current_map.critters
+
+    # Crafting menu for equipment recipes (common)
+    crafting_menu = CraftingMenu(RECIPES)
+
+    # Pathfinding system (common)
+    pathfinding = PathfindingSystem()
+
+    # Build menu for building system
+    build_menu = BuildMenu(cell_size)
+
+    # Crafting menu for equipment recipes
+    crafting_menu = CraftingMenu(RECIPES)
+
+    # Pathfinding system
+    pathfinding = PathfindingSystem()
+
+    # Create a GatheringHut and place it
+    hut_gx, hut_gy = grid_width // 2 + 4, grid_height // 2 + 3
+    hut = GatheringHut(hut_gx, hut_gy, cell_size)
+    world.add_object(hut)
+
+    # Create a Grass and place it # GRASS NOT VISIBLE? And I collide with it???
+    grass_gx, grass_gy = grid_width // 2 - 1, grid_height // 2 - 2
+    grass = Grass(grass_gx, grass_gy, cell_size)
+    world.add_object(grass)
+
+    # Create some critters and assign them to the hut
+    for i in range(3):
+        # Spawn critters just outside the hut to the right, each offset vertically
+        critter_x = hut.x + (hut.width + 1) * cell_size + (i * cell_size)
+        critter_y = hut.y + (i * cell_size * 0.5)
+        critter = Critter(critter_x, critter_y, cell_size=cell_size)
+        hut.assign_critter(critter)
+        world.add_object(critter)  # Add to world objects and to current_map.critters
 
     # Build menu for building system
     build_menu = BuildMenu(cell_size)

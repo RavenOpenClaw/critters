@@ -5,22 +5,24 @@ This file tracks the current task being worked on. If context is lost, refer to 
 ---
 
 ## Current Task
-**Status**: COMPLETED (merged)
-**Task**: Task 35 - Add additional UI and polish
-**Started**: 2026-04-02 (assumed)
-**Completed**: 2026-04-02 (assumed)
-**Branch**: feature/task-35-ui-polish (merged into mainline)
+**Status**: COMPLETED
+**Task**: Task 37 - Title Screen
+**Completed**: 2026-04-02
+**Branch**: feature/task-37-title-screen (merged into mainline)
 **Commit**: (will be added)
 **Notes**:
-- Verified inventory display UI already implemented (Task 25) and functional.
-- Enhanced debug display (F3 toggle) to include:
-  - Critter count
-  - Building count
-  - Entity count (player + critters)
-  - Trampled cell count
-- All 168 tests pass.
+- Created TitleScreen class with New Game and Continue buttons.
+- New Game shows overwrite confirmation when save exists.
+- Continue loads existing save or falls back to New Game if load fails.
+- Integrated into main.py before game loop; uses existing save/load functions.
+- All 168 tests passing; no regressions.
 
-**Next**: Task 36 - Final integration and testing
+**Next**: Deconstruction feature (additional task) and Code Index documentation.
+
+---
+
+## Project Status
+Core prototype complete. Additional tasks pending: Deconstruction feature, Code Index/Architecture documentation.
 
 ---
 
@@ -61,6 +63,8 @@ This file tracks the current task being worked on. If context is lost, refer to 
 - Task 33: Additional World Object Types (Tree, Rock, Stick) – merged; 157 tests passing.
 - Task 34: Enhance rendering with simple animations (2-frame sprite animation for critters) – merged; 168 tests passing.
 - Task 35: Add additional UI and polish – merged; 168 tests passing.
+- Task 36: Final integration and testing – completed; all tests passing; code verified and clean; project complete.
+- Task 37: Title Screen – implemented TitleScreen with New Game/Continue, overwrite confirmation, integrated into main; all 168 tests passing; merged.
 
 ---
 
