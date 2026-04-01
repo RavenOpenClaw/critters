@@ -17,6 +17,7 @@ from tree import Tree
 from rock import Rock
 from stick import Stick
 from build_menu import BuildMenu
+from building import Building
 from gathering_hut import GatheringHut
 from chair import Chair
 from campfire import Campfire
@@ -339,8 +340,18 @@ def main():
         if input_handler.show_debug:
             fps_surface = font.render(f"FPS: {clock.get_fps():.1f}", True, (0, 0, 0))
             pos_surface = font.render(f"Player: ({int(player.x)}, {int(player.y)})", True, (0, 0, 0))
+            # Counts
+            critter_count = len(world.current_map.critters)
+            building_count = sum(1 for obj in world.current_map.objects if isinstance(obj, Building))
+            # Performance: entity count and trampled cells
+            entity_count = critter_count + 1  # +1 for player
+            trampled_count = len(world.trampled_cells)
+            count_surface = font.render(f"Critters: {critter_count}  Buildings: {building_count}", True, (0, 0, 0))
+            perf_surface = font.render(f"Entities: {entity_count}  Trampled: {trampled_count}", True, (0, 0, 0))
             screen.blit(fps_surface, (10, 10))
             screen.blit(pos_surface, (10, 40))
+            screen.blit(count_surface, (10, 70))
+            screen.blit(perf_surface, (10, 100))
             # Draw interaction radius
             pygame.draw.circle(
                 screen,
