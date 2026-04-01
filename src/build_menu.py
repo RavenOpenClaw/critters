@@ -7,11 +7,30 @@ from chair import Chair
 from campfire import Campfire
 
 class BuildMenu:
-    """Simple build menu for selecting and placing buildings."""
+    """Simple build menu for selecting and placing buildings with mouse/keyboard."""
     def __init__(self, cell_size):
         self.cell_size = cell_size
         self.selected_building_class = None
         self.visible = False
+        # Building options: tuple of (class, label)
+        self.buildings = [
+            (GatheringHut, "Gathering Hut"),
+            (Chair, "Chair"),
+            (Campfire, "Campfire"),
+        ]
+        # Button rectangles for mouse interaction (computed in render)
+        self.button_rects = {}  # maps building class to rect
+
+        # Menu appearance
+        self.menu_width = 200
+        self.menu_height = 150
+        self.button_height = 30
+        self.button_margin = 10
+        self.bg_color = (255, 255, 255, 200)  # semi-transparent white
+        self.button_color = (100, 100, 200)
+        self.button_hover_color = (120, 120, 220)
+        self.selected_color = (0, 128, 0)
+        self.text_color = (0, 0, 0)
 
     def toggle(self):
         """Toggle the build menu visibility."""
@@ -19,30 +38,41 @@ class BuildMenu:
         if not self.visible:
             self.selected_building_class = None
 
-    def select_gathering_hut(self):
-        """Select the Gathering Hut building type."""
-        self.selected_building_class = GatheringHut
+    def select_building(self, building_class):
+        """Select a building type."""
+        self.selected_building_class = building_class
+        self.visible = True  # ensure menu stays visible when selecting
 
-    def select_chair(self):
-        """Select the Chair building type."""
-        self.selected_building_class = Chair
+    def handle_mouse_click(self, pos):
+        """
+        Handle mouse click on the build menu.
 
-    def select_campfire(self):
-        """Select the Campfire building type."""
-        self.selected_building_class = Campfire
+        Args:
+            pos: (x, y) mouse position.
+
+        Returns:
+            True if a building button was clicked, False otherwise.
+        """
+        if not self.visible:
+            return False
+        for building_class, rect in self.button_rects.items():
+            if rect.collidepoint(pos):
+                self.select_building(building_class)
+                return True
+        return False
 
     def handle_keypress(self, key):
         """Handle keypresses for building selection when menu is open."""
         if not self.visible:
             return False
         if key == 'g':
-            self.select_gathering_hut()
+            self.select_building(GatheringHut)
             return True
         if key == 'c':
-            self.select_chair()
+            self.select_building(Chair)
             return True
         if key == 'f':
-            self.select_campfire()
+            self.select_building(Campfire)
             return True
         if key == 'b':
             self.toggle()
@@ -94,37 +124,53 @@ class BuildMenu:
 
         return True
 
-    def render(self, screen, font):
-        """Render the build menu overlay when visible."""
+    def render(self, screen, font, hud_button_rect=None):
+        """
+        Render the build menu overlay when visible, and optionally a HUD toggle button.
+
+        Args:
+            screen: Pygame surface to draw on.
+            font: Pygame font for text.
+            hud_button_rect: If provided, draw a small button in the HUD area to toggle menu.
+        """
+        # Draw HUD toggle button if requested
+        if hud_button_rect:
+            pygame.draw.rect(screen, self.button_color, hud_button_rect)
+            btn_text = font.render("Build", True, (255, 255, 255))
+            screen.blit(btn_text, btn_text.get_rect(center=hud_button_rect.center))
+
         if not self.visible:
             return
-        # Simple overlay: list available buildings and selection status
+
+        # Draw menu background
         x, y = 10, 70  # below debug display
-        # Draw a semi-transparent background for readability
-        overlay = pygame.Surface((200, 150))
-        overlay.set_alpha(200)
-        overlay.fill((255, 255, 255))
-        screen.blit(overlay, (x, y))
+        menu_rect = pygame.Rect(x, y, self.menu_width, self.menu_height)
+        # Create a transparent surface
+        bg = pygame.Surface((self.menu_width, self.menu_height), pygame.SRCALPHA)
+        bg.fill(self.bg_color)
+        screen.blit(bg, (x, y))
+        pygame.draw.rect(screen, (0, 0, 0), menu_rect, 2)
+
         # Title
-        title = font.render("Build Menu (B to close)", True, (0, 0, 0))
+        title = font.render("Build Menu (B to close)", True, self.text_color)
         screen.blit(title, (x + 10, y + 10))
-        # Options
-        g_key = font.render("G: Gathering Hut", True, (0, 0, 0))
-        screen.blit(g_key, (x + 20, y + 40))
-        c_key = font.render("C: Chair", True, (0, 0, 0))
-        screen.blit(c_key, (x + 20, y + 65))
-        f_key = font.render("F: Campfire", True, (0, 0, 0))
-        screen.blit(f_key, (x + 20, y + 90))
-        # Selected indicator
-        if self.selected_building_class is GatheringHut:
-            sel = font.render("> Selected", True, (0, 128, 0))
-            screen.blit(sel, (x + 120, y + 40))
-        elif self.selected_building_class is Chair:
-            sel = font.render("> Selected", True, (0, 128, 0))
-            screen.blit(sel, (x + 120, y + 65))
-        elif self.selected_building_class is Campfire:
-            sel = font.render("> Selected", True, (0, 128, 0))
-            screen.blit(sel, (x + 120, y + 90))
+
+        # Compute button rects for each building
+        self.button_rects = {}
+        btn_x = x + 20
+        for idx, (building_class, label) in enumerate(self.buildings):
+            btn_y = y + 40 + idx * (self.button_height + self.button_margin)
+            rect = pygame.Rect(btn_x, btn_y, self.menu_width - 40, self.button_height)
+            self.button_rects[building_class] = rect
+            # Draw button with state
+            is_selected = (self.selected_building_class is building_class)
+            mouse_over = rect.collidepoint(pygame.mouse.get_pos())
+            color = self.selected_color if is_selected else (self.button_hover_color if mouse_over else self.button_color)
+            pygame.draw.rect(screen, color, rect)
+            # Button label
+            btn_lbl = font.render(label, True, (255, 255, 255))
+            screen.blit(btn_lbl, btn_lbl.get_rect(center=rect.center))
+
         # Instructions
         click_instr = font.render("Click grid to place", True, (80, 80, 80))
-        screen.blit(click_instr, (x + 20, y + 120))
+        screen.blit(click_instr, (x + 20, y + self.menu_height - 30))

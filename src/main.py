@@ -177,15 +177,12 @@ def main():
 
     # For a new game, add hut, grass, and starting critters
     if action == "new_game":
-        # Build menu for building system
-        build_menu = BuildMenu(cell_size)
-
         # Create a GatheringHut and place it
         hut_gx, hut_gy = grid_width // 2 + 4, grid_height // 2 + 3
         hut = GatheringHut(hut_gx, hut_gy, cell_size)
         world.add_object(hut)
 
-        # Create a Grass and place it # GRASS NOT VISIBLE? And I collide with it???
+        # Create a Grass and place it
         grass_gx, grass_gy = grid_width // 2 - 1, grid_height // 2 - 2
         grass = Grass(grass_gx, grass_gy, cell_size)
         world.add_object(grass)
@@ -208,58 +205,15 @@ def main():
     # Build menu for building system
     build_menu = BuildMenu(cell_size)
 
-    # Crafting menu for equipment recipes
-    crafting_menu = CraftingMenu(RECIPES)
-
-    # Pathfinding system
-    pathfinding = PathfindingSystem()
-
-    # Create a GatheringHut and place it
-    hut_gx, hut_gy = grid_width // 2 + 4, grid_height // 2 + 3
-    hut = GatheringHut(hut_gx, hut_gy, cell_size)
-    world.add_object(hut)
-
-    # Create a Grass and place it # GRASS NOT VISIBLE? And I collide with it???
-    grass_gx, grass_gy = grid_width // 2 - 1, grid_height // 2 - 2
-    grass = Grass(grass_gx, grass_gy, cell_size)
-    world.add_object(grass)
-
-    # Create some critters and assign them to the hut
-    for i in range(3):
-        # Spawn critters just outside the hut to the right, each offset vertically
-        critter_x = hut.x + (hut.width + 1) * cell_size + (i * cell_size)
-        critter_y = hut.y + (i * cell_size * 0.5)
-        critter = Critter(critter_x, critter_y, cell_size=cell_size)
-        hut.assign_critter(critter)
-        world.add_object(critter)  # Add to world objects and to current_map.critters
-
-    # Build menu for building system
-    build_menu = BuildMenu(cell_size)
-
-    # Crafting menu for equipment recipes
-    crafting_menu = CraftingMenu(RECIPES)
-
-    # Pathfinding system
-    pathfinding = PathfindingSystem()
-
-    # Create a GatheringHut and place it
-    hut_gx, hut_gy = grid_width // 2 + 4, grid_height // 2 + 3
-    hut = GatheringHut(hut_gx, hut_gy, cell_size)
-    world.add_object(hut)
-
-    # Create a Grass and place it # GRASS NOT VISIBLE? And I collide with it???
-    grass_gx, grass_gy = grid_width // 2 - 1, grid_height // 2 - 2
-    grass = Grass(grass_gx, grass_gy, cell_size)
-    world.add_object(grass)
-
-    # Create some critters and assign them to the hut
-    for i in range(3):
-        # Spawn critters just outside the hut to the right, each offset vertically
-        critter_x = hut.x + (hut.width + 1) * cell_size + (i * cell_size)
-        critter_y = hut.y + (i * cell_size * 0.5)
-        critter = Critter(critter_x, critter_y, cell_size=cell_size)
-        hut.assign_critter(critter)
-        world.add_object(critter)  # Add to world objects and to current_map.critters
+    # HUD build button rectangle (top-left, below resource HUD)
+    hud_button_margin = 10
+    hud_button_size = 40
+    hud_button_rect = pygame.Rect(
+        hud_button_margin,
+        WINDOW_HEIGHT - hud_button_size - hud_button_margin,
+        hud_button_size,
+        hud_button_size
+    )
 
     running = True
     while running:
@@ -271,6 +225,23 @@ def main():
             running = False
         input_handler.update(dt)
         input_handler.update_movement()
+
+        # Save/Load requests
+        if input_handler.save_request:
+            try:
+                save_game(world, player, "saves/save.json")
+                print("Game saved.")
+            except Exception as e:
+                print(f"Save failed: {e}")
+
+        if input_handler.load_request:
+            try:
+                world, player = load_game("saves/save.json")
+                grid = world.grid
+                player.world_rect = screen.get_rect()
+                print("Game loaded.")
+            except Exception as e:
+                print(f"Load failed: {e}")
 
         # Update player state (buffs, speed recalculation)
         player.update(dt)
@@ -288,11 +259,24 @@ def main():
             player.interact(world)
         input_handler.interact_count = 0
 
-        # Build menu toggle and selection
+        # Build menu toggle (B key) and mouse handling
         if input_handler.build_toggle:
             build_menu.toggle()
-        if input_handler.select_gathering_hut and build_menu.visible:
-            build_menu.select_gathering_hut()
+
+        if input_handler.mouse_clicked:
+            mx, my = input_handler.mouse_pos
+            clicked_hud = hud_button_rect.collidepoint(mx, my)
+            clicked_build_menu = False
+            if clicked_hud:
+                build_menu.toggle()
+            elif build_menu.visible:
+                clicked_build_menu = build_menu.handle_mouse_click((mx, my))
+            # Only attempt placement if click was not on HUD or build menu
+            if not clicked_hud and not clicked_build_menu:
+                if build_menu.visible and build_menu.selected_building_class is not None:
+                    gx, gy = grid.world_to_grid(mx, my)
+                    if grid.is_within_bounds(gx, gy):
+                        build_menu.attempt_placement(player, world, grid, gx, gy)
 
         # Crafting menu toggle and crafting
         if input_handler.crafting_toggle:
@@ -305,33 +289,8 @@ def main():
                 crafting_menu.craft_selected(player, recipe)
             input_handler.craft_slot = None
 
-        # Building placement on mouse click
-        if input_handler.mouse_clicked and build_menu.visible and build_menu.selected_building_class is not None:
-            mx, my = input_handler.mouse_pos
-            gx, gy = grid.world_to_grid(mx, my)
-            success = build_menu.attempt_placement(player, world, grid, gx, gy)
-            # For now, could add debug message if fails; we'll just ignore
-            # Optionally, reset selection or close menu after placement? Keep simple: stay open, selection remains
-
         # Update crafting menu (for message timer, etc.)
         crafting_menu.update(dt)
-
-        # Save/Load handling
-        if input_handler.save_request:
-            try:
-                save_game(world, player, "saves/save.json")
-                print("Game saved.")  # Could use debug overlay instead
-            except Exception as e:
-                print(f"Save failed: {e}")
-
-        if input_handler.load_request:
-            try:
-                world, player = load_game("saves/save.json")
-                grid = world.grid
-                player.world_rect = screen.get_rect()
-                print("Game loaded.")
-            except Exception as e:
-                print(f"Load failed: {e}")
 
         # Update critters
         for critter in world.current_map.critters:
@@ -362,6 +321,11 @@ def main():
         # Draw HUD (top-left)
         render_hud(screen, player, font)
 
+        # Draw HUD build button (bottom-left)
+        pygame.draw.rect(screen, (100, 100, 200), hud_button_rect)
+        build_lbl = font.render("Build", True, (255, 255, 255))
+        screen.blit(build_lbl, build_lbl.get_rect(center=hud_button_rect.center))
+
         # Draw world objects
         world.draw(screen)
 
@@ -391,7 +355,7 @@ def main():
         )
 
         # Draw critters (red circles) with state labels
-        for critter in critters:
+        for critter in world.current_map.critters:
             dx, dy = critter.get_render_offset()
             rx = int(critter.x + dx)
             ry = int(critter.y + dy)
@@ -456,8 +420,8 @@ def main():
                 1  # line thickness
             )
 
-        # Build menu overlay
-        build_menu.render(screen, font)
+        # Build menu overlay (pass HUD button rect for consistent styling? not needed)
+        build_menu.render(screen, font, hud_button_rect=hud_button_rect)
 
         # Crafting menu overlay
         crafting_menu.render(screen, font)

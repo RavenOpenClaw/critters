@@ -56,9 +56,9 @@ class InputHandler:
                     self.select_gathering_hut = True
                 if event.key == pygame.K_r:
                     self.crafting_toggle = True
-                if event.key == pygame.K_s:
+                if event.key == pygame.K_F5:
                     self.save_request = True
-                if event.key == pygame.K_l:
+                if event.key == pygame.K_F6:
                     self.load_request = True
                 # Number keys 1-9 for crafting selection
                 number_keys = [pygame.K_1, pygame.K_2, pygame.K_3, pygame.K_4, pygame.K_5,
