@@ -21,6 +21,7 @@ from critter import Critter, CritterState
 from pathfinding import PathfindingSystem
 from crafting_menu import CraftingMenu
 from recipes import RECIPES
+from save_system import save_game, load_game
 
 # Resource icon colors (for HUD)
 RESOURCE_COLORS = {
@@ -194,6 +195,23 @@ def main():
 
         # Update crafting menu (for message timer, etc.)
         crafting_menu.update(dt)
+
+        # Save/Load handling
+        if input_handler.save_request:
+            try:
+                save_game(world, player, "saves/save.json")
+                print("Game saved.")  # Could use debug overlay instead
+            except Exception as e:
+                print(f"Save failed: {e}")
+
+        if input_handler.load_request:
+            try:
+                world, player = load_game("saves/save.json")
+                grid = world.grid
+                player.world_rect = screen.get_rect()
+                print("Game loaded.")
+            except Exception as e:
+                print(f"Load failed: {e}")
 
         # Update critters
         for critter in world.current_map.critters:

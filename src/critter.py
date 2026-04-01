@@ -49,6 +49,10 @@ class Critter(Entity):
     def interact(self, player):
         """Do nothing when player interacts. TODO: do something like purr or bark when pet"""
 
+    def get_occupied_cells(self):
+        """Critters do not occupy fixed grid cells; return empty list."""
+        return []
+
     def _effective_stat(self, stat):
         """Return the stat value after applying well-fed multiplier, capped at 100."""
         if self.is_well_fed:

@@ -36,6 +36,8 @@ class World:
         self.grid = GridSystem(self.current_map.cell_size, self.current_map.width, self.current_map.height)
         for obj in self.current_map.objects:
             self.grid.register(obj)
+            # Set world reference for all objects when building grid
+            obj.world = self
 
     # Backward-compatible properties
     @property

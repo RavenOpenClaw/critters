@@ -23,6 +23,8 @@ class InputHandler:
         self.craft_slot = None  # Selected recipe slot (1-9) when crafting menu is open
         self.mouse_clicked = False
         self.mouse_pos = (0, 0)
+        self.save_request = False  # Save game on 'S' key press
+        self.load_request = False  # Load game on 'L' key press
 
         # Hold-to-interact state
         self._e_held = False          # Is E currently held down?
@@ -35,6 +37,8 @@ class InputHandler:
         self.select_gathering_hut = False
         self.mouse_clicked = False
         self.interact = False
+        self.save_request = False
+        self.load_request = False
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return False
@@ -52,6 +56,10 @@ class InputHandler:
                     self.select_gathering_hut = True
                 if event.key == pygame.K_r:
                     self.crafting_toggle = True
+                if event.key == pygame.K_s:
+                    self.save_request = True
+                if event.key == pygame.K_l:
+                    self.load_request = True
                 # Number keys 1-9 for crafting selection
                 number_keys = [pygame.K_1, pygame.K_2, pygame.K_3, pygame.K_4, pygame.K_5,
                                pygame.K_6, pygame.K_7, pygame.K_8, pygame.K_9]
