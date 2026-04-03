@@ -105,3 +105,7 @@ Agents must follow this strict workflow to maintain code quality and visibility:
 - **Detailed implementation plan**: `.kiro/specs/critters-game-prototype/tasks.md` (the Kiro task file) is the authoritative source for what to build next.
 - **High-level vision and guardrails**: `doc/HIGH_LEVEL_TASKS.md` outlines major phases and should be used to avoid misalignment with the overall project goals.
 - **Initial directives**: `doc/INITIAL_DIRECTIVES.md` contains the original philosophy and constraints.
+
+## 📌 Documentation Index
+
+New to the project? Start with `DOCUMENTATION_INDEX.md` at the repository root. It’s a quick lookup guide to all critical documents (tasks, design, requirements, save system guide) and explains common pitfalls like the hidden `.kiro` directory.
