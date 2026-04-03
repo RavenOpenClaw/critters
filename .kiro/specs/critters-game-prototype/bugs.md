@@ -56,7 +56,7 @@ Note: User suggests binary search approach to isolate the cause by disabling sub
 
 ### [GRASS_SPREAD] Grass spreads into occupied cells causing exponential object count
 
-Status: NOT_STARTED
+Status: FIXED
 
 Expected: Grass should only spread to empty grid cells (no other object occupying that cell). When a grass object attempts to spread, it should check if the target cell is completely free of any world objects (including other grass). This prevents exponential growth from multiple grass objects spawning on the same cell.
 
@@ -68,7 +68,7 @@ Desired fix: Replace occupancy check with a check for ANY object in the target c
 
 ### [BERRY_REGROW] Berry bushes only regrow when completely depleted
 
-Status: NOT_STARTED (fix implemented in commit 9884ced but needs verification)
+Status: FIXED
 
 Expected: Berry bushes should gradually regrow berries over time whenever the berry count is below maximum, regardless of whether they are completely depleted or just partially harvested. This creates a more natural and forgiving resource regeneration.
 

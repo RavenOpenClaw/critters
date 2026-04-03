@@ -15,7 +15,7 @@ Key principles:
 
 ## Phase 1: Foundation (The "Hello World" of Critters)
 
-- [ ] 1. Initialize project structure and dependencies
+- [x] 1. Initialize project structure and dependencies
   - Create project directory structure (src/, tst/, doc/)
   - Set up Python virtual environment
   - Install dependencies (pygame, pytest, hypothesis)
@@ -23,116 +23,116 @@ Key principles:
   - Initialize Git repository with mainline branch
   - _Requirements: N/A (project setup)_
 
-- [ ] 2. Create minimal game window with rendering
-  - [ ] 2.1 Implement basic game loop with 60 FPS timing
+- [x] 2. Create minimal game window with rendering
+  - [x] 2.1 Implement basic game loop with 60 FPS timing
     - Create main.py with game loop
     - Implement delta time calculation
     - Set up Pygame window (800x600 initial size)
     - Render light gray background
     - _Requirements: 1.3, 16.4, 16.6_
 
-  - [ ] 2.2 Implement Player entity and render as blue circle
+  - [x] 2.2 Implement Player entity and render as blue circle
     - Create Entity base class with position and radius
     - Create Player class extending Entity
     - Render player as blue circle at center of screen
     - _Requirements: 1.5, 16.1_
 
-  - [ ]* 2.3 Write unit tests for Entity and Player classes
+  - [x]* 2.3 Write unit tests for Entity and Player classes
     - Test entity initialization with position
     - Test player default attributes (radius, speed)
     - _Requirements: 1.5, 16.1_
 
-- [ ] 3. Implement player movement with WASD controls
-  - [ ] 3.1 Implement input handling system
+- [x] 3. Implement player movement with WASD controls
+  - [x] 3.1 Implement input handling system
     - Create InputHandler class to process keyboard events
     - Map WASD keys to movement directions
     - Implement F3 key toggle for debug display
     - _Requirements: 1.1, 15.1_
 
-  - [ ] 3.2 Implement Player.move() method with smooth movement
+  - [x] 3.2 Implement Player.move() method with smooth movement
     - Add velocity-based movement using delta time
     - Implement movement in continuous coordinate space
     - Clamp player position to world boundaries
     - _Requirements: 1.1, 1.2, 1.3_
 
-  - [ ]* 3.3 Write property test for smooth continuous movement
+  - [x]* 3.3 Write property test for smooth continuous movement
     - **Property 1: Smooth Continuous Movement**
     - **Validates: Requirements 1.2, 3.6**
     - Test that player position remains in continuous space (not grid-aligned)
     - _Requirements: 1.2, 3.6_
 
-  - [ ] 3.4 Implement debug display (F3 toggle)
+  - [x] 3.4 Implement debug display (F3 toggle)
     - Display FPS counter
     - Display player position coordinates
     - Toggle visibility with F3 key
     - _Requirements: 15.1, 15.2, 15.3_
 
-- [ ] 4. Implement grid system for world organization
-  - [ ] 4.1 Create GridSystem class with coordinate conversion
+- [x] 4. Implement grid system for world organization
+  - [x] 4.1 Create GridSystem class with coordinate conversion
     - Implement world_to_grid() coordinate conversion
     - Implement grid_to_world() coordinate conversion
     - Set cell_size to 1.0 unit
     - Create occupancy dictionary for spatial queries
     - _Requirements: 3.1, 3.3_
 
-  - [ ] 4.2 Implement spatial query methods
+  - [x] 4.2 Implement spatial query methods
     - Implement is_occupied() for collision detection
     - Implement get_neighbors() for 4-directional adjacency
     - _Requirements: 3.3, 3.4_
 
-  - [ ]* 4.3 Write unit tests for grid coordinate conversion
+  - [x]* 4.3 Write unit tests for grid coordinate conversion
     - Test world_to_grid() with various positions
     - Test grid_to_world() returns cell centers
     - Test round-trip conversion accuracy
     - _Requirements: 3.1_
 
-- [ ] 5. Create WorldObject base class and berry bush
-  - [ ] 5.1 Implement WorldObject base class
+- [x] 5. Create WorldObject base class and berry bush
+  - [x] 5.1 Implement WorldObject base class
     - Extend Entity with width and height (grid cells)
     - Add inventory dictionary for resource storage
     - Implement get_occupied_cells() method
     - Add interact() method (to be overridden by subclasses)
     - _Requirements: 4.1, 4.2, 4.3_
 
-  - [ ] 5.2 Create BerryBush class as first world object
+  - [x] 5.2 Create BerryBush class as first world object
     - Extend WorldObject with 1x1 dimensions
     - Initialize with berries in inventory
     - Render as green square aligned to grid
     - _Requirements: 4.6, 16.3_
 
-  - [ ] 5.3 Implement World class to manage entities
+  - [x] 5.3 Implement World class to manage entities
     - Create World container with entity lists
     - Implement add_object() to register objects in grid
     - Implement remove_object() to unregister from grid
     - Place test berry bush in world
     - _Requirements: 3.3, 4.4_
 
-  - [ ]* 5.4 Write property test for grid occupation by dimensions
+  - [x]* 5.4 Write property test for grid occupation by dimensions
     - **Property 2: Grid Occupation by Dimensions**
     - **Validates: Requirements 3.2, 5.6**
     - Test that W×H object occupies exactly W×H cells
     - _Requirements: 3.2, 5.6_
 
-  - [ ]* 5.5 Write property test for grid cell mutual exclusion
+  - [x]* 5.5 Write property test for grid cell mutual exclusion
     - **Property 3: Grid Cell Mutual Exclusion**
     - **Validates: Requirements 3.4, 5.5**
     - Test that occupied cells prevent new placements
     - _Requirements: 3.4, 5.5_
 
-- [ ] 6. Implement collision detection between player and world objects
-  - [ ] 6.1 Implement collision detection in Player.move()
+- [x] 6. Implement collision detection between player and world objects
+  - [x] 6.1 Implement collision detection in Player.move()
     - Check grid cells in movement direction
     - Prevent movement into occupied cells
     - Use circular collision boundaries
     - _Requirements: 1.4, 1.5_
 
-  - [ ]* 6.2 Write property test for collision detection circularity
+  - [x]* 6.2 Write property test for collision detection circularity
     - **Property 4: Collision Detection Circularity**
     - **Validates: Requirements 1.5**
     - Test distance-based collision with circular boundaries
     - _Requirements: 1.5_
 
-  - [ ]* 6.3 Write property test for movement collision response
+  - [x]* 6.3 Write property test for movement collision response
     - **Property 5: Movement Collision Response**
     - **Validates: Requirements 1.4**
     - Test that player stops when colliding with obstacles
@@ -440,7 +440,7 @@ Key principles:
 
   - [x] 19.2 Prevent grass growth on trampled cells
     - Check trampled status before grass spreading
-    - Block grass creation on trampled cells
+    - Block grass creation on tramppled cells
     - _Requirements: 9.4_
 
   - [x] 19.3 Implement trampled status decay
@@ -565,31 +565,31 @@ Key principles:
     - _Requirements: 12.1, 12.2_
        
 - [x] 25. Implement Berry Economy UI
-  - [ ] 25.1 Design HUD layout for resources
+  - [x] 25.1 Design HUD layout for resources
     - Plan top-left corner, left-aligned horizontal layout for multiple resources
     - Each resource shows: icon (colored square for now) + count
     - Position with margin from top-left corner
     - _Requirements: UI layout, scalability_
-  - [ ] 25.2 Implement Gathering Hut withdraw interaction (E key)
+  - [x] 25.2 Implement Gathering Hut withdraw interaction (E key)
     - Add get_interaction_text() to GatheringHut: show prompt when storage has items
     - Implement interact() on GatheringHut: transfer all storage contents to player inventory
     - After interaction, clear hut storage
     - _Requirements: economy loop, player agency_
-  - [ ] 25.3 Render food (berry) count in HUD
+  - [x] 25.3 Render food (berry) count in HUD
     - Draw red square (15×15 px?) as icon
     - Display "Food: X" where X = player.inventory.get("food", 0)
     - Update every frame based on player inventory
     - _Requirements: HUD rendering, inventory integration_
-  - [ ] 25.4 Ensure all resource-modifying actions update HUD
+  - [x] 25.4 Ensure all resource-modifying actions update HUD
     - Player picking berries: HUD updates automatically via inventory change
     - Withdrawing from Gathering Hut: when player takes resources, inventory changes → HUD updates
     - Spending resources (breeding/crafting): deduct from player inventory → HUD updates
     - _Requirements: real-time synchronization_
-  - [ ]* 25.5 Write unit test for HUD shows correct inventory count
+  - [x]* 25.5 Write unit test for HUD shows correct inventory count
     - Test that HUD displays player.inventory.get("food") correctly
     - Simulate inventory changes (add/remove) and verify HUD updates
     - _Requirements: UI consistency_
-  - [ ]* 25.6 Write property test for HUD reflects only player inventory
+  - [x]* 25.6 Write property test for HUD reflects only player inventory
     - Validate HUD does NOT reflect critter or building inventories
     - _Requirements: scope clarity_
        
@@ -682,39 +682,39 @@ Key principles:
     - Test that entities maintain state across map transitions
     - _Requirements: 18.4_
 
-- [ ] 31. Implement save/load system
-  - [ ] 31.1 Create SaveData class
+- [x] 31. Implement save/load system
+  - [x] 31.1 Create SaveData class
     - Define structure for complete game state
     - Include version field for compatibility
     - _Requirements: 17.1, 17.2, 17.3, 17.4_
 
-  - [ ] 31.2 Implement serialization methods
+  - [x] 31.2 Implement serialization methods
     - Implement to_dict() for all entity classes
     - Implement from_dict() class methods for deserialization
     - Implement SaveData.to_json() for file writing
     - _Requirements: 17.1, 17.2, 17.3, 17.4_
 
-  - [ ] 31.3 Implement save functionality
+  - [x] 31.3 Implement save functionality
     - Collect all game state into SaveData
     - Serialize to JSON
     - Write to save file
     - Handle file system errors gracefully
     - _Requirements: 17.1, 17.2, 17.3, 17.4_
 
-  - [ ] 31.4 Implement load functionality
+  - [x] 31.4 Implement load functionality
     - Read save file
     - Parse JSON to SaveData
     - Restore all game state
     - Handle missing/corrupted save files
     - _Requirements: 17.5_
 
-  - [ ]* 31.5 Write property test for save/load round trip preservation
+  - [x]* 31.5 Write property test for save/load round trip preservation
     - **Property 34: Save/Load Round Trip Preservation**
     - **Validates: Requirements 17.1, 17.2, 17.3, 17.4**
     - Test that save→load preserves all game state
     - _Requirements: 17.1, 17.2, 17.3, 17.4_
 
-- [ ] 32. Final checkpoint - Ensure all tests pass
+- [x] 32. Final checkpoint - Ensure all tests pass
   - Run complete test suite (all unit and property tests)
   - Verify multi-map transitions work correctly
   - Verify save/load preserves game state
@@ -723,48 +723,48 @@ Key principles:
 
 ## Phase 7: Polish & Additional Content
 
-- [ ] 33. Add additional world object types
-  - [ ] 33.1 Create Tree world object
+- [x] 33. Add additional world object types
+  - [x] 33.1 Create Tree world object
     - Extend WorldObject with appropriate dimensions
     - Initialize with wood resources
     - Implement interaction to harvest wood
     - _Requirements: 4.6_
 
-  - [ ] 33.2 Create Rock world object
+  - [x] 33.2 Create Rock world object
     - Extend WorldObject with appropriate dimensions
     - Initialize with stone resources
     - Implement interaction to harvest stone
     - _Requirements: 4.6_
 
-  - [ ] 33.3 Create Stick world object
+  - [x] 33.3 Create Stick world object
     - Extend WorldObject as small collectible
     - Initialize with plant resources
     - _Requirements: 4.6_
 
-  - [ ]* 33.4 Write unit test for object type instantiation
+  - [x]* 33.4 Write unit test for object type instantiation
     - Verify all object types can be instantiated
     - _Requirements: 4.6_
 
-- [ ] 34. Enhance rendering with simple animations
-  - [ ] 34.1 Implement 2-frame sprite animation for critters
+- [x] 34. Enhance rendering with simple animations
+  - [x] 34.1 Implement 2-frame sprite animation for critters
     - Create idle animation (2 frames)
     - Create action animation (2 frames)
     - Alternate frames based on state
     - _Requirements: 16.5_
 
-- [ ] 35. Add additional UI and polish
-  - [ ] 35.1 Implement inventory display UI
+- [x] 35. Add additional UI and polish
+  - [x] 35.1 Implement inventory display UI
     - Show player resources
     - Update in real-time
     - _Requirements: N/A (UI enhancement)_
 
-  - [ ] 35.2 Enhance debug display
+  - [x] 35.2 Enhance debug display
     - Add critter count
     - Add building count
     - Add performance metrics
     - _Requirements: 15.4_
 
-- [ ] 36. Final integration and testing
+- [x] 36. Final integration and testing
   - Run complete test suite one final time
   - Perform manual playtesting of all features
   - Verify all requirements are met
