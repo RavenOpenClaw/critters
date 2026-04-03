@@ -180,6 +180,52 @@ class Critter(Entity):
             # Transition to GATHER
             self.start_gather(None)  # target will be set by update_gather
 
+    def _circle_intersects_rect(self, cx, cy, r, rect_x, rect_y, rect_w, rect_h):
+        """Check if a circle (center cx,cy, radius r) intersects an axis-aligned rectangle."""
+        closest_x = max(rect_x, min(cx, rect_x + rect_w))
+        closest_y = max(rect_y, min(cy, rect_y + rect_h))
+        dx = cx - closest_x
+        dy = cy - closest_y
+        return dx*dx + dy*dy <= r*r
+
+    def _is_cell_within_radius(self, gx, gy, resource):
+        """Check if standing at the center of cell (gx, gy) would allow interaction with resource."""
+        cx = gx * self.cell_size + self.cell_size / 2.0
+        cy = gy * self.cell_size + self.cell_size / 2.0
+        if hasattr(resource, 'width') and hasattr(resource, 'height') and hasattr(resource, 'cell_size'):
+            rect_x = resource.x
+            rect_y = resource.y
+            rect_w = resource.width * resource.cell_size
+            rect_h = resource.height * resource.cell_size
+            return self._circle_intersects_rect(cx, cy, self.interaction_radius, rect_x, rect_y, rect_w, rect_h)
+        else:
+            if hasattr(resource, 'get_center'):
+                tx, ty = resource.get_center()
+                dx = cx - tx
+                dy = cy - ty
+                return dx*dx + dy*dy <= self.interaction_radius * self.interaction_radius
+            return False
+
+    def _find_free_cell_within_radius(self, grid, center_gx, center_gy, resource, max_radius=5):
+        """Search for a free grid cell within max_radius that is also within interaction radius of the resource."""
+        candidates = []
+        for r in range(0, max_radius+1):
+            # Top and bottom rows
+            for x in range(center_gx - r, center_gx + r + 1):
+                for y in (center_gy - r, center_gy + r):
+                    if grid.is_within_bounds(x, y) and not grid.is_occupied(x, y):
+                        if self._is_cell_within_radius(x, y, resource):
+                            candidates.append((x, y))
+            # Left and right columns (excluding corners already added)
+            for y in range(center_gy - r + 1, center_gy + r):
+                for x in (center_gx - r, center_gx + r):
+                    if grid.is_within_bounds(x, y) and not grid.is_occupied(x, y):
+                        if self._is_cell_within_radius(x, y, resource):
+                            candidates.append((x, y))
+        if candidates:
+            return random.choice(candidates)
+        return None
+
     def _update_gather(self, dt, world, pathfinding_system):
         """GATHER behavior: find resource, pathfind, collect, then RETURN."""
         # If we don't have a target resource yet, ask the hut for one
@@ -194,15 +240,16 @@ class Critter(Entity):
         if not hasattr(self, 'path') or not self.path:
             grid = world.grid
             target_gx, target_gy = grid.world_to_grid(self.target_resource.x, self.target_resource.y)
-            # Collect adjacent cells (Manhattan distance 1)
+            # Collect adjacent cells (Manhattan distance 1) that are free AND within interaction radius
             candidates = []
             for dx, dy in [(1,0), (-1,0), (0,1), (0,-1)]:
                 cx, cy = target_gx + dx, target_gy + dy
                 if grid.is_within_bounds(cx, cy) and not grid.is_occupied(cx, cy):
-                    candidates.append((cx, cy))
+                    if self._is_cell_within_radius(cx, cy, self.target_resource):
+                        candidates.append((cx, cy))
             if not candidates:
-                # Fallback: broader search up to radius 3
-                goal_cell = self._find_free_cell_near(grid, target_gx, target_gy, max_radius=3)
+                # Broader search for a free cell within interaction radius
+                goal_cell = self._find_free_cell_within_radius(grid, target_gx, target_gy, self.target_resource, max_radius=5)
                 if goal_cell is None:
                     self.start_idle()
                     return
@@ -247,14 +294,18 @@ class Critter(Entity):
             if pathfinding_system is None:
                 self.start_idle()
                 return
-            # Target: a free cell near the hut (with random offset to spread critters)
-            hut_gx, hut_gy = self.assigned_hut.gx, self.assigned_hut.gy
-            offset_gx = hut_gx + random.randint(-2, 2)
-            offset_gy = hut_gy + random.randint(-2, 2)
-            goal_cell = self._find_free_cell_near(world.grid, offset_gx, offset_gy, max_radius=5)
-            if goal_cell is None:
+            # Target: a free cell adjacent to the hut (including diagonals) to allow immediate deposit
+            hut_cells = self.assigned_hut.get_occupied_cells()
+            adjacent_cells = set()
+            for hx, hy in hut_cells:
+                for dx, dy in [(1,0), (-1,0), (0,1), (0,-1), (1,1), (1,-1), (-1,1), (-1,-1)]:
+                    cx, cy = hx + dx, hy + dy
+                    if grid.is_within_bounds(cx, cy) and not grid.is_occupied(cx, cy):
+                        adjacent_cells.add((cx, cy))
+            if not adjacent_cells:
                 self.start_idle()
                 return
+            goal_cell = random.choice(list(adjacent_cells))
             start_gx, start_gy = critter_gx, critter_gy
             self.is_calculating = True
             self.path = pathfinding_system.find_path((start_gx, start_gy), goal_cell, world.grid)
@@ -311,11 +362,13 @@ class Critter(Entity):
         self.start_idle()
 
     def _is_adjacent_to_hut(self, critter_gx, critter_gy):
-        """Check if the critter is orthogonally adjacent to any cell occupied by the assigned hut."""
+        """Check if the critter is adjacent (including diagonally) to any cell occupied by the assigned hut."""
         hut_cells = self.assigned_hut.get_occupied_cells()
         for hx, hy in hut_cells:
-            if abs(critter_gx - hx) + abs(critter_gy - hy) == 1:
-                return True
+            # Chebyshev distance <= 1 and not the same cell
+            if max(abs(critter_gx - hx), abs(critter_gy - hy)) <= 1:
+                if critter_gx != hx or critter_gy != hy:
+                    return True
         return False
 
     def _follow_path(self, dt, world):

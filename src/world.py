@@ -5,6 +5,7 @@ Supports multiple maps via MapData and portals for transitions.
 from grid_system import GridSystem
 from map_data import MapData, Portal
 from typing import Dict, List, Optional
+from grass import Grass
 
 class World:
     def __init__(self, grid_or_map):
@@ -30,6 +31,12 @@ class World:
         else:
             raise TypeError("World constructor expects GridSystem or MapData")
         self.trample_duration = 5.0
+        # Track grass cells separately for spread checks (grass doesn't occupy grid)
+        self.grass_cells = set()
+        # Populate grass_cells from existing objects in current map
+        for obj in self.current_map.objects:
+            if isinstance(obj, Grass):
+                self.grass_cells.add((obj.gx, obj.gy))
 
     def _rebuild_grid(self):
         """Create a new GridSystem for the current map and register its objects."""
@@ -38,6 +45,11 @@ class World:
             self.grid.register(obj)
             # Set world reference for all objects when building grid
             obj.world = self
+        # Recompute grass_cells for the new map
+        self.grass_cells = set()
+        for obj in self.current_map.objects:
+            if isinstance(obj, Grass):
+                self.grass_cells.add((obj.gx, obj.gy))
 
     # Backward-compatible properties
     @property
@@ -161,11 +173,18 @@ class World:
 
     # Standard API (mostly unchanged)
     def add_object(self, obj):
+        # Prevent duplicate Grass at same location
+        if isinstance(obj, Grass):
+            if (obj.gx, obj.gy) in self.grass_cells:
+                return  # skip adding duplicate grass
         if not hasattr(obj, 'cell_size') or obj.cell_size != self.grid.cell_size:
             obj.cell_size = self.grid.cell_size
         self.current_map.objects.append(obj)
         self.grid.register(obj)
         obj.world = self
+        # Track grass cells for spread logic
+        if isinstance(obj, Grass):
+            self.grass_cells.add((obj.gx, obj.gy))
         # If this object is a Critter, also add to current_map.critters list
         try:
             from critter import Critter
@@ -178,12 +197,22 @@ class World:
         if obj in self.current_map.objects:
             self.current_map.objects.remove(obj)
             self.grid.unregister(obj)
+        # Remove from grass_cells if applicable
+        if isinstance(obj, Grass):
+            self.grass_cells.discard((obj.gx, obj.gy))
 
     def mark_trampled(self, gx, gy):
         self.current_map.trampled[(gx, gy)] = self.trample_duration
 
     def is_trampled(self, gx, gy):
         return (gx, gy) in self.current_map.trampled
+
+    def is_cell_free(self, gx, gy):
+        """Check if no world object (including non-blocking) occupies the given grid cell."""
+        for obj in self.current_map.objects:
+            if (gx, gy) in obj.get_occupied_cells():
+                return False
+        return True
 
     def update_trampled(self, dt):
         trampled = self.current_map.trampled

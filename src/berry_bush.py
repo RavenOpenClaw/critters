@@ -16,19 +16,18 @@ class BerryBush(WorldObject):
         self.time_depleted = 0.0
 
     def update(self, dt):
-        """Update regeneration timer and respawn if depleted."""
-        if self.depleted:
+        """Update regeneration timer and regrow berries when not at max."""
+        current = self.inventory.get_item_count('berry')
+        if current < self.max_berries:
             self.time_depleted += dt
             if self.time_depleted >= self.respawn_duration:
-                # Respawn: replenish berries to max
-                self.inventory.add('berry', self.max_berries)
-                self.depleted = False
+                # Replenish berries to max
+                self.inventory.add('berry', self.max_berries - current)
                 self.time_depleted = 0.0
         else:
-            # Check for depletion: if berry count reaches zero, mark as depleted
-            if self.inventory.get_item_count('berry') == 0:
-                self.depleted = True
-                self.time_depleted = 0.0
+            self.time_depleted = 0.0
+        # Depleted flag indicates whether bush is empty (zero berries)
+        self.depleted = (self.inventory.get_item_count('berry') == 0)
 
     def render(self, screen):
         # Draw a green square at the bush's grid-aligned position
