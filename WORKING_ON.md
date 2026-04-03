@@ -12,14 +12,16 @@ This file tracks the current task being worked on. If context is lost, refer to 
 **Notes**:
 - Task 38: Changed save/load from S/L to F5/F6 in InputHandler.
 - Task 39: BuildMenu mouse support – clickable buttons, HUD Build toggle, refined placement logic.
-- All 168 tests pass; merged to mainline (commit 77d53d1).
+- Deconstruction feature added (Apr 3): Building.deconstruct, X key toggle, HUD indicator, 5 new tests.
+- Code Index documentation added (Apr 3): docs/ARCHITECTURE.md.
+- All 179 tests pass; recent changes merged to mainline (deconstruction: b1cd726; docs: bc58120).
 
-**Project Status**: Core prototype complete. Additional tasks pending: Code Index/Architecture documentation.
+**Project Status**: Core prototype complete. All planned features and documentation complete.
 
 ---
 
 ## Project Status
-Core prototype complete. Additional tasks pending: Code Index/Architecture documentation.
+Core prototype complete. All planned features and documentation complete.
 
 ---
 
