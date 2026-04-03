@@ -31,3 +31,23 @@ Actual: When the player collides with a world object, vertical movement is preve
 Reproduce: Start the game. Move toward a world object from the left (pressing right). Collide with the object. Press down or up while still holding down the right key.
 
 Desired fix: Make it so the component of the blocked movement (the movement that would push the player into the collision box of the object) is canceled, but do not cancel the other component of movement.
+
+### [WGFBKAX] Performance degrades over time during gameplay
+
+Status: NOT_STARTED
+
+Expected: The game should maintain a stable framerate (~60 FPS) and consistent responsiveness throughout extended play sessions.
+
+Actual: The game becomes progressively slower; FPS drops and input/rendering lag increases the longer the game runs.
+
+Reproduce: Start a new game and play for an extended period (10-30 minutes). Observe FPS counter (enable debug with F3). Note that FPS declines steadily or in steps. Performance does not recover upon saving/loading.
+
+Desired fix: Identify and fix the underlying cause of resource/performance degradation. Potential areas to investigate:
+- Pathfinding cache growth (does it invalidate correctly?)
+- World object list growth (are new objects being added without old ones being removed?)
+- Trampled cells set growing indefinitely?
+- Entity count increasing (are critters or objects being duplicated?)
+- Memory leaks (e.g., event queues, timers)
+- Any per-frame allocations that accumulate
+
+Note: User suggests binary search approach to isolate the cause by disabling subsystems until performance stabilizes.
