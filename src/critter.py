@@ -414,21 +414,28 @@ class Critter(Entity):
 
     def _has_reached_target(self, target_obj):
         """
-        Check if critter is close enough to interact with target object.
-        Uses interaction radius: cell_size * 1.5.
+        Check if critter's interaction circle intersects the target object's bounding box.
+        Uses the same logic as _is_cell_within_radius but based on current position.
         """
         if target_obj is None:
             return False
-        # Compute target center
-        if hasattr(target_obj, 'get_center'):
-            tx, ty = target_obj.get_center()
+        # Compute target AABB
+        if hasattr(target_obj, 'width') and hasattr(target_obj, 'height') and hasattr(target_obj, 'cell_size'):
+            rect_x = target_obj.x
+            rect_y = target_obj.y
+            rect_w = target_obj.width * target_obj.cell_size
+            rect_h = target_obj.height * target_obj.cell_size
+            return self._circle_intersects_rect(self.x, self.y, self.interaction_radius, rect_x, rect_y, rect_w, rect_h)
         else:
-            tx = target_obj.x + (getattr(target_obj, 'width', 0) * getattr(target_obj, 'cell_size', 0)) / 2
-            ty = target_obj.y + (getattr(target_obj, 'height', 0) * getattr(target_obj, 'cell_size', 0)) / 2
-        dx = tx - self.x
-        dy = ty - self.y
-        dist_sq = dx*dx + dy*dy
-        return dist_sq <= self.interaction_radius * self.interaction_radius
+            # For point-like targets, fall back to center distance check
+            if hasattr(target_obj, 'get_center'):
+                tx, ty = target_obj.get_center()
+            else:
+                tx, ty = target_obj.x, target_obj.y
+            dx = tx - self.x
+            dy = ty - self.y
+            dist_sq = dx*dx + dy*dy
+            return dist_sq <= self.interaction_radius * self.interaction_radius
 
     def _find_free_cell_near(self, grid, gx, gy, max_radius=5):
         """

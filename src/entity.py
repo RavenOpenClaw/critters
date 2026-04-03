@@ -81,10 +81,20 @@ class Player(Entity):
         """Interact with the nearest world object whose collision shape intersects
         the player's interaction circle (radius 45). The nearest is determined by
         Euclidean distance to the object's center (for deterministic selection).
+        Non-interactable objects (like Grass) are ignored.
         """
+        # Local import to avoid circular dependency; Grass is a common non-interactable
+        try:
+            from grass import Grass
+        except ImportError:
+            Grass = None
+
         nearest = None
         min_dist_sq = float('inf')
         for obj in getattr(world, 'objects', []):
+            # Skip known non-interactable types (e.g., Grass)
+            if Grass is not None and isinstance(obj, Grass):
+                continue
             # Determine object's collision bounds (AABB) and center
             if hasattr(obj, 'width') and hasattr(obj, 'height') and hasattr(obj, 'cell_size'):
                 rect_x = obj.x
