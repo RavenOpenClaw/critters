@@ -34,7 +34,9 @@ Desired fix: Make it so the component of the blocked movement (the movement that
 
 ### [WGFBKAX] Performance degrades over time during gameplay
 
-Status: NOT_STARTED
+Status: FIXED
+
+Root cause: Grass was spreading into occupied cells, leading to exponential growth (millions of grass objects). Fix: Added duplicate prevention in `World.add_object` (track `grass_cells`), and improved spread check to use `world.is_cell_free`. After fix, performance remains stable. Fixed in commit 9884ced.
 
 Expected: The game should maintain a stable framerate (~60 FPS) and consistent responsiveness throughout extended play sessions.
 

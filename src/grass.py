@@ -6,9 +6,12 @@ import pygame
 from world_object import WorldObject
 
 class Grass(WorldObject):
-    def __init__(self, gx, gy, cell_size, spread_threshold=60.0):
+    def __init__(self, gx, gy, cell_size, spread_threshold=None):
         # Grass has no inventory
         super().__init__(gx, gy, width=1, height=1, cell_size=cell_size, inventory=None)
+        # Use provided threshold or randomize between 30-120 seconds for natural variation
+        if spread_threshold is None:
+            spread_threshold = random.uniform(30.0, 120.0)
         self.spread_threshold = spread_threshold
         self.time_accumulator = 0.0
         # Grass does not block movement; critters can walk over it

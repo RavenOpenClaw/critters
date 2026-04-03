@@ -48,3 +48,39 @@ class TestGrassPropagation:
         ngx, ngy = new_grass.gx, new_grass.gy
         # Manhattan distance should be 1 (adjacent orthogonal)
         assert abs(ngx - gx) + abs(ngy - gy) == 1
+
+    def test_grass_does_not_spread_onto_existing_grass_cells(self):
+        """Grass should not spread into a cell that already contains grass."""
+        cell_size = 1
+        grid = GridSystem(cell_size=cell_size, width=10, height=10)
+        world = World(grid)
+        grass1 = Grass(5, 5, cell_size=cell_size, spread_threshold=1.0)
+        grass2 = Grass(6, 5, cell_size=cell_size, spread_threshold=1.0)
+        world.add_object(grass1)
+        world.add_object(grass2)
+
+        # Record initial positions and object identities
+        initial_grass = [o for o in world.objects if isinstance(o, Grass)]
+        initial_positions = {(g.gx, g.gy) for g in initial_grass}
+        assert len(initial_grass) == 2
+
+        # Simulate spread with enough dt
+        dt = 2.0
+        new_objects = []
+        for obj in list(world.objects):
+            if isinstance(obj, Grass):
+                result = obj.update(dt)
+                if result is not None:
+                    new_objects.append(result)
+        for new_obj in new_objects:
+            world.add_object(new_obj)
+
+        final_grass = [o for o in world.objects if isinstance(o, Grass)]
+        # There should be exactly 4 grass (each original spreads to one distinct empty neighbor; they should not spawn on each other)
+        assert len(final_grass) == 4
+
+        # Identify new grass objects (those not in initial_grass list)
+        new_grass_objs = [g for g in final_grass if g not in initial_grass]
+        # All new grass positions must not be in initial_positions
+        for g in new_grass_objs:
+            assert (g.gx, g.gy) not in initial_positions
