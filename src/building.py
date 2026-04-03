@@ -1,6 +1,7 @@
 """
 Building base class: extends WorldObject with build cost and placement validation.
 """
+import math
 from world_object import WorldObject
 
 class Building(WorldObject):
@@ -33,3 +34,26 @@ class Building(WorldObject):
             if not player_inventory.has(resource, required):
                 return False
         return True
+
+    def deconstruct(self, world, player):
+        """
+        Deconstruct this building, refunding half the cost to the player and removing the building.
+
+        Args:
+            world: World instance containing this building
+            player: Player instance to receive refunded resources
+        """
+        # Refund half of each resource cost, rounded up
+        for resource, amount in self.cost.items():
+            refund = math.ceil(amount * 0.5)
+            if refund > 0:
+                player.inventory.add(resource, refund)
+
+        # Unassign any critters that were assigned to this building (if applicable)
+        if hasattr(self, 'assigned_critters'):
+            for critter in list(self.assigned_critters):
+                critter.assigned_hut = None
+            self.assigned_critters.clear()
+
+        # Remove building from the world
+        world.remove_object(self)

@@ -25,6 +25,7 @@ class InputHandler:
         self.mouse_pos = (0, 0)
         self.save_request = False  # Save game on 'S' key press
         self.load_request = False  # Load game on 'L' key press
+        self.deconstruct_mode = False  # Persistent deconstruction mode toggle
 
         # Hold-to-interact state
         self._e_held = False          # Is E currently held down?
@@ -56,6 +57,8 @@ class InputHandler:
                     self.select_gathering_hut = True
                 if event.key == pygame.K_r:
                     self.crafting_toggle = True
+                if event.key == pygame.K_x:
+                    self.deconstruct_mode = not self.deconstruct_mode
                 if event.key == pygame.K_F5:
                     self.save_request = True
                 if event.key == pygame.K_F6:

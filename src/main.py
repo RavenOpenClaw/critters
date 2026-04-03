@@ -271,12 +271,29 @@ def main():
                 build_menu.toggle()
             elif build_menu.visible:
                 clicked_build_menu = build_menu.handle_mouse_click((mx, my))
-            # Only attempt placement if click was not on HUD or build menu
+
+            # Only act if click was not on HUD or build menu UI
             if not clicked_hud and not clicked_build_menu:
-                if build_menu.visible and build_menu.selected_building_class is not None:
+                # Deconstruction mode takes precedence
+                if input_handler.deconstruct_mode:
                     gx, gy = grid.world_to_grid(mx, my)
                     if grid.is_within_bounds(gx, gy):
-                        build_menu.attempt_placement(player, world, grid, gx, gy)
+                        # Check if a building occupies this grid cell
+                        if (gx, gy) in grid.occupied:
+                            obj = grid.occupied[(gx, gy)]
+                            if isinstance(obj, Building):
+                                # Check player is within interaction range
+                                ox, oy = obj.get_center()
+                                dx = player.x - ox
+                                dy = player.y - oy
+                                if dx*dx + dy*dy <= player.interaction_radius**2:
+                                    obj.deconstruct(world, player)
+                # Otherwise, normal building placement
+                else:
+                    if build_menu.visible and build_menu.selected_building_class is not None:
+                        gx, gy = grid.world_to_grid(mx, my)
+                        if grid.is_within_bounds(gx, gy):
+                            build_menu.attempt_placement(player, world, grid, gx, gy)
 
         # Crafting menu toggle and crafting
         if input_handler.crafting_toggle:
@@ -425,6 +442,11 @@ def main():
 
         # Crafting menu overlay
         crafting_menu.render(screen, font)
+
+        # Deconstruction mode indicator
+        if input_handler.deconstruct_mode:
+            decon_surface = font.render("Deconstruction Mode (X to exit)", True, (255, 0, 0))
+            screen.blit(decon_surface, (WINDOW_WIDTH - decon_surface.get_width() - 10, WINDOW_HEIGHT - 30))
 
         pygame.display.flip()
 

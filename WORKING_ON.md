@@ -14,12 +14,12 @@ This file tracks the current task being worked on. If context is lost, refer to 
 - Task 39: BuildMenu mouse support – clickable buttons, HUD Build toggle, refined placement logic.
 - All 168 tests pass; merged to mainline (commit 77d53d1).
 
-**Project Status**: Core prototype complete. Additional tasks pending: Deconstruction feature, Code Index/Architecture documentation.
+**Project Status**: Core prototype complete. Additional tasks pending: Code Index/Architecture documentation.
 
 ---
 
 ## Project Status
-Core prototype complete. Additional tasks pending: Deconstruction feature, Code Index/Architecture documentation.
+Core prototype complete. Additional tasks pending: Code Index/Architecture documentation.
 
 ---
 
@@ -70,4 +70,4 @@ Core prototype complete. Additional tasks pending: Deconstruction feature, Code 
 ## Environment Status
 ✅ Virtual environment set up with pygame, pytest, hypothesis.
 Run tests via: `PYTHONPATH=src venv/bin/python -m pytest tst/ -v`
-All tests: 168/168 passing.
+All tests: 179/179 passing.
