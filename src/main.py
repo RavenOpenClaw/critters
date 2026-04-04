@@ -404,7 +404,7 @@ def main():
             building_count = sum(1 for obj in world.current_map.objects if isinstance(obj, Building))
             # Performance: entity count and trampled cells
             entity_count = critter_count + 1  # +1 for player
-            trampled_count = len(world.trampled_cells)
+            trampled_count = len(world.trampled)
             count_surface = font.render(f"Critters: {critter_count}  Buildings: {building_count}", True, (0, 0, 0))
             perf_surface = font.render(f"Entities: {entity_count}  Trampled: {trampled_count}", True, (0, 0, 0))
             screen.blit(fps_surface, (10, 10))
@@ -419,6 +419,13 @@ def main():
                 int(player.interaction_radius),
                 1  # line thickness
             )
+            # Overlay trampled cells (semi-transparent red)
+            for (gx, gy) in world.trampled:
+                wx, wy = world.grid.grid_to_world(gx, gy)
+                cell_sz = world.grid.cell_size
+                overlay = pygame.Surface((cell_sz, cell_sz), pygame.SRCALPHA)
+                overlay.fill((255, 0, 0, 50))  # red with alpha
+                screen.blit(overlay, (wx, wy))
 
         # Build menu overlay (pass HUD button rect for consistent styling? not needed)
         build_menu.render(screen, font, hud_button_rect=hud_button_rect)
