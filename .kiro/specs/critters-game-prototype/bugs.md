@@ -138,6 +138,31 @@ Reproduce: Sit on a chair; note speed. Sit on another chair (or same chair again
 
 Desired fix: When adding a buff, check if player already has that buff type. If yes, replace it (or reset its timer) rather than appending a new one. Use a dictionary keyed by buff name in the player's active buffs for easy lookup/update.
 
+### [CRTGTHST] Critters get stuck in gather loop targeting trees
+
+Status: FIXED
+
+Expected: Critters assigned to a Gathering Hut should only target BerryBush objects for gathering. Trees should not be considered valid gather targets until a dedicated lumber mill building exists.
+
+Actual: The Gathering Hut's resource search returned any world object with a non-empty inventory, including Trees. Critters would pathfind to free cells adjacent to a tree, then repeatedly fail to complete the gather cycle (oscillating between different corners of the tree) and never transition to RETURN. This appeared to be caused by either interaction radius mismatches with the tree's 2×2 footprint or simply the wrong target type.
+
+Reproduce:
+1. Start a new game and place a Gathering Hut.
+2. Place a Tree (2×2) within the hut's gathering radius (10 cells).
+3. Ensure the tree has wood and is not fully depleted.
+4. Assign at least one critter to the hut.
+5. Observe the critter's debug logs: it will repeatedly compute paths to cells like (19,12) and (20,11) adjacent to the tree and never exit GATHER state.
+6. The critter remains stuck indefinitely, not depositing any resources.
+
+Desired fix: Restrict `GatheringHut.find_resource_in_radius` to only consider BerryBush instances as gather targets. This aligns with current design where only berry bushes are gatherable by the Gathering Hut.
+
+Additional notes:
+- A regression test `test_gathering_hut_filters_to_berry_bushes_only` was added to ensure Trees are never returned.
+- This fix prevents the oscillation bug and keeps critters focused on berries.
+- If/when a lumber mill is implemented, a similar filter should be applied for wood harvesting.
+
+---
+
 ### [ICON_COLOR] Berry icon is dark grey instead of red
 
 Status: NOT_STARTED

@@ -4,6 +4,7 @@ GatheringHut: A 3x3 building that serves as a base for critter gathering assignm
 from building import Building
 from inventory import Inventory
 from entity import Player
+from berry_bush import BerryBush
 
 class GatheringHut(Building):
     """Gathering Hut building (3x3) with storage and critter assignment."""
@@ -52,7 +53,8 @@ class GatheringHut(Building):
 
         candidates = []
         for obj in world.objects:
-            if hasattr(obj, 'inventory') and obj.inventory.items:
+            # Only berry bushes are gatherable by the Gathering Hut at this time.
+            if isinstance(obj, BerryBush):
                 # Compute distance from hut center to object center
                 obj_cx = obj.x + (getattr(obj, 'width', 0) * getattr(obj, 'cell_size', 0)) / 2
                 obj_cy = obj.y + (getattr(obj, 'height', 0) * getattr(obj, 'cell_size', 0)) / 2

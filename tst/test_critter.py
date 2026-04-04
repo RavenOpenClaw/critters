@@ -329,3 +329,36 @@ def test_deposit_completes_cycle():
     assert critter.state == CritterState.IDLE
     assert critter.held_resource is None
     assert hut.storage.has('berry', 1)
+
+
+def test_gathering_hut_filters_to_berry_bushes_only():
+    """
+    Bug check: Gathering Hut should only return BerryBush objects as gather targets.
+    Trees (or other resources) must be excluded even if they have inventory and are within radius.
+    """
+    from tree import Tree
+    cell_size = 32
+    grid = GridSystem(cell_size=cell_size, width=50, height=50)
+    world = World(grid)
+    hut = GatheringHut(10, 10, cell_size)
+    world.add_object(hut)
+
+    # Place a Tree with wood within gathering radius
+    tree = Tree(13, 10, cell_size=cell_size, wood=10)
+    world.add_object(tree)
+
+    # Place a BerryBush also within radius
+    bush = BerryBush(15, 10, cell_size=cell_size, berries=5)
+    world.add_object(bush)
+
+    # A dummy critter (position not critical)
+    critter = Critter(hut.x, hut.y, cell_size=cell_size)
+    hut.assign_critter(critter)
+
+    # Repeatedly query the hut's resource selection to ensure it never picks the tree
+    for _ in range(100):
+        resource = hut.find_resource_in_radius(world, critter)
+        # Resource should be either the BerryBush or None (if somehow bush not found); but never the Tree
+        if resource is not None:
+            assert isinstance(resource, BerryBush), f"Expected BerryBush, got {type(resource).__name__}"
+
