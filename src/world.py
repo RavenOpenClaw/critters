@@ -31,6 +31,7 @@ class World:
         else:
             raise TypeError("World constructor expects GridSystem or MapData")
         self.trample_duration = 5.0
+        self.trample_decay = 5.0  # condition loss per trample event
         # Track grass cells separately for spread checks (grass doesn't occupy grid)
         self.grass_cells = set()
         # Populate grass_cells from existing objects in current map
@@ -203,13 +204,16 @@ class World:
 
     def mark_trampled(self, gx, gy):
         self.current_map.trampled[(gx, gy)] = self.trample_duration
-        # Remove any Grass object at this cell to create bare trampled paths
-        # Grass cannot occupy the same cell as another Grass due to duplicate prevention,
-        # so at most one Grass exists at (gx, gy).
-        for obj in list(self.current_map.objects):
+        # Apply decay to any Grass object at this cell, simulating repeated foot traffic.
+        # Multiple calls per frame will compound decay, making busy paths wear down grass faster.
+        for obj in self.current_map.objects:
             if isinstance(obj, Grass) and obj.gx == gx and obj.gy == gy:
-                self.remove_object(obj)
-                # No need to continue; only one grass can be here
+                obj.condition -= self.trample_decay
+                # If condition drops to 0 or below, Grass will remove itself on next update (or immediately)
+                if obj.condition <= 0.0:
+                    # Optional: remove immediately to avoid lingering dead grass
+                    self.remove_object(obj)
+                # Only one Grass can occupy a cell; break after first
                 break
 
     def is_trampled(self, gx, gy):

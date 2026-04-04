@@ -1,5 +1,6 @@
 """
 Grass: A 1x1 world object that spreads to adjacent empty cells over time.
+Grass has a condition (health) that degrades with trampling and recovers when undisturbed.
 """
 import random
 import pygame
@@ -16,6 +17,11 @@ class Grass(WorldObject):
         self.time_accumulator = 0.0
         # Grass does not block movement; critters can walk over it
         self.blocks_movement = False
+        # Condition system: 0-100, starts full
+        self.condition = 100.0
+        self.max_condition = 100.0
+        # Recovery rate (per second) when not trampled
+        self.recovery_rate = 2.0
         # Note: world reference will be set by World.add_object
 
     def get_occupied_cells(self):
@@ -29,26 +35,37 @@ class Grass(WorldObject):
     def update(self, dt):
         """
         Accumulate time; when threshold reached, attempt to spread to a random empty adjacent cell.
+        Also handle condition recovery if not currently trampled, and removal if condition <= 0.
         Returns a new Grass object if spreading occurs, otherwise None.
         """
+        world = getattr(self, 'world', None)
+        if world is None:
+            return None
+
+        # Condition recovery: if not trampled this frame, slowly regain health
+        if not world.is_trampled(self.gx, self.gy):
+            self.condition = min(self.max_condition, self.condition + self.recovery_rate * dt)
+
+        # Removal check
+        if self.condition <= 0.0:
+            # Remove self from world (if still present)
+            if self in world.current_map.objects:
+                world.remove_object(self)
+            return None
+
+        # Spreading logic
         self.time_accumulator += dt
         if self.time_accumulator >= self.spread_threshold:
-            # Access world via back-reference
-            world = getattr(self, 'world', None)
-            if world is None:
-                return None
             grid = world.grid
-            # Find all adjacent (including diagonals?) Design says "adjacent grid cell". Usually adjacent means 4-directional. But could be 8. Let's use 4-directional for simplicity (N, S, E, W). However, the property says "at least one empty adjacent grid cell" - adjacent could be 4. I'll use 4.
+            # Find all adjacent (4-directional) empty cells not grass and not trampled
             neighbors = []
             for dx, dy in [(-1,0), (1,0), (0,-1), (0,1)]:
                 nx = self.gx + dx
                 ny = self.gy + dy
-                # Check grid bounds if defined
                 if grid.width is not None and grid.height is not None:
                     if not (0 <= nx < grid.width and 0 <= ny < grid.height):
                         continue
-                # Check if cell is free: not occupied by blocking objects, not already grass, and not trampled
-                if not grid.is_occupied(nx, ny) and (nx, ny) not in self.world.grass_cells and not self.world.is_trampled(nx, ny):
+                if not grid.is_occupied(nx, ny) and (nx, ny) not in world.grass_cells and not world.is_trampled(nx, ny):
                     neighbors.append((nx, ny))
             if neighbors:
                 ngx, ngy = random.choice(neighbors)
@@ -59,11 +76,15 @@ class Grass(WorldObject):
         return None
 
     def render(self, screen):
-        """Render grass as a light green square."""
+        """Render grass as a green square, color varies with condition."""
+        factor = max(0.0, self.condition / self.max_condition)
+        r = int(144 * factor)
+        g = int(238 * factor)
+        b = int(144 * factor)
         rect = pygame.Rect(
             self.x,
             self.y,
             self.width * self.cell_size,
             self.height * self.cell_size
         )
-        pygame.draw.rect(screen, (144, 238, 144), rect)  # Light green
+        pygame.draw.rect(screen, (r, g, b), rect)
