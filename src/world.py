@@ -203,6 +203,14 @@ class World:
 
     def mark_trampled(self, gx, gy):
         self.current_map.trampled[(gx, gy)] = self.trample_duration
+        # Remove any Grass object at this cell to create bare trampled paths
+        # Grass cannot occupy the same cell as another Grass due to duplicate prevention,
+        # so at most one Grass exists at (gx, gy).
+        for obj in list(self.current_map.objects):
+            if isinstance(obj, Grass) and obj.gx == gx and obj.gy == gy:
+                self.remove_object(obj)
+                # No need to continue; only one grass can be here
+                break
 
     def is_trampled(self, gx, gy):
         return (gx, gy) in self.current_map.trampled
