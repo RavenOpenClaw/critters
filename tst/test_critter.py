@@ -153,6 +153,20 @@ def test_well_fed_buff_multiplier_and_cap():
     # So it's consistent.
 
 
+def test_critter_carry_capacity():
+    """Test that carry capacity is ceil(endurance/20), with bounds 1-100."""
+    c1 = Critter(0, 0, cell_size=32, endurance=1)
+    assert c1.carry_capacity == 1
+    c20 = Critter(0, 0, cell_size=32, endurance=20)
+    assert c20.carry_capacity == 1
+    c21 = Critter(0, 0, cell_size=32, endurance=21)
+    assert c21.carry_capacity == 2
+    c50 = Critter(0, 0, cell_size=32, endurance=50)
+    assert c50.carry_capacity == 3
+    c100 = Critter(0, 0, cell_size=32, endurance=100)
+    assert c100.carry_capacity == 5
+
+
 # Additional tests for Task 14 (Critter AI state machine)
 
 def test_idle_state_spatial_constraint():
@@ -321,6 +335,7 @@ def test_deposit_completes_cycle():
     critter.x = hut.x + (hut.width * hut.cell_size)/2
     critter.y = hut.y + (hut.height * hut.cell_size)/2
     critter.held_resource = 'berry'
+    critter.held_quantity = 1  # New: track quantity
     critter.start_return()
 
     # Run one update; should detect arrival and deposit

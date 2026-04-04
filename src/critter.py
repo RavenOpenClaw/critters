@@ -24,7 +24,7 @@ class Critter(Entity):
             cell_size: Size of a grid cell in pixels (used to set radius: 0.4 * cell_size).
             strength: Resource gathering effectiveness (1-100).
             speed_stat: Movement speed stat (1-100).
-            endurance: Determines idle duration (1-100).
+            endurance: Determines carry capacity and idle duration (1-100).
         """
         radius = cell_size * 0.4
         super().__init__(x, y, radius)
@@ -35,7 +35,9 @@ class Critter(Entity):
         self.state = CritterState.IDLE
         self.assigned_hut = None
         self.target_resource = None
-        self.held_resource = None
+        self.held_resource = None  # resource type (str) or None
+        self.held_quantity = 0
+        self.carry_capacity = max(1, (endurance + 19) // 20)  # ceil(endurance/20)
         self.is_well_fed = False
         # Interaction radius: allow interaction from a nearby cell (1.5 × cell_size)
         self.interaction_radius = cell_size * 1.5
@@ -89,7 +91,7 @@ class Critter(Entity):
 
     # State machine methods
     def start_idle(self):
-        """Enter IDLE state: reset idle timer to a random duration near the base, and loiter timer."""
+        """Enter IDLE state: reset idle timer, loiter movement, and clear path/gathering."""
         self.state = CritterState.IDLE
         base_duration = self.get_idle_duration()
         # Add ±1 second random jitter to desynchronize critters
@@ -99,22 +101,33 @@ class Critter(Entity):
         self.path = None
         self.path_index = 0
         self.target_resource = None
-        # Loiter movement: wait a random interval before making a small move
+        self.goal_cell = None
+        self.gathering = False
+        self.gather_timer = 0.0
         self.loiter_timer = random.uniform(3.0, 5.0)
         self.loiter_target = None  # (wx, wy) if currently moving during loiter
 
     def start_gather(self, resource_obj):
-        """Enter GATHER state: set target resource and compute path to it."""
+        """Enter GATHER state: set target resource and reset path/gathering state."""
         self.state = CritterState.GATHER
         self.target_resource = resource_obj
         self.held_resource = None
-        # Compute path to resource position (we'll use center of object)
-        # Note: pathfinding will be set by update using pathfinding_system
+        self.held_quantity = 0
+        self.path = None
+        self.path_index = 0
+        self.goal_cell = None
+        self.gathering = False
+        self.gather_timer = 0.0
 
     def start_return(self):
-        """Enter RETURN state: clear target and set path back to hut."""
+        """Enter RETURN state: clear target and path, then compute new path to hut."""
         self.state = CritterState.RETURN
         self.target_resource = None
+        self.path = None
+        self.path_index = 0
+        self.goal_cell = None
+        self.gathering = False
+        self.gather_timer = 0.0
         # Path to hut will be computed in update
 
     def update(self, dt, world, pathfinding_system):
@@ -227,53 +240,70 @@ class Critter(Entity):
         return None
 
     def _update_gather(self, dt, world, pathfinding_system):
-        """GATHER behavior: find resource, pathfind, collect, then RETURN."""
-        # If we don't have a target resource yet, ask the hut for one
+        """GATHER behavior: find resource, pathfind to destination, gather over time, then RETURN."""
+        # Acquire target if not set
         if self.target_resource is None and self.assigned_hut is not None:
             self.target_resource = self.assigned_hut.find_resource_in_radius(world, self)
-        # If still no resource, go idle (nothing to gather)
         if self.target_resource is None:
             self.start_idle()
             return
 
-        # If we don't have a path yet, compute it to a free cell adjacent to the resource
-        if not hasattr(self, 'path') or not self.path:
-            grid = world.grid
-            target_gx, target_gy = grid.world_to_grid(self.target_resource.x, self.target_resource.y)
-            # Collect adjacent cells (Manhattan distance 1) that are free AND within interaction radius
-            candidates = []
-            for dx, dy in [(1,0), (-1,0), (0,1), (0,-1)]:
-                cx, cy = target_gx + dx, target_gy + dy
-                if grid.is_within_bounds(cx, cy) and not grid.is_occupied(cx, cy):
-                    if self._is_cell_within_radius(cx, cy, self.target_resource):
-                        candidates.append((cx, cy))
-            if not candidates:
-                # Broader search for a free cell within interaction radius
-                goal_cell = self._find_free_cell_within_radius(grid, target_gx, target_gy, self.target_resource, max_radius=5)
-                if goal_cell is None:
+        # If not currently gathering, ensure we have a path to the goal cell
+        if not self.gathering:
+            if self.path is None:
+                grid = world.grid
+                target_gx, target_gy = grid.world_to_grid(self.target_resource.x, self.target_resource.y)
+                # Find a free cell within interaction radius to stand in
+                candidates = []
+                for dx, dy in [(1,0), (-1,0), (0,1), (0,-1)]:
+                    cx, cy = target_gx + dx, target_gy + dy
+                    if grid.is_within_bounds(cx, cy) and not grid.is_occupied(cx, cy):
+                        if self._is_cell_within_radius(cx, cy, self.target_resource):
+                            candidates.append((cx, cy))
+                if not candidates:
+                    goal_cell = self._find_free_cell_within_radius(grid, target_gx, target_gy, self.target_resource, max_radius=5)
+                    if goal_cell is None:
+                        self.start_idle()
+                        return
+                else:
+                    goal_cell = random.choice(candidates)
+
+                start_gx, start_gy = grid.world_to_grid(self.x, self.y)
+                self.is_calculating = True
+                self.path = pathfinding_system.find_path((start_gx, start_gy), goal_cell, grid)
+                if self.path is not None:
+                    print(f"[DEBUG] Critter {id(self)} GATHER path to {goal_cell} len={len(self.path)} path={self.path}")
+                else:
+                    print(f"[DEBUG] Critter {id(self)} GATHER no path to {goal_cell}")
+                self.path_index = 0
+                self.goal_cell = goal_cell
+                if self.path is None:
                     self.start_idle()
                     return
-            else:
-                goal_cell = random.choice(candidates)
-            start_gx, start_gy = grid.world_to_grid(self.x, self.y)
-            self.is_calculating = True
-            self.path = pathfinding_system.find_path((start_gx, start_gy), goal_cell, grid)
-            # Debug: log computed path
-            if self.path is not None:
-                print(f"[DEBUG] Critter {id(self)} GATHER path to {goal_cell} len={len(self.path)} path={self.path}")
-            else:
-                print(f"[DEBUG] Critter {id(self)} GATHER no path to {goal_cell}")
-            self.path_index = 0
-            if self.path is None:
-                self.start_idle()
-                return
 
-        # Follow the path
-        self._follow_path(dt, world)
-        # Check if we've reached the target (or close enough)
-        if self._has_reached_target(self.target_resource):
-            # Harvest resource directly from target inventory
-            self._harvest_target()
+            # Follow the path if we have one and not yet gathering
+            if self.path is not None:
+                self._follow_path(dt, world)
+                # Check if we've arrived at the goal cell
+                if self.path is None:
+                    # Arrived: start gathering timer
+                    self.gathering = True
+                    self.gather_timer = 0.0
+                    gather_rate = self.get_gather_speed()
+                    self.gathering_time_required = 1.0 / gather_rate if gather_rate > 0 else float('inf')
+                    # Snap to exact cell center of goal_cell
+                    if self.goal_cell is not None:
+                        gx, gy = self.goal_cell
+                        self.x = gx * self.cell_size + self.cell_size / 2
+                        self.y = gy * self.cell_size + self.cell_size / 2
+
+        # If we are in the gathering phase, accumulate time and harvest when ready
+        if self.gathering:
+            self.gather_timer += dt
+            while self.gather_timer >= self.gathering_time_required and self.target_resource is not None:
+                self.gather_timer -= self.gathering_time_required
+                self._harvest_target()  # may set start_return and break loop
+            # Note: _harvest_target will call start_return when capacity full or target empty
 
     def _update_return(self, dt, world, pathfinding_system):
         """RETURN behavior: pathfind back to hut and deposit when adjacent."""
@@ -355,10 +385,11 @@ class Critter(Entity):
         # else: no valid target; loiter_target stays None; timer will retry later
 
     def _deposit_at_hut(self):
-        """Deposit held resource at the assigned hut and transition to IDLE."""
-        if self.held_resource:
-            self.assigned_hut.storage.add(self.held_resource, 1)
+        """Deposit held resources at the assigned hut and transition to IDLE."""
+        if self.held_resource and self.held_quantity > 0:
+            self.assigned_hut.storage.add(self.held_resource, self.held_quantity)
             self.held_resource = None
+            self.held_quantity = 0
         self.start_idle()
 
     def _is_adjacent_to_hut(self, critter_gx, critter_gy):
@@ -463,18 +494,29 @@ class Critter(Entity):
         return random.choice(candidates)
 
     def _harvest_target(self):
-        """Harvest one resource from current target and transition to RETURN."""
+        """Harvest one resource from current target during gathering. Transition to RETURN when capacity full or target empty."""
         target = self.target_resource
-        if hasattr(target, 'inventory') and target.inventory.items:
-            resource_type = next(iter(target.inventory.items))
-            if target.inventory.has(resource_type, 1):
-                target.inventory.remove(resource_type, 1)
-                self.held_resource = resource_type
-                self.start_return()
-                return
-        # If harvesting failed (no resource), clear target and reset path
-        self.target_resource = None
-        self.path = None
+        if not (hasattr(target, 'inventory') and target.inventory.items):
+            self.target_resource = None
+            self.path = None
+            return
+
+        resource_type = next(iter(target.inventory.items))
+        # If we haven't started a resource type yet, set it
+        if self.held_resource is None:
+            self.held_resource = resource_type
+
+        # Only harvest if we haven't reached capacity and target has at least one
+        if self.held_quantity < self.carry_capacity and target.inventory.has(resource_type, 1):
+            target.inventory.remove(resource_type, 1)
+            self.held_quantity += 1
+
+        # Check exit conditions: capacity reached OR target depleted
+        if self.held_quantity >= self.carry_capacity or not target.inventory.has(resource_type, 1):
+            self.start_return()
+            return
+
+        # Otherwise, continue gathering (stay in GATHER, will harvest again next frame)
 
     def get_render_offset(self):
         """Return (dx, dy) offset for animation based on state and current frame."""

@@ -136,6 +136,7 @@ def _serialize_critter(critter: Critter) -> Dict[str, Any]:
         "assigned_hut_ref": assigned_hut_ref,
         "target_resource_ref": target_resource_ref,
         "held_resource": critter.held_resource,
+        "held_quantity": critter.held_quantity,
         "loiter_timer": critter.loiter_timer,
         "loiter_target": loiter_target,
         "idle_timer": critter.idle_timer,
@@ -161,6 +162,7 @@ def _deserialize_critter(data: Dict[str, Any]) -> Critter:
     critter.path = [tuple(p) for p in data.get("path", [])]
     critter.path_index = data.get("path_index", 0)
     critter.held_resource = data.get("held_resource")
+    critter.held_quantity = data.get("held_quantity", 0)
     # Defer resolution of assigned_hut and target_resource until world is built.
     critter.assigned_hut = None
     critter.target_resource = None
