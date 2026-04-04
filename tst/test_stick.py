@@ -12,11 +12,11 @@ class TestStickInstantiation:
         assert stick.gy == 1
         assert stick.width == 1
         assert stick.height == 1
-        assert stick.inventory.get_item_count('stick') == 4
+        assert stick.inventory.get_item_count('wood') == 4
 
     def test_stick_default_stick_count(self):
         stick = Stick(0, 0, cell_size=1.0)
-        assert stick.inventory.get_item_count('stick') == 2
+        assert stick.inventory.get_item_count('wood') == 2
 
     def test_stick_position_conversion(self):
         stick = Stick(3, 3, cell_size=32)
@@ -36,8 +36,8 @@ class TestStickInteraction:
                 return 1.0
         player = MockPlayer()
         stick.interact(player)
-        assert stick.inventory.get_item_count('stick') < 5
-        assert player.inventory.has('stick', 1)
+        assert stick.inventory.get_item_count('wood') < 5
+        assert player.inventory.has('wood', 1)
 
     def test_stick_get_interaction_text(self):
         stick = Stick(0, 0, cell_size=1.0)

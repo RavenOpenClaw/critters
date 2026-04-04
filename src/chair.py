@@ -20,4 +20,4 @@ class Chair(Building):
         if isinstance(other, Player):
             # Rested: 1.5x speed for 30 seconds
             buff = Buff("Rested", {'speed': 1.5}, duration=30.0)
-            other.active_buffs.append(buff)
+            other.apply_buff(buff)

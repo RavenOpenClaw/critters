@@ -6,6 +6,8 @@ from grid_system import GridSystem
 from map_data import MapData, Portal
 from typing import Dict, List, Optional
 from grass import Grass
+from stick import Stick
+from rock import Rock
 
 class World:
     def __init__(self, grid_or_map):
@@ -237,6 +239,16 @@ class World:
                 trampled[cell] = remaining
         for cell in expired:
             trampled.pop(cell, None)
+
+    def cleanup_depleted_resources(self):
+        """Remove non-renewable resource objects (Stick, Rock) that have empty inventories."""
+        to_remove = []
+        for obj in self.current_map.objects:
+            if isinstance(obj, (Stick, Rock)):
+                if not obj.inventory.items:  # empty inventory
+                    to_remove.append(obj)
+        for obj in to_remove:
+            self.remove_object(obj)
 
     def draw(self, screen):
         for obj in self.current_map.objects:

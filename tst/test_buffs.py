@@ -98,5 +98,33 @@ class TestChairAndCampfire(unittest.TestCase):
         self.assertEqual(buff.multipliers['gather'], 2.0)
         self.assertEqual(buff.duration, 30.0)
 
+class TestBuffStacking(unittest.TestCase):
+    def test_reapplying_same_buff_resets_timer(self):
+        """Reapplying a buff with the same name should reset its timer, not stack."""
+        player = Player(0, 0)
+        buff = Buff("Speed", {'speed': 1.5}, 10.0)
+        # Apply first time
+        player.apply_buff(buff)
+        self.assertEqual(len(player.active_buffs), 1)
+        self.assertEqual(player.active_buffs[0].remaining, 10.0)
+        # Wait or reduce remaining to simulate time passing
+        player.active_buffs[0].update(5.0)  # now 5.0 remaining
+        self.assertEqual(player.active_buffs[0].remaining, 5.0)
+        # Apply same buff again (new instance with duration 10)
+        player.apply_buff(buff)
+        self.assertEqual(len(player.active_buffs), 1)
+        self.assertEqual(player.active_buffs[0].remaining, 10.0)  # reset to full
+
+    def test_different_buffs_stack(self):
+        """Applying different buff names should stack multiplicatively."""
+        player = Player(0, 0)
+        buff1 = Buff("Speed", {'speed': 1.5}, 10.0)
+        buff2 = Buff("Haste", {'speed': 2.0}, 10.0)
+        player.apply_buff(buff1)
+        player.apply_buff(buff2)
+        self.assertEqual(len(player.active_buffs), 2)
+        # Speed multiplier should be product
+        self.assertAlmostEqual(player._get_speed_multiplier(), 3.0)
+
 if __name__ == '__main__':
     unittest.main()

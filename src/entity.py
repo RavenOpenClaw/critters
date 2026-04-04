@@ -163,6 +163,14 @@ class Player(Entity):
                 mult *= eq.gather_multiplier
         return mult
 
+    def apply_buff(self, buff):
+        """Apply a buff to the player. If a buff with the same name already exists, reset its timer."""
+        for existing in self.active_buffs:
+            if existing.name == buff.name:
+                existing.remaining = buff.duration
+                return
+        self.active_buffs.append(buff)
+
     def unlock_equipment(self, equipment):
         """Unlock an equipment item (by id string or Equipment object)."""
         equipment_id = getattr(equipment, 'id', equipment)

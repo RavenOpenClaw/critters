@@ -192,4 +192,4 @@ def test_stick_serialization_roundtrip():
     assert len(sticks) == 1
     s = sticks[0]
     assert s.gx == 2 and s.gy == 2
-    assert s.inventory.get_item_count('stick') == 3
+    assert s.inventory.get_item_count('wood') == 3
