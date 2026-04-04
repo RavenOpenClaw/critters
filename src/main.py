@@ -335,14 +335,6 @@ def main():
         # Rendering
         screen.fill(BACKGROUND_COLOR)
 
-        # Draw HUD (top-left)
-        render_hud(screen, player, font)
-
-        # Draw HUD build button (bottom-left)
-        pygame.draw.rect(screen, (100, 100, 200), hud_button_rect)
-        build_lbl = font.render("Build", True, (255, 255, 255))
-        screen.blit(build_lbl, build_lbl.get_rect(center=hud_button_rect.center))
-
         # Draw world objects
         world.draw(screen)
 
@@ -391,26 +383,17 @@ def main():
             label_rect = label_surface.get_rect(center=(rx, ry - int(critter.radius) - 10))
             screen.blit(label_surface, label_rect)
 
+        # HUD elements (drawn on top of world)
+        # Draw HUD (top-left)
+        render_hud(screen, player, font)
+
+        # Draw HUD build button (bottom-left)
+        pygame.draw.rect(screen, (100, 100, 200), hud_button_rect)
+        build_lbl = font.render("Build", True, (255, 255, 255))
+        screen.blit(build_lbl, build_lbl.get_rect(center=hud_button_rect.center))
+
         # Buffs display (top-right corner)
         render_active_buffs(screen, player, font)
-
-        # Inventory display (top-right corner)
-        inv_x = WINDOW_WIDTH - 200
-        inv_y = 10
-        # Title
-        inv_title = font.render("Inventory", True, (0, 0, 0))
-        screen.blit(inv_title, (inv_x, inv_y))
-        inv_y += 25
-        # List items
-        items = player.inventory.items
-        if not items:
-            empty_surface = font.render("(empty)", True, (80, 80, 80))
-            screen.blit(empty_surface, (inv_x, inv_y))
-        else:
-            for resource, count in sorted(items.items()):
-                inv_surface = font.render(f"{resource}: {count}", True, (0, 0, 0))
-                screen.blit(inv_surface, (inv_x, inv_y))
-                inv_y += 20
 
         # Debug display (F3 toggle)
         if input_handler.show_debug:
