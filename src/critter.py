@@ -4,6 +4,7 @@ Critter entity with stats and behavior helpers.
 import random
 from enum import Enum, auto
 from entity import Entity
+from buff import Buff  # for apply_buff and buff handling
 
 class CritterState(Enum):
     """State machine states for critter AI."""
@@ -39,6 +40,7 @@ class Critter(Entity):
         self.held_quantity = 0
         self.carry_capacity = max(1, (endurance + 19) // 20)  # ceil(endurance/20)
         self.is_well_fed = False
+        self.active_buffs = []  # Active buff effects list
         # Interaction radius: allow interaction from a nearby cell (1.5 × cell_size)
         self.interaction_radius = cell_size * 1.5
         # Debug: flag for pathfinding activity (set during calls to find_path)
@@ -65,21 +67,59 @@ class Critter(Entity):
             return min(stat * 1.1, 100)
         return stat
 
+    def _update_buffs(self, dt):
+        """Update active buffs, removing expired ones."""
+        still_active = []
+        for buff in self.active_buffs:
+            if buff.update(dt):
+                still_active.append(buff)
+        self.active_buffs = still_active
+
+    def _get_speed_multiplier(self):
+        """Calculate total speed multiplier from active buffs (multiplicative)."""
+        mult = 1.0
+        for buff in self.active_buffs:
+            if 'speed' in buff.multipliers:
+                mult *= buff.multipliers['speed']
+        return mult
+
+    def _get_gather_multiplier(self):
+        """Calculate total gather multiplier from active buffs."""
+        mult = 1.0
+        for buff in self.active_buffs:
+            if 'gather' in buff.multipliers:
+                mult *= buff.multipliers['gather']
+        return mult
+
+    def apply_buff(self, buff):
+        """Apply a buff to the critter. If a buff with the same name exists, reset its timer."""
+        for existing in self.active_buffs:
+            if existing.name == buff.name:
+                existing.remaining = buff.duration
+                return
+        self.active_buffs.append(buff)
+
     def get_movement_speed(self):
         """
         Return movement speed in pixels per second.
         Base: 50 + speed_stat * 2. Well-fed multiplies speed_stat by 1.1 (capped at 100).
+        Buff multipliers are applied multiplicatively.
         """
         effective_speed = self._effective_stat(self.speed_stat)
-        return 50 + effective_speed * 2
+        base = 50 + effective_speed * 2
+        speed_mult = self._get_speed_multiplier()
+        return base * speed_mult
 
     def get_gather_speed(self):
         """
         Return gather speed in resources per second.
         Formula: strength * 0.1. Well-fed multiplies strength by 1.1 (capped at 100).
+        Buff multipliers are applied multiplicatively.
         """
         effective_strength = self._effective_stat(self.strength)
-        return effective_strength * 0.1
+        base = effective_strength * 0.1
+        gather_mult = self._get_gather_multiplier()
+        return base * gather_mult
 
     def get_idle_duration(self):
         """
@@ -141,6 +181,8 @@ class Critter(Entity):
         """
         # Clear per-frame calculation flag
         self.is_calculating = False
+        # Update active buffs and remove expired ones
+        self._update_buffs(dt)
         if self.state == CritterState.IDLE:
             self._update_idle(dt, world)
         elif self.state == CritterState.GATHER:

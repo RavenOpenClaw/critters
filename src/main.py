@@ -21,6 +21,7 @@ from building import Building
 from gathering_hut import GatheringHut
 from chair import Chair
 from campfire import Campfire
+from buff import Buff  # for applying campfire aura
 from critter import Critter, CritterState
 from pathfinding import PathfindingSystem
 from crafting_menu import CraftingMenu
@@ -243,6 +244,26 @@ def main():
                 print("Game loaded.")
             except Exception as e:
                 print(f"Load failed: {e}")
+
+        # Apply campfire aura buffs to player and critters
+        for obj in world.current_map.objects:
+            if isinstance(obj, Campfire):
+                cx = obj.x + (obj.width * obj.cell_size) / 2.0
+                cy = obj.y + (obj.height * obj.cell_size) / 2.0
+                radius_sq = (3.0 * obj.cell_size) ** 2
+                # Player
+                dx = player.x - cx
+                dy = player.y - cy
+                if dx*dx + dy*dy <= radius_sq:
+                    buff = Buff("Strength", {'gather': 2.0}, duration=30.0)
+                    player.apply_buff(buff)
+                # Critters
+                for critter in world.current_map.critters:
+                    dx = critter.x - cx
+                    dy = critter.y - cy
+                    if dx*dx + dy*dy <= radius_sq:
+                        buff = Buff("Strength", {'gather': 2.0}, duration=30.0)
+                        critter.apply_buff(buff)
 
         # Update player state (buffs, speed recalculation)
         player.update(dt)

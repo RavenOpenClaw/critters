@@ -11,13 +11,12 @@ class Campfire(Building):
         super().__init__(gx, gy, width=2, height=2, cell_size=cell_size, cost=cost)
 
     def get_interaction_text(self):
-        """Return prompt to interact."""
-        return "Warm by Campfire (E)"
+        """Return None: campfire now provides automatic aura buff, no manual interaction needed."""
+        return None
 
     def interact(self, other):
-        """Apply Strength buff to the player."""
+        """Optional: still allow manual buff for compatibility, but aura handles automatically."""
         from entity import Player
         if isinstance(other, Player):
-            # Strength: 2.0x gather for 30 seconds
             buff = Buff("Strength", {'gather': 2.0}, duration=30.0)
             other.apply_buff(buff)
