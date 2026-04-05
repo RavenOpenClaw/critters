@@ -58,8 +58,41 @@ class CritterInspector:
             return True
         return False
 
+    def handle_assign(self, player, world):
+        """Assign the selected critter to the nearest hut (GatheringHut or MatingHut) within player's interaction radius.
+        Shows feedback message on success or failure.
+        """
+        if self.selected_critter is None:
+            return
+        from gathering_hut import GatheringHut
+        from mating_hut import MatingHut
+        # Find candidate huts
+        huts = [obj for obj in world.current_map.objects if isinstance(obj, (GatheringHut, MatingHut))]
+        if not huts:
+            world.set_message("No huts built.", 2.0)
+            return
+        # Find nearest hut within interaction radius
+        nearest_hut = None
+        min_dist_sq = float('inf')
+        for hut in huts:
+            hx, hy = hut.get_center()
+            dx = player.x - hx
+            dy = player.y - hy
+            dist_sq = dx*dx + dy*dy
+            if dist_sq <= player.interaction_radius**2 and dist_sq < min_dist_sq:
+                min_dist_sq = dist_sq
+                nearest_hut = hut
+        if nearest_hut is None:
+            world.set_message("No hut in range.", 2.0)
+            return
+        # Perform assignment (handles unassign from previous)
+        nearest_hut.assign_critter(self.selected_critter)
+        hut_name = type(nearest_hut).__name__
+        world.set_message(f"Critter assigned to {hut_name}.", 2.0)
+
     def draw(self, screen):
         if not self.visible or self.selected_critter is None:
+            self.assign_button_rect = None
             return
         # Draw panel background
         pygame.draw.rect(screen, (240, 240, 240), self.panel_rect)
@@ -91,6 +124,13 @@ class CritterInspector:
                 lines.append(f"  {b.name} ({b.remaining:.1f}s)")
         else:
             lines.append("Buffs: None")
+        # Assignment status line
+        assigned_hut = getattr(c, 'assigned_hut', None)
+        if assigned_hut is not None:
+            hut_name = type(assigned_hut).__name__
+            lines.append(f"Assigned: {hut_name}")
+        else:
+            lines.append("Assigned: None")
         # Render lines
         x0 = self.panel_rect.x + 10
         y0 = self.panel_rect.y + 10
@@ -98,3 +138,19 @@ class CritterInspector:
         for i, line in enumerate(lines):
             text = self.font.render(line, True, (0, 0, 0))
             screen.blit(text, (x0, y0 + i * line_spacing))
+        # Draw "Assign" button below stats
+        btn_y = y0 + len(lines) * line_spacing + 8
+        btn_text = "Assign to Nearest Hut"
+        text_surf = self.font.render(btn_text, True, (255, 255, 255))
+        text_rect = text_surf.get_rect()
+        btn_rect = pygame.Rect(
+            x0,
+            btn_y,
+            text_rect.width + 16,
+            line_spacing + 6
+        )
+        self.assign_button_rect = btn_rect
+        pygame.draw.rect(screen, (100, 100, 200), btn_rect)
+        pygame.draw.rect(screen, (0, 0, 0), btn_rect, 1)
+        text_rect.center = btn_rect.center
+        screen.blit(text_surf, text_rect)
