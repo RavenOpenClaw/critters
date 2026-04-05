@@ -16,6 +16,8 @@ from world import World
 from gathering_hut import GatheringHut
 from berry_bush import BerryBush
 from pathfinding import PathfindingSystem
+from buff import Buff
+from entity import Player
 
 # Feature: critters-game-prototype
 
@@ -376,4 +378,61 @@ def test_gathering_hut_filters_to_berry_bushes_only():
         # Resource should be either the BerryBush or None (if somehow bush not found); but never the Tree
         if resource is not None:
             assert isinstance(resource, BerryBush), f"Expected BerryBush, got {type(resource).__name__}"
+
+
+# Regression tests for Critter buff system
+
+def test_critter_apply_buff_resets_timer():
+    critter = Critter(0, 0, cell_size=32)
+    buff = Buff("Strength", {'gather': 2.0}, 30.0)
+    critter.apply_buff(buff)
+    assert len(critter.active_buffs) == 1
+    assert critter.active_buffs[0].remaining == 30.0
+    critter.active_buffs[0].update(10.0)
+    assert critter.active_buffs[0].remaining == 20.0
+    critter.apply_buff(buff)  # reset
+    assert critter.active_buffs[0].remaining == 30.0
+
+def test_critter_get_gather_multiplier_combines():
+    critter = Critter(0, 0, cell_size=32)
+    critter.active_buffs = [
+        Buff("A", {'gather': 2.0}, 30),
+        Buff("B", {'gather': 1.5}, 30),
+        Buff("C", {'speed': 1.2}, 30)
+    ]
+    assert critter._get_gather_multiplier() == pytest.approx(3.0)
+
+def test_critter_get_speed_multiplier_combines():
+    critter = Critter(0, 0, cell_size=32)
+    critter.active_buffs = [
+        Buff("A", {'speed': 2.0}, 30),
+        Buff("B", {'speed': 1.5}, 30),
+        Buff("C", {'gather': 1.5}, 30)
+    ]
+    assert critter._get_speed_multiplier() == pytest.approx(3.0)
+
+def test_critter_update_removes_expired_buffs():
+    critter = Critter(0, 0, cell_size=32)
+    b1 = Buff("Short", {}, 1.0)
+    b2 = Buff("Long", {}, 5.0)
+    critter.active_buffs = [b1, b2]
+    b1.update(1.5)  # expired
+    b2.update(1.0)  # still active
+    critter._update_buffs(dt=0)
+    assert b1 not in critter.active_buffs
+    assert b2 in critter.active_buffs
+
+def test_critter_buff_affects_gather_speed():
+    critter = Critter(0, 0, cell_size=32, strength=50)
+    assert critter.get_gather_speed() == pytest.approx(5.0)
+    buff = Buff("Strength", {'gather': 2.0}, 30.0)
+    critter.apply_buff(buff)
+    assert critter.get_gather_speed() == pytest.approx(10.0)
+
+def test_critter_buff_affects_movement_speed():
+    critter = Critter(0, 0, cell_size=32, speed_stat=50)
+    assert critter.get_movement_speed() == pytest.approx(150.0)
+    buff = Buff("Haste", {'speed': 2.0}, 30.0)
+    critter.apply_buff(buff)
+    assert critter.get_movement_speed() == pytest.approx(300.0)
 
