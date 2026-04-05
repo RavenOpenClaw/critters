@@ -380,7 +380,7 @@ def main():
         # Update world objects that have an update method (regeneration, grass spreading, etc.)
         new_objects = []
         for obj in list(world.current_map.objects):
-            if isinstance(obj, (BerryBush, Grass)):
+            if isinstance(obj, (BerryBush, Grass, Tree)):
                 result = obj.update(dt)
                 if result is not None:
                     new_objects.append(result)
