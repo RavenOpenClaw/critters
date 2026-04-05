@@ -811,6 +811,48 @@ Required Python packages:
 Install with: `pip install pygame pytest hypothesis`
 
 
+## Phase 9: Companion & Follow System
+
+**Goal**: Add a "Follow" button to the critter inspector to make a critter follow the player and enable quick assignment to buildings.
+
+### Task 45: Implement Critter Follow & Assign Feature
+**Priority**: Medium
+**Status**: NOT_STARTED
+
+Context: The `CritterInspector` displays critter stats but lacks a Follow control. This feature would allow the player to have a critter companion that trails them, and automatically assign the following critter to a building when the player interacts with it.
+
+Implementation steps:
+- Extend `CritterInspector` UI:
+  - Add a "Follow" toggle button.
+  - When toggled on, set the critter's AI state to a FOLLOW mode (or implement custom behavior that periodically sets a movement goal near the player).
+- Implement follow behavior in `Critter`:
+  - Add a `following` flag or `follow_target` reference to the player.
+  - When following, every 1-2 seconds compute a nearby cell (e.g., within 2-3 cells of player) and pathfind toward it.
+  - Avoid overlapping with the player; maintain a small offset.
+  - If the path is interrupted or the following target becomes unreachable, follow state ends.
+- Integrate with building assignment:
+  - When the player interacts with a building (GatheringHut or MatingHut), if a critter is in follow mode, automatically assign that critter to the building (`building.assign_critter(following_critter)`).
+  - Possibly give visual/audio feedback: "Critter assigned to [Building]".
+  - Ensure only one critter can follow at a time per player (or allow multiple but assignment applies to the specific following critter).
+- Edge cases:
+  - If the building cannot accept more critters (no capacity limit, so always okay)
+  - If the following critter is already assigned to another building, unassign it first before reassigning.
+  - If the player interacts with a building without a following critter, no effect.
+- Add unit tests:
+  - Test that follow mode sets critter behavior correctly
+  - Test that building interaction assigns the following critter
+  - Test that reassignment unassigns previous hut
+
+Acceptance:
+- Player can select a critter in the inspector and click "Follow"
+- The critter then moves to stay near the player, updating its destination periodically
+- When the player presses E on a building, the following critter becomes assigned to that building
+- The inspector updates to show the new assignment
+- Tests added and passing
+
+---
+
+
 ## Phase 8: Missing Features & Polish
 
 **Goal**: Address gaps identified during QA to bring the prototype to full feature parity with the original design vision.
