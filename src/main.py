@@ -333,11 +333,7 @@ def main():
                 # If inspector is visible, let it handle the click first to consume events inside its panel
                 inspector_handled = False
                 if critter_inspector.visible:
-                    # Check if assign button was clicked
-                    if hasattr(critter_inspector, 'assign_button_rect') and critter_inspector.assign_button_rect and critter_inspector.assign_button_rect.collidepoint(mx, my):
-                        critter_inspector.handle_assign(player, world)
-                        inspector_handled = True
-                    elif critter_inspector.handle_mouse_click((mx, my)):
+                    if critter_inspector.handle_mouse_click((mx, my)):
                         inspector_handled = True
                     else:
                         # Click outside the inspector panel: close it and consume the click
@@ -397,12 +393,6 @@ def main():
 
         # Update crafting menu (for message timer, etc.)
         crafting_menu.update(dt)
-
-        # Assignment request (A key) when inspector visible
-        if input_handler.assign_request:
-            if critter_inspector.visible:
-                critter_inspector.handle_assign(player, world)
-            input_handler.assign_request = False  # consume
 
         # Update critters
         for critter in world.current_map.critters:

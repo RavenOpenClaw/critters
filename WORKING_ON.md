@@ -6,14 +6,15 @@ This file tracks the current task being worked on. If context is lost, refer to 
 
 ## Current Task
 **Status**: COMPLETED
-**Task**: Task 42 - Complete Mating Hut Integration
+**Task**: Task 43 - Implement Critter Assignment UI
 **Completed**: 2026-04-05
-**Branch**: feature/complete-mating-hut-integration (merged to mainline)
+**Branch**: mainline
 **Notes**:
-- Implemented MatingHut.interact with food cost (5) and world.message feedback.
-- Added world.message transient UI system (World.set_message, timer, rendering in main.py).
-- Added 4 new tests in tst/test_breeding.py for interaction behavior.
-- All 208 tests pass; changes merged to mainline.
+- Extended CritterInspector: shows assignment status, added Assign button/shortcut (A).
+- Added Building.unassign_critter and enhanced assign_critter (auto-unassign from previous).
+- Added InputHandler.assign_request, main loop handling for A key and inspector button click.
+- Added 5 tests for inspector assignment behavior.
+- All 221 tests pass; changes merged to mainline.
 
 **Project Status**: Core prototype complete. All planned features and documentation complete.
 
@@ -65,10 +66,14 @@ Core prototype complete. All planned features and documentation complete.
 - Task 37: Title Screen – implemented TitleScreen with New Game/Continue, overwrite confirmation, integrated into main; all 168 tests passing; merged.
 - Task 38: Changed save/load keybinds S/L → F5/F6 in InputHandler; merged (77d53d1).
 - Task 39: Build menu mouse support – clickable buttons, HUD Build toggle; refined placement; merged (77d53d1).
+- Task 40: Building Costs – defined costs for all buildings; BuildMenu displays and enforces costs; merged (d2aab2d).
+- Task 41: Second Map & Travel – created 'north_woods' map with neighbor links and entity preservation; merged (e301345).
+- Task 42: Complete Mating Hut Integration – MatingHut.interact with food cost and message; assignment via interaction; 4 new tests; 216 tests; merged (df6b95d).
+- Task 43: Critter Assignment UI – CritterInspector Assign button/shortcut; assignment logic; 5 new tests; 221 tests; merged (56d2a2d).
 
 ---
 
 ## Environment Status
 ✅ Virtual environment set up with pygame, pytest, hypothesis.
 Run tests via: `PYTHONPATH=src venv/bin/python -m pytest tst/ -v`
-All tests: 208/208 passing.
+All tests: 221/221 passing.

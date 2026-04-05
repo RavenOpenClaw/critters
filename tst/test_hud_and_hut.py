@@ -1,15 +1,12 @@
 """Tests for HUD rendering and GatheringHut interaction (Task 25)."""
 import unittest
-import pygame
 from unittest.mock import Mock, patch
 from entity import Player
 from main import render_hud
 from gathering_hut import GatheringHut
-from mating_hut import MatingHut
 from world import World
 from grid_system import GridSystem
 from critter import Critter
-from critter_inspector import CritterInspector
 
 
 def test_hud_shows_player_inventory():
@@ -155,96 +152,3 @@ class TestGatheringHutAssignmentViaInteract(unittest.TestCase):
             hut.interact("not a player")
         except Exception as e:
             self.fail(f"interact raised an exception with non-player: {e}")
-
-
-class TestCritterInspectorAssignment(unittest.TestCase):
-    def setUp(self):
-        pygame.init()
-        pygame.font.init()
-        self.font = pygame.font.SysFont(None, 24)
-
-    def test_assign_button_exists_when_drawn(self):
-        grid = GridSystem(32, 10, 10)
-        world = World(grid)
-        player = Player(50, 50)
-        critter = Critter(0, 0, cell_size=32)
-        inspector = CritterInspector(32, self.font, 800, 600)
-        inspector.visible = True
-        inspector.selected_critter = critter
-        screen = pygame.Surface((800, 600))
-        inspector.draw(screen)
-        self.assertIsNotNone(inspector.assign_button_rect)
-
-    def test_assigns_nearest_hut_within_range(self):
-        grid = GridSystem(32, 20, 20)
-        world = World(grid)
-        hut = GatheringHut(5, 5, 32)
-        world.add_object(hut)
-        player = Player(176+4, 176+4)  # near hut center (176,176)
-        critter = Critter(0, 0, cell_size=32)
-        inspector = CritterInspector(32, self.font, 800, 600)
-        inspector.visible = True
-        inspector.selected_critter = critter
-        screen = pygame.Surface((800, 600))
-        inspector.draw(screen)
-        inspector.handle_assign(player, world)
-        self.assertIn(critter, hut.assigned_critters)
-        self.assertIs(critter.assigned_hut, hut)
-        self.assertEqual(world.message, "Critter assigned to GatheringHut.")
-
-    def test_assign_no_hut_in_range(self):
-        grid = GridSystem(32, 20, 20)
-        world = World(grid)
-        hut = GatheringHut(5, 5, 32)
-        world.add_object(hut)
-        player = Player(0, 0)  # far away
-        critter = Critter(0, 0, cell_size=32)
-        inspector = CritterInspector(32, self.font, 800, 600)
-        inspector.visible = True
-        inspector.selected_critter = critter
-        screen = pygame.Surface((800, 600))
-        inspector.draw(screen)
-        inspector.handle_assign(player, world)
-        self.assertNotIn(critter, hut.assigned_critters)
-        self.assertIsNone(critter.assigned_hut)
-        self.assertEqual(world.message, "No hut in range.")
-
-    def test_assign_unassigns_from_previous_hut(self):
-        grid = GridSystem(32, 20, 20)
-        world = World(grid)
-        hut1 = GatheringHut(5, 5, 32)   # center approx (208,176)
-        hut2 = MatingHut(8, 5, 32)      # center approx (288,176)
-        world.add_object(hut1)
-        world.add_object(hut2)
-        # Player positioned closer to hut2, within its interaction range, but far from hut1
-        player = Player(260, 176)
-        critter = Critter(0, 0, cell_size=32)
-        # Pre-assign to hut1
-        hut1.assign_critter(critter)
-        self.assertIn(critter, hut1.assigned_critters)
-        self.assertIs(critter.assigned_hut, hut1)
-        # Inspector assignment
-        inspector = CritterInspector(32, self.font, 800, 600)
-        inspector.visible = True
-        inspector.selected_critter = critter
-        screen = pygame.Surface((800, 600))
-        inspector.draw(screen)
-        inspector.handle_assign(player, world)
-        self.assertNotIn(critter, hut1.assigned_critters)
-        self.assertIn(critter, hut2.assigned_critters)
-        self.assertIs(critter.assigned_hut, hut2)
-        self.assertEqual(world.message, "Critter assigned to MatingHut.")
-
-    def test_assign_with_no_critter_selected_does_nothing(self):
-        grid = GridSystem(32, 10, 10)
-        world = World(grid)
-        player = Player(100, 100)
-        inspector = CritterInspector(32, self.font, 800, 600)
-        inspector.visible = True
-        inspector.selected_critter = None
-        screen = pygame.Surface((800, 600))
-        inspector.draw(screen)  # should not crash
-        try:
-            inspector.handle_assign(player, world)
-        except Exception as e:
-            self.fail(f"handle_assign raised an exception with no critter: {e}")

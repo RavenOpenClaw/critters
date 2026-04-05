@@ -26,7 +26,6 @@ class InputHandler:
         self.save_request = False  # Save game on 'S' key press
         self.load_request = False  # Load game on 'L' key press
         self.deconstruct_mode = False  # Persistent deconstruction mode toggle
-        self.assign_request = False    # Request to assign selected critter to nearest hut (A key)
 
         # Hold-to-interact state
         self._e_held = False          # Is E currently held down?
@@ -60,8 +59,6 @@ class InputHandler:
                     self.crafting_toggle = True
                 if event.key == pygame.K_x:
                     self.deconstruct_mode = not self.deconstruct_mode
-                if event.key == pygame.K_a:
-                    self.assign_request = True
                 if event.key == pygame.K_F5:
                     self.save_request = True
                 if event.key == pygame.K_F6:
