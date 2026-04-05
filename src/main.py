@@ -420,6 +420,12 @@ def main():
         # Remove depleted non-renewable resources (Sticks, Rocks)
         world.cleanup_depleted_resources()
 
+        # Update world message timer
+        if world.message_timer > 0:
+            world.message_timer -= dt
+            if world.message_timer <= 0:
+                world.message = ""
+
         # Rendering
         screen.fill(BACKGROUND_COLOR)
 
@@ -482,6 +488,12 @@ def main():
 
         # Buffs display (top-right corner)
         render_active_buffs(screen, player, font)
+
+        # Draw world transient message
+        if world.message:
+            msg_surface = font.render(world.message, True, (0, 0, 0))
+            msg_rect = msg_surface.get_rect(center=(WINDOW_WIDTH // 2, 50))
+            screen.blit(msg_surface, msg_rect)
 
         # Debug display (F3 toggle)
         if input_handler.show_debug:

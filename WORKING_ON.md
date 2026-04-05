@@ -6,15 +6,14 @@ This file tracks the current task being worked on. If context is lost, refer to 
 
 ## Current Task
 **Status**: COMPLETED
-**Task**: Task 39 - Add mouse support to Build Menu (plus Task 38: keybinds)
-**Completed**: 2026-04-02
-**Branch**: mainline
+**Task**: Task 42 - Complete Mating Hut Integration
+**Completed**: 2026-04-05
+**Branch**: feature/complete-mating-hut-integration (merged to mainline)
 **Notes**:
-- Task 38: Changed save/load from S/L to F5/F6 in InputHandler.
-- Task 39: BuildMenu mouse support – clickable buttons, HUD Build toggle, refined placement logic.
-- Deconstruction feature added (Apr 3): Building.deconstruct, X key toggle, HUD indicator, 5 new tests.
-- Code Index documentation added (Apr 3): docs/ARCHITECTURE.md.
-- All 179 tests pass; recent changes merged to mainline (deconstruction: b1cd726; docs: bc58120).
+- Implemented MatingHut.interact with food cost (5) and world.message feedback.
+- Added world.message transient UI system (World.set_message, timer, rendering in main.py).
+- Added 4 new tests in tst/test_breeding.py for interaction behavior.
+- All 208 tests pass; changes merged to mainline.
 
 **Project Status**: Core prototype complete. All planned features and documentation complete.
 
@@ -72,4 +71,4 @@ Core prototype complete. All planned features and documentation complete.
 ## Environment Status
 ✅ Virtual environment set up with pygame, pytest, hypothesis.
 Run tests via: `PYTHONPATH=src venv/bin/python -m pytest tst/ -v`
-All tests: 179/179 passing.
+All tests: 208/208 passing.

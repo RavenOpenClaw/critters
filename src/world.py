@@ -41,6 +41,15 @@ class World:
             if isinstance(obj, Grass):
                 self.grass_cells.add((obj.gx, obj.gy))
 
+        # Transient message system (for UI feedback)
+        self.message = ""
+        self.message_timer = 0.0
+
+    def set_message(self, msg, duration=2.0):
+        """Set a transient message to be displayed for the given duration (seconds)."""
+        self.message = msg
+        self.message_timer = duration
+
     def _rebuild_grid(self):
         """Create a new GridSystem for the current map and register its objects."""
         self.grid = GridSystem(self.current_map.cell_size, self.current_map.width, self.current_map.height)

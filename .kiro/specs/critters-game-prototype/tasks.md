@@ -902,31 +902,16 @@ Acceptance:
 
 ### Task 39: Complete Mating Hut Integration
 **Priority**: Medium
-**Status**: NOT_STARTED
+**Status**: COMPLETED (2026-04-05)
 
-Context: `MatingHut` class exists with `breed()` method, but player cannot trigger breeding in-game. The `interact` method is stub; also offspring addition to world needs a clean integration.
+Implementation:
+- MatingHut cost already defined (wood=15, stone=10).
+- Implemented `MatingHut.interact(player)` with food cost (5 food) and message feedback.
+- Added world.message system and integrated into main.py.
+- Created tests in `tst/test_breeding.py` (4 new tests).
+- All tests pass (208).
 
-Implementation steps:
-- In `MatingHut.__init__`, define a building cost (use from Task 37)
-- Implement `MatingHut.get_interaction_text()` to return "Press E to breed" when ≥2 critters assigned
-- Implement `MatingHut.interact(player)`:
-  - Check `len(self.assigned_critters) >= 2`
-  - Call `self.breed(world)` (need world reference; either store world on building during placement or pass via player)
-  - Possible solutions:
-    - Add `self.world` reference in `Building` when placed (set in `World.add_object`)
-    - Then `breed(world)` can use `self.world` or accept world param
-  - After offspring created, display a brief message "Breeding produced a new critter!"
-  - Optionally consume a resource cost (berries/food) for balancing
-- Ensure `MatingHut.breed(world)` creates offspring and adds to world (already does) and returns it
-- Update `main.py` to handle the interact properly (already calls `player.interact(world)` which finds nearby objects and calls their `interact`; MatingHut.interact should accept `player` and use `player.world` or the world reference)
-- Consider adding a small cooldown or limit to prevent spamming
-- Write unit tests: breeding with two critters produces one offspring with stats within bounds; breeding with <2 does nothing
-
-Acceptance:
-- Player can interact with MatingHut (press E) when two critters assigned
-- Offspring appears at hut center with stats derived from parents
-- Building cost enforced
-- Tests updated/added
+Acceptance satisfied: player can press E on MatingHut with ≥2 assigned critters and enough food to breed; offspring appears; costs enforced; feedback shown.
 
 ### Task 40: Implement Critter Assignment UI
 **Priority**: Medium
