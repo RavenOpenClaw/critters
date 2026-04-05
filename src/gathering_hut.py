@@ -85,7 +85,7 @@ class GatheringHut(Building):
     def interact(self, player):
         """Handle interaction: assign following critter or withdraw storage.
 
-        - If player has a following critter, assign it to this hut.
+        - If player has a following critter, assign it to this hut and clear following state.
         - Otherwise, transfer all storage contents to player inventory.
         """
         if not isinstance(player, Player):
@@ -94,6 +94,8 @@ class GatheringHut(Building):
         # Assignment mode: if player has a following critter, assign it
         if player.following_critter is not None:
             critter = player.following_critter
+            # Stop following behavior and clear reference
+            critter.stop_follow()
             self.assign_critter(critter)
             player.following_critter = None
             if hasattr(self, 'world') and self.world is not None:

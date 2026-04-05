@@ -333,7 +333,11 @@ def main():
                 # If inspector is visible, let it handle the click first to consume events inside its panel
                 inspector_handled = False
                 if critter_inspector.visible:
-                    if critter_inspector.handle_mouse_click((mx, my)):
+                    # Check if follow button was clicked
+                    if critter_inspector.follow_button_rect and critter_inspector.follow_button_rect.collidepoint(mx, my):
+                        critter_inspector.toggle_follow(player, world)
+                        inspector_handled = True
+                    elif critter_inspector.handle_mouse_click((mx, my)):
                         inspector_handled = True
                     else:
                         # Click outside the inspector panel: close it and consume the click

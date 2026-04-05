@@ -38,7 +38,7 @@ class MatingHut(Building):
     def interact(self, player):
         """Handle player interaction: assign following critter or breed.
 
-        - If player has a following critter, assign it to this hut and clear following.
+        - If player has a following critter, assign it to this hut and stop following.
         - Otherwise, if hut has ≥2 assigned critters and player has 5 food, breed.
         """
         from entity import Player
@@ -48,6 +48,8 @@ class MatingHut(Building):
         # Assignment mode: if player has a following critter, assign it
         if player.following_critter is not None:
             critter = player.following_critter
+            # Stop following behavior and clear reference
+            critter.stop_follow()
             self.assign_critter(critter)
             player.following_critter = None
             if hasattr(self, 'world') and self.world is not None:

@@ -436,3 +436,60 @@ def test_critter_buff_affects_movement_speed():
     critter.apply_buff(buff)
     assert critter.get_movement_speed() == pytest.approx(300.0)
 
+
+
+class TestCritterFollow:
+    """Tests for critter follow behavior."""
+
+    def test_start_follow(self):
+        player = Player(200, 100)
+        critter = Critter(50, 100, cell_size=32)
+        critter.start_follow(player)
+        assert critter.state == CritterState.FOLLOW
+        assert player.following_critter is critter
+
+    def test_start_follow_stops_existing(self):
+        player = Player(200, 100)
+        critter1 = Critter(50, 100, cell_size=32)
+        critter2 = Critter(60, 100, cell_size=32)
+        critter1.start_follow(player)
+        assert player.following_critter is critter1
+        critter2.start_follow(player)
+        assert player.following_critter is critter2
+        assert critter1.state == CritterState.IDLE
+        assert critter2.state == CritterState.FOLLOW
+
+    def test_stop_follow(self):
+        player = Player(200, 100)
+        critter = Critter(50, 100, cell_size=32)
+        critter.start_follow(player)
+        assert critter.state == CritterState.FOLLOW
+        assert player.following_critter is critter
+        critter.stop_follow()
+        assert critter.state == CritterState.IDLE
+        assert player.following_critter is None
+
+    def test_follow_moves_towards_player(self):
+        player = Player(200, 100)
+        grid = GridSystem(cell_size=32, width=20, height=20)
+        world = World(grid)
+        critter = Critter(50, 100, cell_size=32)
+        critter.start_follow(player)
+        initial_x = critter.x
+        critter.update(dt=1.0, world=world, pathfinding_system=None)
+        assert critter.x > initial_x
+
+    def test_follow_clears_when_assigned(self):
+        player = Player(200, 100)
+        grid = GridSystem(cell_size=32, width=20, height=20)
+        world = World(grid)
+        critter = Critter(50, 100, cell_size=32)
+        critter.start_follow(player)
+        assert critter.state == CritterState.FOLLOW
+        hut = GatheringHut(5, 5, 32)
+        hut.world = world
+        hut.interact(player)
+        assert critter.state != CritterState.FOLLOW
+        assert player.following_critter is None
+        assert critter in hut.assigned_critters
+

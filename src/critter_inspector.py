@@ -2,7 +2,7 @@
 Critter Inspector UI: displays stats of a selected critter.
 """
 import pygame
-from critter import Critter
+from critter import Critter, CritterState
 
 class CritterInspector:
     """Shows detailed stats for a selected critter in a fixed side panel."""
@@ -32,6 +32,8 @@ class CritterInspector:
             self.close_button_size,
             self.close_button_size
         )
+        # Follow button rect (below stats)
+        self.follow_button_rect = None
 
     def toggle(self, critter=None):
         """Toggle visibility. If a critter is provided, show that critter's stats."""
@@ -57,6 +59,26 @@ class CritterInspector:
                 self.hide()
             return True
         return False
+
+    def toggle_follow(self, player, world):
+        """Toggle follow mode for the selected critter.
+        - If critter already following, stop following.
+        - If not following, start following the player.
+        Provides feedback via world.message.
+        """
+        if self.selected_critter is None:
+            return
+        c = self.selected_critter
+        from critter import CritterState
+        if c.state == CritterState.FOLLOW:
+            c.stop_follow()
+            if player.following_critter is c:
+                player.following_critter = None
+            world.set_message("Stopped following.", 2.0)
+        else:
+            # Start following; this will also stop any existing following critter
+            c.start_follow(player)
+            world.set_message("Critter is following you.", 2.0)
 
     def draw(self, screen):
         if not self.visible or self.selected_critter is None:
@@ -105,3 +127,20 @@ class CritterInspector:
         for i, line in enumerate(lines):
             text = self.font.render(line, True, (0, 0, 0))
             screen.blit(text, (x0, y0 + i * line_spacing))
+        # Draw "Follow" button below stats
+        btn_y = y0 + len(lines) * line_spacing + 8
+        is_following = (c.state == CritterState.FOLLOW)
+        btn_text = "Stop Following" if is_following else "Follow"
+        text_surf = self.font.render(btn_text, True, (255, 255, 255))
+        text_rect = text_surf.get_rect()
+        btn_rect = pygame.Rect(
+            x0,
+            btn_y,
+            text_rect.width + 16,
+            line_spacing + 6
+        )
+        self.follow_button_rect = btn_rect
+        pygame.draw.rect(screen, (100, 200, 100) if is_following else (100, 100, 200), btn_rect)
+        pygame.draw.rect(screen, (0, 0, 0), btn_rect, 1)
+        text_rect.center = btn_rect.center
+        screen.blit(text_surf, text_rect)
