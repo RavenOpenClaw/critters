@@ -138,6 +138,37 @@ def main():
         initial_map = MapData(name="main", width=grid_width, height=grid_height, cell_size=cell_size)
         world = World(initial_map)
         grid = world.grid  # alias to current grid for convenience
+
+        # Create a second map: north_woods (adjacent north of main)
+        # Use same grid dimensions for consistency
+        north_woods = MapData(name="north_woods", width=grid_width, height=grid_height, cell_size=cell_size)
+        # Populate north_woods with resources (sparse set)
+        second_bush_positions = [(5, 5), (10, 5), (5, 10), (12, 12)]
+        for gx, gy in second_bush_positions:
+            bush = BerryBush(gx, gy, cell_size=cell_size, berries=5)
+            north_woods.objects.append(bush)
+        second_tree_positions = [(2, 5), (8, 3), (14, 8)]
+        for gx, gy in second_tree_positions:
+            tree = Tree(gx, gy, cell_size=cell_size, wood=10, respawn_duration=30.0)
+            north_woods.objects.append(tree)
+        second_rock_positions = [(4, 8), (12, 2)]
+        for gx, gy in second_rock_positions:
+            rock = Rock(gx, gy, cell_size=cell_size, stone=5)
+            north_woods.objects.append(rock)
+        second_stick_positions = [(7, 6), (15, 4)]
+        for gx, gy in second_stick_positions:
+            stick = Stick(gx, gy, cell_size=cell_size, sticks=3)
+            north_woods.objects.append(stick)
+        # Add a GatheringHut on north_woods (for demo)
+        second_hut = GatheringHut(grid_width//2 + 2, grid_height//2 + 2, cell_size)
+        north_woods.objects.append(second_hut)
+
+        # Register the second map with the world
+        world.add_map(north_woods)
+        # Configure neighbors for boundary-based transitions
+        world.current_map.neighbors = {'north': 'north_woods'}
+        north_woods.neighbors = {'south': 'main'}
+
         # Add test berry bushes at various positions for collision and interaction testing
         test_positions = [
             (5, 5), (10, 5), (5, 10), (15, 5), (5, 15),
