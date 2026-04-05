@@ -221,11 +221,18 @@ def main():
         world.add_object(grass)
 
         # Create some critters and assign them to the hut
-        for i in range(3):
+        # Stats variations: weak (25), strong (75), average (50)
+        critter_stats = [
+            (25, 25, 25),   # weak
+            (75, 75, 75),   # strong
+            (50, 50, 50)    # average
+        ]
+        for i, (strength, speed, endurance) in enumerate(critter_stats):
             # Spawn critters just outside the hut to the right, each offset vertically
             critter_x = hut.x + (hut.width + 1) * cell_size + (i * cell_size)
             critter_y = hut.y + (i * cell_size * 0.5)
-            critter = Critter(critter_x, critter_y, cell_size=cell_size)
+            critter = Critter(critter_x, critter_y, cell_size=cell_size,
+                              strength=strength, speed_stat=speed, endurance=endurance)
             hut.assign_critter(critter)
             world.add_object(critter)  # Add to world objects and to current_map.critters
 
@@ -289,14 +296,14 @@ def main():
                 dx = player.x - cx
                 dy = player.y - cy
                 if dx*dx + dy*dy <= radius_sq:
-                    buff = Buff("Strength", {'gather': 2.0}, duration=30.0)
+                    buff = Buff("Warm", {'gather': 2.0}, duration=30.0)
                     player.apply_buff(buff)
                 # Critters
                 for critter in world.current_map.critters:
                     dx = critter.x - cx
                     dy = critter.y - cy
                     if dx*dx + dy*dy <= radius_sq:
-                        buff = Buff("Strength", {'gather': 2.0}, duration=30.0)
+                        buff = Buff("Warm", {'gather': 2.0}, duration=30.0)
                         critter.apply_buff(buff)
 
         # Update player state (buffs, speed recalculation)
@@ -330,43 +337,46 @@ def main():
 
             # Only act if click was not on HUD or build menu UI
             if not clicked_hud and not clicked_build_menu:
-                # If inspector is visible, let it handle the click first to consume events inside its panel
                 inspector_handled = False
-                if critter_inspector.visible:
-                    # Check if follow button was clicked
-                    if critter_inspector.follow_button_rect and critter_inspector.follow_button_rect.collidepoint(mx, my):
-                        critter_inspector.toggle_follow(player, world)
-                        inspector_handled = True
-                    elif critter_inspector.handle_mouse_click((mx, my)):
-                        inspector_handled = True
-                    else:
-                        # Click outside the inspector panel: close it and consume the click
-                        critter_inspector.hide()
-                        inspector_handled = True
+
+                # Deconstruction mode takes precedence over everything
+                if input_handler.deconstruct_mode:
+                    gx, gy = grid.world_to_grid(mx, my)
+                    if grid.is_within_bounds(gx, gy):
+                        # Check if a building occupies this grid cell
+                        if (gx, gy) in grid.occupied:
+                            obj = grid.occupied[(gx, gy)]
+                            if isinstance(obj, Building):
+                                # Check player is within interaction range
+                                ox, oy = obj.get_center()
+                                dx = player.x - ox
+                                dy = player.y - oy
+                                if dx*dx + dy*dy <= player.interaction_radius**2:
+                                    obj.deconstruct(world, player)
+                                    world.set_message("Deconstructed", 2.0)
+                                    inspector_handled = True  # consume click
+                                else:
+                                    world.set_message("Out of range", 1.5)
+                                    inspector_handled = True
+
+                # If deconstruct didn't handle, proceed with inspector interaction
                 if not inspector_handled:
-                    # Deconstruction mode takes precedence
-                    if input_handler.deconstruct_mode:
-                        gx, gy = grid.world_to_grid(mx, my)
-                        if grid.is_within_bounds(gx, gy):
-                            # Check if a building occupies this grid cell
-                            if (gx, gy) in grid.occupied:
-                                obj = grid.occupied[(gx, gy)]
-                                if isinstance(obj, Building):
-                                    # Check player is within interaction range
-                                    ox, oy = obj.get_center()
-                                    dx = player.x - ox
-                                    dy = player.y - oy
-                                    if dx*dx + dy*dy <= player.interaction_radius**2:
-                                        obj.deconstruct(world, player)
-                    else:
+                    # If inspector is visible, let it handle the click first to consume events inside its panel
+                    if critter_inspector.visible:
+                        # Check if follow button was clicked
+                        if critter_inspector.follow_button_rect and critter_inspector.follow_button_rect.collidepoint(mx, my):
+                            critter_inspector.toggle_follow(player, world)
+                            inspector_handled = True
+                        elif critter_inspector.handle_mouse_click((mx, my)):
+                            inspector_handled = True
+                        else:
+                            # Click outside the inspector panel: close it and consume the click
+                            critter_inspector.hide()
+                            inspector_handled = True
+                    if not inspector_handled:
                         # Critter inspection: prioritize clicking on critters
                         clicked_critter = False
                         for c in world.current_map.critters:
-                            # Check player is within interaction radius of the critter
-                            dxp = player.x - c.x
-                            dyp = player.y - c.y
-                            if dxp*dxp + dyp*dyp > player.interaction_radius**2:
-                                continue
                             # Check mouse click near critter (within radius + 5px tolerance)
                             dx = mx - c.x
                             dy = my - c.y
@@ -398,16 +408,29 @@ def main():
         # Update crafting menu (for message timer, etc.)
         crafting_menu.update(dt)
 
+        # Enforce mode exclusivity and handle Escape
+        if input_handler.deconstruct_mode and build_menu.visible:
+            build_menu.visible = False
+        if input_handler.escape_pressed:
+            if build_menu.visible:
+                build_menu.visible = False
+            if input_handler.deconstruct_mode:
+                input_handler.deconstruct_mode = False
+            if critter_inspector.visible:
+                critter_inspector.hide()
+
         # Update critters
         for critter in world.current_map.critters:
             critter.update(dt, world, pathfinding)
 
-        # Mark trampled cells by player and critters
+        # Mark trampled cells by player and critters (only on first entry per cell)
         entities = [player] + world.current_map.critters
         for ent in entities:
             gx, gy = grid.world_to_grid(ent.x, ent.y)
             if grid.is_within_bounds(gx, gy):
-                world.mark_trampled(gx, gy)
+                if getattr(ent, 'last_trampled_cell', None) != (gx, gy):
+                    world.mark_trampled(gx, gy)
+                    ent.last_trampled_cell = (gx, gy)
         # Decay trampled status over time
         world.update_trampled(dt)
 
@@ -436,6 +459,21 @@ def main():
         # Draw world objects
         world.draw(screen)
 
+        # Debug: show building inventories when debug mode is on
+        if input_handler.show_debug:
+            for obj in world.current_map.objects:
+                if isinstance(obj, Building):
+                    inv = obj.inventory
+                    if inv.items:
+                        parts = [f"{count} {res}" for res, count in inv.items.items()]
+                        text = ", ".join(parts)
+                    else:
+                        text = "empty"
+                    text_surf = font.render(text, True, (0, 0, 0))
+                    cx, cy = obj.get_center()
+                    text_rect = text_surf.get_rect(center=(cx, cy - 20))
+                    screen.blit(text_surf, text_rect)
+
         # Draw interaction prompts for nearby objects
         for obj in world.current_map.objects:
             # Get object center
@@ -448,6 +486,9 @@ def main():
             if dx*dx + dy*dy <= player.interaction_radius ** 2:
                 if hasattr(obj, 'get_interaction_text'):
                     text = obj.get_interaction_text()
+                    # Override interaction text when player has following critters
+                    if isinstance(obj, Building) and player.following_critters:
+                        text = "Assign: E"
                     if text:
                         text_surface = font.render(text, True, (0, 0, 0))
                         text_rect = text_surface.get_rect(center=(ox, oy - 30))  # raised by 10px
@@ -474,6 +515,8 @@ def main():
             )
             # Render state label above critter with color based on state; optionally add debug info
             label = critter.state.name
+            if critter.state == CritterState.IDLE:
+                label = "REST"
             color = STATE_COLORS.get(critter.state, (0, 0, 0))
             if input_handler.show_debug and critter.is_calculating:
                 label += " (CALC)"

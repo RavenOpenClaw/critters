@@ -214,18 +214,21 @@ class World:
             self.grass_cells.discard((obj.gx, obj.gy))
 
     def mark_trampled(self, gx, gy):
+        """Mark a grid cell as trampled, resetting its decay timer.
+
+        If this is a new trample (cell not already marked), apply decay to Grass at that location.
+        """
+        already_trampled = (gx, gy) in self.current_map.trampled
         self.current_map.trampled[(gx, gy)] = self.trample_duration
-        # Apply decay to any Grass object at this cell, simulating repeated foot traffic.
-        # Multiple calls per frame will compound decay, making busy paths wear down grass faster.
-        for obj in self.current_map.objects:
-            if isinstance(obj, Grass) and obj.gx == gx and obj.gy == gy:
-                obj.condition -= self.trample_decay
-                # If condition drops to 0 or below, Grass will remove itself on next update (or immediately)
-                if obj.condition <= 0.0:
-                    # Optional: remove immediately to avoid lingering dead grass
-                    self.remove_object(obj)
-                # Only one Grass can occupy a cell; break after first
-                break
+        # Only apply decay on first trample event (entry) to avoid rapid degradation while staying.
+        if not already_trampled:
+            for obj in self.current_map.objects:
+                if isinstance(obj, Grass) and obj.gx == gx and obj.gy == gy:
+                    obj.condition -= self.trample_decay
+                    if obj.condition <= 0.0:
+                        self.remove_object(obj)
+                    # Only one Grass can occupy a cell; break after first
+                    break
 
     def is_trampled(self, gx, gy):
         return (gx, gy) in self.current_map.trampled

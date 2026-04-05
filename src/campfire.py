@@ -19,5 +19,16 @@ class Campfire(Building):
         """Optional: still allow manual buff for compatibility, but aura handles automatically."""
         from entity import Player
         if isinstance(other, Player):
-            buff = Buff("Strength", {'gather': 2.0}, duration=30.0)
+            buff = Buff("Warm", {'gather': 2.0}, duration=30.0)
             other.apply_buff(buff)
+
+    def render(self, screen):
+        """Render the Campfire as a red rectangle."""
+        import pygame
+        rect = pygame.Rect(
+            self.x,
+            self.y,
+            self.width * self.cell_size,
+            self.height * self.cell_size
+        )
+        pygame.draw.rect(screen, (255, 0, 0), rect)  # Red

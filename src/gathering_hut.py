@@ -91,13 +91,12 @@ class GatheringHut(Building):
         if not isinstance(player, Player):
             return
 
-        # Assignment mode: if player has a following critter, assign it
-        if player.following_critter is not None:
-            critter = player.following_critter
-            # Stop following behavior and clear reference
+        # Assignment mode: if player has any following critters, assign the first one
+        if player.following_critters:
+            critter = player.following_critters[0]
+            # Stop following behavior and clear reference (stop_follow removes from list)
             critter.stop_follow()
             self.assign_critter(critter)
-            player.following_critter = None
             if hasattr(self, 'world') and self.world is not None:
                 self.world.set_message("Critter assigned to Gathering Hut.", 2.0)
             return
@@ -106,6 +105,10 @@ class GatheringHut(Building):
         for item_name, count in list(self.storage.items.items()):
             player.inventory.add(item_name, count)
             del self.storage.items[item_name]
+
+    def can_gather(self):
+        """GatheringHut supports resource gathering."""
+        return True
 
     def render(self, screen):
         """Render the Gathering Hut as a brown rectangle."""

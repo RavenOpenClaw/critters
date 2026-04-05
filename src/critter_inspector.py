@@ -72,8 +72,6 @@ class CritterInspector:
         from critter import CritterState
         if c.state == CritterState.FOLLOW:
             c.stop_follow()
-            if player.following_critter is c:
-                player.following_critter = None
             world.set_message("Stopped following.", 2.0)
         else:
             # Start following; this will also stop any existing following critter

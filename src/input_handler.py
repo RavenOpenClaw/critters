@@ -15,22 +15,23 @@ class InputHandler:
         self.move_x = 0
         self.move_y = 0
         self.show_debug = False
-        self.interact = False  # Interaction flag set on 'E' key press (tap)
-        self.interact_count = 0  # Number of interactions to fire this frame
-        self.build_toggle = False  # Toggle build menu on 'B' key press
-        self.select_gathering_hut = False  # Select GatheringHut on 'G' key press
-        self.crafting_toggle = False  # Toggle crafting menu on 'R' key press
-        self.craft_slot = None  # Selected recipe slot (1-9) when crafting menu is open
+        self.interact = False
+        self.interact_count = 0
+        self.build_toggle = False
+        self.select_gathering_hut = False
+        self.crafting_toggle = False
+        self.craft_slot = None
         self.mouse_clicked = False
         self.mouse_pos = (0, 0)
-        self.save_request = False  # Save game on 'S' key press
-        self.load_request = False  # Load game on 'L' key press
-        self.deconstruct_mode = False  # Persistent deconstruction mode toggle
+        self.save_request = False
+        self.load_request = False
+        self.deconstruct_mode = False
+        self.escape_pressed = False  # Escape key to close overlays
 
         # Hold-to-interact state
-        self._e_held = False          # Is E currently held down?
-        self._hold_timer = 0.0        # Time E has been held since first press
-        self._auto_timer = 0.0        # Accumulator for auto-repeat interval
+        self._e_held = False
+        self._hold_timer = 0.0
+        self._auto_timer = 0.0
 
     def handle_events(self):
         """Process pygame events. Returns False if the app should quit."""
@@ -40,6 +41,7 @@ class InputHandler:
         self.interact = False
         self.save_request = False
         self.load_request = False
+        self.escape_pressed = False
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return False
@@ -53,16 +55,24 @@ class InputHandler:
                     self._auto_timer = 0.0
                 if event.key == pygame.K_b:
                     self.build_toggle = True
+                    # Exiting deconstruct mode if build mode is toggled
+                    if self.deconstruct_mode:
+                        self.deconstruct_mode = False
                 if event.key == pygame.K_g:
                     self.select_gathering_hut = True
                 if event.key == pygame.K_r:
                     self.crafting_toggle = True
                 if event.key == pygame.K_x:
                     self.deconstruct_mode = not self.deconstruct_mode
+                    # Exiting build mode if deconstruct mode is toggled on
+                    if self.deconstruct_mode and self.build_toggle:
+                        self.build_toggle = False
                 if event.key == pygame.K_F5:
                     self.save_request = True
                 if event.key == pygame.K_F6:
                     self.load_request = True
+                if event.key == pygame.K_ESCAPE:
+                    self.escape_pressed = True
                 # Number keys 1-9 for crafting selection
                 number_keys = [pygame.K_1, pygame.K_2, pygame.K_3, pygame.K_4, pygame.K_5,
                                pygame.K_6, pygame.K_7, pygame.K_8, pygame.K_9]

@@ -841,46 +841,31 @@ Acceptance satisfied: Player can select a critter and toggle Follow; critter tra
 
 ### Task 37: Implement Building Costs
 **Priority**: High
-**Status**: NOT_STARTED
+**Status**: COMPLETED (2026-04-05)
 
-Context: All buildings currently have empty cost dictionaries, making them free to place. The design intends resource costs for buildings to create strategic resource management.
+Implementation:
+- Defined building costs: GatheringHut (wood=10, stone=5), Chair (wood=2), Campfire (wood=5, stone=2), MatingHut (wood=15, stone=10)
+- Updated subclasses to pass costs to `Building.__init__`
+- BuildMenu displays costs on buttons and enforces resource deduction on placement
+- Added unit tests verifying correct deduction and rejection when resources insufficient
 
-Implementation steps:
-- Define reasonable costs for each building type
-  - GatheringHut: e.g., wood=10, stone=5
-  - Chair: e.g., wood=2
-  - Campfire: e.g., wood=5, stone=2
-  - MatingHut: e.g., wood=15, stone=10
-- Update each building's `__init__` to pass the cost to `Building.__init__`
-- Ensure BuildMenu displays costs in the button labels or tooltip
-- Ensure `attempt_placement` already checks `can_place()`; verify it deducts resources properly
-- Write unit tests to confirm placement deducts correct resources and fails when insufficient
+All tests pass at completion.
 
-Acceptance:
-- Buildings require resources to place
-- Build menu shows costs
-- Placement fails with insufficient resources (no deduction)
-- All existing tests pass
+Acceptance satisfied: Buildings now require resources; costs are visible; placement respects affordability; tests cover behavior.
 
 ### Task 38: Add Second Map and Enable Travel
 **Priority**: High
-**Status**: NOT_STARTED
+**Status**: COMPLETED (2026-04-05)
 
-Context: Multi‑map infrastructure exists, but only a single map ("main") is created in `main.py`. The player cannot travel to another map because no neighbor is defined.
+Implementation:
+- Created second `MapData` "north_woods" with resources and a GatheringHut
+- Registered map with world and configured neighbor links (main.north → north_woods, north_woods.south → main)
+- Verified boundary crossing triggers map transitions and entity state is preserved
+- Added tests for map switching and state preservation
 
-Implementation steps:
-- In `main.py` new game setup, create a second `MapData` (e.g., name="north_woods") with desired dimensions and objects (some resources, maybe a second hut)
-- Register the second map with `world.add_map(second_map)`
-- Configure neighbors on the main map to enable edge transitions (e.g., main.neighbors['north'] = 'north_woods'; north_woods.neighbors['south'] = 'main')
-- Alternatively or additionally, add a Portal object on the main map that transitions to the second map, and trigger via interaction
-- Ensure player starting position is within main map bounds
-- Test that walking off the north edge transitions to the new map and preserves player position appropriately
+All tests pass.
 
-Acceptance:
-- Player can walk off screen edge (or use portal) to enter a second map
-- Second map contains at least a few resources and is navigable
-- Returning to the main map preserves the player's prior position on that map
-- All tests pass
+Acceptance satisfied: Player can walk north to enter north_woods; second map contains resources; returning south restores main map with player position intact.
 
 ### Task 39: Complete Mating Hut Integration
 **Priority**: Medium

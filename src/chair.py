@@ -22,3 +22,14 @@ class Chair(Building):
             # Rested: 1.5x speed for 30 seconds
             buff = Buff("Rested", {'speed': 1.5}, duration=30.0)
             other.apply_buff(buff)
+
+    def render(self, screen):
+        """Render the Chair as a brown rectangle."""
+        import pygame
+        rect = pygame.Rect(
+            self.x,
+            self.y,
+            self.width * self.cell_size,
+            self.height * self.cell_size
+        )
+        pygame.draw.rect(screen, (210, 105, 30), rect)  # Chocolate brown

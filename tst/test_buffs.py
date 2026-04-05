@@ -94,7 +94,7 @@ class TestChairAndCampfire(unittest.TestCase):
         campfire.interact(player)
         self.assertEqual(len(player.active_buffs), 1)
         buff = player.active_buffs[0]
-        self.assertEqual(buff.name, "Strength")
+        self.assertEqual(buff.name, "Warm")
         self.assertEqual(buff.multipliers['gather'], 2.0)
         self.assertEqual(buff.duration, 30.0)
 

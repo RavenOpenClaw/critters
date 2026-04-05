@@ -5,15 +5,10 @@ This file tracks the current task being worked on. If context is lost, refer to 
 ---
 
 ## Current Task
-**Status**: IN_PROGRESS
-**Task**: Task 45 - Implement Critter Follow & Assign Feature
-**Started**: 2026-04-05
-**Branch**: feature/critter-follow
-**Notes**:
-- Extend CritterInspector with a "Follow" toggle button.
-- Implement follow behavior: critter periodically picks destination near player and moves there.
-- Building interaction already assigns the following critter; ensure it works smoothly.
-- Add tests for follow logic and assignment integration.
+**Status**: COMPLETED
+**Task**: All planned critter tasks (through Task 45) complete
+**Branch**: mainline
+**Notes**: Project prototype complete. All features implemented, tested, and merged. No outstanding tasks.
 
 **Project Status**: Core prototype complete. All planned features and documentation complete.
 
@@ -70,10 +65,11 @@ Core prototype complete. All planned features and documentation complete.
 - Task 42: Complete Mating Hut Integration – MatingHut.interact with food cost and message; assignment via interaction; 4 new tests; 216 tests; merged (df6b95d).
 - Task 43: Critter Assignment UI – assignment via E key; inspector shows status; removed A-key/button; tests in hut suites; 216 tests; merged (487b695).
 - Task 44: Balance and QA Regression – verified core loop, UI cues present, test suite green (216/216); no blocking issues. Completed (2026-04-05).
+- Task 45: Implement Critter Follow & Assign Feature – added FOLLOW state with exclusive following, follow movement, CritterInspector follow button; building interaction integrates assignment; 5 new tests; all 221 tests passing; merged (2597017).
 
 ---
 
 ## Environment Status
 ✅ Virtual environment set up with pygame, pytest, hypothesis.
 Run tests via: `PYTHONPATH=src venv/bin/python -m pytest tst/ -v`
-All tests: 216/216 passing.
+All tests: 221/221 passing.

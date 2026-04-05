@@ -15,14 +15,27 @@ class Player(Entity):
     """Player entity with movement speed, world bounds, interaction, buffs, and equipment."""
     def __init__(self, x, y, radius=20, speed=200):
         super().__init__(x, y, radius)
-        self.base_speed = speed  # Base speed in pixels per second (without buffs)
-        self.speed = speed       # Current effective speed (updated by buffs)
-        self.world_rect = None   # pygame.Rect for clamping; set externally
+        self.base_speed = speed
+        self.speed = speed
+        self.world_rect = None
         self.inventory = Inventory()
-        self.active_buffs = []   # List of active Buff instances
-        self.unlocked_equipment = set()  # Set of equipment IDs that have been unlocked
-        self.equipped = set()            # Set of equipped equipment IDs
-        self.following_critter = None     # Critter currently following the player (if any)
+        self.active_buffs = []
+        self.unlocked_equipment = set()
+        self.equipped = set()
+        self.following_critters = []  # List of critters following the player (max 2)
+        self.last_trampled_cell = None  # Track last trampled grid cell to avoid repeated damage
+
+    @property
+    def following_critter(self):
+        """Backward compatibility: return first following critter or None."""
+        return self.following_critters[0] if self.following_critters else None
+
+    @following_critter.setter
+    def following_critter(self, value):
+        if value is None:
+            self.following_critters = []
+        else:
+            self.following_critters = [value]
 
     @property
     def interaction_radius(self):

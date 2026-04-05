@@ -66,3 +66,10 @@ class Building(WorldObject):
             self.assigned_critters.remove(critter)
             if getattr(critter, 'assigned_hut', None) is self:
                 critter.assigned_hut = None
+
+    def find_resource_in_radius(self, world, critter):
+        """
+        Find a resource-bearing world object within this building's gathering radius.
+        Base Building returns None; subclasses with gathering (e.g., GatheringHut) should override.
+        """
+        return None

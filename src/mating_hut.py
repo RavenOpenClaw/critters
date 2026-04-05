@@ -45,13 +45,13 @@ class MatingHut(Building):
         if not isinstance(player, Player):
             return
 
-        # Assignment mode: if player has a following critter, assign it
-        if player.following_critter is not None:
-            critter = player.following_critter
-            # Stop following behavior and clear reference
+        # Assignment mode: if player has any following critters, assign the first one
+        if player.following_critters:
+            critter = player.following_critters[0]
+            # Stop following behavior and clear reference (stop_follow removes from list)
             critter.stop_follow()
             self.assign_critter(critter)
-            player.following_critter = None
+            # No need to clear player.following_critter; stop_follow already removed
             if hasattr(self, 'world') and self.world is not None:
                 self.world.set_message("Critter assigned to Mating Hut.", 2.0)
             return
@@ -119,3 +119,14 @@ class MatingHut(Building):
         world.add_object(offspring)
 
         return offspring
+
+    def render(self, screen):
+        """Render the MatingHut as a pink rectangle."""
+        import pygame
+        rect = pygame.Rect(
+            self.x,
+            self.y,
+            self.width * self.cell_size,
+            self.height * self.cell_size
+        )
+        pygame.draw.rect(screen, (255, 105, 180), rect)  # Hot pink

@@ -58,6 +58,11 @@ class Critter(Entity):
         self.animation_interval = 0.2  # seconds per frame (5 FPS)
         self.animation_frame = 0  # 0 or 1
         # Initialize state machine state
+        self.path = None
+        self.path_index = 0
+        self.goal_cell = None
+        # Trample tracking: last cell where damage was applied
+        self.last_trampled_cell = None
         self.start_idle()
 
     def interact(self, player):
@@ -181,12 +186,17 @@ class Critter(Entity):
         # If already following this player, ignore
         if self.state == CritterState.FOLLOW and self.following_player is player:
             return
-        # Stop any existing following critter first
-        if player.following_critter is not None and player.following_critter is not self:
-            player.following_critter.stop_follow()
+        # Ensure we are not already in player's list (remove if present)
+        if self in player.following_critters:
+            player.following_critters.remove(self)
+        # Manage capacity: if player already has 2 followers, remove the oldest
+        if len(player.following_critters) >= 2:
+            old = player.following_critters.pop(0)
+            old.stop_follow()
+        # Add this critter to following list
+        player.following_critters.append(self)
         self.state = CritterState.FOLLOW
         self.following_player = player
-        player.following_critter = self
         self.follow_timer = 0.0
         self.follow_goal = None
         self.path = None
@@ -197,11 +207,17 @@ class Critter(Entity):
     def stop_follow(self):
         """Cease following and return to IDLE."""
         if self.state == CritterState.FOLLOW:
-            # Clear player's reference if it points to us
-            if self.following_player and self.following_player.following_critter is self:
-                self.following_player.following_critter = None
+            if self.following_player:
+                if self in self.following_player.following_critters:
+                    self.following_player.following_critters.remove(self)
             self.state = CritterState.IDLE
             self.following_player = None
+            self.follow_timer = 0.0
+            self.follow_goal = None
+            self.path = None
+            self.path_index = 0
+            self.goal_cell = None
+            self.loiter_target = None
             self.follow_timer = 0.0
             self.follow_goal = None
             self.path = None
@@ -273,8 +289,12 @@ class Critter(Entity):
         # Idle timer counts down to transition to GATHER
         self.idle_timer -= dt
         if self.idle_timer <= 0:
-            # Transition to GATHER
-            self.start_gather(None)  # target will be set by update_gather
+            # Transition to GATHER only if assigned hut supports gathering
+            if self.assigned_hut and self.assigned_hut.can_gather():
+                self.start_gather(None)
+            else:
+                # No valid gathering; remain idle with extended timer to avoid constant re-evaluation
+                self.idle_timer = random.uniform(10.0, 20.0)
 
     def _circle_intersects_rect(self, cx, cy, r, rect_x, rect_y, rect_w, rect_h):
         """Check if a circle (center cx,cy, radius r) intersects an axis-aligned rectangle."""
@@ -440,16 +460,14 @@ class Critter(Entity):
             self._deposit_at_hut()
 
     def _update_follow(self, dt, world, pathfinding_system):
-        """FOLLOW behavior: stay near the player."""
+        """FOLLOW behavior: stay near the player using pathfinding."""
         if self.following_player is None:
             self.start_idle()
             return
         player = self.following_player
-        # Recalculate goal periodically
         self.follow_timer -= dt
         if self.follow_timer <= 0.0:
             self.follow_timer = self.follow_recalc_interval
-            # Choose a free cell near player (2-3 cells away)
             grid = world.grid
             player_gx, player_gy = grid.world_to_grid(player.x, player.y)
             radius = random.choice([2, 3])
@@ -460,34 +478,23 @@ class Critter(Entity):
                         continue
                     gx = player_gx + dx
                     gy = player_gy + dy
-                    if grid.is_within_bounds(gx, gy) and not grid.is_occupied(gx, gy):
-                        if dx*dx + dy*dy <= radius*radius:
-                            candidates.append((gx, gy))
-            if candidates:
-                self.follow_goal = random.choice(candidates)
-            else:
-                self.follow_goal = None
-        # Move towards follow_goal if set
+                    if grid.is_within_bounds(gx, gy) and not grid.is_occupied(gx, gy) and dx*dx+dy*dy <= radius*radius:
+                        candidates.append((gx, gy))
+            self.follow_goal = random.choice(candidates) if candidates else None
+            self.path = None
         if self.follow_goal is not None:
-            goal_gx, goal_gy = self.follow_goal
-            goal_x = goal_gx * self.cell_size + self.cell_size / 2
-            goal_y = goal_gy * self.cell_size + self.cell_size / 2
-            dx = goal_x - self.x
-            dy = goal_y - self.y
-            dist_sq = dx*dx + dy*dy
-            if dist_sq < 1.0:
-                self.x, self.y = goal_x, goal_y
+            if self.path is None:
+                grid = world.grid
+                start_gx, start_gy = grid.world_to_grid(self.x, self.y)
+                self.path = pathfinding_system.find_path((start_gx, start_gy), self.follow_goal, grid)
+                self.path_index = 0
+                if self.path is None:
+                    self.follow_goal = None
+                    return
+            self._follow_path(dt, world)
+            if self.path is None:
                 self.follow_goal = None
-                self.path = None
-            else:
-                speed = self.get_movement_speed()
-                move_dist = speed * dt
-                if move_dist * move_dist >= dist_sq:
-                    self.x = goal_x
-                    self.y = goal_y
-                else:
-                    self.x += (dx / dist_sq**0.5) * move_dist
-                    self.y += (dy / dist_sq**0.5) * move_dist
+
 
     def _is_adjacent_to_hut(self, critter_gx, critter_gy):
         """Check if the critter is orthogonally adjacent to any cell occupied by the assigned hut."""

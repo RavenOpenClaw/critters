@@ -107,3 +107,29 @@ class TestTrampling:
         # Should have been removed
         assert not world.is_trampled(5, 5)
         assert (5, 5) not in world.trampled
+
+    def test_trample_damage_applied_only_on_first_entry(self):
+        """Grass condition should decrease only once when an entity first enters the cell, not every frame while standing."""
+        from entity import Entity
+        cell_size = 1
+        grid = GridSystem(cell_size=cell_size, width=10, height=10)
+        world = World(grid)
+        grass = Grass(5, 5, cell_size=cell_size)
+        world.add_object(grass)
+        initial_condition = grass.condition
+        # Simulate an entity standing on the grass cell for multiple frames
+        ent = Entity(5.5, 5.5, radius=0.5)  # entity positioned on the grass cell
+        # First frame: mark trampled
+        gx, gy = grid.world_to_grid(ent.x, ent.y)
+        world.mark_trampled(gx, gy)
+        # Grass condition should decrease by trample_decay (default 5) exactly once
+        # Because it was first entry
+        # After first mark, the grass condition should be reduced
+        # But we need to allow the world's trampled dict to have the entry
+        # Now simulate subsequent frames where entity remains on same cell
+        for _ in range(5):
+            # Call mark_trampled again for same cell
+            world.mark_trampled(gx, gy)
+        # After multiple calls, condition should not decrease further (only initial 5)
+        expected_condition = initial_condition - world.trample_decay
+        assert grass.condition == expected_condition

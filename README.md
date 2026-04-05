@@ -99,6 +99,7 @@ Agents must follow this strict workflow to maintain code quality and visibility:
 6. Updating Docs:
    - Update both task files to mark completed items (checkboxes in `.kiro/specs/.../tasks.md` and `doc/HIGH_LEVEL_TASKS.md`).
    - If new libraries were added, update `doc/dependencies.md`.
+7. Bug Reporting: If you discover bugs during development or testing, add them to `.kiro/specs/critters-game-prototype/bugs.md` with the required format (ID, Expected, Actual, Reproduce, Desired fix). See `DOCUMENTATION_INDEX.md` for more on the bug tracking process.
 
 ## 📜 Source of Truth
 
