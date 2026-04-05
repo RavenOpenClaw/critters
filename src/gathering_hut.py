@@ -8,6 +8,8 @@ from berry_bush import BerryBush
 
 class GatheringHut(Building):
     """Gathering Hut building (3x3) with storage and critter assignment."""
+    cost = {"wood": 10, "stone": 5}  # class attribute for UI display
+
     def __init__(self, gx, gy, cell_size):
         """
         Initialize a Gathering Hut.
@@ -16,9 +18,7 @@ class GatheringHut(Building):
             gx, gy: grid coordinates for placement
             cell_size: size of a grid cell in world units
         """
-        # Cost: not specified in Task 9; will be defined later when costs are balanced
-        cost = {}  # Placeholder; likely will require wood, stone, etc.
-        super().__init__(gx, gy, width=3, height=3, cell_size=cell_size, cost=cost)
+        super().__init__(gx, gy, width=3, height=3, cell_size=cell_size, cost=self.cost)
         # Storage inventory for gathered resources
         self.storage = Inventory()
         # List of assigned critter references (to be defined later when Critter exists)

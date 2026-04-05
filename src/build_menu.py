@@ -5,6 +5,7 @@ import pygame
 from gathering_hut import GatheringHut
 from chair import Chair
 from campfire import Campfire
+from mating_hut import MatingHut
 
 class BuildMenu:
     """Simple build menu for selecting and placing buildings with mouse/keyboard."""
@@ -15,6 +16,7 @@ class BuildMenu:
         # Building options: tuple of (class, label)
         self.buildings = [
             (GatheringHut, "Gathering Hut"),
+            (MatingHut, "Mating Hut"),
             (Chair, "Chair"),
             (Campfire, "Campfire"),
         ]
@@ -24,13 +26,14 @@ class BuildMenu:
         # Menu appearance
         self.menu_width = 200
         self.menu_height = 150
-        self.button_height = 30
+        self.button_height = 40  # taller to accommodate cost line
         self.button_margin = 10
         self.bg_color = (255, 255, 255, 200)  # semi-transparent white
         self.button_color = (100, 100, 200)
         self.button_hover_color = (120, 120, 220)
         self.selected_color = (0, 128, 0)
         self.text_color = (0, 0, 0)
+        self.cost_color = (80, 80, 80)  # darker gray for cost text
 
     def toggle(self):
         """Toggle the build menu visibility."""
@@ -167,9 +170,20 @@ class BuildMenu:
             mouse_over = rect.collidepoint(pygame.mouse.get_pos())
             color = self.selected_color if is_selected else (self.button_hover_color if mouse_over else self.button_color)
             pygame.draw.rect(screen, color, rect)
-            # Button label
-            btn_lbl = font.render(label, True, (255, 255, 255))
-            screen.blit(btn_lbl, btn_lbl.get_rect(center=rect.center))
+            # Button label (top half)
+            lbl_surface = font.render(label, True, (255, 255, 255))
+            lbl_rect = lbl_surface.get_rect(center=(rect.centerx, rect.centery - 8))
+            screen.blit(lbl_surface, lbl_rect)
+            # Cost string (bottom half)
+            cost_dict = getattr(building_class, 'cost', {})
+            if cost_dict:
+                cost_parts = [f"{qty} {res}" for res, qty in cost_dict.items()]
+                cost_str = "Cost: " + ", ".join(cost_parts)
+            else:
+                cost_str = "Free"
+            cost_surface = font.render(cost_str, True, self.cost_color)
+            cost_rect = cost_surface.get_rect(center=(rect.centerx, rect.centery + 8))
+            screen.blit(cost_surface, cost_rect)
 
         # Instructions
         click_instr = font.render("Click grid to place", True, (80, 80, 80))

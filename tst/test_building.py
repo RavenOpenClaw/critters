@@ -6,6 +6,9 @@ from hypothesis import given, strategies as st
 from inventory import Inventory
 from building import Building
 from gathering_hut import GatheringHut
+from chair import Chair
+from campfire import Campfire
+from mating_hut import MatingHut
 from grid_system import GridSystem
 from world import World
 from build_menu import BuildMenu
@@ -122,6 +125,117 @@ class TestCritterAssignment(unittest.TestCase):
         self.assertEqual(len(hut.assigned_critters), n)
         for c in critters:
             self.assertIs(c.assigned_hut, hut)
+
+class TestBuildingCosts(unittest.TestCase):
+    """Tests for Task 40: Building costs enforcement."""
+
+    def test_gathering_hut_cost(self):
+        """GatheringHut has correct cost."""
+        hut = GatheringHut(0, 0, cell_size=32)
+        self.assertEqual(hut.cost, {"wood": 10, "stone": 5})
+
+    def test_chair_cost(self):
+        """Chair has correct cost."""
+        chair = Chair(0, 0, cell_size=32)
+        self.assertEqual(chair.cost, {"wood": 2})
+
+    def test_campfire_cost(self):
+        """Campfire has correct cost."""
+        cf = Campfire(0, 0, cell_size=32)
+        self.assertEqual(cf.cost, {"wood": 5, "stone": 2})
+
+    def test_mating_hut_cost(self):
+        """MatingHut has correct cost."""
+        mh = MatingHut(0, 0, cell_size=32)
+        self.assertEqual(mh.cost, {"wood": 15, "stone": 10})
+
+    def test_gathering_hut_placement_deducts_cost(self):
+        """Placing a GatheringHut deducts exact cost from player inventory."""
+        cell_size = 32
+        grid = GridSystem(cell_size=cell_size, width=20, height=20)
+        world = World(grid)
+        menu = BuildMenu(cell_size)
+        menu.selected_building_class = GatheringHut
+        menu.visible = True
+        player = Player(0, 0, radius=20)
+        player.inventory.add('wood', 100)
+        player.inventory.add('stone', 100)
+        start_wood = player.inventory.get_item_count('wood')
+        start_stone = player.inventory.get_item_count('stone')
+        success = menu.attempt_placement(player, world, grid, 5, 5)
+        self.assertTrue(success, "Placement should succeed with sufficient resources")
+        self.assertEqual(player.inventory.get_item_count('wood'), start_wood - 10)
+        self.assertEqual(player.inventory.get_item_count('stone'), start_stone - 5)
+
+    def test_gathering_hut_placement_fails_without_resources(self):
+        """Placement fails when resources insufficient and deducts nothing."""
+        cell_size = 32
+        grid = GridSystem(cell_size=cell_size, width=20, height=20)
+        world = World(grid)
+        menu = BuildMenu(cell_size)
+        menu.selected_building_class = GatheringHut
+        menu.visible = True
+        player = Player(0, 0, radius=20)
+        player.inventory.add('wood', 5)  # not enough wood (need 10)
+        player.inventory.add('stone', 10)
+        start_wood = player.inventory.get_item_count('wood')
+        start_stone = player.inventory.get_item_count('stone')
+        success = menu.attempt_placement(player, world, grid, 5, 5)
+        self.assertFalse(success, "Placement should fail with insufficient resources")
+        self.assertEqual(player.inventory.get_item_count('wood'), start_wood)
+        self.assertEqual(player.inventory.get_item_count('stone'), start_stone)
+
+    def test_chair_placement_deducts_cost(self):
+        """Placing a Chair deducts its wood cost."""
+        cell_size = 32
+        grid = GridSystem(cell_size=cell_size, width=20, height=20)
+        world = World(grid)
+        menu = BuildMenu(cell_size)
+        menu.selected_building_class = Chair
+        menu.visible = True
+        player = Player(0, 0, radius=20)
+        player.inventory.add('wood', 50)
+        start_wood = player.inventory.get_item_count('wood')
+        success = menu.attempt_placement(player, world, grid, 2, 2)
+        self.assertTrue(success)
+        self.assertEqual(player.inventory.get_item_count('wood'), start_wood - 2)
+
+    def test_campfire_placement_deducts_cost(self):
+        """Placing a Campfire deducts wood and stone."""
+        cell_size = 32
+        grid = GridSystem(cell_size=cell_size, width=20, height=20)
+        world = World(grid)
+        menu = BuildMenu(cell_size)
+        menu.selected_building_class = Campfire
+        menu.visible = True
+        player = Player(0, 0, radius=20)
+        player.inventory.add('wood', 50)
+        player.inventory.add('stone', 50)
+        start_wood = player.inventory.get_item_count('wood')
+        start_stone = player.inventory.get_item_count('stone')
+        success = menu.attempt_placement(player, world, grid, 3, 3)
+        self.assertTrue(success)
+        self.assertEqual(player.inventory.get_item_count('wood'), start_wood - 5)
+        self.assertEqual(player.inventory.get_item_count('stone'), start_stone - 2)
+
+    def test_mating_hut_placement_deducts_cost(self):
+        """Placing a MatingHut deducts its cost."""
+        cell_size = 32
+        grid = GridSystem(cell_size=cell_size, width=20, height=20)
+        world = World(grid)
+        menu = BuildMenu(cell_size)
+        menu.selected_building_class = MatingHut
+        menu.visible = True
+        player = Player(0, 0, radius=20)
+        player.inventory.add('wood', 100)
+        player.inventory.add('stone', 100)
+        start_wood = player.inventory.get_item_count('wood')
+        start_stone = player.inventory.get_item_count('stone')
+        success = menu.attempt_placement(player, world, grid, 4, 4)
+        self.assertTrue(success)
+        self.assertEqual(player.inventory.get_item_count('wood'), start_wood - 15)
+        self.assertEqual(player.inventory.get_item_count('stone'), start_stone - 10)
+
 
 if __name__ == '__main__':
     unittest.main()

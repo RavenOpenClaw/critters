@@ -6,10 +6,11 @@ from critter import Critter, CritterState
 import random
 
 class MatingHut(Building):
-    """Mating Hut building (2x2) for critter breeding."""
+    """Mating Hut building (2x2) for critter building."""
+    cost = {"wood": 15, "stone": 10}  # class attribute for UI display
+
     def __init__(self, gx, gy, cell_size):
-        cost = {}
-        super().__init__(gx, gy, width=2, height=2, cell_size=cell_size, cost=cost)
+        super().__init__(gx, gy, width=2, height=2, cell_size=cell_size, cost=self.cost)
         self.assigned_critters = []
 
     def assign_critter(self, critter):

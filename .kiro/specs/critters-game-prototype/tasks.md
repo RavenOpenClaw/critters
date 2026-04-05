@@ -809,3 +809,129 @@ Required Python packages:
 - hypothesis >= 6.82.0 (property-based testing)
 
 Install with: `pip install pygame pytest hypothesis`
+
+
+## Phase 8: Missing Features & Polish
+
+**Goal**: Address gaps identified during QA to bring the prototype to full feature parity with the original design vision.
+
+### Task 37: Implement Building Costs
+**Priority**: High
+**Status**: NOT_STARTED
+
+Context: All buildings currently have empty cost dictionaries, making them free to place. The design intends resource costs for buildings to create strategic resource management.
+
+Implementation steps:
+- Define reasonable costs for each building type
+  - GatheringHut: e.g., wood=10, stone=5
+  - Chair: e.g., wood=2
+  - Campfire: e.g., wood=5, stone=2
+  - MatingHut: e.g., wood=15, stone=10
+- Update each building's `__init__` to pass the cost to `Building.__init__`
+- Ensure BuildMenu displays costs in the button labels or tooltip
+- Ensure `attempt_placement` already checks `can_place()`; verify it deducts resources properly
+- Write unit tests to confirm placement deducts correct resources and fails when insufficient
+
+Acceptance:
+- Buildings require resources to place
+- Build menu shows costs
+- Placement fails with insufficient resources (no deduction)
+- All existing tests pass
+
+### Task 38: Add Second Map and Enable Travel
+**Priority**: High
+**Status**: NOT_STARTED
+
+Context: Multi‑map infrastructure exists, but only a single map ("main") is created in `main.py`. The player cannot travel to another map because no neighbor is defined.
+
+Implementation steps:
+- In `main.py` new game setup, create a second `MapData` (e.g., name="north_woods") with desired dimensions and objects (some resources, maybe a second hut)
+- Register the second map with `world.add_map(second_map)`
+- Configure neighbors on the main map to enable edge transitions (e.g., main.neighbors['north'] = 'north_woods'; north_woods.neighbors['south'] = 'main')
+- Alternatively or additionally, add a Portal object on the main map that transitions to the second map, and trigger via interaction
+- Ensure player starting position is within main map bounds
+- Test that walking off the north edge transitions to the new map and preserves player position appropriately
+
+Acceptance:
+- Player can walk off screen edge (or use portal) to enter a second map
+- Second map contains at least a few resources and is navigable
+- Returning to the main map preserves the player's prior position on that map
+- All tests pass
+
+### Task 39: Complete Mating Hut Integration
+**Priority**: Medium
+**Status**: NOT_STARTED
+
+Context: `MatingHut` class exists with `breed()` method, but player cannot trigger breeding in-game. The `interact` method is stub; also offspring addition to world needs a clean integration.
+
+Implementation steps:
+- In `MatingHut.__init__`, define a building cost (use from Task 37)
+- Implement `MatingHut.get_interaction_text()` to return "Press E to breed" when ≥2 critters assigned
+- Implement `MatingHut.interact(player)`:
+  - Check `len(self.assigned_critters) >= 2`
+  - Call `self.breed(world)` (need world reference; either store world on building during placement or pass via player)
+  - Possible solutions:
+    - Add `self.world` reference in `Building` when placed (set in `World.add_object`)
+    - Then `breed(world)` can use `self.world` or accept world param
+  - After offspring created, display a brief message "Breeding produced a new critter!"
+  - Optionally consume a resource cost (berries/food) for balancing
+- Ensure `MatingHut.breed(world)` creates offspring and adds to world (already does) and returns it
+- Update `main.py` to handle the interact properly (already calls `player.interact(world)` which finds nearby objects and calls their `interact`; MatingHut.interact should accept `player` and use `player.world` or the world reference)
+- Consider adding a small cooldown or limit to prevent spamming
+- Write unit tests: breeding with two critters produces one offspring with stats within bounds; breeding with <2 does nothing
+
+Acceptance:
+- Player can interact with MatingHut (press E) when two critters assigned
+- Offspring appears at hut center with stats derived from parents
+- Building cost enforced
+- Tests updated/added
+
+### Task 40: Implement Critter Assignment UI
+**Priority**: Medium
+**Status**: NOT_STARTED
+
+Context: Critters can be assigned to GatheringHut programmatically, but there is no way for the player to manually assign or reassign critters to different huts.
+
+Implementation steps:
+- Extend `CritterInspector` to show building assignment:
+  - Display which hut (if any) the selected critter is assigned to
+  - Provide a button or key (e.g., 'A' to assign to nearest available hut within interaction range)
+  - Or: clicking on a hut while a critter is selected assigns that critter to the hut
+- Alternatively, add a "Assign" mode to the build menu or a new "Management" UI panel
+- Implement assignment logic:
+  - When player triggers assign for a critter to a hut, call `hut.assign_critter(critter)` and remove any previous assignment (critter.assigned_hut.unassign or similar)
+  - Provide visual feedback (e.g., "Critter assigned to Hut" message)
+- Add a way to unassign (e.g., click assigned hut again to remove)
+- Ensure that reassigning works: moving a critter from one hut automatically unassigns from the previous hut
+- Write unit tests for unassignment and reassignment
+
+Acceptance:
+- Player can select a critter (via existing inspector)
+- Player can assign the selected critter to a nearby GatheringHut
+- Player can unassign a critter from its hut
+- At most one assignment per critter; huts have no assignment limit
+- Tests cover assignment, unassignment, and reassignment
+
+### Task 41: Balance and Testing
+**Priority**: Medium
+**Status**: NOT_STARTED
+
+After the above tasks are implemented:
+- Playtest the complete loop: gather resources, build huts, assign critters, breed, travel maps
+- Tune building costs, critter stats, gather speeds, regrowth rates for enjoyable progression
+- Add any missing UI cues (costs, assignment status)
+- Run full test suite; fix any regressions
+- Update `TASKS.md` in workspace root to reflect new completions
+
+---
+
+## Notes
+
+- Tasks marked with `*` are optional and can be skipped for faster MVP delivery
+- Each task references specific requirements for traceability
+- Checkpoints ensure incremental validation and provide opportunities for user feedback
+- Property tests validate universal correctness properties from the design document
+- Unit tests validate specific examples, edge cases, and integration points
+- All code should be committed to feature branches and merged after tests pass
+- The phased approach ensures basic functionality works before adding complexity
+- Graphics start minimal (circles and squares) to focus on core mechanics first

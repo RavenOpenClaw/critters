@@ -6,9 +6,10 @@ from buff import Buff
 
 class Campfire(Building):
     """Campfire building (2x2) that grants the Strength gather buff."""
+    cost = {"wood": 5, "stone": 2}  # class attribute for UI display
+
     def __init__(self, gx, gy, cell_size):
-        cost = {}  # Free for now
-        super().__init__(gx, gy, width=2, height=2, cell_size=cell_size, cost=cost)
+        super().__init__(gx, gy, width=2, height=2, cell_size=cell_size, cost=self.cost)
 
     def get_interaction_text(self):
         """Return None: campfire now provides automatic aura buff, no manual interaction needed."""

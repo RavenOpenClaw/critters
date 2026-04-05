@@ -19,9 +19,9 @@ class TestMatingHut(unittest.TestCase):
         self.assertEqual(hut.assigned_critters, [])
 
     def test_mating_hut_cost_attribute(self):
-        """MatingHut has empty cost dict by default."""
+        """MatingHut has correct building cost."""
         hut = MatingHut(0, 0, cell_size=1.0)
-        self.assertEqual(hut.cost, {})
+        self.assertEqual(hut.cost, {"wood": 15, "stone": 10})
 
 class TestMatingHutAssignment(unittest.TestCase):
     """Assignment behavior for MatingHut."""
