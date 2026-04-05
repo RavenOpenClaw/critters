@@ -37,7 +37,6 @@ RESOURCE_COLORS = {
     "stone": (128, 128, 128), # Gray for stone
     "stick": (210, 180, 140), # Tan for sticks (unused after stick->wood change)
     "plant": (144, 238, 144), # Light green for plants
-    "berry": (255, 0, 0),     # Red for berries (explicit mapping)
 }
 
 # Constants

@@ -8,19 +8,19 @@ RECIPES = [
     Recipe(
         name="Wooden Gatherer",
         result="wooden_gatherer",
-        cost={"berry": 10},
+        cost={"food": 10},
         unlocks_equipment=True
     ),
     Recipe(
         name="Steel Gatherer",
         result="steel_gatherer",
-        cost={"berry": 50},
+        cost={"food": 50},
         unlocks_equipment=True
     ),
     Recipe(
         name="Magic Gatherer",
         result="magic_gatherer",
-        cost={"berry": 200},
+        cost={"food": 200},
         unlocks_equipment=True
     ),
 ]

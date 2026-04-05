@@ -42,13 +42,13 @@ class TestMultiMap(unittest.TestCase):
 
     def test_inactive_map_entity_preservation(self):
         """Property 36: Entities on non-current maps retain their state."""
-        # Place a BerryBush on map_a (current map) and mutate it (deplete some berries)
+        # Place a BerryBush on map_a (current map) and mutate it (deplete some food)
         bush_a = BerryBush(5, 5, cell_size=32, berries=5)
         self.world.add_object(bush_a)
         # Deplete it partially
-        self.assertEqual(bush_a.inventory.get_item_count('berry'), 5)
-        bush_a.inventory.remove('berry', 3)
-        self.assertEqual(bush_a.inventory.get_item_count('berry'), 2)
+        self.assertEqual(bush_a.inventory.get_item_count('food'), 5)
+        bush_a.inventory.remove('food', 3)
+        self.assertEqual(bush_a.inventory.get_item_count('food'), 2)
         # Transition to map_b (by placing player off east edge)
         self.player.x = self.world.current_map.cell_size * self.world.current_map.width
         self.player.y = self.world.current_map.cell_size * 5
@@ -59,8 +59,8 @@ class TestMultiMap(unittest.TestCase):
         self.player.x = -self.world.current_map.cell_size  # one cell west of map_b's west edge
         self.world.handle_map_transition(self.player)
         self.assertEqual(self.world.current_map.name, 'map_a')
-        # The bush on map_a should still have 2 berries
-        self.assertEqual(bush_a.inventory.get_item_count('berry'), 2)
+        # The bush on map_a should still have 2 food
+        self.assertEqual(bush_a.inventory.get_item_count('food'), 2)
 
     def test_transition_only_with_neighbor(self):
         """Transition does not occur if no neighbor in that direction."""

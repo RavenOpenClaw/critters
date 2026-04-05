@@ -117,34 +117,34 @@ class TestInteractionTargeting(unittest.TestCase):
 
 class TestResourceTransferConservation(unittest.TestCase):
     @given(
-        bush_berries=st.integers(min_value=0, max_value=100),
-        player_berries=st.integers(min_value=0, max_value=100)
+        bush_food=st.integers(min_value=0, max_value=100),
+        player_food=st.integers(min_value=0, max_value=100)
     )
-    def test_resource_transfer_conserves_total(self, bush_berries, player_berries):
-        """Property 7.4: Transferring a berry conserves total resource count."""
-        # Create a BerryBush with given berries; cell_size=1 for simplicity
-        bush = BerryBush(gx=0, gy=0, cell_size=1, berries=bush_berries)
-        # Create a player with given berries in inventory
+    def test_resource_transfer_conserves_total(self, bush_food, player_food):
+        """Property 7.4: Transferring food conserves total resource count."""
+        # Create a BerryBush with given food; cell_size=1 for simplicity
+        bush = BerryBush(gx=0, gy=0, cell_size=1, berries=bush_food)
+        # Create a player with given food in inventory
         player = Player(0, 0, radius=20)
-        player.inventory.add('berry', player_berries)
+        player.inventory.add('food', player_food)
 
-        total_before = bush.inventory.get_item_count('berry') + player.inventory.get_item_count('berry')
+        total_before = bush.inventory.get_item_count('food') + player.inventory.get_item_count('food')
 
         # Perform interaction (bush.interact(player))
         bush.interact(player)
 
-        total_after = bush.inventory.get_item_count('berry') + player.inventory.get_item_count('berry')
+        total_after = bush.inventory.get_item_count('food') + player.inventory.get_item_count('food')
 
-        self.assertEqual(total_after, total_before, "Total berry count should be conserved during transfer")
+        self.assertEqual(total_after, total_before, "Total food count should be conserved during transfer")
 
-        # Additionally, if bush had berries, exactly one transferred
-        if bush_berries > 0:
-            self.assertEqual(bush.inventory.get_item_count('berry'), bush_berries - 1)
-            self.assertEqual(player.inventory.get_item_count('berry'), player_berries + 1)
+        # Additionally, if bush had food, exactly one transferred
+        if bush_food > 0:
+            self.assertEqual(bush.inventory.get_item_count('food'), bush_food - 1)
+            self.assertEqual(player.inventory.get_item_count('food'), player_food + 1)
         else:
             # No transfer occurred; inventories unchanged
-            self.assertEqual(bush.inventory.get_item_count('berry'), 0)
-            self.assertEqual(player.inventory.get_item_count('berry'), player_berries)
+            self.assertEqual(bush.inventory.get_item_count('food'), 0)
+            self.assertEqual(player.inventory.get_item_count('food'), player_food)
 
 if __name__ == '__main__':
     unittest.main()
