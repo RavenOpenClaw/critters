@@ -101,3 +101,26 @@ Implementation (commit 9884ced):
 Testing:
 - Manual and property tests confirm berries regrow whether partially or fully harvested.
 - All tests pass; no regressions.
+
+### [DUPLICATE_HUD] Two inventory displays on screen (top-left and top-right) causing confusion
+
+Status: FIXED
+
+Plan:
+- Review HUD rendering in `main.py` to identify redundant inventory displays.
+- Remove the top-right text-only inventory display, keeping only the top-left icon-based HUD as the sole inventory viewer.
+- Ensure rendering order places HUD on top of world objects for clarity.
+- Verify that the build HUD button and active buffs display remain functional without duplication.
+
+Implementation (commit 8db1b2c):
+- Moved `render_hud(screen, player, font)` and build button drawing after world and critters to ensure they render on top.
+- Removed the redundant top-right text-only inventory display code (located near the debug/performance stats area).
+- Cleaned up drawing order: world → prompts → player → critters → deformations → HUD → build button → active buffs → debug overlay.
+- Single inventory HUD now shown at top-left with colored icons and counts.
+
+Testing:
+- Manual playtest: start game, observe that only one inventory panel is visible in the top-left corner.
+- Confirm that resource counts update correctly as player gathers berries, wood, etc.
+- Verify that top-right now shows only active buffs (which are not inventory), eliminating confusion.
+- All 179 tests pass; no regressions in HUD functionality.
+- Note: No automated regression test was added for this UI change, as it requires visual inspection.

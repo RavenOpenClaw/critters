@@ -104,7 +104,7 @@ Desired fix: Change Stick object's inventory to use "wood" instead of "stick". A
 
 ### [DUPLICATE_HUD] Two inventory displays on screen (top-left and top-right) causing confusion
 
-Status: NOT_STARTED
+Status: FIXED
 
 Expected: There should be a single, clear inventory display. Either the top-left or top-right HUD element should be the sole inventory viewer, not both.
 
