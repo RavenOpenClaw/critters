@@ -80,7 +80,7 @@ Desired fix: Modify `BerryBush.update()` to always accumulate time when `berry_c
 
 ### [RESOURCE_DEPLETION] Sticks and rocks should be removed from world when their inventory is depleted
 
-Status: NOT_STARTED
+Status: FIXED
 
 Expected: When the player harvests all resources from a stick or rock object (i.e., its inventory becomes empty), the object should be removed from the world map. This keeps the world clean and prevents interacting with depleted resources.
 
@@ -92,7 +92,7 @@ Desired fix: After inventory becomes empty, remove the object from the world (ca
 
 ### [STICK_RESOURCE] Stick objects add "stick" resource, but should add "wood"
 
-Status: NOT_STARTED
+Status: FIXED
 
 Expected: All wooden resources (from trees and stick piles) should contribute to the same "wood" inventory type. "stick" should not be a separate resource type.
 
@@ -116,7 +116,7 @@ Desired fix: Determine which HUD element is intended (likely top-right is the ma
 
 ### [TREE_REGROW] Trees should respawn wood inventory over time (like berry bushes)
 
-Status: NOT_STARTED
+Status: FIXED
 
 Expected: For prototyping simplicity, trees should automatically regenerate their wood supply after a configurable duration (e.g., 30 seconds) once depleted. This allows continued gameplay without manual tree planting.
 
@@ -128,7 +128,7 @@ Desired fix: Implement regeneration logic similar to BerryBush: track `depleted`
 
 ### [BUFF_STACKING] Chair rested buff and campfire strength buff can be stacked multiple times
 
-Status: NOT_STARTED
+Status: FIXED
 
 Expected: Each buff type should be unique per player. Applying the same buff again should reset its timer to full duration, not stack the effect multiplicatively. Only one `rested` buff and one `strength` buff should be active at a time.
 
@@ -165,7 +165,7 @@ Additional notes:
 
 ### [ICON_COLOR] Berry icon is dark grey instead of red
 
-Status: NOT_STARTED
+Status: FIXED
 
 Expected: The berry icon should be visually red (or at least a distinct reddish color) to match typical berry imagery.
 

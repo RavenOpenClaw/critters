@@ -124,3 +124,87 @@ Testing:
 - Verify that top-right now shows only active buffs (which are not inventory), eliminating confusion.
 - All 179 tests pass; no regressions in HUD functionality.
 - Note: No automated regression test was added for this UI change, as it requires visual inspection.
+
+### [STICK_RESOURCE] Stick objects add "stick" resource, but should add "wood"
+
+Status: FIXED
+
+Plan:
+- Change Stick object's inventory to use "wood" instead of "stick".
+- Update any tests that reference "stick" to expect "wood".
+- Ensure HUD and UI display only "wood" for both sticks and trees.
+
+Implementation (commit 1f0e683):
+- In `src/stick.py`, changed inventory initialization to `inventory.add('wood', sticks)` (previously added 'stick').
+- Updated `interact` method to use 'wood'.
+- Adjusted tests in `tst/test_stick.py` to check for 'wood' quantity.
+
+Testing:
+- All 188 tests pass.
+- Manual verification: harvesting a stick pile now adds "wood" to player inventory; HUD shows brown wood icon. Trees already gave wood, so resource unification successful.
+
+### [RESOURCE_DEPLETION] Sticks and rocks should be removed from world when their inventory is depleted
+
+Status: FIXED
+
+Plan:
+- Add a method `World.cleanup_depleted_resources()` that removes non-renewable resource objects (Stick, Rock) when their inventory is empty.
+- Call this method once per frame after object updates to tidy up the world.
+- Write unit tests to verify that depleted sticks and rocks are removed, while renewable resources (BerryBush) remain.
+
+Implementation (commit 1f0e683):
+- Added `cleanup_depleted_resources()` in `src/world.py`: iterate over `self.current_map.objects`, collect any `isinstance(obj, (Stick, Rock))` with `not obj.inventory.items`, then remove via `self.remove_object(obj)`.
+- Called this method in `src/main.py` after object updates.
+- Added `tst/test_resource_depletion.py` with four tests covering stick removal, rock removal, preservation of non-empty resources, and berry bush (renewable) not removed.
+
+Testing:
+- All 188 tests pass.
+- Manual: after fully harvesting a stick or rock, it disappears from the map on the next frame; interaction prompt no longer appears.
+
+### [BUFF_STACKING] Chair rested buff and campfire strength buff can be stacked multiple times
+
+Status: FIXED
+
+Plan:
+- Prevent multiple instances of the same buff from stacking. When applying a buff, if a buff with the same name already exists on the player, reset its timer to the full duration instead of adding a new buff.
+- Provide an `apply_buff` method on the player to centralize this logic.
+- Update all buff sources (Chair, Campfire) to use `player.apply_buff` rather than directly manipulating `active_buffs`.
+
+Implementation (commit 1f0e683):
+- Added `apply_buff(self, buff)` method to `Player` (in `src/entity.py`): searches `self.active_buffs` for same name; if found, resets `remaining`; else appends.
+- Modified `Chair.interact` and `Campfire.interact` (and the campfire aura in main) to use `player.apply_buff(buff)`.
+- Added tests in `tst/test_buffs.py`: `test_reapplying_same_buff_resets_timer` verifies reset behavior; `test_different_buffs_stack` ensures different buffs can coexist.
+
+Testing:
+- All 188 tests pass.
+- Manual: re-sitting on a chair or re-entering a campfire aura now refreshes the buff timer without increasing effect beyond the intended multiplier.
+
+### [TREE_REGROW] Trees should respawn wood inventory over time (like berry bushes)
+
+Status: FIXED
+
+Plan:
+- Tree regeneration logic already exists in `Tree.update()` (depletion flag, respawn timer). However, the main game loop was not calling `update()` on Tree objects, preventing regrowth.
+- Fix: include `Tree` in the world object update loop in `main.py` alongside `BerryBush` and `Grass`.
+
+Implementation (current branch fix/remaining-bugs):
+- Modified `src/main.py` world object update loop: changed `if isinstance(obj, (BerryBush, Grass))` to `if isinstance(obj, (BerryBush, Grass, Tree))`.
+- No changes to `Tree` class itself; its existing update logic now runs each frame.
+
+Testing:
+- All 195 tests pass; tree regeneration unit test (`test_tree_regeneration_after_depletion`) already verifies the logic.
+- Manual: after chopping a tree to depletion, waiting ~30 seconds (default respawn duration) causes wood to replenish to full.
+
+### [ICON_COLOR] Berry icon is dark grey instead of red
+
+Status: FIXED
+
+Plan: Add explicit mapping for "berry" in RESOURCE_COLORS in main.py to ensure red color.
+
+Implementation (commit 1f0e683):
+- Added `"berry": (255, 0, 0)` to the RESOURCE_COLORS dictionary in `src/main.py`.
+- This ensures the HUD renders a red square for the berry resource, consistent with typical berry imagery and matching the "food" color for berries.
+
+Testing:
+- Manual: after collecting berries from a bush, the inventory HUD displays a red icon for the berry count.
+- All 188 tests pass; no regressions.
