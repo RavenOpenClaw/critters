@@ -301,11 +301,15 @@ def main():
             # Only act if click was not on HUD or build menu UI
             if not clicked_hud and not clicked_build_menu:
                 # If inspector is visible, let it handle the click first to consume events inside its panel
-                inspector_consumed = False
+                inspector_handled = False
                 if critter_inspector.visible:
-                    inspector_consumed = critter_inspector.handle_mouse_click((mx, my))
-                # If inspector didn't consume the click, handle other interactions
-                if not inspector_consumed:
+                    if critter_inspector.handle_mouse_click((mx, my)):
+                        inspector_handled = True
+                    else:
+                        # Click outside the inspector panel: close it and consume the click
+                        critter_inspector.hide()
+                        inspector_handled = True
+                if not inspector_handled:
                     # Deconstruction mode takes precedence
                     if input_handler.deconstruct_mode:
                         gx, gy = grid.world_to_grid(mx, my)
