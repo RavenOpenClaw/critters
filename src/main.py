@@ -22,6 +22,7 @@ from gathering_hut import GatheringHut
 from chair import Chair
 from campfire import Campfire
 from buff import Buff  # for applying campfire aura
+from critter_inspector import CritterInspector
 from critter import Critter, CritterState
 from pathfinding import PathfindingSystem
 from crafting_menu import CraftingMenu
@@ -207,6 +208,9 @@ def main():
     # Build menu for building system
     build_menu = BuildMenu(cell_size)
 
+    # Critter inspector UI
+    critter_inspector = CritterInspector(cell_size, font, WINDOW_WIDTH, WINDOW_HEIGHT)
+
     # HUD build button rectangle (top-left, below resource HUD)
     hud_button_margin = 10
     hud_button_size = 40
@@ -296,26 +300,51 @@ def main():
 
             # Only act if click was not on HUD or build menu UI
             if not clicked_hud and not clicked_build_menu:
-                # Deconstruction mode takes precedence
-                if input_handler.deconstruct_mode:
-                    gx, gy = grid.world_to_grid(mx, my)
-                    if grid.is_within_bounds(gx, gy):
-                        # Check if a building occupies this grid cell
-                        if (gx, gy) in grid.occupied:
-                            obj = grid.occupied[(gx, gy)]
-                            if isinstance(obj, Building):
-                                # Check player is within interaction range
-                                ox, oy = obj.get_center()
-                                dx = player.x - ox
-                                dy = player.y - oy
-                                if dx*dx + dy*dy <= player.interaction_radius**2:
-                                    obj.deconstruct(world, player)
-                # Otherwise, normal building placement
-                else:
-                    if build_menu.visible and build_menu.selected_building_class is not None:
+                # If inspector is visible, let it handle the click first to consume events inside its panel
+                inspector_consumed = False
+                if critter_inspector.visible:
+                    inspector_consumed = critter_inspector.handle_mouse_click((mx, my))
+                # If inspector didn't consume the click, handle other interactions
+                if not inspector_consumed:
+                    # Deconstruction mode takes precedence
+                    if input_handler.deconstruct_mode:
                         gx, gy = grid.world_to_grid(mx, my)
                         if grid.is_within_bounds(gx, gy):
-                            build_menu.attempt_placement(player, world, grid, gx, gy)
+                            # Check if a building occupies this grid cell
+                            if (gx, gy) in grid.occupied:
+                                obj = grid.occupied[(gx, gy)]
+                                if isinstance(obj, Building):
+                                    # Check player is within interaction range
+                                    ox, oy = obj.get_center()
+                                    dx = player.x - ox
+                                    dy = player.y - oy
+                                    if dx*dx + dy*dy <= player.interaction_radius**2:
+                                        obj.deconstruct(world, player)
+                    else:
+                        # Critter inspection: prioritize clicking on critters
+                        clicked_critter = False
+                        for c in world.current_map.critters:
+                            # Check player is within interaction radius of the critter
+                            dxp = player.x - c.x
+                            dyp = player.y - c.y
+                            if dxp*dxp + dyp*dyp > player.interaction_radius**2:
+                                continue
+                            # Check mouse click near critter (within radius + 5px tolerance)
+                            dx = mx - c.x
+                            dy = my - c.y
+                            if dx*dx + dy*dy <= (c.radius + 5) ** 2:
+                                # Toggle inspector for this critter
+                                if critter_inspector.visible and critter_inspector.selected_critter is c:
+                                    critter_inspector.hide()
+                                else:
+                                    critter_inspector.toggle(c)
+                                clicked_critter = True
+                                break
+                        # If no critter clicked and build menu is active with a selected building, attempt placement
+                        if not clicked_critter and build_menu.visible and build_menu.selected_building_class is not None:
+                            gx, gy = grid.world_to_grid(mx, my)
+                            if grid.is_within_bounds(gx, gy):
+                                build_menu.attempt_placement(player, world, grid, gx, gy)
 
         # Crafting menu toggle and crafting
         if input_handler.crafting_toggle:
@@ -462,6 +491,9 @@ def main():
         if input_handler.deconstruct_mode:
             decon_surface = font.render("Deconstruction Mode (X to exit)", True, (255, 0, 0))
             screen.blit(decon_surface, (WINDOW_WIDTH - decon_surface.get_width() - 10, WINDOW_HEIGHT - 30))
+
+        # Draw critter inspector UI (if visible)
+        critter_inspector.draw(screen)
 
         pygame.display.flip()
 
