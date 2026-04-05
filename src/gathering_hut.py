@@ -29,8 +29,15 @@ class GatheringHut(Building):
     def assign_critter(self, critter):
         """Assign a critter to this hut.
 
-        Adds critter to the assigned_critters list and sets its assigned_hut reference.
+        If the critter is already assigned to another hut, unassign it first.
+        If the critter is already assigned to this hut, do nothing.
         """
+        # If already assigned to this hut, nothing to do
+        if critter in self.assigned_critters:
+            return
+        # Unassign from previous hut if needed
+        if critter.assigned_hut is not None and critter.assigned_hut is not self:
+            critter.assigned_hut.unassign_critter(critter)
         self.assigned_critters.append(critter)
         critter.assigned_hut = self
 
@@ -75,14 +82,27 @@ class GatheringHut(Building):
             return "Press E to collect resources"
         return None
 
-    def interact(self, other):
-        """Transfer all storage contents to the interacting entity's inventory."""
-        if not isinstance(other, Player):
-            return  # Only player can withdraw
-        # Transfer all items from hut storage to player inventory
+    def interact(self, player):
+        """Handle interaction: assign following critter or withdraw storage.
+
+        - If player has a following critter, assign it to this hut.
+        - Otherwise, transfer all storage contents to player inventory.
+        """
+        if not isinstance(player, Player):
+            return
+
+        # Assignment mode: if player has a following critter, assign it
+        if player.following_critter is not None:
+            critter = player.following_critter
+            self.assign_critter(critter)
+            player.following_critter = None
+            if hasattr(self, 'world') and self.world is not None:
+                self.world.set_message("Critter assigned to Gathering Hut.", 2.0)
+            return
+
+        # Withdraw mode: transfer all storage to player inventory
         for item_name, count in list(self.storage.items.items()):
-            other.inventory.add(item_name, count)
-            # Remove from storage
+            player.inventory.add(item_name, count)
             del self.storage.items[item_name]
 
     def render(self, screen):

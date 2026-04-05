@@ -22,6 +22,7 @@ class Player(Entity):
         self.active_buffs = []   # List of active Buff instances
         self.unlocked_equipment = set()  # Set of equipment IDs that have been unlocked
         self.equipped = set()            # Set of equipped equipment IDs
+        self.following_critter = None     # Critter currently following the player (if any)
 
     @property
     def interaction_radius(self):

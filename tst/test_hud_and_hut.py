@@ -1,10 +1,12 @@
 """Tests for HUD rendering and GatheringHut interaction (Task 25)."""
+import unittest
 from unittest.mock import Mock, patch
 from entity import Player
 from main import render_hud
 from gathering_hut import GatheringHut
 from world import World
 from grid_system import GridSystem
+from critter import Critter
 
 
 def test_hud_shows_player_inventory():
@@ -92,3 +94,61 @@ def test_gathering_hut_no_interaction_when_far():
 
     assert player.inventory.get_item_count("food") == 0
     assert hut.storage.get_item_count("food") == 10
+
+
+class TestGatheringHutAssignmentViaInteract(unittest.TestCase):
+    def test_assigns_following_critter(self):
+        """GatheringHut.interact assigns player's following critter when present."""
+        grid = GridSystem(cell_size=32, width=10, height=10)
+        world = World(grid)
+        hut = GatheringHut(5, 5, 32)
+        world.add_object(hut)
+        player = Player(100, 100)
+        critter = Critter(0, 0, cell_size=32)
+        player.following_critter = critter
+        hut.interact(player)
+        self.assertIn(critter, hut.assigned_critters)
+        self.assertIs(critter.assigned_hut, hut)
+        self.assertIsNone(player.following_critter)
+        self.assertEqual(world.message, "Critter assigned to Gathering Hut.")
+
+    def test_assign_clears_following_even_if_already_assigned(self):
+        """Assignment clears following flag even if critter already assigned to this hut."""
+        grid = GridSystem(cell_size=32, width=10, height=10)
+        world = World(grid)
+        hut = GatheringHut(5, 5, 32)
+        world.add_object(hut)
+        player = Player(100, 100)
+        critter = Critter(0, 0, cell_size=32)
+        hut.assign_critter(critter)
+        player.following_critter = critter
+        hut.interact(player)
+        self.assertIn(critter, hut.assigned_critters)
+        self.assertIsNone(player.following_critter)
+
+    def test_assign_unassigns_from_previous_hut(self):
+        """Assigning a following critter to this hut unassigns it from any other hut."""
+        grid = GridSystem(cell_size=32, width=20, height=20)
+        world = World(grid)
+        hut1 = GatheringHut(5, 5, 32)
+        hut2 = GatheringHut(15, 15, 32)
+        world.add_object(hut1)
+        world.add_object(hut2)
+        player = Player(100, 100)
+        critter = Critter(0, 0, cell_size=32)
+        hut1.assign_critter(critter)
+        self.assertIn(critter, hut1.assigned_critters)
+        self.assertIs(critter.assigned_hut, hut1)
+        player.following_critter = critter
+        hut2.interact(player)
+        self.assertNotIn(critter, hut1.assigned_critters)
+        self.assertIn(critter, hut2.assigned_critters)
+        self.assertIs(critter.assigned_hut, hut2)
+        self.assertIsNone(player.following_critter)
+
+    def test_assign_does_not_assign_non_player(self):
+        hut = GatheringHut(0, 0, 32)
+        try:
+            hut.interact("not a player")
+        except Exception as e:
+            self.fail(f"interact raised an exception with non-player: {e}")

@@ -17,8 +17,15 @@ class MatingHut(Building):
     def assign_critter(self, critter):
         """Assign a critter to this hut.
 
-        Adds critter to the assigned_critters list and sets its assigned_hut reference.
+        If the critter is already assigned to another hut, unassign it first.
+        If the critter is already assigned to this hut, do nothing.
         """
+        # If already assigned to this hut, nothing to do
+        if critter in self.assigned_critters:
+            return
+        # Unassign from previous hut if needed
+        if critter.assigned_hut is not None and critter.assigned_hut is not self:
+            critter.assigned_hut.unassign_critter(critter)
         self.assigned_critters.append(critter)
         critter.assigned_hut = self
 
@@ -29,37 +36,38 @@ class MatingHut(Building):
         return None
 
     def interact(self, player):
-        """Handle player interaction: breed if conditions are met.
+        """Handle player interaction: assign following critter or breed.
 
-        Conditions:
-        - Player must have at least 5 food.
-        - At least two critters must be assigned.
-        On success: deduct food, produce offspring, display feedback message.
+        - If player has a following critter, assign it to this hut and clear following.
+        - Otherwise, if hut has ≥2 assigned critters and player has 5 food, breed.
         """
-        from entity import Player  # Import Player class (avoid circular import)
+        from entity import Player
         if not isinstance(player, Player):
             return
 
-        # Check assigned critters
+        # Assignment mode: if player has a following critter, assign it
+        if player.following_critter is not None:
+            critter = player.following_critter
+            self.assign_critter(critter)
+            player.following_critter = None
+            if hasattr(self, 'world') and self.world is not None:
+                self.world.set_message("Critter assigned to Mating Hut.", 2.0)
+            return
+
+        # Breeding mode
         if len(self.assigned_critters) < 2:
             if hasattr(self, 'world') and self.world is not None:
                 self.world.set_message("Need at least 2 critters to breed!", 2.0)
             return
 
-        # Check food resource
         if not player.inventory.has("food", self.BREED_FOOD_COST):
             if hasattr(self, 'world') and self.world is not None:
                 self.world.set_message(f"Need {self.BREED_FOOD_COST} food to breed!", 2.0)
             return
 
-        # Deduct food cost
         player.inventory.remove("food", self.BREED_FOOD_COST)
-
-        # Ensure we have a world reference to add offspring
         if not hasattr(self, 'world') or self.world is None:
             return
-
-        # Breed and show success message
         offspring = self.breed(self.world)
         if offspring:
             self.world.set_message("Breeding produced a new critter!", 3.0)

@@ -57,3 +57,12 @@ class Building(WorldObject):
 
         # Remove building from the world
         world.remove_object(self)
+
+    def unassign_critter(self, critter):
+        """Remove a critter from this building's assignment and clear its assigned_hut reference.
+        Safe no-op if the building does not manage assignments or the critter is not assigned.
+        """
+        if hasattr(self, 'assigned_critters') and critter in self.assigned_critters:
+            self.assigned_critters.remove(critter)
+            if getattr(critter, 'assigned_hut', None) is self:
+                critter.assigned_hut = None
