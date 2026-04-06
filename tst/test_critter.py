@@ -461,6 +461,26 @@ class TestCritterFollow:
         assert critter1.state == CritterState.FOLLOW
         assert critter2.state == CritterState.FOLLOW
 
+    def test_start_follow_capacity_limit(self):
+        """When a third critter tries to follow, the oldest (first) follower should be evicted."""
+        player = Player(200, 100)
+        critter1 = Critter(50, 100, cell_size=32)
+        critter2 = Critter(60, 100, cell_size=32)
+        critter3 = Critter(70, 100, cell_size=32)
+        critter1.start_follow(player)
+        critter2.start_follow(player)
+        assert len(player.following_critters) == 2
+        # Third follow should evict the oldest (critter1)
+        critter3.start_follow(player)
+        assert len(player.following_critters) == 2
+        assert critter1 not in player.following_critters
+        assert critter1.state == CritterState.IDLE
+        assert critter2 in player.following_critters
+        assert critter3 in player.following_critters
+        assert player.following_critter is critter2  # first in list
+        assert critter2.state == CritterState.FOLLOW
+        assert critter3.state == CritterState.FOLLOW
+
     def test_stop_follow(self):
         player = Player(200, 100)
         critter = Critter(50, 100, cell_size=32)
@@ -503,4 +523,27 @@ class TestCritterFollow:
         assert critter.state != CritterState.FOLLOW
         assert player.following_critter is None
         assert critter in hut.assigned_critters
+
+    def test_mating_hut_assigned_critter_gather_safety(self):
+        """A critter assigned to MatingHut should not crash when entering GATHER; it should return to IDLE."""
+        from grid_system import GridSystem
+        from world import World
+        from mating_hut import MatingHut
+        grid = GridSystem(cell_size=32, width=20, height=20)
+        world = World(grid)
+        hut = MatingHut(5, 5, 32)
+        world.add_object(hut)
+        critter = Critter(50, 100, cell_size=32)
+        hut.assign_critter(critter)
+        world.add_object(critter)
+        # Force critter into GATHER state
+        critter.start_gather(None)
+        assert critter.state == CritterState.GATHER
+        # Provide a dummy pathfinder that does nothing (None is not expected, we need an object with find_path)
+        class DummyPathfinder:
+            def find_path(self, start, goal, grid):
+                return None  # no path
+        # Update critter: should attempt to find resource (None), then transition to IDLE without crash
+        critter.update(dt=1.0, world=world, pathfinding_system=DummyPathfinder())
+        assert critter.state == CritterState.IDLE
 

@@ -45,5 +45,19 @@ class TestMatingHutAssignment(unittest.TestCase):
         for c in critters:
             self.assertIs(c.assigned_hut, hut)
 
+class TestMatingHutGathering(unittest.TestCase):
+    """MatingHut does not provide gathering resources; should return None."""
+
+    def test_find_resource_in_radius_returns_none(self):
+        """MatingHut.find_resource_in_radius returns None (base Building implementation)."""
+        from grid_system import GridSystem
+        from world import World
+        hut = MatingHut(5, 5, cell_size=32)
+        grid = GridSystem(cell_size=32, width=10, height=10)
+        world = World(grid)
+        critter = Critter(50, 50, cell_size=32)
+        result = hut.find_resource_in_radius(world, critter)
+        self.assertIsNone(result)
+
 if __name__ == '__main__':
     unittest.main()

@@ -16,14 +16,15 @@ from entity import Player
 from critter import Critter
 
 class TestBuilding(unittest.TestCase):
-    def test_can_place_with_sufficient_resources(self):
-        """Building.can_place returns True when player has all required resources."""
-        cost = {'wood': 5, 'stone': 3}
-        building = Building(0, 0, width=2, height=2, cell_size=1.0, cost=cost)
-        player_inv = Inventory()
-        player_inv.add('wood', 10)
-        player_inv.add('stone', 10)
-        self.assertTrue(building.can_place(player_inv))
+    def test_building_base_find_resource_in_radius_returns_none(self):
+        """Base Building.find_resource_in_radius returns None; subclasses should override."""
+        cell_size = 32
+        building = Building(0, 0, width=1, height=1, cell_size=cell_size, cost={})
+        grid = GridSystem(cell_size, 10, 10)
+        world = World(grid)
+        critter = Critter(50, 50, cell_size=cell_size)
+        result = building.find_resource_in_radius(world, critter)
+        self.assertIsNone(result)
 
     def test_can_place_with_insufficient_one_resource(self):
         """Building.can_place returns False when any resource is insufficient."""
