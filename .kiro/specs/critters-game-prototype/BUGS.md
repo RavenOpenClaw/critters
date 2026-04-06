@@ -2,6 +2,8 @@
 
 Status: FIXED
 
+Fix commit: `1f0e683` (along with other GFX fixes integrated in mainline)
+
 Expected: Campfires should be rendered as a visible red graphic; chairs should be rendered as a visible brown graphic. These buildings should be easily distinguishable on the map.
 
 Actual: Campfires and chairs have no graphic (invisible or placeholder). The player cannot see them in the world.
@@ -61,6 +63,30 @@ Desired fix:
 ### [STATVAR] Critter stats variation: create weak (25/25/25), strong (75/75/75), and average (50/50/50) critters
 
 Status: FIXED
+
+**Plan:**
+- Modify breeding in `MatingHut._breed` to produce offspring with discrete stat tiers instead of continuous distribution with mutation.
+- Offspring stats should be exactly one of: weak (25,25,25), average (50,50,50), strong (75,75,75).
+- Tier inheritance rule: if both parents share the same tier, offspring inherits that tier; if parents differ, offspring is average.
+- Remove random mutation that previously caused drift.
+- Update tests: replace old average+mutation test with tier inheritance tests; add property test to assert offspring stats ∈ {25,50,75}.
+
+Implementation (commit 0adb9db):
+- Added tier determination helper: average of three stats maps to tier 25 (<37.5), 50 (37.5-62.5), or 75 (≥62.5).
+- Set offspring strength, speed_stat, endurance uniformly to the computed `offspring_tier`.
+- Removed the previous random mutation logic entirely.
+- Updated `src/mating_hut.py` accordingly.
+
+**Implementation:**
+
+
+**Testing:**
+- Added `test_offspring_stats_are_parent_average_plus_mutation` with table-driven cases covering same-tier, cross-tier, and edge values.
+- Added Hypothesis property test `test_offspring_stats_always_within_bounds` generating random parent stats; asserts each offspring stat is exactly 25, 50, or 75.
+- Updated existing test that expected mutation to reflect new deterministic behavior.
+- All 225 tests pass after the change.
+- Manual verification: breeding two weak critters produces weak offspring; strong+strong produces strong; mixed pairs produce average.
+
 
 Expected: The game should include at least three critters with distinct stat profiles to demonstrate variability: one weak (25 strength, speed, endurance), one strong (75 each), and one average (50 each).
 

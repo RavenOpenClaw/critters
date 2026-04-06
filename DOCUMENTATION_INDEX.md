@@ -40,14 +40,13 @@ critters/
 │   ├── tasks.md          ← **START HERE** for what to implement next
 │   ├── design.md         ← Deep architecture
 │   ├── requirements.md   ← Full requirements
-│   ├── bugs.md           ← Bug tracking
-│   └── fixes.md          ← Fix documentation
+│   ├── BUGS.md           ← Unified bug tracking and fix documentation (includes fixes)
 ├── doc/                  ← Additional design and notes
 ├── docs/                 ← Save system guide (critical for serialization)
 ├── src/                  ← Source code modules
 ├── tst/                  ← Test suite
-├── WORKING_ON.md         ← Current task tracking and completed tasks
 ├── README.md             ← Project overview
+├── COMMIT_ACCOUNTING.md  ← Mapping of every commit to task/bug/category
 └── DOCUMENTATION_INDEX.md ← This file
 ```
 
@@ -58,10 +57,11 @@ critters/
 - **What should I work on next?** → `.kiro/specs/critters-game-prototype/tasks.md`
 - **How does the system fit together?** → `.kiro/specs/critters-game-prototype/design.md`
 - **How to add a new building/object and make it savable?** → `docs/SAVE_SYSTEM_EXTENSION.md`
-- **What's currently in progress?** → `WORKING_ON.md`
 - **What are the exact requirements for feature X?** → `.kiro/specs/critters-game-prototype/requirements.md`
 - **Dependencies and setup?** → `doc/dependencies.md`
 - **Where are the tests?** → `tst/test_*.py` (match name to module)
+- **Which commit corresponds to which task/bug?** → `COMMIT_ACCOUNTING.md` (traceability matrix)
+- **What bugs are known and how are they fixed?** → `.kiro/specs/critters-game-prototype/BUGS.md` (unified bug reports and fix details)
 - **Which commit introduced change Y?** → `CHANGELOG.md` (search by commit or message)
 
 ---
