@@ -12,6 +12,7 @@
 | **Design & Architecture** | `.kiro/specs/critters-game-prototype/design.md` | Full system architecture, design principles, data flow, and module relationships. |
 | **Requirements** | `.kiro/specs/critters-game-prototype/requirements.md` | Detailed requirements and acceptance criteria. |
 | **Known Bugs & Fixes** | `.kiro/specs/critters-game-prototype/bugs.md` & `fixes.md` | Issue tracking and resolutions. |
+| **Full Changelog** | `CHANGELOG.md` | Complete audit trail of all commits on `mainline` with task/bug associations. |
 
 ---
 
@@ -61,6 +62,7 @@ critters/
 - **What are the exact requirements for feature X?** → `.kiro/specs/critters-game-prototype/requirements.md`
 - **Dependencies and setup?** → `doc/dependencies.md`
 - **Where are the tests?** → `tst/test_*.py` (match name to module)
+- **Which commit introduced change Y?** → `CHANGELOG.md` (search by commit or message)
 
 ---
 
