@@ -209,7 +209,7 @@ class TestMatingHutAssignmentViaInteract(unittest.TestCase):
         world.add_object(hut)
         player = Player(100, 100)
         critter = Critter(0, 0, cell_size=32)
-        player.following_critter = critter
+        critter.start_follow(player)  # Properly initiate following
         hut.interact(player)
         self.assertIn(critter, hut.assigned_critters)
         self.assertIs(critter.assigned_hut, hut)
@@ -225,7 +225,7 @@ class TestMatingHutAssignmentViaInteract(unittest.TestCase):
         player = Player(100, 100)
         critter = Critter(0, 0, cell_size=32)
         hut.assign_critter(critter)  # pre-assign
-        player.following_critter = critter
+        critter.start_follow(player)  # set following correctly
         hut.interact(player)
         self.assertIn(critter, hut.assigned_critters)
         self.assertIsNone(player.following_critter)
@@ -243,7 +243,7 @@ class TestMatingHutAssignmentViaInteract(unittest.TestCase):
         hut1.assign_critter(critter)
         self.assertIn(critter, hut1.assigned_critters)
         self.assertIs(critter.assigned_hut, hut1)
-        player.following_critter = critter
+        critter.start_follow(player)  # properly set following
         hut2.interact(player)
         self.assertNotIn(critter, hut1.assigned_critters)
         self.assertIn(critter, hut2.assigned_critters)

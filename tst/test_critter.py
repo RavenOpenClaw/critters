@@ -455,8 +455,10 @@ class TestCritterFollow:
         critter1.start_follow(player)
         assert player.following_critter is critter1
         critter2.start_follow(player)
-        assert player.following_critter is critter2
-        assert critter1.state == CritterState.IDLE
+        # With capacity 2, both should be following (no removal)
+        assert len(player.following_critters) == 2
+        assert player.following_critter is critter1  # property returns first
+        assert critter1.state == CritterState.FOLLOW
         assert critter2.state == CritterState.FOLLOW
 
     def test_stop_follow(self):
@@ -476,7 +478,16 @@ class TestCritterFollow:
         critter = Critter(50, 100, cell_size=32)
         critter.start_follow(player)
         initial_x = critter.x
-        critter.update(dt=1.0, world=world, pathfinding_system=None)
+
+        # Provide a dummy pathfinder that returns a path pointing to the player's general area
+        class DummyPathfinder:
+            def find_path(self, start, goal, grid):
+                # Simple stub: return a path that goes toward the goal directly
+                # We'll return a path with the goal as the only waypoint; critter will move toward it over time
+                return [goal]
+
+        dummy_pf = DummyPathfinder()
+        critter.update(dt=1.0, world=world, pathfinding_system=dummy_pf)
         assert critter.x > initial_x
 
     def test_follow_clears_when_assigned(self):
