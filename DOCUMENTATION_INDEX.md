@@ -11,7 +11,8 @@
 | **Master Task List** | `.kiro/specs/critters-game-prototype/tasks.md` | **The definitive task list.** All implementation work should reference this file. |
 | **Design & Architecture** | `.kiro/specs/critters-game-prototype/design.md` | Full system architecture, design principles, data flow, and module relationships. |
 | **Requirements** | `.kiro/specs/critters-game-prototype/requirements.md` | Detailed requirements and acceptance criteria. |
-| **Known Bugs & Fixes** | `.kiro/specs/critters-game-prototype/bugs.md` & `fixes.md` | Issue tracking and resolutions. |
+| **Bug Tracking** | `.kiro/specs/critters-game-prototype/bugs.md` | Unified bug reports and fix details (when fixed). |
+| **Commit Accounting** | `COMMIT_ACCOUNTING.md` | Traceability matrix mapping every commit to tasks/bugs/categories. |
 | **Full Changelog** | `CHANGELOG.md` | Complete audit trail of all commits on `mainline` with task/bug associations. |
 
 ---
@@ -40,7 +41,7 @@ critters/
 │   ├── tasks.md          ← **START HERE** for what to implement next
 │   ├── design.md         ← Deep architecture
 │   ├── requirements.md   ← Full requirements
-│   ├── BUGS.md           ← Unified bug tracking and fix documentation (includes fixes)
+│   ├── bugs.md           ← Unified bug tracking and fix documentation (includes fixes)
 ├── doc/                  ← Additional design and notes
 ├── docs/                 ← Save system guide (critical for serialization)
 ├── src/                  ← Source code modules
@@ -61,7 +62,7 @@ critters/
 - **Dependencies and setup?** → `doc/dependencies.md`
 - **Where are the tests?** → `tst/test_*.py` (match name to module)
 - **Which commit corresponds to which task/bug?** → `COMMIT_ACCOUNTING.md` (traceability matrix)
-- **What bugs are known and how are they fixed?** → `.kiro/specs/critters-game-prototype/BUGS.md` (unified bug reports and fix details)
+- **What bugs are known and how are they fixed?** → `.kiro/specs/critters-game-prototype/bugs.md` (unified bug reports and fix details)
 - **Which commit introduced change Y?** → `CHANGELOG.md` (search by commit or message)
 
 ---
