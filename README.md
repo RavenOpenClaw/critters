@@ -77,7 +77,7 @@ PYTHONPATH=src venv/bin/python -m pytest tst/
 
 - **WASD**: Move player
 - **E**: Interact with nearby objects (tap once, or hold for auto-repeat)
-  - Hold threshold: 0.5 s before auto-repeat begins
+  - Hold threshold: 0.5 s before auto-repeat begins
   - Base auto-repeat rate: 2 interactions per second (configurable via code)
 - **F3**: Toggle debug overlay (FPS, position, interaction radius)
 - **B**: Toggle build menu
@@ -109,4 +109,39 @@ Agents must follow this strict workflow to maintain code quality and visibility:
 
 ## 📌 Documentation Index
 
-New to the project? Start with `DOCUMENTATION_INDEX.md` at the repository root. It’s a quick lookup guide to all critical documents (tasks, design, requirements, save system guide) and explains common pitfalls like the hidden `.kiro` directory.
+New to the project? Start with `DOCUMENTATION_INDEX.md` at the repository root. It's a quick lookup guide to all critical documents (tasks, design, requirements, save system guide) and explains common pitfalls like the hidden `.kiro` directory.
+
+## 🐛 Bug Tracking and Fixes
+
+Bugs are reported and tracked in `.kiro/specs/critters-game-prototype/bugs.md`. When a bug is fixed, the same entry is updated with:
+- `Status: FIXED`
+- `Fix commit: <short-sha>`
+- A `Fix Details` section containing **Plan**, **Implementation**, and **Testing**.
+
+This unified file serves as the single source of truth for both bug reports and their resolutions.
+
+## 📊 Commit Traceability
+
+`COMMIT_ACCOUNTING.md` maps every commit on `mainline` to its associated task number, bug ID, or category (Feature, Test, Documentation, etc.). This matrix ensures full auditability. Agents must update this file (or confirm entries exist) when merging work.
+
+## ✅ Pre-Report Checklist
+
+Before reporting completion to the user, agents must verify:
+- [ ] Bug fixes: updated `bugs.md` with fix details and commit ID.
+- [ ] Task completions: marked in `.kiro/specs/critters-game-prototype/tasks.md` (with checkmark) and referenced commit ID.
+- [ ] Branch merged to `mainline` and pushed.
+- [ ] `COMMIT_ACCOUNTING.md` updated if new commit types appear.
+- [ ] Full test suite passes.
+- [ ] Any changed workflows documented in relevant READMEs or skills.
+
+(Full checklist also in `AGENTS.md` under "Pre-Report Documentation Checklist".)
+
+## 🤖 Agent Onboarding
+
+Agents should:
+1. Read `README.md` (this file).
+2. Consult `DOCUMENTATION_INDEX.md` for quick lookups.
+3. Select the next task from `.kiro/specs/critters-game-prototype/tasks.md`.
+4. Follow the workflow above and checklist.
+
+The `critters-implement` skill automates this orientation—use it to quickly start the next task.
