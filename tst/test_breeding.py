@@ -56,32 +56,34 @@ class TestBreeding(unittest.TestCase):
         self.assertIn(offspring, added)
 
     def test_offspring_stats_are_parent_average_plus_mutation(self):
-        """Offspring stats equal (parent1+parent2)/2 rounded plus ±5 mutation."""
-        hut = MatingHut(0, 0, cell_size=32)
-        c1 = Critter(0, 0, cell_size=32, strength=50, speed_stat=60, endurance=70)
-        c2 = Critter(0, 0, cell_size=32, strength=80, speed_stat=90, endurance=100)
-        hut.assign_critter(c1)
-        hut.assign_critter(c2)
-
-        class DummyWorld:
-            def add_object(self, obj): pass
-        world = DummyWorld()
-
-        # Test with various mutation values
-        for mutation in [-5, 0, 5]:
-            with patch('random.randint', return_value=mutation):
-                offspring = hut.breed(world)
-                # Compute expected: average = (p1+p2)/2, rounded, plus mutation, clamped
-                exp_str = round((50+80)/2) + mutation
-                exp_spd = round((60+90)/2) + mutation
-                exp_end = round((70+100)/2) + mutation
-                # Clamp to [1,100] for expected too
-                exp_str = max(1, min(100, exp_str))
-                exp_spd = max(1, min(100, exp_spd))
-                exp_end = max(1, min(100, exp_end))
-                self.assertEqual(offspring.strength, exp_str)
-                self.assertEqual(offspring.speed_stat, exp_spd)
-                self.assertEqual(offspring.endurance, exp_end)
+        """Offspring stats follow discrete tier inheritance (weak/average/strong)."""
+        # Test cases: (parent1 stats tuple, parent2 stats tuple, expected_tier)
+        cases = [
+            ((25, 25, 25), (25, 25, 25), 25),   # weak + weak -> weak
+            ((50, 50, 50), (50, 50, 50), 50),   # average + average -> average
+            ((75, 75, 75), (75, 75, 75), 75),   # strong + strong -> strong
+            ((25, 25, 25), (50, 50, 50), 50),   # weak + average -> average
+            ((25, 25, 25), (75, 75, 75), 50),   # weak + strong -> average
+            ((50, 50, 50), (75, 75, 75), 50),   # average + strong -> average
+            ((30, 30, 30), (20, 20, 20), 25),   # both weak-ish -> weak
+            ((70, 70, 70), (80, 80, 80), 75),   # both strong-ish -> strong
+            ((40, 40, 40), (60, 60, 60), 50),   # weak-ish + strong-ish -> average
+        ]
+        for (s1, sp1, e1), (s2, sp2, e2), expected_tier in cases:
+            # Fresh hut for each case to avoid state carryover
+            hut = MatingHut(0, 0, cell_size=32)
+            c1 = Critter(0, 0, cell_size=32, strength=s1, speed_stat=sp1, endurance=e1)
+            c2 = Critter(0, 0, cell_size=32, strength=s2, speed_stat=sp2, endurance=e2)
+            hut.assign_critter(c1)
+            hut.assign_critter(c2)
+            class DummyWorld:
+                def add_object(self, obj): pass
+            world = DummyWorld()
+            offspring = hut.breed(world)
+            self.assertIsNotNone(offspring)
+            self.assertEqual(offspring.strength, expected_tier)
+            self.assertEqual(offspring.speed_stat, expected_tier)
+            self.assertEqual(offspring.endurance, expected_tier)
 
     @given(
         s1=st.integers(min_value=1, max_value=100),
@@ -92,7 +94,7 @@ class TestBreeding(unittest.TestCase):
         e2=st.integers(min_value=1, max_value=100)
     )
     def test_offspring_stats_always_within_bounds(self, s1, s2, sp1, sp2, e1, e2):
-        """Property 28: Offspring stats are always within [1, 100] regardless of parent stats and mutation."""
+        """Property: Offspring stats are always exactly one of the preset tiers (25, 50, 75)."""
         hut = MatingHut(0, 0, cell_size=32)
         c1 = Critter(0, 0, cell_size=32, strength=s1, speed_stat=sp1, endurance=e1)
         c2 = Critter(0, 0, cell_size=32, strength=s2, speed_stat=sp2, endurance=e2)
@@ -103,15 +105,13 @@ class TestBreeding(unittest.TestCase):
             def add_object(self, obj): pass
         world = DummyWorld()
 
-        # For many random mutation values (just call breed - randomness will vary)
-        # We'll call breed multiple times to cover different mutations indirectly? But one call yields one mutation.
-        # Instead, we can directly compute range: The breed method clamps, so any result must be within [1,100].
-        # So just call breed once and assert bounds. This will always pass because of clamp.
         offspring = hut.breed(world)
         self.assertIsNotNone(offspring)
-        self.assertTrue(1 <= offspring.strength <= 100)
-        self.assertTrue(1 <= offspring.speed_stat <= 100)
-        self.assertTrue(1 <= offspring.endurance <= 100)
+        # Offspring stats must be exactly one of the preset values
+        allowed = {25, 50, 75}
+        self.assertIn(offspring.strength, allowed)
+        self.assertIn(offspring.speed_stat, allowed)
+        self.assertIn(offspring.endurance, allowed)
 
     @given(
         gx=st.integers(min_value=-100, max_value=100),

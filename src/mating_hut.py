@@ -3,7 +3,6 @@ MatingHut: A 2x2 building where critters can be assigned for breeding.
 """
 from building import Building
 from critter import Critter, CritterState
-import random
 
 class MatingHut(Building):
     """Mating Hut building (2x2) for critter building."""
@@ -78,7 +77,7 @@ class MatingHut(Building):
         """Breed two assigned critters to produce offspring.
 
         Requires at least two assigned critters.
-        Offspring stats are the average of parents' stats, with a random mutation of ±5.
+        Offspring stats follow discrete tiers: weak (25/25/25), average (50/50/50), strong (75/75/75).
         Offspring is placed at the hut location and added to the given world.
         Returns the new Critter instance, or None if insufficient critters.
         """
@@ -88,22 +87,33 @@ class MatingHut(Building):
         return self._breed(parent1, parent2, world)
 
     def _breed(self, parent1, parent2, world):
-        """Internal method to produce offspring from two parents."""
-        # Compute average stats
-        strength = (parent1.strength + parent2.strength) / 2
-        speed_stat = (parent1.speed_stat + parent2.speed_stat) / 2
-        endurance = (parent1.endurance + parent2.endurance) / 2
+        """Internal method to produce offspring from two parents.
 
-        # Apply random mutation: each stat ±5 (integer)
-        mutation = random.randint(-5, 5)
-        strength = int(round(strength)) + mutation
-        speed_stat = int(round(speed_stat)) + mutation
-        endurance = int(round(endurance)) + mutation
+        Offspring stats follow the discrete tier system:
+        - weak: (25, 25, 25)
+        - average: (50, 50, 50)
+        - strong: (75, 75, 75)
 
-        # Clamp to [1, 100]
-        strength = max(1, min(100, strength))
-        speed_stat = max(1, min(100, speed_stat))
-        endurance = max(1, min(100, endurance))
+        Tier determination:
+        - If both parents have the same tier, offspring inherits that tier.
+        - If parents have different tiers, offspring is average (50).
+        """
+        # Helper: determine a critter's tier based on average of its three stats
+        def get_tier(c):
+            avg = (c.strength + c.speed_stat + c.endurance) / 3
+            if avg < 37.5:
+                return 25
+            elif avg < 62.5:
+                return 50
+            else:
+                return 75
+
+        tier1 = get_tier(parent1)
+        tier2 = get_tier(parent2)
+        offspring_tier = tier1 if tier1 == tier2 else 50
+
+        # Assign uniform stats based on offspring tier
+        strength = speed_stat = endurance = offspring_tier
 
         # Position: center of the hut's area in world coordinates
         world_x = self.x + (self.width * self.cell_size) / 2
