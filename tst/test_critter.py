@@ -547,3 +547,31 @@ class TestCritterFollow:
         critter.update(dt=1.0, world=world, pathfinding_system=DummyPathfinder())
         assert critter.state == CritterState.IDLE
 
+class TestCritterInteract:
+    """Tests for Critter interaction via E key (follow toggle)."""
+
+    def test_interact_toggles_follow(self):
+        from grid_system import GridSystem
+        from world import World
+        grid = GridSystem(cell_size=32, width=20, height=20)
+        world = World(grid)
+        player = Player(100, 100)
+        # Set world reference on player for feedback messages
+        player.world = world
+        # Create a critter within interaction radius (distance 20 < 45)
+        critter = Critter(120, 100, cell_size=32)
+        world.add_object(critter)
+        # Initial state
+        assert critter.state == CritterState.IDLE
+        assert not player.following_critters
+        # First interaction: start follow
+        player.interact(world)
+        assert critter.state == CritterState.FOLLOW
+        assert critter in player.following_critters
+        assert world.message == "Critter is following you."
+        # Second interaction: stop follow
+        player.interact(world)
+        assert critter.state == CritterState.IDLE
+        assert not player.following_critters
+        assert world.message == "Stopped following."
+

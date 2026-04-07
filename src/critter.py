@@ -66,7 +66,15 @@ class Critter(Entity):
         self.start_idle()
 
     def interact(self, player):
-        """Do nothing when player interacts. TODO: do something like purr or bark when pet"""
+        """Toggle follow state when player interacts (E key). Provides feedback via player.world if available."""
+        if self.state == CritterState.FOLLOW:
+            self.stop_follow()
+            if hasattr(player, 'world') and player.world is not None:
+                player.world.set_message("Stopped following.", 2.0)
+        else:
+            self.start_follow(player)
+            if hasattr(player, 'world') and player.world is not None:
+                player.world.set_message("Critter is following you.", 2.0)
 
     def get_occupied_cells(self):
         """Critters do not occupy fixed grid cells; return empty list."""

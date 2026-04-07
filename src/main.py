@@ -205,6 +205,9 @@ def main():
         # Should not happen, but default to new game if unknown action
         raise ValueError(f"Unknown title screen action: {action}")
 
+    # Associate world with player for interaction feedback (E key on critters)
+    player.world = world
+
     # Create input handler (common to both paths)
     input_handler = InputHandler()
 
