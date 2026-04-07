@@ -227,7 +227,9 @@ Desired fix:
 
 ### [EINTERACT] Pressing E should make critters follow the player, not swallow the action
 
-Status: NOT_STARTED
+Status: FIXED
+
+Fix commit: `e02b15f`
 
 Expected: When the player presses E while targeting a critter (within interaction radius), the critter should begin following the player (toggle follow). This is more intuitive than the current behavior where E may be consumed by other systems or not map to follow clearly.
 
