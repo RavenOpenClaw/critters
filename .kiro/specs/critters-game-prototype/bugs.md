@@ -334,7 +334,9 @@ Desired fix:
 
 ### [CONSTANTS] Centralize all in-game text strings in a Constants module
 
-Status: NOT_STARTED
+Status: FIXED
+
+Fix commit: `abb097c`
 
 Expected: All user-facing text strings (UI prompts, button labels, HUD text, messages, buff names) should be defined in a single `constants.py` module. Game code should reference these constants by variable names. This improves maintainability and consistency.
 
