@@ -7,6 +7,7 @@ from gathering_hut import GatheringHut
 from world import World
 from grid_system import GridSystem
 from critter import Critter
+from constants import PROMPT_GATHER, MSG_ASSIGN_GATHERING
 
 
 def test_hud_shows_player_inventory():
@@ -56,7 +57,7 @@ def test_gathering_hut_interaction_prompt():
 
     full_hut = GatheringHut(0, 0, 32)
     full_hut.storage.add("food", 3)
-    assert full_hut.get_interaction_text() == "Press E to collect resources"
+    assert full_hut.get_interaction_text() == PROMPT_GATHER
 
 
 def test_gathering_hut_interaction_at_edge():
@@ -110,7 +111,7 @@ class TestGatheringHutAssignmentViaInteract(unittest.TestCase):
         self.assertIn(critter, hut.assigned_critters)
         self.assertIs(critter.assigned_hut, hut)
         self.assertIsNone(player.following_critter)
-        self.assertEqual(world.message, "Critter assigned to Gathering Hut.")
+        self.assertEqual(world.message, MSG_ASSIGN_GATHERING)
 
     def test_assign_clears_following_even_if_already_assigned(self):
         """Assignment clears following flag even if critter already assigned to this hut."""

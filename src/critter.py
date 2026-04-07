@@ -67,14 +67,15 @@ class Critter(Entity):
 
     def interact(self, player):
         """Toggle follow state when player interacts (E key). Provides feedback via player.world if available."""
+        from constants import MESSAGE_FOLLOW_STOP, MESSAGE_FOLLOW_START
         if self.state == CritterState.FOLLOW:
             self.stop_follow()
             if hasattr(player, 'world') and player.world is not None:
-                player.world.set_message("Stopped following.", 2.0)
+                player.world.set_message(MESSAGE_FOLLOW_STOP, 2.0)
         else:
             self.start_follow(player)
             if hasattr(player, 'world') and player.world is not None:
-                player.world.set_message("Critter is following you.", 2.0)
+                player.world.set_message(MESSAGE_FOLLOW_START, 2.0)
 
     def get_occupied_cells(self):
         """Critters do not occupy fixed grid cells; return empty list."""

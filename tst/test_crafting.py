@@ -7,6 +7,7 @@ from entity import Player
 from recipe import Recipe
 from equipment import Equipment, EQUIPMENT_REGISTRY
 from crafting_menu import CraftingMenu
+from constants import CRAFT_MSG_UNLOCKED, CRAFT_MSG_NOT_ENOUGH
 
 class TestCraftingSystem(unittest.TestCase):
     def setUp(self):
@@ -24,7 +25,7 @@ class TestCraftingSystem(unittest.TestCase):
         self.assertTrue(result)
         self.assertIn("test_axe", self.player.unlocked_equipment)
         self.assertEqual(self.player.inventory.get_item_count('food'), 5)
-        self.assertIn("Unlocked: Test Axe!", self.menu.last_message)
+        self.assertIn(CRAFT_MSG_UNLOCKED.format(item="Test Axe"), self.menu.last_message)
 
     def test_craft_fails_with_insufficient_resources(self):
         """Crafting fails when resources are insufficient; no unlock, inventory unchanged."""
@@ -33,7 +34,7 @@ class TestCraftingSystem(unittest.TestCase):
         self.assertFalse(result)
         self.assertNotIn("test_axe", self.player.unlocked_equipment)
         self.assertEqual(self.player.inventory.get_item_count('food'), 3)
-        self.assertIn("Not enough food!", self.menu.last_message)
+        self.assertIn(CRAFT_MSG_NOT_ENOUGH.format(resource="food"), self.menu.last_message)
 
     def test_craft_multiple_resource_types(self):
         """Crafting works with multiple resource types."""

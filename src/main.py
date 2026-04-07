@@ -29,6 +29,16 @@ from crafting_menu import CraftingMenu
 from recipes import RECIPES
 from save_system import save_game, load_game
 from title_screen import TitleScreen
+from constants import (
+    HUD_BUILD_BUTTON,
+    HUD_BUFFS_TITLE,
+    HUD_BUFFS_NONE,
+    DECONSTRUCTION_MODE_LABEL,
+    BUFF_NAME_WARM,
+    MESSAGE_DECONSTRUCTED,
+    MESSAGE_OUT_OF_RANGE,
+    PROMPT_ASSIGN,
+)
 
 # Resource icon colors (for HUD)
 RESOURCE_COLORS = {
@@ -75,11 +85,11 @@ def render_active_buffs(screen, player, font):
     x = WINDOW_WIDTH - 200
     y = 10
     # Title
-    title = font.render("Buffs", True, (0, 0, 0))
+    title = font.render(HUD_BUFFS_TITLE, True, (0, 0, 0))
     screen.blit(title, (x, y))
     y += 20
     if not player.active_buffs:
-        none_surface = font.render("(none)", True, (80, 80, 80))
+        none_surface = font.render(HUD_BUFFS_NONE, True, (80, 80, 80))
         screen.blit(none_surface, (x, y))
     else:
         for buff in player.active_buffs:
@@ -299,14 +309,14 @@ def main():
                 dx = player.x - cx
                 dy = player.y - cy
                 if dx*dx + dy*dy <= radius_sq:
-                    buff = Buff("Warm", {'gather': 2.0}, duration=30.0)
+                    buff = Buff(BUFF_NAME_WARM, {'gather': 2.0}, duration=30.0)
                     player.apply_buff(buff)
                 # Critters
                 for critter in world.current_map.critters:
                     dx = critter.x - cx
                     dy = critter.y - cy
                     if dx*dx + dy*dy <= radius_sq:
-                        buff = Buff("Warm", {'gather': 2.0}, duration=30.0)
+                        buff = Buff(BUFF_NAME_WARM, {'gather': 2.0}, duration=30.0)
                         critter.apply_buff(buff)
 
         # Update player state (buffs, speed recalculation)
@@ -356,10 +366,10 @@ def main():
                                 dy = player.y - oy
                                 if dx*dx + dy*dy <= player.interaction_radius**2:
                                     obj.deconstruct(world, player)
-                                    world.set_message("Deconstructed", 2.0)
+                                    world.set_message(MESSAGE_DECONSTRUCTED, 2.0)
                                     inspector_handled = True  # consume click
                                 else:
-                                    world.set_message("Out of range", 1.5)
+                                    world.set_message(MESSAGE_OUT_OF_RANGE, 1.5)
                                     inspector_handled = True
 
                 # If deconstruct didn't handle, proceed with inspector interaction
@@ -491,7 +501,7 @@ def main():
                     text = obj.get_interaction_text()
                     # Override interaction text when player has following critters
                     if isinstance(obj, Building) and player.following_critters:
-                        text = "Assign: E"
+                        text = PROMPT_ASSIGN
                     if text:
                         text_surface = font.render(text, True, (0, 0, 0))
                         text_rect = text_surface.get_rect(center=(ox, oy - 30))  # raised by 10px
@@ -533,7 +543,7 @@ def main():
 
         # Draw HUD build button (bottom-left)
         pygame.draw.rect(screen, (100, 100, 200), hud_button_rect)
-        build_lbl = font.render("Build", True, (255, 255, 255))
+        build_lbl = font.render(HUD_BUILD_BUTTON, True, (255, 255, 255))
         screen.blit(build_lbl, build_lbl.get_rect(center=hud_button_rect.center))
 
         # Buffs display (top-right corner)
@@ -585,7 +595,7 @@ def main():
 
         # Deconstruction mode indicator
         if input_handler.deconstruct_mode:
-            decon_surface = font.render("Deconstruction Mode (X to exit)", True, (255, 0, 0))
+            decon_surface = font.render(DECONSTRUCTION_MODE_LABEL, True, (255, 0, 0))
             screen.blit(decon_surface, (WINDOW_WIDTH - decon_surface.get_width() - 10, WINDOW_HEIGHT - 30))
 
         # Draw critter inspector UI (if visible)

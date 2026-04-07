@@ -10,6 +10,7 @@ from critter import Critter, CritterState
 from grid_system import GridSystem
 from world import World
 from entity import Player
+from constants import MSG_BREED_SUCCESS, MSG_ASSIGN_MATING, MSG_BREED_NEED_TWO, MSG_BREED_NEED_FOOD
 
 class TestBreeding(unittest.TestCase):
     def test_breed_requires_two_critters(self):
@@ -154,7 +155,7 @@ class TestMatingHutInteraction(unittest.TestCase):
         hut.assign_critter(critter)
         hut.interact(player)
         self.assertEqual(len(world.current_map.objects), 1)
-        self.assertEqual(world.message, "Need at least 2 critters to breed!")
+        self.assertEqual(world.message, MSG_BREED_NEED_TWO)
         self.assertEqual(player.inventory.get_item_count("food"), 10)
 
     def test_interact_requires_food(self):
@@ -170,7 +171,7 @@ class TestMatingHutInteraction(unittest.TestCase):
         hut.assign_critter(c2)
         hut.interact(player)
         self.assertEqual(len(world.current_map.objects), 1)
-        self.assertEqual(world.message, "Need 5 food to breed!")
+        self.assertEqual(world.message, MSG_BREED_NEED_FOOD.format(5))
         self.assertEqual(player.inventory.get_item_count("food"), 3)
 
     def test_interact_breeds_successfully(self):
@@ -191,7 +192,7 @@ class TestMatingHutInteraction(unittest.TestCase):
         offspring = world.current_map.objects[1]
         self.assertIsInstance(offspring, Critter)
         self.assertIs(offspring.assigned_hut, hut)
-        self.assertEqual(world.message, "Breeding produced a new critter!")
+        self.assertEqual(world.message, MSG_BREED_SUCCESS)
 
     def test_interact_ignores_non_player(self):
         hut = MatingHut(0, 0, 32)
@@ -214,7 +215,7 @@ class TestMatingHutAssignmentViaInteract(unittest.TestCase):
         self.assertIn(critter, hut.assigned_critters)
         self.assertIs(critter.assigned_hut, hut)
         self.assertIsNone(player.following_critter)
-        self.assertEqual(world.message, "Critter assigned to Mating Hut.")
+        self.assertEqual(world.message, MSG_ASSIGN_MATING)
 
     def test_assign_clears_following_even_if_already_assigned(self):
         """Assignment clears following flag even if critter already assigned to this hut."""

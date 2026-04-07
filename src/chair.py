@@ -3,6 +3,7 @@ Chair: A building that provides a Rested buff (movement speed increase) when int
 """
 from building import Building
 from buff import Buff
+from constants import PROMPT_REST, BUFF_NAME_RESTED
 
 class Chair(Building):
     """Chair building (1x1) that grants the Rested speed buff."""
@@ -13,14 +14,14 @@ class Chair(Building):
 
     def get_interaction_text(self):
         """Return prompt to interact."""
-        return "Rest on Chair (E)"
+        return PROMPT_REST
 
     def interact(self, other):
         """Apply Rested buff to the player."""
         from entity import Player  # Import Player from entity module
         if isinstance(other, Player):
             # Rested: 1.5x speed for 30 seconds
-            buff = Buff("Rested", {'speed': 1.5}, duration=30.0)
+            buff = Buff(BUFF_NAME_RESTED, {'speed': 1.5}, duration=30.0)
             other.apply_buff(buff)
 
     def render(self, screen):

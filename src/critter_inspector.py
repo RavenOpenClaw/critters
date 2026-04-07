@@ -70,13 +70,14 @@ class CritterInspector:
             return
         c = self.selected_critter
         from critter import CritterState
+        from constants import MESSAGE_FOLLOW_STOP, MESSAGE_FOLLOW_START
         if c.state == CritterState.FOLLOW:
             c.stop_follow()
-            world.set_message("Stopped following.", 2.0)
+            world.set_message(MESSAGE_FOLLOW_STOP, 2.0)
         else:
             # Start following; this will also stop any existing following critter
             c.start_follow(player)
-            world.set_message("Critter is following you.", 2.0)
+            world.set_message(MESSAGE_FOLLOW_START, 2.0)
 
     def draw(self, screen):
         if not self.visible or self.selected_critter is None:
@@ -92,32 +93,38 @@ class CritterInspector:
         pygame.draw.line(screen, (0, 0, 0), (x+4, y+4), (x+s-4, y+s-4), 2)
         pygame.draw.line(screen, (0, 0, 0), (x+s-4, y+4), (x+4, y+s-4), 2)
         # Prepare stats text
+        from constants import (
+            INSPECTOR_TITLE, LABEL_STATE, LABEL_STRENGTH, LABEL_SPEED,
+            LABEL_ENDURANCE, LABEL_CAPACITY, LABEL_HELD, LABEL_GATHER_SPEED,
+            LABEL_MOVE_SPEED
+        )
         c = self.selected_critter
         lines = [
-            f"Critter Stats",
-            f"State: {c.state.name}",
-            f"Strength: {c.strength}",
-            f"Speed: {c.speed_stat}",
-            f"Endurance: {c.endurance}",
-            f"Carry Capacity: {c.carry_capacity}",
-            f"Held: {c.held_resource} x{c.held_quantity}",
-            f"Gather Speed: {c.get_gather_speed():.2f}/s",
-            f"Move Speed: {c.get_movement_speed():.1f}",
+            INSPECTOR_TITLE,
+            f"{LABEL_STATE}{c.state.name}",
+            f"{LABEL_STRENGTH}{c.strength}",
+            f"{LABEL_SPEED}{c.speed_stat}",
+            f"{LABEL_ENDURANCE}{c.endurance}",
+            f"{LABEL_CAPACITY}{c.carry_capacity}",
+            f"{LABEL_HELD}{c.held_resource} x{c.held_quantity}",
+            f"{LABEL_GATHER_SPEED}{c.get_gather_speed():.2f}/s",
+            f"{LABEL_MOVE_SPEED}{c.get_movement_speed():.1f}",
         ]
+        from constants import LABEL_BUFFS, VALUE_ASSIGNED_NONE, LABEL_ASSIGNED
         # Active buffs
         if c.active_buffs:
-            lines.append("Buffs:")
+            lines.append(LABEL_BUFFS)
             for b in c.active_buffs:
                 lines.append(f"  {b.name} ({b.remaining:.1f}s)")
         else:
-            lines.append("Buffs: None")
+            lines.append(f"{LABEL_BUFFS} {VALUE_ASSIGNED_NONE}")
         # Assignment status line
         assigned_hut = getattr(c, 'assigned_hut', None)
         if assigned_hut is not None:
             hut_name = type(assigned_hut).__name__
-            lines.append(f"Assigned: {hut_name}")
+            lines.append(f"{LABEL_ASSIGNED} {hut_name}")
         else:
-            lines.append("Assigned: None")
+            lines.append(f"{LABEL_ASSIGNED} {VALUE_ASSIGNED_NONE}")
         # Render lines
         x0 = self.panel_rect.x + 10
         y0 = self.panel_rect.y + 10

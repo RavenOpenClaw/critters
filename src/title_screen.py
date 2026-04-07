@@ -5,6 +5,16 @@ Provides a simple menu with New Game and Continue options, plus confirmation for
 """
 import pygame
 from pathlib import Path
+from constants import (
+    TITLE_TEXT,
+    BUTTON_NEW_GAME,
+    BUTTON_CONTINUE,
+    INSTRUCTIONS,
+    CONFIRM_OVERWRITE,
+    CONFIRM_PROCEED,
+    BUTTON_YES,
+    BUTTON_NO,
+)
 
 
 class TitleScreen:
@@ -86,22 +96,22 @@ class TitleScreen:
     def render(self, screen):
         screen.fill(self.bg_color)
         # Title
-        title_surf = self.title_font.render("CRITTERS", True, self.text_color)
+        title_surf = self.title_font.render(TITLE_TEXT, True, self.text_color)
         title_rect = title_surf.get_rect(center=(self.width // 2, self.height // 3))
         screen.blit(title_surf, title_rect)
 
         if self.state == "menu":
             # New Game button
             pygame.draw.rect(screen, self.button_color, self.new_game_rect)
-            new_text = self.font.render("New Game", True, (255, 255, 255))
+            new_text = self.font.render(BUTTON_NEW_GAME, True, (255, 255, 255))
             screen.blit(new_text, new_text.get_rect(center=self.new_game_rect.center))
             # Continue button (only if save exists)
             if self.continue_rect:
                 pygame.draw.rect(screen, self.button_color, self.continue_rect)
-                cont_text = self.font.render("Continue", True, (255, 255, 255))
+                cont_text = self.font.render(BUTTON_CONTINUE, True, (255, 255, 255))
                 screen.blit(cont_text, cont_text.get_rect(center=self.continue_rect.center))
             # Instructions
-            instr = self.small_font.render("N: New, C: Continue, Esc: Quit", True, self.text_color)
+            instr = self.small_font.render(INSTRUCTIONS, True, self.text_color)
             screen.blit(instr, instr.get_rect(center=(self.width // 2, self.height - 50)))
         elif self.state == "confirm_new":
             # Dark overlay
@@ -111,14 +121,14 @@ class TitleScreen:
             # Confirmation box
             pygame.draw.rect(screen, (255, 255, 255), self.confirm_box_rect)
             pygame.draw.rect(screen, (0, 0, 0), self.confirm_box_rect, 2)
-            msg1 = self.font.render("New Game will overwrite the saved game.", True, self.text_color)
-            msg2 = self.font.render("Proceed?", True, self.text_color)
+            msg1 = self.font.render(CONFIRM_OVERWRITE, True, self.text_color)
+            msg2 = self.font.render(CONFIRM_PROCEED, True, self.text_color)
             screen.blit(msg1, msg1.get_rect(center=(self.width // 2, self.height // 2 - 30)))
             screen.blit(msg2, msg2.get_rect(center=(self.width // 2, self.height // 2 + 10)))
             # Yes/No buttons
             pygame.draw.rect(screen, (200, 50, 50), self.yes_rect)
             pygame.draw.rect(screen, self.button_color, self.no_rect)
-            yes_text = self.font.render("Yes", True, (255, 255, 255))
-            no_text = self.font.render("No", True, (255, 255, 255))
+            yes_text = self.font.render(BUTTON_YES, True, (255, 255, 255))
+            no_text = self.font.render(BUTTON_NO, True, (255, 255, 255))
             screen.blit(yes_text, yes_text.get_rect(center=self.yes_rect.center))
             screen.blit(no_text, no_text.get_rect(center=self.no_rect.center))

@@ -3,6 +3,7 @@ Campfire: A building that provides a Strength buff (increased gathering) when in
 """
 from building import Building
 from buff import Buff
+from constants import BUFF_NAME_WARM
 
 class Campfire(Building):
     """Campfire building (2x2) that grants the Strength gather buff."""
@@ -19,7 +20,7 @@ class Campfire(Building):
         """Optional: still allow manual buff for compatibility, but aura handles automatically."""
         from entity import Player
         if isinstance(other, Player):
-            buff = Buff("Warm", {'gather': 2.0}, duration=30.0)
+            buff = Buff(BUFF_NAME_WARM, {'gather': 2.0}, duration=30.0)
             other.apply_buff(buff)
 
     def render(self, screen):

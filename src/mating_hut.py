@@ -3,6 +3,7 @@ MatingHut: A 2x2 building where critters can be assigned for breeding.
 """
 from building import Building
 from critter import Critter, CritterState
+from constants import PROMPT_BREED, MSG_ASSIGN_MATING, MSG_BREED_NEED_TWO, MSG_BREED_NEED_FOOD, MSG_BREED_SUCCESS
 
 class MatingHut(Building):
     """Mating Hut building (2x2) for critter building."""
@@ -31,7 +32,7 @@ class MatingHut(Building):
     def get_interaction_text(self):
         """Return prompt if breeding is possible (at least 2 assigned critters)."""
         if len(self.assigned_critters) >= 2:
-            return "Press E to breed critters"
+            return PROMPT_BREED
         return None
 
     def interact(self, player):
@@ -52,18 +53,18 @@ class MatingHut(Building):
             self.assign_critter(critter)
             # No need to clear player.following_critter; stop_follow already removed
             if hasattr(self, 'world') and self.world is not None:
-                self.world.set_message("Critter assigned to Mating Hut.", 2.0)
+                self.world.set_message(MSG_ASSIGN_MATING, 2.0)
             return
 
         # Breeding mode
         if len(self.assigned_critters) < 2:
             if hasattr(self, 'world') and self.world is not None:
-                self.world.set_message("Need at least 2 critters to breed!", 2.0)
+                self.world.set_message(MSG_BREED_NEED_TWO, 2.0)
             return
 
         if not player.inventory.has("food", self.BREED_FOOD_COST):
             if hasattr(self, 'world') and self.world is not None:
-                self.world.set_message(f"Need {self.BREED_FOOD_COST} food to breed!", 2.0)
+                self.world.set_message(MSG_BREED_NEED_FOOD.format(self.BREED_FOOD_COST), 2.0)
             return
 
         player.inventory.remove("food", self.BREED_FOOD_COST)
@@ -71,7 +72,7 @@ class MatingHut(Building):
             return
         offspring = self.breed(self.world)
         if offspring:
-            self.world.set_message("Breeding produced a new critter!", 3.0)
+            self.world.set_message(MSG_BREED_SUCCESS, 3.0)
 
     def breed(self, world):
         """Breed two assigned critters to produce offspring.

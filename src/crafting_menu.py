@@ -2,6 +2,7 @@
 CraftingMenu: UI for selecting and crafting recipes.
 """
 import pygame
+from constants import CRAFTING_MENU_TITLE, CRAFT_MSG_NOT_ENOUGH, CRAFT_MSG_UNLOCKED, CRAFT_MSG_CRAFTED
 
 class CraftingMenu:
     """Crafting menu overlay.
@@ -52,7 +53,7 @@ class CraftingMenu:
         # Verify costs
         for resource, required in recipe.cost.items():
             if not player.inventory.has(resource, required):
-                self.last_message = f"Not enough {resource}!"
+                self.last_message = CRAFT_MSG_NOT_ENOUGH.format(resource=resource)
                 self.message_timer = 2.0  # Show for 2 seconds
                 return False
         # Deduct resources
@@ -61,10 +62,10 @@ class CraftingMenu:
         # Process result
         if recipe.unlocks_equipment:
             player.unlock_equipment(recipe.result)
-            self.last_message = f"Unlocked: {recipe.name}!"
+            self.last_message = CRAFT_MSG_UNLOCKED.format(item=recipe.name)
         else:
             # For future: add item to inventory
-            self.last_message = f"Crafted: {recipe.name}!"
+            self.last_message = CRAFT_MSG_CRAFTED.format(item=recipe.name)
         self.message_timer = 2.0
         return True
 
@@ -85,7 +86,7 @@ class CraftingMenu:
         overlay.fill((255, 255, 255))
         screen.blit(overlay, (x, y))
         # Title
-        title = font.render("Crafting (R to close)", True, (0, 0, 0))
+        title = font.render(CRAFTING_MENU_TITLE, True, (0, 0, 0))
         screen.blit(title, (x + 10, y + 10))
         # List recipes
         for idx, recipe in enumerate(self.recipes):

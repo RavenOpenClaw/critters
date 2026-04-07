@@ -5,6 +5,7 @@ from building import Building
 from inventory import Inventory
 from entity import Player
 from berry_bush import BerryBush
+from constants import PROMPT_GATHER, MSG_ASSIGN_GATHERING
 
 class GatheringHut(Building):
     """Gathering Hut building (3x3) with storage and critter assignment."""
@@ -79,7 +80,7 @@ class GatheringHut(Building):
     def get_interaction_text(self):
         """Return prompt text if hut has resources to collect."""
         if self.storage.items:
-            return "Press E to collect resources"
+            return PROMPT_GATHER
         return None
 
     def interact(self, player):
@@ -98,7 +99,7 @@ class GatheringHut(Building):
             critter.stop_follow()
             self.assign_critter(critter)
             if hasattr(self, 'world') and self.world is not None:
-                self.world.set_message("Critter assigned to Gathering Hut.", 2.0)
+                self.world.set_message(MSG_ASSIGN_GATHERING, 2.0)
             return
 
         # Withdraw mode: transfer all storage to player inventory

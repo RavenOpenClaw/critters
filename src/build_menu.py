@@ -6,6 +6,15 @@ from gathering_hut import GatheringHut
 from chair import Chair
 from campfire import Campfire
 from mating_hut import MatingHut
+from constants import (
+    HUD_BUILD_BUTTON,
+    BUILD_MENU_TITLE,
+    BUILD_PLACEMENT_INSTR,
+    BUILDING_GATHERING_HUT,
+    BUILDING_MATING_HUT,
+    BUILDING_CHAIR,
+    BUILDING_CAMPFIRE,
+)
 
 class BuildMenu:
     """Simple build menu for selecting and placing buildings with mouse/keyboard."""
@@ -15,10 +24,10 @@ class BuildMenu:
         self.visible = False
         # Building options: tuple of (class, label)
         self.buildings = [
-            (GatheringHut, "Gathering Hut"),
-            (MatingHut, "Mating Hut"),
-            (Chair, "Chair"),
-            (Campfire, "Campfire"),
+            (GatheringHut, BUILDING_GATHERING_HUT),
+            (MatingHut, BUILDING_MATING_HUT),
+            (Chair, BUILDING_CHAIR),
+            (Campfire, BUILDING_CAMPFIRE),
         ]
         # Button rectangles for mouse interaction (computed in render)
         self.button_rects = {}  # maps building class to rect
@@ -139,7 +148,7 @@ class BuildMenu:
         # Draw HUD toggle button if requested
         if hud_button_rect:
             pygame.draw.rect(screen, self.button_color, hud_button_rect)
-            btn_text = font.render("Build", True, (255, 255, 255))
+            btn_text = font.render(HUD_BUILD_BUTTON, True, (255, 255, 255))
             screen.blit(btn_text, btn_text.get_rect(center=hud_button_rect.center))
 
         if not self.visible:
@@ -155,7 +164,7 @@ class BuildMenu:
         pygame.draw.rect(screen, (0, 0, 0), menu_rect, 2)
 
         # Title
-        title = font.render("Build Menu (B to close)", True, self.text_color)
+        title = font.render(BUILD_MENU_TITLE, True, self.text_color)
         screen.blit(title, (x + 10, y + 10))
 
         # Compute button rects for each building
@@ -186,5 +195,5 @@ class BuildMenu:
             screen.blit(cost_surface, cost_rect)
 
         # Instructions
-        click_instr = font.render("Click grid to place", True, (80, 80, 80))
+        click_instr = font.render(BUILD_PLACEMENT_INSTR, True, (80, 80, 80))
         screen.blit(click_instr, (x + 20, y + self.menu_height - 30))

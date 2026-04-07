@@ -18,6 +18,7 @@ from berry_bush import BerryBush
 from pathfinding import PathfindingSystem
 from buff import Buff
 from entity import Player
+from constants import MESSAGE_FOLLOW_START, MESSAGE_FOLLOW_STOP
 
 # Feature: critters-game-prototype
 
@@ -568,10 +569,10 @@ class TestCritterInteract:
         player.interact(world)
         assert critter.state == CritterState.FOLLOW
         assert critter in player.following_critters
-        assert world.message == "Critter is following you."
+        assert world.message == MESSAGE_FOLLOW_START
         # Second interaction: stop follow
         player.interact(world)
         assert critter.state == CritterState.IDLE
         assert not player.following_critters
-        assert world.message == "Stopped following."
+        assert world.message == MESSAGE_FOLLOW_STOP
 
