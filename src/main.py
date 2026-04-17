@@ -141,6 +141,7 @@ def main():
             # Fallback to new game
             world, player = new_game(WINDOW_WIDTH, WINDOW_HEIGHT)
             grid = world.grid
+            player.world_rect = screen.get_rect()
             cell_size = world.current_map.cell_size
             grid_width = world.current_map.width
             grid_height = world.current_map.height
@@ -152,13 +153,6 @@ def main():
         cell_size = world.current_map.cell_size
         grid_width = world.current_map.width
         grid_height = world.current_map.height
-        # Grid and world setup (multi-map)
-        cell_size = 32
-        grid_width = (WINDOW_WIDTH + cell_size - 1) // cell_size
-        grid_height = (WINDOW_HEIGHT + cell_size - 1) // cell_size
-        initial_map = MapData(name="main", width=grid_width, height=grid_height, cell_size=cell_size)
-        world = World(initial_map)
-        grid = world.grid  # alias to current grid for convenience
 
         # Create a second map: north_woods (adjacent north of main)
         # Use same grid dimensions for consistency
