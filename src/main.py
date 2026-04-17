@@ -27,8 +27,9 @@ from critter import Critter, CritterState
 from pathfinding import PathfindingSystem
 from crafting_menu import CraftingMenu
 from recipes import RECIPES
-from save_system import save_game, load_game
+from save_system import save_game
 from title_screen import TitleScreen
+from game_state import load_game, new_game
 from constants import (
     HUD_BUILD_BUTTON,
     HUD_BUFFS_TITLE,
@@ -138,9 +139,19 @@ def main():
         except Exception as e:
             print(f"Load failed: {e}")
             # Fallback to new game
-            action = "new_game"
+            world, player = new_game(WINDOW_WIDTH, WINDOW_HEIGHT)
+            grid = world.grid
+            cell_size = world.current_map.cell_size
+            grid_width = world.current_map.width
+            grid_height = world.current_map.height
 
     if action == "new_game":
+        world, player = new_game(WINDOW_WIDTH, WINDOW_HEIGHT)
+        grid = world.grid
+        player.world_rect = screen.get_rect()
+        cell_size = world.current_map.cell_size
+        grid_width = world.current_map.width
+        grid_height = world.current_map.height
         # Grid and world setup (multi-map)
         cell_size = 32
         grid_width = (WINDOW_WIDTH + cell_size - 1) // cell_size

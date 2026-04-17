@@ -15,6 +15,7 @@ from constants import (
     BUTTON_YES,
     BUTTON_NO,
 )
+from game_state import load_game
 
 
 class TitleScreen:
@@ -66,7 +67,12 @@ class TitleScreen:
                     else:
                         self.selected_action = "new_game"
                 if self.continue_rect and self.continue_rect.collidepoint(mx, my):
-                    self.selected_action = "continue"
+                    try:
+                        world, player = load_game(str(self.save_path))
+                        self.selected_action = "continue"
+                    except Exception as e:
+                        print(f"Load failed: {e}")
+                        self.selected_action = "new_game"
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_n:
                     if self.check_save_exists():
@@ -74,7 +80,12 @@ class TitleScreen:
                     else:
                         self.selected_action = "new_game"
                 if event.key == pygame.K_c and self.check_save_exists():
-                    self.selected_action = "continue"
+                    try:
+                        world, player = load_game(str(self.save_path))
+                        self.selected_action = "continue"
+                    except Exception as e:
+                        print(f"Load failed: {e}")
+                        self.selected_action = "new_game"
                 if event.key == pygame.K_ESCAPE:
                     self.selected_action = "quit"
         elif self.state == "confirm_new":

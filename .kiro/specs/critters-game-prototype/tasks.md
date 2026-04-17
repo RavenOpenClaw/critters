@@ -834,6 +834,33 @@ Acceptance satisfied: Player can select a critter and toggle Follow; critter tra
 
 ---
 
+## Phase 10: Code Structure & Maintainability
+
+**Goal**: Improve code structure, separation of concerns, and maintainability.
+
+### Task 46: Refactor Game State Management into Dedicated Module
+**Priority**: Medium
+**Status**: NOT_STARTED
+
+**Description**:
+Refactor the game state management logic (loading and starting a new game) into a dedicated module, `game_state.py`. This will improve separation of concerns and reusability.
+
+**Acceptance Criteria**:
+- Create a new module `src/game_state.py` with functions:
+  - `load_game(save_path)`: Loads a saved game and returns `(world, player)`.
+  - `new_game()`: Starts a new game and returns `(world, player)`.
+- Update `TitleScreen` to use `game_state.load_game` for the Continue action.
+- Update `main.py` to use `game_state.load_game` and `game_state.new_game` based on `selected_action`.
+- Ensure all existing tests pass after refactoring.
+- Update any relevant documentation.
+
+**Design Notes**:
+- The `TitleScreen` class should remain focused on UI and action selection.
+- The `main.py` loop should remain focused on running the game.
+- The new `game_state.py` module should encapsulate all game initialization logic.
+
+---
+
 
 ## Phase 8: Missing Features & Polish
 
