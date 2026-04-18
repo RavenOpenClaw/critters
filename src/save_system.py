@@ -229,7 +229,8 @@ def _deserialize_world_object(data: Dict[str, Any]) -> WorldObject:
     blocks_movement = data.get("blocks_movement", True)
 
     if classname == "BerryBush":
-        obj = BerryBush(gx, gy, cell_size=cell_size, berries=0)
+        # Set max_food to 3 by default since save system doesn't store original berry count
+        obj = BerryBush(gx, gy, cell_size=cell_size, berries=3)
         obj.inventory = inventory
         obj.blocks_movement = blocks_movement
         return obj
@@ -274,13 +275,6 @@ def _deserialize_world_object(data: Dict[str, Any]) -> WorldObject:
         obj.blocks_movement = blocks_movement
         obj.depleted = data.get("depleted", False)
         obj.time_depleted = data.get("time_depleted", 0.0)
-        return obj
-    elif classname == "BerryBush":
-        # Determine max_food from the restored inventory count to ensure regrowth works after load
-        max_food = inventory.get_item_count('food') if inventory.items else 0
-        obj = BerryBush(gx, gy, cell_size=cell_size, berries=max_food)
-        obj.inventory = inventory
-        obj.blocks_movement = blocks_movement
         return obj
     elif classname == "Rock":
         obj = Rock(gx, gy, cell_size)  # default stone count, will override inventory
