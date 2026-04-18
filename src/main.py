@@ -156,6 +156,11 @@ def main():
     # Associate world with player for interaction feedback (E key on critters)
     player.world = world
 
+    # Derive grid parameters from world
+    cell_size = world.current_map.cell_size
+    grid_width = world.current_map.width
+    grid_height = world.current_map.height
+
     # Create input handler (common to both paths)
     input_handler = InputHandler()
 
