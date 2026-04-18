@@ -145,8 +145,7 @@ def main():
             cell_size = world.current_map.cell_size
             grid_width = world.current_map.width
             grid_height = world.current_map.height
-
-    if action == "new_game":
+    elif action == "new_game":
         world, player = new_game(WINDOW_WIDTH, WINDOW_HEIGHT)
         grid = world.grid
         player.world_rect = screen.get_rect()
