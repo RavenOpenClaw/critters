@@ -229,8 +229,8 @@ def _deserialize_world_object(data: Dict[str, Any]) -> WorldObject:
     blocks_movement = data.get("blocks_movement", True)
 
     if classname == "BerryBush":
-        # Set max_food to 3 by default since save system doesn't store original berry count
-        obj = BerryBush(gx, gy, cell_size=cell_size, berries=3)
+        # Bushes must always have max_food=5; inventory is restored from save, but regrowth target is fixed
+        obj = BerryBush(gx, gy, cell_size=cell_size, berries=5)
         obj.inventory = inventory
         obj.blocks_movement = blocks_movement
         return obj
