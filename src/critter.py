@@ -362,7 +362,8 @@ class Critter(Entity):
 
         # If not currently gathering, ensure we have a path to the goal cell
         if not self.gathering:
-            if self.path is None:
+            # Fallback/guardrail: if path is None or empty, plan a new route
+            if self.path is None or not self.path:
                 grid = world.grid
                 target_gx, target_gy = grid.world_to_grid(self.target_resource.x, self.target_resource.y)
                 # Find a free cell within interaction radius to stand in
@@ -389,15 +390,15 @@ class Critter(Entity):
                     print(f"[DEBUG] Critter {id(self)} GATHER no path to {goal_cell}")
                 self.path_index = 0
                 self.goal_cell = goal_cell
-                if self.path is None:
+                if self.path is None or not self.path:
                     self.start_idle()
                     return
 
             # Follow the path if we have one and not yet gathering
-            if self.path is not None:
+            if self.path:
                 self._follow_path(dt, world)
                 # Check if we've arrived at the goal cell
-                if self.path is None:
+                if self.path is None or not self.path:
                     # Arrived: start gathering timer
                     self.gathering = True
                     self.gather_timer = 0.0
@@ -648,6 +649,12 @@ class Critter(Entity):
         if not (hasattr(target, 'inventory') and target.inventory.items):
             self.target_resource = None
             self.path = None
+            return
+
+        if not target.inventory.items:
+            self.target_resource = None
+            # If target is gone or empty, stop gathering and return
+            self.start_return()
             return
 
         resource_type = next(iter(target.inventory.items))
