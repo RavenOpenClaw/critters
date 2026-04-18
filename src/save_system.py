@@ -123,6 +123,14 @@ def _serialize_critter(critter: Critter) -> Dict[str, Any]:
         path = [[gx, gy] for gx, gy in critter.path]
     path_index = getattr(critter, 'path_index', 0)
 
+    # Follow state serialization
+    following_player_id = None
+    if critter.following_player is not None:
+        following_player_id = id(critter.following_player)
+    follow_goal = None
+    if critter.follow_goal is not None:
+        follow_goal = [critter.follow_goal[0], critter.follow_goal[1]]
+
     return {
         "type": "Critter",
         "x": critter.x,
@@ -142,6 +150,11 @@ def _serialize_critter(critter: Critter) -> Dict[str, Any]:
         "idle_timer": critter.idle_timer,
         "path": path,
         "path_index": path_index,
+        # Follow state
+        "following_player_id": following_player_id,
+        "follow_timer": critter.follow_timer,
+        "follow_recalc_interval": critter.follow_recalc_interval,
+        "follow_goal": follow_goal,
     }
 
 def _deserialize_critter(data: Dict[str, Any]) -> Critter:
@@ -163,6 +176,12 @@ def _deserialize_critter(data: Dict[str, Any]) -> Critter:
     critter.path_index = data.get("path_index", 0)
     critter.held_resource = data.get("held_resource")
     critter.held_quantity = data.get("held_quantity", 0)
+    # Follow state deserialization
+    critter.following_player = None
+    critter.follow_timer = data.get("follow_timer", 0.0)
+    critter.follow_recalc_interval = data.get("follow_recalc_interval", 1.0)
+    fg = data.get("follow_goal")
+    critter.follow_goal = tuple(fg) if fg is not None else None
     # Defer resolution of assigned_hut and target_resource until world is built.
     critter.assigned_hut = None
     critter.target_resource = None
