@@ -73,3 +73,10 @@ class Building(WorldObject):
         Base Building returns None; subclasses with gathering (e.g., GatheringHut) should override.
         """
         return None
+
+
+def _is_resource_available(obj):
+    """Check if a world object is a non-depleted resource."""
+    if isinstance(obj, (BerryBush, Tree)):
+        return not getattr(obj, 'depleted', True)
+    return False

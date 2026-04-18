@@ -170,7 +170,11 @@ class Critter(Entity):
     def start_gather(self, resource_obj):
         """Enter GATHER state: set target resource and reset path/gathering state."""
         self.state = CritterState.GATHER
-        self.target_resource = resource_obj
+        # If the provided resource is depleted, clear it
+        if resource_obj is not None and hasattr(resource_obj, 'depleted') and resource_obj.depleted:
+            self.target_resource = None
+        else:
+            self.target_resource = resource_obj
         self.held_resource = None
         self.held_quantity = 0
         self.path = None

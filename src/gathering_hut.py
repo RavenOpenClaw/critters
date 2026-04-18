@@ -63,6 +63,9 @@ class GatheringHut(Building):
         for obj in world.objects:
             # Only berry bushes are gatherable by the Gathering Hut at this time.
             if isinstance(obj, BerryBush):
+                # Skip depleted bushes
+                if getattr(obj, 'depleted', True):
+                    continue
                 # Compute distance from hut center to object center
                 obj_cx = obj.x + (getattr(obj, 'width', 0) * getattr(obj, 'cell_size', 0)) / 2
                 obj_cy = obj.y + (getattr(obj, 'height', 0) * getattr(obj, 'cell_size', 0)) / 2
