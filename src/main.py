@@ -443,7 +443,7 @@ def main():
         # Mark trampled cells by player and critters (only on first entry per cell)
         entities = [player] + world.current_map.critters
         for ent in entities:
-            gx, gy = grid.world_to_world_to_grid(ent.x, ent.y)
+            gx, gy = grid.world_to_grid(ent.x, ent.y)
             if grid.is_within_bounds(gx, gy):
                 if getattr(ent, 'last_trampled_cell', None) != (gx, gy):
                     world.mark_trampled(gx, gy)
