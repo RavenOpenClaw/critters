@@ -652,7 +652,8 @@ class Critter(Entity):
         target = self.target_resource
         if not (hasattr(target, 'inventory') and target.inventory.items):
             self.target_resource = None
-            self.path = None
+            # If target is gone or empty, stop gathering and return
+            self.start_return()
             return
 
         if not target.inventory.items:
