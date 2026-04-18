@@ -149,72 +149,6 @@ def main():
         world, player = new_game(WINDOW_WIDTH, WINDOW_HEIGHT)
         grid = world.grid
         player.world_rect = screen.get_rect()
-        cell_size = world.current_map.cell_size
-        grid_width = world.current_map.width
-        grid_height = world.current_map.height
-
-        # Create a second map: north_woods (adjacent north of main)
-        # Use same grid dimensions for consistency
-        north_woods = MapData(name="north_woods", width=grid_width, height=grid_height, cell_size=cell_size)
-        # Populate north_woods with resources (sparse set)
-        second_bush_positions = [(5, 5), (10, 5), (5, 10), (12, 12)]
-        for gx, gy in second_bush_positions:
-            bush = BerryBush(gx, gy, cell_size=cell_size, berries=5)
-            north_woods.objects.append(bush)
-        second_tree_positions = [(2, 5), (8, 3), (14, 8)]
-        for gx, gy in second_tree_positions:
-            tree = Tree(gx, gy, cell_size=cell_size, wood=10, respawn_duration=30.0)
-            north_woods.objects.append(tree)
-        second_rock_positions = [(4, 8), (12, 2)]
-        for gx, gy in second_rock_positions:
-            rock = Rock(gx, gy, cell_size=cell_size, stone=5)
-            north_woods.objects.append(rock)
-        second_stick_positions = [(7, 6), (15, 4)]
-        for gx, gy in second_stick_positions:
-            stick = Stick(gx, gy, cell_size=cell_size, sticks=3)
-            north_woods.objects.append(stick)
-        # Add a GatheringHut on north_woods (for demo)
-        second_hut = GatheringHut(grid_width//2 + 2, grid_height//2 + 2, cell_size)
-        north_woods.objects.append(second_hut)
-
-        # Register the second map with the world
-        world.add_map(north_woods)
-        # Configure neighbors for boundary-based transitions
-        world.current_map.neighbors = {'north': 'north_woods'}
-        north_woods.neighbors = {'south': 'main'}
-
-        # Add test berry bushes at various positions for collision and interaction testing
-        test_positions = [
-            (5, 5), (10, 5), (5, 10), (15, 5), (5, 15),
-            (12, 12), (8, 14), (3, 8), (18, 7)
-            # No bush at player start to avoid spawn collision
-        ]
-        for gx, gy in test_positions:
-            bush = BerryBush(gx, gy, cell_size=cell_size, berries=5)
-            world.add_object(bush)
-
-        # Add Trees (2x2) - renewable wood source
-        tree_positions = [(2, 5), (8, 3), (14, 8), (20, 12)]
-        for gx, gy in tree_positions:
-            tree = Tree(gx, gy, cell_size=cell_size, wood=10, respawn_duration=30.0)
-            world.add_object(tree)
-
-        # Add Rocks (1x1) - non-renewable stone source
-        rock_positions = [(4, 8), (12, 2), (18, 10), (6, 15)]
-        for gx, gy in rock_positions:
-            rock = Rock(gx, gy, cell_size=cell_size, stone=5)
-            world.add_object(rock)
-
-        # Add Sticks (1x1) - small collectibles
-        stick_positions = [(7, 6), (15, 4), (10, 16), (3, 12)]
-        for gx, gy in stick_positions:
-            stick = Stick(gx, gy, cell_size=cell_size, sticks=3)
-            world.add_object(stick)
-
-        # Create player
-        player = Player(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2, radius=20, speed=200)
-        # Set world bounds for player
-        player.world_rect = screen.get_rect()
     else:
         # Should not happen, but default to new game if unknown action
         raise ValueError(f"Unknown title screen action: {action}")
@@ -224,34 +158,6 @@ def main():
 
     # Create input handler (common to both paths)
     input_handler = InputHandler()
-
-    # For a new game, add hut, grass, and starting critters
-    if action == "new_game":
-        # Create a GatheringHut and place it
-        hut_gx, hut_gy = grid_width // 2 + 4, grid_height // 2 + 3
-        hut = GatheringHut(hut_gx, hut_gy, cell_size)
-        world.add_object(hut)
-
-        # Create a Grass and place it
-        grass_gx, grass_gy = grid_width // 2 - 1, grid_height // 2 - 2
-        grass = Grass(grass_gx, grass_gy, cell_size)
-        world.add_object(grass)
-
-        # Create some critters and assign them to the hut
-        # Stats variations: weak (25), strong (75), average (50)
-        critter_stats = [
-            (25, 25, 25),   # weak
-            (75, 75, 75),   # strong
-            (50, 50, 50)    # average
-        ]
-        for i, (strength, speed, endurance) in enumerate(critter_stats):
-            # Spawn critters just outside the hut to the right, each offset vertically
-            critter_x = hut.x + (hut.width + 1) * cell_size + (i * cell_size)
-            critter_y = hut.y + (i * cell_size * 0.5)
-            critter = Critter(critter_x, critter_y, cell_size=cell_size,
-                              strength=strength, speed_stat=speed, endurance=endurance)
-            hut.assign_critter(critter)
-            world.add_object(critter)  # Add to world objects and to current_map.critters
 
     # Crafting menu for equipment recipes (common)
     crafting_menu = CraftingMenu(RECIPES)
