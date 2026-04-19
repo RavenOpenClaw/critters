@@ -43,7 +43,6 @@ critters/
 │   ├── requirements.md   ← Full requirements
 │   ├── bugs.md           ← Unified bug tracking and fix documentation (includes fixes)
 ├── doc/                  ← Additional design and notes
-├── docs/                 ← Save system guide (critical for serialization)
 ├── src/                  ← Source code modules
 ├── tst/                  ← Test suite
 ├── README.md             ← Project overview
