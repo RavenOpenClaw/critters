@@ -932,6 +932,55 @@ Verification:
 
 ---
 
+## Phase 11: Critter Intelligence & UX Improvements
+
+**Goal**: Improve critter autonomy and streamline the interaction flow for managing critters.
+
+### Task 47: Improve Critter Gathering Intelligence
+**Priority**: Medium
+**Status**: NOT_STARTED
+
+**Description**:
+Currently, critters may target the same resource and return empty-handed if it's depleted by the time they arrive. Improve this by making critters check their inventory upon reaching or finishing a resource. If they still have capacity, they should seek another resource within range before returning to the hut.
+
+**Acceptance Criteria**:
+- In `src/critter.py`, modify `GATHER` state behavior.
+- If a critter finishes gathering from a resource but still has `held_quantity < carry_capacity`, it should attempt to find a new `target_resource`.
+- If a new resource is found, it remains in `GATHER` state and pathfinds to the new target.
+- If no new resource is found or capacity is full, it transitions to `RETURN`.
+- Add tests to verify that critters can visit multiple bushes in one trip if not full.
+
+### Task 48: Streamline Follow Interaction with 'F' Key
+**Priority**: Low
+**Status**: NOT_STARTED
+
+**Description**:
+Add a keyboard shortcut 'F' that toggles follow status for the currently inspected critter and automatically closes the inspector menu.
+
+**Acceptance Criteria**:
+- In `src/input_handler.py`, detect 'F' key press.
+- If `CritterInspector` is active and has a selected critter:
+  - Toggle follow for that critter.
+  - Close the `CritterInspector`.
+- Ensure appropriate feedback messages are shown.
+
+### Task 49: Direct Assignment via Right-Click
+**Priority**: Medium
+**Status**: NOT_STARTED
+
+**Description**:
+Allow players to assign a selected critter directly to a building by right-clicking the building while the critter's inspector is open. This bypasses the need for the "Follow" step.
+
+**Acceptance Criteria**:
+- In `main.py`, detect right-click events.
+- If a critter is currently selected in `CritterInspector`:
+  - Check if the right-click is over a `Building` (GatheringHut or MatingHut).
+  - If yes, assign the selected critter to that building.
+  - Show a feedback message (e.g., "Critter assigned to <Building>").
+- This should work regardless of player distance to the building (since it's a UI-driven management action).
+
+---
+
 ## Notes
 
 - Tasks marked with `*` are optional and can be skipped for faster MVP delivery
