@@ -510,14 +510,6 @@ class Critter(Entity):
                 self.follow_goal = None
 
 
-    def _is_adjacent_to_hut(self, critter_gx, critter_gy):
-        """Check if the critter is orthogonally adjacent to any cell occupied by the assigned hut."""
-        hut_cells = self.assigned_hut.get_occupied_cells()
-        for hx, hy in hut_cells:
-            if abs(critter_gx - hx) + abs(critter_gy - hy) == 1:
-                return True
-        return False
-
     def _perform_loiter_move(self, world):
         """Pick a nearby free cell (1-2 steps) and set loiter_target to its center; movement happens in _update_idle."""
         if self.assigned_hut is None:

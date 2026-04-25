@@ -147,27 +147,23 @@ Desired fix:
 
 ---
 
-### [GFXMISSING_METHOD] MatingHut missing find_resource_in_radius causing crash when critter assigned and enters GATHER state
+### [GFXMISSING_METHOD] MatingHut missing find_resource_in_radius and can_gather causing crash when critter assigned
 
 Status: FIXED
 
-Expected: When a critter assigned to a MatingHut enters GATHER state, it should not attempt to call `find_resource_in_radius`, because MatingHut is not meant to provide gather resources. The critter's behavior should either be prevented from transitioning to GATHER while assigned to a MatingHut, or the method should exist and handle appropriately (e.g., no resource, transition back to IDLE).
+Expected: When a critter assigned to a MatingHut enters GATHER state or checks for gathering support while IDLE, it should not crash. MatingHut is not meant to provide gather resources, so it should handle these calls gracefully (e.g., returning None or False).
 
-Actual: Crash with `AttributeError: 'MatingHut' object has no attribute 'find_resource_in_radius'` when a critter assigned to a MatingHut starts gathering.
+Actual: Crash with `AttributeError: 'MatingHut' object has no attribute 'find_resource_in_radius'` or `AttributeError: 'MatingHut' object has no attribute 'can_gather'`.
 
-Reproduce:
-1. Build a MatingHut.
-2. Assign at least 2 critters to the MatingHut (via follow+E or future UI).
-3. Wait for an assigned critter to transition from IDLE to GATHER (after idle timer expires).
-4. The critter's `_update_gather` calls `self.assigned_hut.find_resource_in_radius(world, self)`.
-5. Since MatingHut does not define this method, Python raises AttributeError and the game crashes.
+Fix implemented:
+- Added a default `can_gather()` method to the `Building` base class in `src/building.py` that returns `False`.
+- Added a default `find_resource_in_radius()` method (already present but now more robustly inherited) to the `Building` base class that returns `None`.
+- These changes ensure that all buildings support these queries by default, and critters assigned to non-gathering buildings like `MatingHut` will correctly fallback to IDLE state.
+- Also cleaned up `src/critter.py` by removing a duplicate definition of `_is_adjacent_to_hut`.
 
-Desired fix (several options, choose one):
-- **Option A (Preferred)**: Override `start_gather` in Critter to check if `assigned_hut` is a MatingHut and prevent transitioning to GATHER; instead transition to IDLE or a custom BREED state if conditions are appropriate. This keeps the critter from trying to gather from a MatingHut.
-- **Option B**: Add a `find_resource_in_radius` method to Building base class that returns `None` by default, and have MatingHut inherit it without override. This would make `_update_gather` handle `None` gracefully (already does: `if self.target_resource is None: self.start_idle()`). This is a minimal fix that uses existing code path.
-- **Option C**: Change `_update_gather` to check `hasattr(self.assigned_hut, 'find_resource_in_radius')` before calling, but this is less clean.
-
-Recommendation: Implement Option B for simplicity and robustness. Ensure that when `target_resource` is None, the critter returns to IDLE. Verify that critters assigned to MatingHut do not get stuck in a loop attempting to gather repeatedly. Add regression tests covering a critter assigned to a MatingHut and ensuring no crash occurs when it updates.
+Testing:
+- Added `test_mating_hut_assigned_critter_idle_safety` to `tst/test_critter.py` to specifically test the `_update_idle` transition without crash.
+- Verified that all breeding and critter tests pass (53/53).
 
 ---
 

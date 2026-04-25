@@ -74,6 +74,10 @@ class Building(WorldObject):
         """
         return None
 
+    def can_gather(self):
+        """Returns True if the building supports critter gathering. Base Building returns False."""
+        return False
+
 
 def _is_resource_available(obj):
     """Check if a world object is a non-depleted resource."""

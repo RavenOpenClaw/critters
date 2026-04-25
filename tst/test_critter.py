@@ -548,6 +548,25 @@ class TestCritterFollow:
         critter.update(dt=1.0, world=world, pathfinding_system=DummyPathfinder())
         assert critter.state == CritterState.IDLE
 
+    def test_mating_hut_assigned_critter_idle_safety(self):
+        """A critter assigned to MatingHut should not crash during idle update when timer expires."""
+        from mating_hut import MatingHut
+        grid = GridSystem(cell_size=32, width=20, height=20)
+        world = World(grid)
+        hut = MatingHut(5, 5, 32)
+        world.add_object(hut)
+        critter = Critter(50, 100, cell_size=32)
+        hut.assign_critter(critter)
+        world.add_object(critter)
+
+        # Set idle_timer to 0 to trigger the check in _update_idle
+        critter.idle_timer = 0
+        # This should not raise AttributeError: 'MatingHut' object has no attribute 'can_gather'
+        critter.update(dt=0.1, world=world, pathfinding_system=None)
+        assert critter.state == CritterState.IDLE
+        # It should have reset the idle_timer to a large value because can_gather() is False
+        assert critter.idle_timer > 5.0
+
 class TestCritterInteract:
     """Tests for Critter interaction via E key (follow toggle)."""
 
