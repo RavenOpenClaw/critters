@@ -75,15 +75,20 @@ class Grass(WorldObject):
                 return new_grass
         return None
 
-    def render(self, screen):
+    def render(self, screen, camera=None):
         """Render grass as a green square, color varies with condition."""
         factor = max(0.0, self.condition / self.max_condition)
         r = int(144 * factor)
         g = int(238 * factor)
         b = int(144 * factor)
+        
+        draw_x, draw_y = self.x, self.y
+        if camera:
+            draw_x, draw_y = camera.apply(self.x, self.y)
+            
         rect = pygame.Rect(
-            self.x,
-            self.y,
+            draw_x,
+            draw_y,
             self.width * self.cell_size,
             self.height * self.cell_size
         )

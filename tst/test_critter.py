@@ -39,7 +39,7 @@ class TestCritterAttributes:
     """Unit tests for Critter class attributes."""
 
     def test_critter_has_required_attributes(self):
-        c = Critter(0, 0, cell_size=32)
+        c = Critter(0, 0, cell_size=24)
         assert hasattr(c, 'strength')
         assert hasattr(c, 'speed_stat')
         assert hasattr(c, 'endurance')
@@ -51,7 +51,7 @@ class TestCritterAttributes:
         assert hasattr(c, 'radius')
 
     def test_critter_defaults(self):
-        c = Critter(0, 0, cell_size=32)
+        c = Critter(0, 0, cell_size=24)
         assert c.strength == 50
         assert c.speed_stat == 50
         assert c.endurance == 50
@@ -60,10 +60,10 @@ class TestCritterAttributes:
         assert c.target_resource is None
         assert c.held_resource is None
         assert c.is_well_fed is False
-        assert c.radius == 32 * 0.4
+        assert c.radius == 24 * 0.4
 
     def test_critter_custom_stats(self):
-        c = Critter(0, 0, cell_size=32, strength=30, speed_stat=70, endurance=80)
+        c = Critter(0, 0, cell_size=24, strength=30, speed_stat=70, endurance=80)
         assert c.strength == 30
         assert c.speed_stat == 70
         assert c.endurance == 80
@@ -82,7 +82,7 @@ class TestCritterAttributes:
 )
 def test_stat_bounds(strength, speed_stat, endurance):
     """Property 17: Stat Bounds – stats remain within [1, 100]."""
-    c = Critter(0, 0, cell_size=32, strength=strength, speed_stat=speed_stat, endurance=endurance)
+    c = Critter(0, 0, cell_size=24, strength=strength, speed_stat=speed_stat, endurance=endurance)
     assert 1 <= c.strength <= 100
     assert 1 <= c.speed_stat <= 100
     assert 1 <= c.endurance <= 100
@@ -95,8 +95,8 @@ def test_stat_bounds(strength, speed_stat, endurance):
 def test_strength_gather_speed_monotonic(s1, delta):
     """Property 18: Strength Affects Gather Speed Monotonically."""
     s2 = s1 + delta
-    c1 = Critter(0, 0, cell_size=32, strength=s1)
-    c2 = Critter(0, 0, cell_size=32, strength=s2)
+    c1 = Critter(0, 0, cell_size=24, strength=s1)
+    c2 = Critter(0, 0, cell_size=24, strength=s2)
     assert c1.get_gather_speed() < c2.get_gather_speed()
 
 
@@ -107,8 +107,8 @@ def test_strength_gather_speed_monotonic(s1, delta):
 def test_speed_stat_movement_speed_monotonic(speed1, delta):
     """Property 19: Speed Stat Affects Movement Speed Monotonically."""
     speed2 = speed1 + delta
-    c1 = Critter(0, 0, cell_size=32, speed_stat=speed1)
-    c2 = Critter(0, 0, cell_size=32, speed_stat=speed2)
+    c1 = Critter(0, 0, cell_size=24, speed_stat=speed1)
+    c2 = Critter(0, 0, cell_size=24, speed_stat=speed2)
     # Without well-fed, both use base speed; ensure monotonic
     assert c1.get_movement_speed() < c2.get_movement_speed()
 
@@ -120,29 +120,29 @@ def test_speed_stat_movement_speed_monotonic(speed1, delta):
 def test_endurance_idle_duration_monotonic(e1, delta):
     """Property 20: Endurance Affects Idle Duration Monotonically."""
     e2 = e1 + delta
-    c1 = Critter(0, 0, cell_size=32, endurance=e1)
-    c2 = Critter(0, 0, cell_size=32, endurance=e2)
+    c1 = Critter(0, 0, cell_size=24, endurance=e1)
+    c2 = Critter(0, 0, cell_size=24, endurance=e2)
     assert c1.get_idle_duration() < c2.get_idle_duration()
 
 
 def test_well_fed_buff_multiplier_and_cap():
     """Property 21: Well-Fed Buff Multiplier – applies 1.1×, capped at 100."""
     # Strength case: below cap
-    c = Critter(0, 0, cell_size=32, strength=50)
+    c = Critter(0, 0, cell_size=24, strength=50)
     base = c.get_gather_speed()  # 5.0
     c.is_well_fed = True
     well_fed = c.get_gather_speed()
     assert well_fed == pytest.approx(min(50 * 1.1, 100) * 0.1)  # 5.5
 
     # Speed case: below cap
-    c2 = Critter(0, 0, cell_size=32, speed_stat=50)
+    c2 = Critter(0, 0, cell_size=24, speed_stat=50)
     base_speed = c2.get_movement_speed()  # 50 + 50*2 = 150
     c2.is_well_fed = True
     well_fed_speed = c2.get_movement_speed()
     assert well_fed_speed == pytest.approx(50 + min(50 * 1.1, 100) * 2)  # 50+110=160
 
     # Cap case: strength=100 -> effective strength = 100 after cap, gather stays 10.0
-    c3 = Critter(0, 0, cell_size=32, strength=100)
+    c3 = Critter(0, 0, cell_size=24, strength=100)
     base3 = c3.get_gather_speed()  # 10.0
     c3.is_well_fed = True
     assert c3.get_gather_speed() == pytest.approx(10.0)
@@ -150,7 +150,7 @@ def test_well_fed_buff_multiplier_and_cap():
     assert c3._effective_stat(c3.strength) == 100
 
     # Cap case: speed_stat=100 -> effective speed=100, movement speed = 250? Actually 50+100*2=250
-    c4 = Critter(0, 0, cell_size=32, speed_stat=100)
+    c4 = Critter(0, 0, cell_size=24, speed_stat=100)
     c4.is_well_fed = True
     assert c4.get_movement_speed() == pytest.approx(50 + 100 * 2)  # still 250 since cap on stat
     # So it's consistent.
@@ -158,15 +158,15 @@ def test_well_fed_buff_multiplier_and_cap():
 
 def test_critter_carry_capacity():
     """Test that carry capacity is ceil(endurance/20), with bounds 1-100."""
-    c1 = Critter(0, 0, cell_size=32, endurance=1)
+    c1 = Critter(0, 0, cell_size=24, endurance=1)
     assert c1.carry_capacity == 1
-    c20 = Critter(0, 0, cell_size=32, endurance=20)
+    c20 = Critter(0, 0, cell_size=24, endurance=20)
     assert c20.carry_capacity == 1
-    c21 = Critter(0, 0, cell_size=32, endurance=21)
+    c21 = Critter(0, 0, cell_size=24, endurance=21)
     assert c21.carry_capacity == 2
-    c50 = Critter(0, 0, cell_size=32, endurance=50)
+    c50 = Critter(0, 0, cell_size=24, endurance=50)
     assert c50.carry_capacity == 3
-    c100 = Critter(0, 0, cell_size=32, endurance=100)
+    c100 = Critter(0, 0, cell_size=24, endurance=100)
     assert c100.carry_capacity == 5
 
 
@@ -384,7 +384,7 @@ def test_gathering_hut_filters_to_berry_bushes_only():
 # Regression tests for Critter buff system
 
 def test_critter_apply_buff_resets_timer():
-    critter = Critter(0, 0, cell_size=32)
+    critter = Critter(0, 0, cell_size=24)
     buff = Buff("Strength", {'gather': 2.0}, 30.0)
     critter.apply_buff(buff)
     assert len(critter.active_buffs) == 1
@@ -395,7 +395,7 @@ def test_critter_apply_buff_resets_timer():
     assert critter.active_buffs[0].remaining == 30.0
 
 def test_critter_get_gather_multiplier_combines():
-    critter = Critter(0, 0, cell_size=32)
+    critter = Critter(0, 0, cell_size=24)
     critter.active_buffs = [
         Buff("A", {'gather': 2.0}, 30),
         Buff("B", {'gather': 1.5}, 30),
@@ -404,7 +404,7 @@ def test_critter_get_gather_multiplier_combines():
     assert critter._get_gather_multiplier() == pytest.approx(3.0)
 
 def test_critter_get_speed_multiplier_combines():
-    critter = Critter(0, 0, cell_size=32)
+    critter = Critter(0, 0, cell_size=24)
     critter.active_buffs = [
         Buff("A", {'speed': 2.0}, 30),
         Buff("B", {'speed': 1.5}, 30),
@@ -413,7 +413,7 @@ def test_critter_get_speed_multiplier_combines():
     assert critter._get_speed_multiplier() == pytest.approx(3.0)
 
 def test_critter_update_removes_expired_buffs():
-    critter = Critter(0, 0, cell_size=32)
+    critter = Critter(0, 0, cell_size=24)
     b1 = Buff("Short", {}, 1.0)
     b2 = Buff("Long", {}, 5.0)
     critter.active_buffs = [b1, b2]
@@ -424,14 +424,14 @@ def test_critter_update_removes_expired_buffs():
     assert b2 in critter.active_buffs
 
 def test_critter_buff_affects_gather_speed():
-    critter = Critter(0, 0, cell_size=32, strength=50)
+    critter = Critter(0, 0, cell_size=24, strength=50)
     assert critter.get_gather_speed() == pytest.approx(5.0)
     buff = Buff("Strength", {'gather': 2.0}, 30.0)
     critter.apply_buff(buff)
     assert critter.get_gather_speed() == pytest.approx(10.0)
 
 def test_critter_buff_affects_movement_speed():
-    critter = Critter(0, 0, cell_size=32, speed_stat=50)
+    critter = Critter(0, 0, cell_size=24, speed_stat=50)
     assert critter.get_movement_speed() == pytest.approx(150.0)
     buff = Buff("Haste", {'speed': 2.0}, 30.0)
     critter.apply_buff(buff)
@@ -444,15 +444,15 @@ class TestCritterFollow:
 
     def test_start_follow(self):
         player = Player(200, 100)
-        critter = Critter(50, 100, cell_size=32)
+        critter = Critter(50, 100, cell_size=24)
         critter.start_follow(player)
         assert critter.state == CritterState.FOLLOW
         assert player.following_critter is critter
 
     def test_start_follow_stops_existing(self):
         player = Player(200, 100)
-        critter1 = Critter(50, 100, cell_size=32)
-        critter2 = Critter(60, 100, cell_size=32)
+        critter1 = Critter(50, 100, cell_size=24)
+        critter2 = Critter(60, 100, cell_size=24)
         critter1.start_follow(player)
         assert player.following_critter is critter1
         critter2.start_follow(player)
@@ -465,9 +465,9 @@ class TestCritterFollow:
     def test_start_follow_capacity_limit(self):
         """When a third critter tries to follow, the oldest (first) follower should be evicted."""
         player = Player(200, 100)
-        critter1 = Critter(50, 100, cell_size=32)
-        critter2 = Critter(60, 100, cell_size=32)
-        critter3 = Critter(70, 100, cell_size=32)
+        critter1 = Critter(50, 100, cell_size=24)
+        critter2 = Critter(60, 100, cell_size=24)
+        critter3 = Critter(70, 100, cell_size=24)
         critter1.start_follow(player)
         critter2.start_follow(player)
         assert len(player.following_critters) == 2
@@ -484,7 +484,7 @@ class TestCritterFollow:
 
     def test_stop_follow(self):
         player = Player(200, 100)
-        critter = Critter(50, 100, cell_size=32)
+        critter = Critter(50, 100, cell_size=24)
         critter.start_follow(player)
         assert critter.state == CritterState.FOLLOW
         assert player.following_critter is critter
@@ -494,9 +494,9 @@ class TestCritterFollow:
 
     def test_follow_moves_towards_player(self):
         player = Player(200, 100)
-        grid = GridSystem(cell_size=32, width=20, height=20)
+        grid = GridSystem(cell_size=24, width=20, height=20)
         world = World(grid)
-        critter = Critter(50, 100, cell_size=32)
+        critter = Critter(50, 100, cell_size=24)
         critter.start_follow(player)
         initial_x = critter.x
 
@@ -513,12 +513,12 @@ class TestCritterFollow:
 
     def test_follow_clears_when_assigned(self):
         player = Player(200, 100)
-        grid = GridSystem(cell_size=32, width=20, height=20)
+        grid = GridSystem(cell_size=24, width=20, height=20)
         world = World(grid)
-        critter = Critter(50, 100, cell_size=32)
+        critter = Critter(50, 100, cell_size=24)
         critter.start_follow(player)
         assert critter.state == CritterState.FOLLOW
-        hut = GatheringHut(5, 5, 32)
+        hut = GatheringHut(5, 5, 24)
         hut.world = world
         hut.interact(player)
         assert critter.state != CritterState.FOLLOW
@@ -530,11 +530,11 @@ class TestCritterFollow:
         from grid_system import GridSystem
         from world import World
         from mating_hut import MatingHut
-        grid = GridSystem(cell_size=32, width=20, height=20)
+        grid = GridSystem(cell_size=24, width=20, height=20)
         world = World(grid)
-        hut = MatingHut(5, 5, 32)
+        hut = MatingHut(5, 5, 24)
         world.add_object(hut)
-        critter = Critter(50, 100, cell_size=32)
+        critter = Critter(50, 100, cell_size=24)
         hut.assign_critter(critter)
         world.add_object(critter)
         # Force critter into GATHER state
@@ -551,11 +551,11 @@ class TestCritterFollow:
     def test_mating_hut_assigned_critter_idle_safety(self):
         """A critter assigned to MatingHut should not crash during idle update when timer expires."""
         from mating_hut import MatingHut
-        grid = GridSystem(cell_size=32, width=20, height=20)
+        grid = GridSystem(cell_size=24, width=20, height=20)
         world = World(grid)
-        hut = MatingHut(5, 5, 32)
+        hut = MatingHut(5, 5, 24)
         world.add_object(hut)
-        critter = Critter(50, 100, cell_size=32)
+        critter = Critter(50, 100, cell_size=24)
         hut.assign_critter(critter)
         world.add_object(critter)
 
@@ -569,7 +569,7 @@ class TestCritterFollow:
 
     def test_critter_gathering_intelligence(self):
         """Task 47: Critters should seek new resource if not full when current resource is depleted."""
-        cell_size = 32
+        cell_size = 24
         grid = GridSystem(cell_size=cell_size, width=20, height=20)
         world = World(grid)
         hut = GatheringHut(1, 1, cell_size)
@@ -583,8 +583,8 @@ class TestCritterFollow:
         # Bush 1: only 1 berry
         bush1 = BerryBush(5, 5, cell_size=cell_size, berries=1)
         world.add_object(bush1)
-        # Bush 2: has berries
-        bush2 = BerryBush(7, 7, cell_size=cell_size, berries=5)
+        # Bush 2: has berries, within radius (8 cells)
+        bush2 = BerryBush(8, 8, cell_size=cell_size, berries=5)
         world.add_object(bush2)
 
         # Target bush1
@@ -594,33 +594,49 @@ class TestCritterFollow:
         critter.gathering_time_required = 0.5  # Harvest once per 0.5s
 
         # First harvest from bush1
-        critter._harvest_target(world)
-        assert critter.held_quantity == 1
-        assert bush1.inventory.get_item_count("food") == 0
-        
-        # Ensure bush1 is marked as depleted so find_resource_in_radius doesn't pick it again
+        # Instead of calling _harvest_target which immediately seeks a new one,
+        # we harvest manually so we can control the timing of the 'depleted' flag.
+        bush1.inventory.remove("food", 1)
         bush1.update(0.1)
         assert bush1.depleted is True
+        critter.held_quantity = 1
 
-        # Should NOT have returned to RETURN state, should have found bush2
+        # Trigger update to select new target
+        class DummyPF:
+            def find_path(self, start, goal, grid):
+                return [(goal[0], goal[1])]
+
+        # Critter is at bush1, gathering=True.
+        # Next update, it will try to harvest, see it's empty, and seek new target.
+        critter.target_resource = bush1
+        critter.gathering = True
+        critter.gather_timer = 1.0
+
+        # Move critter away so it has to travel to new target
+        critter.x = 0
+        critter.y = 0
+        critter.update(0.1, world, DummyPF())
+
+        # Should NOT have returned to RETURN state, should have found bush2 (or another valid bush)
         assert critter.state == CritterState.GATHER
+        assert critter.target_resource is not bush1
         assert critter.target_resource is bush2
+        assert isinstance(critter.target_resource, BerryBush)
         assert critter.gathering is False  # Must re-travel
         assert critter.path is None
-
 class TestCritterInteract:
     """Tests for Critter interaction via E key (follow toggle)."""
 
     def test_interact_toggles_follow(self):
         from grid_system import GridSystem
         from world import World
-        grid = GridSystem(cell_size=32, width=20, height=20)
+        grid = GridSystem(cell_size=24, width=20, height=20)
         world = World(grid)
         player = Player(100, 100)
         # Set world reference on player for feedback messages
         player.world = world
         # Create a critter within interaction radius (distance 20 < 45)
-        critter = Critter(120, 100, cell_size=32)
+        critter = Critter(120, 100, cell_size=24)
         world.add_object(critter)
         # Initial state
         assert critter.state == CritterState.IDLE

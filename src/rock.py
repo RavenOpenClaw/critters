@@ -12,11 +12,15 @@ class Rock(WorldObject):
         super().__init__(gx, gy, width=1, height=1, cell_size=cell_size, inventory=inventory)
         self.initial_stone = stone
 
-    def render(self, screen):
+    def render(self, screen, camera=None):
         # Draw as a gray square/rectangle
+        draw_x, draw_y = self.x, self.y
+        if camera:
+            draw_x, draw_y = camera.apply(self.x, self.y)
+            
         rect = pygame.Rect(
-            self.x,
-            self.y,
+            draw_x,
+            draw_y,
             self.width * self.cell_size,
             self.height * self.cell_size
         )

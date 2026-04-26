@@ -18,6 +18,7 @@ from rock import Rock
 from stick import Stick
 from build_menu import BuildMenu
 from building import Building
+from camera import Camera
 from gathering_hut import GatheringHut
 from chair import Chair
 from campfire import Campfire
@@ -131,24 +132,29 @@ def main():
         try:
             world, player = load_game("saves/save.json")
             grid = world.grid
-            player.world_rect = screen.get_rect()
-            # Derive grid parameters from loaded map
             cell_size = world.current_map.cell_size
             grid_width = world.current_map.width
             grid_height = world.current_map.height
+            player.world_rect = pygame.Rect(0, 0, grid_width * cell_size, grid_height * cell_size)
+            if 'camera' in locals():
+                camera.map_width = grid_width * cell_size
+                camera.map_height = grid_height * cell_size
         except Exception as e:
             print(f"Load failed: {e}")
             # Fallback to new game
             world, player = new_game(WINDOW_WIDTH, WINDOW_HEIGHT)
             grid = world.grid
-            player.world_rect = screen.get_rect()
             cell_size = world.current_map.cell_size
             grid_width = world.current_map.width
             grid_height = world.current_map.height
+            player.world_rect = pygame.Rect(0, 0, grid_width * cell_size, grid_height * cell_size)
     elif action == "new_game":
         world, player = new_game(WINDOW_WIDTH, WINDOW_HEIGHT)
         grid = world.grid
-        player.world_rect = screen.get_rect()
+        cell_size = world.current_map.cell_size
+        grid_width = world.current_map.width
+        grid_height = world.current_map.height
+        player.world_rect = pygame.Rect(0, 0, grid_width * cell_size, grid_height * cell_size)
     else:
         # Should not happen, but default to new game if unknown action
         raise ValueError(f"Unknown title screen action: {action}")
@@ -172,6 +178,9 @@ def main():
 
     # Build menu for building system
     build_menu = BuildMenu(cell_size)
+
+    # Initialize Camera
+    camera = Camera(WINDOW_WIDTH, WINDOW_HEIGHT, grid_width * cell_size, grid_height * cell_size)
 
     # Critter inspector UI
     critter_inspector = CritterInspector(cell_size, font, WINDOW_WIDTH, WINDOW_HEIGHT)
@@ -209,7 +218,12 @@ def main():
             try:
                 world, player = load_game("saves/save.json")
                 grid = world.grid
-                player.world_rect = screen.get_rect()
+                cell_size = world.current_map.cell_size
+                grid_width = world.current_map.width
+                grid_height = world.current_map.height
+                player.world_rect = pygame.Rect(0, 0, grid_width * cell_size, grid_height * cell_size)
+                camera.map_width = grid_width * cell_size
+                camera.map_height = grid_height * cell_size
                 print("Game loaded.")
             except Exception as e:
                 print(f"Load failed: {e}")
@@ -240,10 +254,16 @@ def main():
         # Player movement (with collision detection)
         player.move(input_handler.move_x, input_handler.move_y, dt, grid=grid)
 
+        # Update Camera to follow player
+        camera.update(player.x, player.y)
+
         # Handle map transitions
         world.handle_map_transition(player)
         # Keep grid alias in sync with current map's grid
         grid = world.grid
+        # Update camera map boundaries in case of map transition
+        camera.map_width = grid.width * cell_size
+        camera.map_height = grid.height * cell_size
 
         # Player interaction (tap = 1, hold = auto-repeat at base rate)
         for _ in range(input_handler.interact_count):
@@ -256,6 +276,9 @@ def main():
 
         if input_handler.mouse_clicked:
             mx, my = input_handler.mouse_pos
+            # Use world coordinates for world-space interactions
+            wx, wy = camera.undo(mx, my)
+            
             clicked_hud = hud_button_rect.collidepoint(mx, my)
             clicked_build_menu = False
             if clicked_hud:
@@ -269,7 +292,7 @@ def main():
 
                 # Deconstruction mode takes precedence over everything
                 if input_handler.deconstruct_mode:
-                    gx, gy = grid.world_to_grid(mx, my)
+                    gx, gy = grid.world_to_grid(wx, wy)
                     if grid.is_within_bounds(gx, gy):
                         # Check if a building occupies this grid cell
                         if (gx, gy) in grid.occupied:
@@ -305,9 +328,9 @@ def main():
                         # Critter inspection: prioritize clicking on critters
                         clicked_critter = False
                         for c in world.current_map.critters:
-                            # Check mouse click near critter (within radius + 5px tolerance)
-                            dx = mx - c.x
-                            dy = my - c.y
+                            # Check mouse click near critter in world space
+                            dx = wx - c.x
+                            dy = wy - c.y
                             if dx*dx + dy*dy <= (c.radius + 5) ** 2:
                                 # Toggle inspector for this critter
                                 if critter_inspector.visible and critter_inspector.selected_critter is c:
@@ -318,7 +341,7 @@ def main():
                                 break
                         # If no critter clicked and build menu is active with a selected building, attempt placement
                         if not clicked_critter and build_menu.visible and build_menu.selected_building_class is not None:
-                            gx, gy = grid.world_to_grid(mx, my)
+                            gx, gy = grid.world_to_grid(wx, wy)
                             if grid.is_within_bounds(gx, gy):
                                 build_menu.attempt_placement(player, world, grid, gx, gy)
 
@@ -385,7 +408,7 @@ def main():
         screen.fill(BACKGROUND_COLOR)
 
         # Draw world objects
-        world.draw(screen)
+        world.draw(screen, camera=camera)
 
         # Debug: show building inventories when debug mode is on
         if input_handler.show_debug:
@@ -399,7 +422,8 @@ def main():
                         text = "empty"
                     text_surf = font.render(text, True, (0, 0, 0))
                     cx, cy = obj.get_center()
-                    text_rect = text_surf.get_rect(center=(cx, cy - 20))
+                    scx, scy = camera.apply(cx, cy)
+                    text_rect = text_surf.get_rect(center=(scx, scy - 20))
                     screen.blit(text_surf, text_rect)
 
         # Draw interaction prompts for nearby objects
@@ -419,14 +443,16 @@ def main():
                         text = PROMPT_ASSIGN
                     if text:
                         text_surface = font.render(text, True, (0, 0, 0))
-                        text_rect = text_surface.get_rect(center=(ox, oy - 30))  # raised by 10px
+                        sox, soy = camera.apply(ox, oy)
+                        text_rect = text_surface.get_rect(center=(sox, soy - 30))  # raised by 10px
                         screen.blit(text_surface, text_rect)
 
         # Draw player as a blue circle
+        spx, spy = camera.apply(player.x, player.y)
         pygame.draw.circle(
             screen,
             (0, 0, 255),  # Blue
-            (int(player.x), int(player.y)),
+            (int(spx), int(spy)),
             player.radius
         )
 
@@ -435,10 +461,11 @@ def main():
             dx, dy = critter.get_render_offset()
             rx = int(critter.x + dx)
             ry = int(critter.y + dy)
+            srx, sry = camera.apply(rx, ry)
             pygame.draw.circle(
                 screen,
                 (255, 0, 0),  # Red
-                (rx, ry),
+                (int(srx), int(sry)),
                 int(critter.radius)
             )
             # Render state label above critter with color based on state; optionally add debug info
@@ -449,7 +476,7 @@ def main():
             if input_handler.show_debug and critter.is_calculating:
                 label += " (CALC)"
             label_surface = font.render(label, True, color)
-            label_rect = label_surface.get_rect(center=(rx, ry - int(critter.radius) - 10))
+            label_rect = label_surface.get_rect(center=(srx, sry - int(critter.radius) - 10))
             screen.blit(label_surface, label_rect)
 
         # HUD elements (drawn on top of world)
@@ -487,20 +514,22 @@ def main():
             screen.blit(count_surface, (10, 70))
             screen.blit(perf_surface, (10, 100))
             # Draw interaction radius
+            ispx, ispy = camera.apply(player.x, player.y)
             pygame.draw.circle(
                 screen,
                 (0, 255, 0),  # Green
-                (int(player.x), int(player.y)),
+                (int(ispx), int(ispy)),
                 int(player.interaction_radius),
                 1  # line thickness
             )
             # Overlay trampled cells (semi-transparent red)
             for (gx, gy) in world.trampled:
                 wx, wy = world.grid.grid_to_world(gx, gy)
+                swx, swy = camera.apply(wx, wy)
                 cell_sz = world.grid.cell_size
                 overlay = pygame.Surface((cell_sz, cell_sz), pygame.SRCALPHA)
                 overlay.fill((255, 0, 0, 50))  # red with alpha
-                screen.blit(overlay, (wx, wy))
+                screen.blit(overlay, (swx, swy))
 
         # Build menu overlay (pass HUD button rect for consistent styling? not needed)
         build_menu.render(screen, font, hud_button_rect=hud_button_rect)

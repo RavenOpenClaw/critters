@@ -39,9 +39,10 @@ def new_game(window_width: int = 800, window_height: int = 600) -> tuple[World, 
         A tuple of (world, player) representing the new game state.
     """
     # Grid and world setup (multi-map)
-    cell_size = 32
-    grid_width = (window_width + cell_size - 1) // cell_size
-    grid_height = (window_height + cell_size - 1) // cell_size
+    cell_size = 24  # slightly smaller grid squares
+    # Quadruple the map area: 2x width, 2x height
+    grid_width = ((window_width * 2) + cell_size - 1) // cell_size
+    grid_height = ((window_height * 2) + cell_size - 1) // cell_size
 
     initial_map = MapData(name="main", width=grid_width, height=grid_height, cell_size=cell_size)
     world = World(initial_map)
@@ -85,42 +86,63 @@ def new_game(window_width: int = 800, window_height: int = 600) -> tuple[World, 
     world.current_map.neighbors = {'north': 'north_woods'}
     north_woods.neighbors = {'south': 'main'}
 
-    # Add test berry bushes at various positions for collision and interaction testing
-    test_positions = [
-        (5, 5), (10, 5), (5, 10), (15, 5), (5, 15),
-        (12, 12), (8, 14), (3, 8), (18, 7)
-        # No bush at player start to avoid spawn collision
+    # Add berry bush clusters at various positions for exploration and multiple gathering sites
+    # Each cluster has 3-4 bushes with gaps for player movement.
+    clusters = [
+        # Northwest Cluster
+        [(8, 8), (12, 8), (8, 12), (12, 12)],
+        # Southwest Cluster
+        [(10, 35), (14, 35), (10, 39), (14, 39)],
+        # Northeast Cluster
+        [(55, 10), (59, 10), (55, 14), (59, 14)],
+        # Southeast Cluster
+        [(50, 40), (54, 40), (50, 44), (54, 44)],
+        # Scattered bushes near center (but not at spawn)
+        [(25, 15), (45, 15), (25, 35), (45, 35)]
     ]
-    for gx, gy in test_positions:
-        from berry_bush import BerryBush
-        bush = BerryBush(gx, gy, cell_size=cell_size, berries=5)
-        world.add_object(bush)
+    
+    for cluster in clusters:
+        for gx, gy in cluster:
+            from berry_bush import BerryBush
+            bush = BerryBush(gx, gy, cell_size=cell_size, berries=5)
+            world.add_object(bush)
 
     # Add Trees (2x2) - renewable wood source
     from tree import Tree
-    tree_positions = [(2, 5), (8, 3), (14, 8), (20, 12)]
+    tree_positions = [
+        (5, 5), (15, 5), (60, 5), (5, 45), (60, 45),
+        (30, 10), (40, 40), (10, 25), (55, 25)
+    ]
     for gx, gy in tree_positions:
         tree = Tree(gx, gy, cell_size=cell_size, wood=10, respawn_duration=30.0)
         world.add_object(tree)
 
     # Add Rocks (1x1) - non-renewable stone source
     from rock import Rock
-    rock_positions = [(4, 8), (12, 2), (18, 10), (6, 15)]
+    rock_positions = [
+        (10, 2), (2, 10), (64, 2), (2, 48), (64, 48),
+        (33, 5), (33, 45), (5, 30), (60, 30)
+    ]
     for gx, gy in rock_positions:
         rock = Rock(gx, gy, cell_size=cell_size, stone=5)
         world.add_object(rock)
 
     # Add Sticks (1x1) - small collectibles
     from stick import Stick
-    stick_positions = [(7, 6), (15, 4), (10, 16), (3, 12)]
+    stick_positions = [
+        (15, 15), (50, 15), (15, 40), (50, 40),
+        (33, 12), (33, 38), (12, 25), (54, 25)
+    ]
     for gx, gy in stick_positions:
         stick = Stick(gx, gy, cell_size=cell_size, sticks=3)
         world.add_object(stick)
 
-    # Create player
-    player = Player(window_width // 2, window_height // 2, radius=20, speed=200)
+    # Create player in the center of the large map
+    world_width_px = grid_width * cell_size
+    world_height_px = grid_height * cell_size
+    player = Player(world_width_px // 2, world_height_px // 2, radius=18, speed=200)
 
-    # Create a GatheringHut and place it
+    # Create a GatheringHut and place it near center
     from gathering_hut import GatheringHut
     hut_gx, hut_gy = grid_width // 2 + 4, grid_height // 2 + 3
     hut = GatheringHut(hut_gx, hut_gy, cell_size)

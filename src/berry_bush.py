@@ -29,11 +29,15 @@ class BerryBush(WorldObject):
         # Depleted flag indicates whether bush is empty (zero food)
         self.depleted = (self.inventory.get_item_count('food') == 0)
 
-    def render(self, screen):
+    def render(self, screen, camera=None):
         # Draw a green square at the bush's grid-aligned position
+        draw_x, draw_y = self.x, self.y
+        if camera:
+            draw_x, draw_y = camera.apply(self.x, self.y)
+            
         rect = pygame.Rect(
-            self.x,
-            self.y,
+            draw_x,
+            draw_y,
             self.width * self.cell_size,
             self.height * self.cell_size
         )
@@ -53,8 +57,8 @@ class BerryBush(WorldObject):
             radius = max(2, cell_size // 8)
             for i in range(min(food_count, len(offsets))):
                 ox, oy = offsets[i]
-                cx = self.x + ox * cell_size
-                cy = self.y + oy * cell_size
+                cx = draw_x + ox * cell_size
+                cy = draw_y + oy * cell_size
                 pygame.draw.circle(screen, (200, 0, 0), (int(cx), int(cy)), radius)
 
     def interact(self, player):

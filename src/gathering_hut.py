@@ -114,12 +114,16 @@ class GatheringHut(Building):
         """GatheringHut supports resource gathering."""
         return True
 
-    def render(self, screen):
+    def render(self, screen, camera=None):
         """Render the Gathering Hut as a brown rectangle."""
         import pygame
+        draw_x, draw_y = self.x, self.y
+        if camera:
+            draw_x, draw_y = camera.apply(self.x, self.y)
+            
         rect = pygame.Rect(
-            self.x,
-            self.y,
+            draw_x,
+            draw_y,
             self.width * self.cell_size,
             self.height * self.cell_size
         )

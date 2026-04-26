@@ -24,12 +24,16 @@ class Chair(Building):
             buff = Buff(BUFF_NAME_RESTED, {'speed': 1.5}, duration=30.0)
             other.apply_buff(buff)
 
-    def render(self, screen):
+    def render(self, screen, camera=None):
         """Render the Chair as a brown rectangle."""
         import pygame
+        draw_x, draw_y = self.x, self.y
+        if camera:
+            draw_x, draw_y = camera.apply(self.x, self.y)
+            
         rect = pygame.Rect(
-            self.x,
-            self.y,
+            draw_x,
+            draw_y,
             self.width * self.cell_size,
             self.height * self.cell_size
         )

@@ -978,6 +978,37 @@ Allow players to assign a selected critter directly to a building by right-click
 
 ---
 
+## Phase 12: World Expansion & Camera System
+
+**Goal**: Make the game world feel larger and more open by increasing map size and implementing a scrolling camera that follows the player.
+
+### Task 50: Implement Large Map and Scrolling Camera
+**Priority**: High
+**Status**: NOT_STARTED
+
+**Description**:
+Increase the map size and implement a camera system that follows the player, allowing for exploration of a world larger than the screen.
+
+**Requirements**:
+1. **Smaller Grid Size**: Reduce `cell_size` from 32 to a slightly smaller value (e.g., 24) to fit more on screen and feel more open.
+2. **Larger Map Dimensions**: Increase map size to be 3x to 4x the current size (e.g., 80x60 or 100x75 grid cells).
+3. **Scrolling Camera**:
+   - Only show a subset of the map (viewport) at a time.
+   - The camera should follow the player.
+   - **Scroll Logic**: The camera stays still while the player is in the center 50% of the screen. When the player enters the outer 25% "deadzone" on any edge, the camera scrolls in that direction to keep the player within the center 50%.
+   - **Boundary Clamping**: The camera should not scroll beyond the map boundaries.
+4. **Coordinate Mapping**: Update all rendering and mouse interaction to correctly map between screen coordinates and world/grid coordinates using camera offsets.
+5. **Preserve Mechanics**: Ensure critter navigation, pathfinding, and object placement remain functional and unaffected by the visual scrolling.
+
+**Acceptance Criteria**:
+- Map is significantly larger than the screen.
+- Camera smoothly follows the player using the 25%/50%/25% deadzone logic.
+- Mouse clicks for building placement, inspection, and deconstruction correctly target the world objects at their scrolled positions.
+- All HUD elements (inventory, build buttons, active buffs) remain fixed to the screen.
+- Debug display and interaction prompts correctly follow world objects.
+
+---
+
 ## Notes
 
 - Tasks marked with `*` are optional and can be skipped for faster MVP delivery

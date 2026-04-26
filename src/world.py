@@ -262,7 +262,16 @@ class World:
         for obj in to_remove:
             self.remove_object(obj)
 
-    def draw(self, screen):
+    def draw(self, screen, camera=None):
         for obj in self.current_map.objects:
             if hasattr(obj, 'render'):
-                obj.render(screen)
+                if camera:
+                    # Some objects might need camera-aware rendering
+                    # but for now we'll assume they just draw at self.x, self.y
+                    # We can either pass camera to render, or temporarily shift object
+                    # Passing camera is cleaner if we update all render methods.
+                    # For now, let's just use the camera.apply in common cases if we can.
+                    # Actually, better to pass camera to the render methods.
+                    obj.render(screen, camera=camera)
+                else:
+                    obj.render(screen)
