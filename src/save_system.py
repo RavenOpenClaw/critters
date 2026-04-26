@@ -18,6 +18,8 @@ from building import Building
 from berry_bush import BerryBush
 from gathering_hut import GatheringHut
 from mating_hut import MatingHut
+from chair import Chair
+from campfire import Campfire
 from obstacle import Obstacle
 from grass import Grass
 from tree import Tree
@@ -283,6 +285,20 @@ def _deserialize_world_object(data: Dict[str, Any]) -> WorldObject:
         return obj
     elif classname == "Stick":
         obj = Stick(gx, gy, cell_size)  # default sticks count, will override inventory
+        obj.inventory = inventory
+        obj.blocks_movement = blocks_movement
+        return obj
+    elif classname == "Chair":
+        obj = Chair(gx, gy, cell_size)
+        if "cost" in data:
+            obj.cost = data["cost"]
+        obj.inventory = inventory
+        obj.blocks_movement = blocks_movement
+        return obj
+    elif classname == "Campfire":
+        obj = Campfire(gx, gy, cell_size)
+        if "cost" in data:
+            obj.cost = data["cost"]
         obj.inventory = inventory
         obj.blocks_movement = blocks_movement
         return obj

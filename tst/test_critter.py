@@ -567,6 +567,47 @@ class TestCritterFollow:
         # It should have reset the idle_timer to a large value because can_gather() is False
         assert critter.idle_timer > 5.0
 
+    def test_critter_gathering_intelligence(self):
+        """Task 47: Critters should seek new resource if not full when current resource is depleted."""
+        cell_size = 32
+        grid = GridSystem(cell_size=cell_size, width=20, height=20)
+        world = World(grid)
+        hut = GatheringHut(1, 1, cell_size)
+        world.add_object(hut)
+
+        # High endurance for high carry capacity (ceil(80/20) = 4)
+        critter = Critter(100, 100, cell_size=cell_size, endurance=80)
+        hut.assign_critter(critter)
+        world.add_object(critter)
+
+        # Bush 1: only 1 berry
+        bush1 = BerryBush(5, 5, cell_size=cell_size, berries=1)
+        world.add_object(bush1)
+        # Bush 2: has berries
+        bush2 = BerryBush(7, 7, cell_size=cell_size, berries=5)
+        world.add_object(bush2)
+
+        # Target bush1
+        critter.start_gather(bush1)
+        critter.gathering = True  # Arrived
+        critter.gather_timer = 1.0
+        critter.gathering_time_required = 0.5  # Harvest once per 0.5s
+
+        # First harvest from bush1
+        critter._harvest_target(world)
+        assert critter.held_quantity == 1
+        assert bush1.inventory.get_item_count("food") == 0
+        
+        # Ensure bush1 is marked as depleted so find_resource_in_radius doesn't pick it again
+        bush1.update(0.1)
+        assert bush1.depleted is True
+
+        # Should NOT have returned to RETURN state, should have found bush2
+        assert critter.state == CritterState.GATHER
+        assert critter.target_resource is bush2
+        assert critter.gathering is False  # Must re-travel
+        assert critter.path is None
+
 class TestCritterInteract:
     """Tests for Critter interaction via E key (follow toggle)."""
 

@@ -938,17 +938,14 @@ Verification:
 
 ### Task 47: Improve Critter Gathering Intelligence
 **Priority**: Medium
-**Status**: NOT_STARTED
+**Status**: COMPLETED (2026-04-25)
 
-**Description**:
-Currently, critters may target the same resource and return empty-handed if it's depleted by the time they arrive. Improve this by making critters check their inventory upon reaching or finishing a resource. If they still have capacity, they should seek another resource within range before returning to the hut.
-
-**Acceptance Criteria**:
-- In `src/critter.py`, modify `GATHER` state behavior.
-- If a critter finishes gathering from a resource but still has `held_quantity < carry_capacity`, it should attempt to find a new `target_resource`.
-- If a new resource is found, it remains in `GATHER` state and pathfinds to the new target.
-- If no new resource is found or capacity is full, it transitions to `RETURN`.
-- Add tests to verify that critters can visit multiple bushes in one trip if not full.
+Implementation:
+- Modified `_harvest_target` to accept `world`.
+- Implemented `_continue_gathering_or_return` to seek new resources if capacity isn't full and the current resource is depleted.
+- Critters now visit multiple bushes in one trip if they have space.
+- Added regression test `test_critter_gathering_intelligence` in `tst/test_critter.py`.
+- All 227 tests pass.
 
 ### Task 48: Streamline Follow Interaction with 'F' Key
 **Priority**: Low

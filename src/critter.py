@@ -419,7 +419,7 @@ class Critter(Entity):
             self.gather_timer += dt
             while self.gather_timer >= self.gathering_time_required and self.target_resource is not None:
                 self.gather_timer -= self.gathering_time_required
-                self._harvest_target()  # may set start_return and break loop
+                self._harvest_target(world)  # may set start_return and break loop
             # Note: _harvest_target will call start_return when capacity full or target empty
 
     def _update_return(self, dt, world, pathfinding_system):
@@ -639,19 +639,17 @@ class Critter(Entity):
             return None
         return random.choice(candidates)
 
-    def _harvest_target(self):
+    def _harvest_target(self, world):
         """Harvest one resource from current target during gathering. Transition to RETURN when capacity full or target empty."""
         target = self.target_resource
         if not (hasattr(target, 'inventory') and target.inventory.items):
             self.target_resource = None
-            # If target is gone or empty, stop gathering and return
-            self.start_return()
+            self._continue_gathering_or_return(world)
             return
 
         if not target.inventory.items:
             self.target_resource = None
-            # If target is gone or empty, stop gathering and return
-            self.start_return()
+            self._continue_gathering_or_return(world)
             return
 
         resource_type = next(iter(target.inventory.items))
@@ -665,11 +663,31 @@ class Critter(Entity):
             self.held_quantity += 1
 
         # Check exit conditions: capacity reached OR target depleted
-        if self.held_quantity >= self.carry_capacity or not target.inventory.has(resource_type, 1):
+        if self.held_quantity >= self.carry_capacity:
             self.start_return()
             return
 
+        if not target.inventory.has(resource_type, 1):
+            self.target_resource = None
+            self._continue_gathering_or_return(world)
+            return
+
         # Otherwise, continue gathering (stay in GATHER, will harvest again next frame)
+
+    def _continue_gathering_or_return(self, world):
+        """After a resource is depleted, either find a new target if not full, or return to hut."""
+        if self.held_quantity < self.carry_capacity and self.assigned_hut is not None:
+            new_target = self.assigned_hut.find_resource_in_radius(world, self)
+            if new_target is not None:
+                # Found a new target! Stay in GATHER, but reset gathering phase and path
+                self.target_resource = new_target
+                self.gathering = False
+                self.path = None
+                self.path_index = 0
+                return
+
+        # No new target found or already at capacity
+        self.start_return()
 
     def get_render_offset(self):
         """Return (dx, dy) offset for animation based on state and current frame."""

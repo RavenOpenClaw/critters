@@ -355,4 +355,51 @@ Desired fix:
 - Ensure that the new constants are imported where needed.
 
 ---
-EOF
+
+### [SAVE_CHAIR] Unknown world object type: Chair (and Campfire) when loading saved game
+
+Status: FIXED
+
+Expected: Saved games containing Chair or Campfire buildings should load successfully.
+
+Actual: Loading fails with `ValueError: Unknown world object type: Chair` (or Campfire) because these types were not registered in the save system's deserialization dispatcher.
+
+Reproduce:
+1. Place a Chair or Campfire in the world.
+2. Save the game.
+3. Attempt to load the save.
+4. Observe the "Load failed" error message.
+
+Fix implemented:
+- Added `Chair` and `Campfire` to the `_deserialize_world_object` dispatcher in `src/save_system.py`.
+- Added missing imports for `Chair` and `Campfire` in `src/save_system.py`.
+- Verified fix with new round-trip tests in `tst/test_chair_campfire_save.py`.
+
+Testing:
+- Added `test_chair_serialization_roundtrip` and `test_campfire_serialization_roundtrip`.
+- All save/load tests pass.
+
+---
+
+### [UI_BUILD_MENU_SIZE] Build menu buttons and background are too small
+
+Status: OPEN
+
+Expected: 
+- Build menu buttons should be wide enough to contain their labels without clipping.
+- The build menu background box should be tall enough to contain all building buttons and the instructions text without overflow.
+
+Actual: 
+- Buttons are too narrow for some labels (e.g., "Gathering Hut", "Mating Hut" might be tight or overflow).
+- The menu height (150px) is insufficient for 4 buttons (4x40px + margins) and instructions, causing the last button and instructions to draw outside the menu background.
+
+Reproduce:
+1. Open the build menu (B).
+2. Observe the last button (Campfire) and the instruction text at the bottom.
+3. Observe the labels on "Gathering Hut" and "Mating Hut" buttons.
+
+Desired fix:
+- Increase `menu_width` and `menu_height` in `BuildMenu.__init__`.
+- Recalculate `menu_height` dynamically based on the number of buttons, or set a larger fixed value (e.g., 250px).
+- Ensure button width is sufficient for the longest label + cost text.
+- Update tests to verify dimensions.

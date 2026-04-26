@@ -33,10 +33,14 @@ class BuildMenu:
         self.button_rects = {}  # maps building class to rect
 
         # Menu appearance
-        self.menu_width = 200
-        self.menu_height = 150
-        self.button_height = 40  # taller to accommodate cost line
+        self.menu_width = 280
+        self.button_height = 45  # slightly taller for better spacing
         self.button_margin = 10
+        self.header_height = 40
+        self.footer_height = 40
+        # Calculate height based on number of buildings
+        self.menu_height = self.header_height + len(self.buildings) * (self.button_height + self.button_margin) + self.footer_height
+        
         self.bg_color = (255, 255, 255, 200)  # semi-transparent white
         self.button_color = (100, 100, 200)
         self.button_hover_color = (120, 120, 220)
@@ -165,13 +169,13 @@ class BuildMenu:
 
         # Title
         title = font.render(BUILD_MENU_TITLE, True, self.text_color)
-        screen.blit(title, (x + 10, y + 10))
+        screen.blit(title, (x + 10, y + (self.header_height - title.get_height()) // 2))
 
         # Compute button rects for each building
         self.button_rects = {}
         btn_x = x + 20
         for idx, (building_class, label) in enumerate(self.buildings):
-            btn_y = y + 40 + idx * (self.button_height + self.button_margin)
+            btn_y = y + self.header_height + idx * (self.button_height + self.button_margin)
             rect = pygame.Rect(btn_x, btn_y, self.menu_width - 40, self.button_height)
             self.button_rects[building_class] = rect
             # Draw button with state
@@ -181,7 +185,7 @@ class BuildMenu:
             pygame.draw.rect(screen, color, rect)
             # Button label (top half)
             lbl_surface = font.render(label, True, (255, 255, 255))
-            lbl_rect = lbl_surface.get_rect(center=(rect.centerx, rect.centery - 8))
+            lbl_rect = lbl_surface.get_rect(center=(rect.centerx, rect.centery - 10))
             screen.blit(lbl_surface, lbl_rect)
             # Cost string (bottom half)
             cost_dict = getattr(building_class, 'cost', {})
@@ -190,10 +194,11 @@ class BuildMenu:
                 cost_str = "Cost: " + ", ".join(cost_parts)
             else:
                 cost_str = "Free"
-            cost_surface = font.render(cost_str, True, self.cost_color)
-            cost_rect = cost_surface.get_rect(center=(rect.centerx, rect.centery + 8))
+            cost_surface = font.render(cost_str, True, (240, 240, 240)) # slightly brighter cost text
+            cost_rect = cost_surface.get_rect(center=(rect.centerx, rect.centery + 10))
             screen.blit(cost_surface, cost_rect)
 
         # Instructions
         click_instr = font.render(BUILD_PLACEMENT_INSTR, True, (80, 80, 80))
-        screen.blit(click_instr, (x + 20, y + self.menu_height - 30))
+        instr_y = y + self.menu_height - self.footer_height + (self.footer_height - click_instr.get_height()) // 2
+        screen.blit(click_instr, (x + 20, instr_y))
