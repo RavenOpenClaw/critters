@@ -1,0 +1,11 @@
+[[rule]]
+toolName = "run_shell_command"
+commandPrefix = "PYTHONPATH=src venv/bin/python -m pytest"
+decision = "allow"
+priority = 100
+
+[[rule]]
+toolName = "run_shell_command"
+commandPrefix = "make test"
+decision = "allow"
+priority = 100

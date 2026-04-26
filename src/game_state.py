@@ -130,7 +130,7 @@ def new_game(window_width: int = 800, window_height: int = 600) -> tuple[World, 
     # Add Sticks (1x1) - small collectibles
     from stick import Stick
     stick_positions = [
-        (15, 15), (50, 15), (15, 40), (50, 40),
+        (15, 15), (50, 15), (15, 40), (48, 40),
         (33, 12), (33, 38), (12, 25), (54, 25)
     ]
     for gx, gy in stick_positions:
