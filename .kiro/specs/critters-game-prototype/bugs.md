@@ -400,3 +400,15 @@ Implementation:
 - Changed `menu_height` to be calculated dynamically based on the number of buildings: `self.header_height + len(self.buildings) * (self.button_height + self.button_margin) + self.footer_height`.
 - Updated `render` method to use these constants and improve vertical centering of text.
 - Verified with automated tests in `tst/test_build_menu_ui.py`.
+
+---
+
+### [UI_CAMERA_LOAD_CENTER] Camera resets to (0,0) on game load
+
+Status: OPEN
+
+Expected: 
+The camera should center on the player's position immediately after loading a saved game.
+
+Actual: 
+On load, the camera is scrolled as far up and to the left as possible (offset 0,0), regardless of the player's position. It only starts following the player once they move near the screen edges.
