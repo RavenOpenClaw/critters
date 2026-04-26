@@ -383,23 +383,20 @@ Testing:
 
 ### [UI_BUILD_MENU_SIZE] Build menu buttons and background are too small
 
-Status: OPEN
+Status: FIXED
+
+Fix commit: (current session)
 
 Expected: 
 - Build menu buttons should be wide enough to contain their labels without clipping.
 - The build menu background box should be tall enough to contain all building buttons and the instructions text without overflow.
 
 Actual: 
-- Buttons are too narrow for some labels (e.g., "Gathering Hut", "Mating Hut" might be tight or overflow).
-- The menu height (150px) is insufficient for 4 buttons (4x40px + margins) and instructions, causing the last button and instructions to draw outside the menu background.
+- Buttons were too narrow for some labels (e.g., "Gathering Hut" and cost strings).
+- The menu height (150px) was insufficient for 4 buttons (4x40px + margins) and instructions, causing the last button and instructions to draw outside the menu background.
 
-Reproduce:
-1. Open the build menu (B).
-2. Observe the last button (Campfire) and the instruction text at the bottom.
-3. Observe the labels on "Gathering Hut" and "Mating Hut" buttons.
-
-Desired fix:
-- Increase `menu_width` and `menu_height` in `BuildMenu.__init__`.
-- Recalculate `menu_height` dynamically based on the number of buttons, or set a larger fixed value (e.g., 250px).
-- Ensure button width is sufficient for the longest label + cost text.
-- Update tests to verify dimensions.
+Implementation:
+- Increased `menu_width` to 320 in `BuildMenu.__init__`.
+- Changed `menu_height` to be calculated dynamically based on the number of buildings: `self.header_height + len(self.buildings) * (self.button_height + self.button_margin) + self.footer_height`.
+- Updated `render` method to use these constants and improve vertical centering of text.
+- Verified with automated tests in `tst/test_build_menu_ui.py`.

@@ -33,7 +33,7 @@ class BuildMenu:
         self.button_rects = {}  # maps building class to rect
 
         # Menu appearance
-        self.menu_width = 280
+        self.menu_width = 320
         self.button_height = 45  # slightly taller for better spacing
         self.button_margin = 10
         self.header_height = 40
