@@ -78,6 +78,12 @@ class Building(WorldObject):
         """Returns True if the building supports critter gathering. Base Building returns False."""
         return False
 
+    def assign_critter(self, critter):
+        """Assign a critter to this building. Standard interface for assignment logic."""
+        # Standard implementation should handle unassigning from old hut
+        # but base class provides no-op if not supported.
+        pass
+
 
 def _is_resource_available(obj):
     """Check if a world object is a non-depleted resource."""

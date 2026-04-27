@@ -181,6 +181,7 @@ def main():
 
     # Initialize Camera
     camera = Camera(WINDOW_WIDTH, WINDOW_HEIGHT, grid_width * cell_size, grid_height * cell_size)
+    camera.center_on(player.x, player.y)
 
     # Critter inspector UI
     critter_inspector = CritterInspector(cell_size, font, WINDOW_WIDTH, WINDOW_HEIGHT)
@@ -224,6 +225,7 @@ def main():
                 player.world_rect = pygame.Rect(0, 0, grid_width * cell_size, grid_height * cell_size)
                 camera.map_width = grid_width * cell_size
                 camera.map_height = grid_height * cell_size
+                camera.center_on(player.x, player.y)
                 print("Game loaded.")
             except Exception as e:
                 print(f"Load failed: {e}")
@@ -345,6 +347,30 @@ def main():
                             if grid.is_within_bounds(gx, gy):
                                 build_menu.attempt_placement(player, world, grid, gx, gy)
 
+        # Handle mouse right-click for direct assignment
+        if input_handler.mouse_right_clicked:
+            mx, my = input_handler.mouse_pos
+            wx, wy = camera.undo(mx, my)
+            
+            # If a critter is selected in inspector, try to assign it to the right-clicked building
+            if critter_inspector.visible and critter_inspector.selected_critter:
+                gx, gy = grid.world_to_grid(wx, wy)
+                if grid.is_within_bounds(gx, gy):
+                    if (gx, gy) in grid.occupied:
+                        obj = grid.occupied[(gx, gy)]
+                        if isinstance(obj, Building):
+                            # Try to assign the critter
+                            critter = critter_inspector.selected_critter
+                            # Check if the building supports assignment (has the method and manages assigned_critters)
+                            # We use assign_critter which we just standardized.
+                            if hasattr(obj, 'assigned_critters'):
+                                obj.assign_critter(critter)
+                                # Success message
+                                building_name = obj.__class__.__name__
+                                world.set_message(f"Critter assigned to {building_name}", 2.0)
+                            else:
+                                world.set_message("This building does not support assignment", 1.5)
+
         # Crafting menu toggle and crafting
         if input_handler.crafting_toggle:
             crafting_menu.toggle()
@@ -368,6 +394,12 @@ def main():
             if input_handler.deconstruct_mode:
                 input_handler.deconstruct_mode = False
             if critter_inspector.visible:
+                critter_inspector.hide()
+
+        # Handle 'F' key for critter follow toggle
+        if input_handler.f_pressed:
+            if critter_inspector.visible and critter_inspector.selected_critter:
+                critter_inspector.toggle_follow(player, world)
                 critter_inspector.hide()
 
         # Update critters

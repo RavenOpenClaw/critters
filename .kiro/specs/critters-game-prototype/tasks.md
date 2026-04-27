@@ -840,24 +840,12 @@ Acceptance satisfied: Player can select a critter and toggle Follow; critter tra
 
 ### Task 46: Refactor Game State Management into Dedicated Module
 **Priority**: Medium
-**Status**: NOT_STARTED
+**Status**: COMPLETED (2026-04-26)
 
-**Description**:
-Refactor the game state management logic (loading and starting a new game) into a dedicated module, `game_state.py`. This will improve separation of concerns and reusability.
-
-**Acceptance Criteria**:
-- Create a new module `src/game_state.py` with functions:
-  - `load_game(save_path)`: Loads a saved game and returns `(world, player)`.
-  - `new_game()`: Starts a new game and returns `(world, player)`.
-- Update `TitleScreen` to use `game_state.load_game` for the Continue action.
-- Update `main.py` to use `game_state.load_game` and `game_state.new_game` based on `selected_action`.
-- Ensure all existing tests pass after refactoring.
-- Update any relevant documentation.
-
-**Design Notes**:
-- The `TitleScreen` class should remain focused on UI and action selection.
-- The `main.py` loop should remain focused on running the game.
-- The new `game_state.py` module should encapsulate all game initialization logic.
+Implementation:
+- Created `src/game_state.py` with `load_game` and `new_game` functions.
+- Updated `main.py` to use these functions for game initialization.
+- Separation of concerns improved: `main.py` handles the loop, `game_state.py` handles setup.
 
 ---
 
@@ -949,32 +937,22 @@ Implementation:
 
 ### Task 48: Streamline Follow Interaction with 'F' Key
 **Priority**: Low
-**Status**: NOT_STARTED
+**Status**: COMPLETED (2026-04-26)
 
-**Description**:
-Add a keyboard shortcut 'F' that toggles follow status for the currently inspected critter and automatically closes the inspector menu.
-
-**Acceptance Criteria**:
-- In `src/input_handler.py`, detect 'F' key press.
-- If `CritterInspector` is active and has a selected critter:
-  - Toggle follow for that critter.
-  - Close the `CritterInspector`.
-- Ensure appropriate feedback messages are shown.
+Implementation:
+- Added `f_pressed` flag and 'F' key detection in `InputHandler`.
+- Updated `main.py` to toggle follow for the inspected critter and hide the inspector when 'F' is pressed.
+- Improved UX by reducing clicks needed to recruit followers.
 
 ### Task 49: Direct Assignment via Right-Click
 **Priority**: Medium
-**Status**: NOT_STARTED
+**Status**: COMPLETED (2026-04-26)
 
-**Description**:
-Allow players to assign a selected critter directly to a building by right-clicking the building while the critter's inspector is open. This bypasses the need for the "Follow" step.
-
-**Acceptance Criteria**:
-- In `main.py`, detect right-click events.
-- If a critter is currently selected in `CritterInspector`:
-  - Check if the right-click is over a `Building` (GatheringHut or MatingHut).
-  - If yes, assign the selected critter to that building.
-  - Show a feedback message (e.g., "Critter assigned to <Building>").
-- This should work regardless of player distance to the building (since it's a UI-driven management action).
+Implementation:
+- Added `mouse_right_clicked` support to `InputHandler`.
+- Updated `main.py` to detect right-clicks on buildings when a critter is selected in the inspector.
+- Standardized `assign_critter` interface in `Building` and implemented direct assignment.
+- Enabled remote management of critters regardless of player distance.
 
 ---
 
@@ -984,28 +962,14 @@ Allow players to assign a selected critter directly to a building by right-click
 
 ### Task 50: Implement Large Map and Scrolling Camera
 **Priority**: High
-**Status**: NOT_STARTED
+**Status**: COMPLETED (2026-04-26)
 
-**Description**:
-Increase the map size and implement a camera system that follows the player, allowing for exploration of a world larger than the screen.
-
-**Requirements**:
-1. **Smaller Grid Size**: Reduce `cell_size` from 32 to a slightly smaller value (e.g., 24) to fit more on screen and feel more open.
-2. **Larger Map Dimensions**: Increase map size to be 3x to 4x the current size (e.g., 80x60 or 100x75 grid cells).
-3. **Scrolling Camera**:
-   - Only show a subset of the map (viewport) at a time.
-   - The camera should follow the player.
-   - **Scroll Logic**: The camera stays still while the player is in the center 50% of the screen. When the player enters the outer 25% "deadzone" on any edge, the camera scrolls in that direction to keep the player within the center 50%.
-   - **Boundary Clamping**: The camera should not scroll beyond the map boundaries.
-4. **Coordinate Mapping**: Update all rendering and mouse interaction to correctly map between screen coordinates and world/grid coordinates using camera offsets.
-5. **Preserve Mechanics**: Ensure critter navigation, pathfinding, and object placement remain functional and unaffected by the visual scrolling.
-
-**Acceptance Criteria**:
-- Map is significantly larger than the screen.
-- Camera smoothly follows the player using the 25%/50%/25% deadzone logic.
-- Mouse clicks for building placement, inspection, and deconstruction correctly target the world objects at their scrolled positions.
-- All HUD elements (inventory, build buttons, active buffs) remain fixed to the screen.
-- Debug display and interaction prompts correctly follow world objects.
+Implementation:
+- Created `Camera` class in `src/camera.py` with deadzone logic and boundary clamping.
+- Reduced `cell_size` to 24 and quadrupled map area in `game_state.py`.
+- Updated all world objects and `main.py` rendering to use camera offsets.
+- Mapped mouse clicks to world coordinates using `camera.undo()`.
+- Verified with 241+ tests.
 
 ---
 

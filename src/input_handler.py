@@ -22,11 +22,13 @@ class InputHandler:
         self.crafting_toggle = False
         self.craft_slot = None
         self.mouse_clicked = False
+        self.mouse_right_clicked = False
         self.mouse_pos = (0, 0)
         self.save_request = False
         self.load_request = False
         self.deconstruct_mode = False
         self.escape_pressed = False  # Escape key to close overlays
+        self.f_pressed = False  # F key for critter follow toggle
 
         # Hold-to-interact state
         self._e_held = False
@@ -38,16 +40,20 @@ class InputHandler:
         self.build_toggle = False
         self.select_gathering_hut = False
         self.mouse_clicked = False
+        self.mouse_right_clicked = False
         self.interact = False
         self.save_request = False
         self.load_request = False
         self.escape_pressed = False
+        self.f_pressed = False
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return False
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_F3:
                     self.show_debug = not self.show_debug
+                if event.key == pygame.K_f:
+                    self.f_pressed = True
                 if event.key == pygame.K_e:
                     self.interact = True
                     self._e_held = True
@@ -86,6 +92,9 @@ class InputHandler:
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:  # Left click
                     self.mouse_clicked = True
+                    self.mouse_pos = event.pos
+                if event.button == 3:  # Right click
+                    self.mouse_right_clicked = True
                     self.mouse_pos = event.pos
         return True
 

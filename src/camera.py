@@ -28,6 +28,14 @@ class Camera:
         self.deadzone_top = height * 0.25
         self.deadzone_bottom = height * 0.75
 
+    def center_on(self, x, y):
+        """Immediately center the camera on world coordinates (x, y)."""
+        self.offset_x = x - self.width / 2
+        self.offset_y = y - self.height / 2
+        # Clamp camera to map boundaries
+        self.offset_x = max(0, min(self.offset_x, self.map_width - self.width))
+        self.offset_y = max(0, min(self.offset_y, self.map_height - self.height))
+
     def update(self, player_x, player_y):
         """
         Update camera offset to follow the player based on deadzone logic.

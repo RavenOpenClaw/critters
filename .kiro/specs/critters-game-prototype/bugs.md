@@ -405,10 +405,16 @@ Implementation:
 
 ### [UI_CAMERA_LOAD_CENTER] Camera resets to (0,0) on game load
 
-Status: OPEN
+Status: FIXED
+
+Fix commit: (current session)
 
 Expected: 
 The camera should center on the player's position immediately after loading a saved game.
 
 Actual: 
-On load, the camera is scrolled as far up and to the left as possible (offset 0,0), regardless of the player's position. It only starts following the player once they move near the screen edges.
+On load, the camera was scrolled as far up and to the left as possible (offset 0,0), regardless of the player's position.
+
+Implementation:
+- Added `Camera.center_on(x, y)` method to `src/camera.py`.
+- Called `camera.center_on(player.x, player.y)` in `main.py` after camera initialization and after in-game load.
