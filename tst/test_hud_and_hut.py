@@ -7,7 +7,7 @@ from gathering_hut import GatheringHut
 from world import World
 from grid_system import GridSystem
 from critter import Critter
-from constants import PROMPT_GATHER, MSG_ASSIGN_GATHERING
+from constants import PROMPT_GATHER, MSG_ASSIGN_GATHERING, PROMPT_WITHDRAW
 
 
 def test_hud_shows_player_inventory():
@@ -57,7 +57,7 @@ def test_gathering_hut_interaction_prompt():
 
     full_hut = GatheringHut(0, 0, 32)
     full_hut.storage.add("food", 3)
-    assert full_hut.get_interaction_text() == PROMPT_GATHER
+    assert full_hut.get_interaction_text() == PROMPT_WITHDRAW
 
 
 def test_gathering_hut_interaction_at_edge():

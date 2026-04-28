@@ -33,9 +33,11 @@ BUTTON_STOP_FOLLOW = "Stop Following"
 
 # --- Building Interaction Prompts ---
 PROMPT_GATHER = "Press E to collect resources"
+PROMPT_WITHDRAW = "Withdraw (E)"
 PROMPT_BREED = "Press E to breed critters"
 PROMPT_REST = "Rest on Chair (E)"
 PROMPT_ASSIGN = "Assign: E"
+PROMPT_DIRECT_ASSIGN = "Right-click: Assign"
 
 # --- Building Interaction Feedback Messages ---
 MSG_ASSIGN_GATHERING = "Critter assigned to Gathering Hut."

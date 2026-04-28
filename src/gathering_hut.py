@@ -5,7 +5,7 @@ from building import Building
 from inventory import Inventory
 from entity import Player
 from berry_bush import BerryBush
-from constants import PROMPT_GATHER, MSG_ASSIGN_GATHERING
+from constants import PROMPT_GATHER, MSG_ASSIGN_GATHERING, PROMPT_WITHDRAW
 
 class GatheringHut(Building):
     """Gathering Hut building (3x3) with storage and critter assignment."""
@@ -83,7 +83,7 @@ class GatheringHut(Building):
     def get_interaction_text(self):
         """Return prompt text if hut has resources to collect."""
         if self.storage.items:
-            return PROMPT_GATHER
+            return PROMPT_WITHDRAW
         return None
 
     def interact(self, player):

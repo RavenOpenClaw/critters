@@ -145,8 +145,7 @@ def _serialize_critter(critter: Critter) -> Dict[str, Any]:
         "is_well_fed": critter.is_well_fed,
         "assigned_hut_ref": assigned_hut_ref,
         "target_resource_ref": target_resource_ref,
-        "held_resource": critter.held_resource,
-        "held_quantity": critter.held_quantity,
+        "inventory": _serialize_inventory(critter.inventory),
         "loiter_timer": critter.loiter_timer,
         "loiter_target": loiter_target,
         "idle_timer": critter.idle_timer,
@@ -176,8 +175,13 @@ def _deserialize_critter(data: Dict[str, Any]) -> Critter:
     critter.idle_timer = data["idle_timer"]
     critter.path = [tuple(p) for p in data.get("path", [])]
     critter.path_index = data.get("path_index", 0)
-    critter.held_resource = data.get("held_resource")
-    critter.held_quantity = data.get("held_quantity", 0)
+    
+    # Restore inventory with fallback to old held_resource format
+    if "inventory" in data:
+        critter.inventory = _deserialize_inventory(data["inventory"])
+    elif data.get("held_resource"):
+        critter.inventory.add(data["held_resource"], data.get("held_quantity", 0))
+        
     # Follow state deserialization
     critter.following_player = None
     critter.follow_timer = data.get("follow_timer", 0.0)

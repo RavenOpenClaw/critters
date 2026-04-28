@@ -31,3 +31,7 @@ class Inventory:
     def get_item_count(self, item_name):
         """Return the count of a specific item, or 0 if not present."""
         return self.items.get(item_name, 0)
+
+    def get_total_quantity(self):
+        """Return the total quantity of all items in the inventory."""
+        return sum(self.items.values())

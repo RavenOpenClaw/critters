@@ -106,10 +106,19 @@ class CritterInspector:
             f"{LABEL_SPEED}{c.speed_stat}",
             f"{LABEL_ENDURANCE}{c.endurance}",
             f"{LABEL_CAPACITY}{c.carry_capacity}",
-            f"{LABEL_HELD}{c.held_resource} x{c.held_quantity}",
+            LABEL_HELD,
+        ]
+        # Show each held resource
+        if c.inventory.items:
+            for res, qty in c.inventory.items.items():
+                lines.append(f"  {res}: {qty}")
+        else:
+            lines.append(f"  (none)")
+            
+        lines.extend([
             f"{LABEL_GATHER_SPEED}{c.get_gather_speed():.2f}/s",
             f"{LABEL_MOVE_SPEED}{c.get_movement_speed():.1f}",
-        ]
+        ])
         from constants import LABEL_BUFFS, VALUE_ASSIGNED_NONE, LABEL_ASSIGNED
         # Active buffs
         if c.active_buffs:

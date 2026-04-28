@@ -37,8 +37,8 @@ class Critter(Entity):
         self.state = CritterState.IDLE
         self.assigned_hut = None
         self.target_resource = None
-        self.held_resource = None  # resource type (str) or None
-        self.held_quantity = 0
+        from inventory import Inventory
+        self.inventory = Inventory()
         self.carry_capacity = max(1, (endurance + 19) // 20)  # ceil(endurance/20)
         self.is_well_fed = False
         self.active_buffs = []  # Active buff effects list
@@ -175,8 +175,6 @@ class Critter(Entity):
             self.target_resource = None
         else:
             self.target_resource = resource_obj
-        self.held_resource = None
-        self.held_quantity = 0
         self.path = None
         self.path_index = 0
         self.goal_cell = None
@@ -532,10 +530,16 @@ class Critter(Entity):
 
     def _deposit_at_hut(self):
         """Deposit held resources at the assigned hut and transition to IDLE."""
-        if self.held_resource and self.held_quantity > 0:
-            self.assigned_hut.storage.add(self.held_resource, self.held_quantity)
-            self.held_resource = None
-            self.held_quantity = 0
+        if self.inventory.items:
+            # Check if building supports storage (e.g. GatheringHut has storage, MatingHut does not)
+            if hasattr(self.assigned_hut, 'storage'):
+                for resource_type, quantity in list(self.inventory.items.items()):
+                    self.assigned_hut.storage.add(resource_type, quantity)
+                    self.inventory.remove(resource_type, quantity)
+            else:
+                # If hut has no storage, critter just stops at the hut but keeps their items
+                # for potential future assignment to a storage-capable building.
+                pass
         self.start_idle()
 
     def _is_adjacent_to_hut(self, critter_gx, critter_gy):
@@ -640,30 +644,24 @@ class Critter(Entity):
         return random.choice(candidates)
 
     def _harvest_target(self, world):
-        """Harvest one resource from current target during gathering. Transition to RETURN when capacity full or target empty."""
+        """Harvest one resource from current target during gathering. Transition to RETURN when capacity for that resource is full or target empty."""
         target = self.target_resource
         if not (hasattr(target, 'inventory') and target.inventory.items):
             self.target_resource = None
             self._continue_gathering_or_return(world)
             return
 
-        if not target.inventory.items:
-            self.target_resource = None
-            self._continue_gathering_or_return(world)
-            return
-
         resource_type = next(iter(target.inventory.items))
-        # If we haven't started a resource type yet, set it
-        if self.held_resource is None:
-            self.held_resource = resource_type
-
-        # Only harvest if we haven't reached capacity and target has at least one
-        if self.held_quantity < self.carry_capacity and target.inventory.has(resource_type, 1):
+        
+        # Only harvest if we haven't reached capacity for THIS resource type and target has at least one
+        held_count = self.inventory.get_item_count(resource_type)
+        if held_count < self.carry_capacity and target.inventory.has(resource_type, 1):
             target.inventory.remove(resource_type, 1)
-            self.held_quantity += 1
+            self.inventory.add(resource_type, 1)
+            held_count += 1
 
-        # Check exit conditions: capacity reached OR target depleted
-        if self.held_quantity >= self.carry_capacity:
+        # Check exit conditions: capacity for this resource reached OR target depleted
+        if held_count >= self.carry_capacity:
             self.start_return()
             return
 
@@ -676,7 +674,7 @@ class Critter(Entity):
 
     def _continue_gathering_or_return(self, world):
         """After a resource is depleted, either find a new target if not full, or return to hut."""
-        if self.held_quantity < self.carry_capacity and self.assigned_hut is not None:
+        if self.inventory.get_total_quantity() < self.carry_capacity and self.assigned_hut is not None:
             new_target = self.assigned_hut.find_resource_in_radius(world, self)
             if new_target is not None:
                 # Found a new target! Stay in GATHER, but reset gathering phase and path

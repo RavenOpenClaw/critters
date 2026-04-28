@@ -465,18 +465,38 @@ def main():
                 ox, oy = obj.get_center()
             else:
                 ox, oy = obj.x, obj.y
+            
+            # 1. Nearby interaction prompts (E key)
             dx = ox - player.x
             dy = oy - player.y
             if dx*dx + dy*dy <= player.interaction_radius ** 2:
-                if hasattr(obj, 'get_interaction_text'):
+                text = None
+                # If building and following critters, show Assign
+                if isinstance(obj, Building) and player.following_critters:
+                    text = PROMPT_ASSIGN
+                elif hasattr(obj, 'get_interaction_text'):
                     text = obj.get_interaction_text()
-                    # Override interaction text when player has following critters
-                    if isinstance(obj, Building) and player.following_critters:
-                        text = PROMPT_ASSIGN
-                    if text:
-                        text_surface = font.render(text, True, (0, 0, 0))
+                
+                if text:
+                    text_surface = font.render(text, True, (0, 0, 0))
+                    sox, soy = camera.apply(ox, oy)
+                    text_rect = text_surface.get_rect(center=(sox, soy - 30))  # raised by 10px
+                    screen.blit(text_surface, text_rect)
+
+            # 2. Remote management hover feedback (Right-click assign)
+            # Only if critter selected in inspector
+            if critter_inspector.visible and critter_inspector.selected_critter:
+                if isinstance(obj, Building):
+                    mx, my = input_handler.mouse_pos
+                    wx, wy = camera.undo(mx, my)
+                    gx, gy = grid.world_to_grid(wx, wy)
+                    # Check if building occupies this grid cell
+                    if (gx, gy) in obj.get_occupied_cells():
+                        text = PROMPT_DIRECT_ASSIGN
+                        text_surface = font.render(text, True, (0, 0, 150)) # slightly blue for remote actions
+                        # Show near mouse or center of building? Center of building is more stable.
                         sox, soy = camera.apply(ox, oy)
-                        text_rect = text_surface.get_rect(center=(sox, soy - 30))  # raised by 10px
+                        text_rect = text_surface.get_rect(center=(sox, soy - 50)) # Higher up to avoid overlap with E prompt
                         screen.blit(text_surface, text_rect)
 
         # Draw player as a blue circle

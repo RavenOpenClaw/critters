@@ -46,7 +46,7 @@ class TestCritterAttributes:
         assert hasattr(c, 'state')
         assert hasattr(c, 'assigned_hut')
         assert hasattr(c, 'target_resource')
-        assert hasattr(c, 'held_resource')
+        assert hasattr(c, 'inventory')
         assert hasattr(c, 'is_well_fed')
         assert hasattr(c, 'radius')
 
@@ -58,7 +58,7 @@ class TestCritterAttributes:
         assert c.state == CritterState.IDLE
         assert c.assigned_hut is None
         assert c.target_resource is None
-        assert c.held_resource is None
+        assert c.inventory.get_total_quantity() == 0
         assert c.is_well_fed is False
         assert c.radius == 24 * 0.4
 
@@ -294,7 +294,7 @@ def test_return_navigation_to_hut():
 
     # Force critter into RETURN state directly to test navigation
     # We'll set held_resource and then call start_return()
-    critter.held_resource = 'berry'
+    critter.inventory.add('berry', 1)
     critter.start_return()
 
     pathfinding = PathfindingSystem()
@@ -337,15 +337,14 @@ def test_deposit_completes_cycle():
     # Directly simulate a deposit without moving: place critter at hut center and set state to RETURN with held resource
     critter.x = hut.x + (hut.width * hut.cell_size)/2
     critter.y = hut.y + (hut.height * hut.cell_size)/2
-    critter.held_resource = 'berry'
-    critter.held_quantity = 1  # New: track quantity
+    critter.inventory.add('berry', 1)
     critter.start_return()
 
     # Run one update; should detect arrival and deposit
     critter.update(0.05, world, None)
 
     assert critter.state == CritterState.IDLE
-    assert critter.held_resource is None
+    assert critter.inventory.get_total_quantity() == 0
     assert hut.storage.has('berry', 1)
 
 
@@ -599,7 +598,7 @@ class TestCritterFollow:
         bush1.inventory.remove("food", 1)
         bush1.update(0.1)
         assert bush1.depleted is True
-        critter.held_quantity = 1
+        critter.inventory.add("food", 1)
 
         # Trigger update to select new target
         class DummyPF:

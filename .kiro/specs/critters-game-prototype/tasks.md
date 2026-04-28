@@ -973,6 +973,31 @@ Implementation:
 
 ---
 
+## Phase 13: UX Polish & Critter Refinement
+
+**Goal**: Improve feedback for direct management and enhance critter inventory capabilities.
+
+### Task 51: Direct Assignment Feedback & UX
+**Priority**: Medium
+**Status**: COMPLETED (2026-04-26)
+
+Implementation:
+- Updated `main.py` to show "Right-click: Assign" when hovering over a building with a critter selected in the inspector.
+- Improved `GatheringHut` interaction prompts: now shows "Withdraw (E)" for resource collection and "Assign: E" when a critter is following.
+- Unified prompt logic in `main.py` for consistent building assignment feedback.
+
+### Task 52: Multi-Resource Critter Inventory
+**Priority**: Medium
+**Status**: COMPLETED (2026-04-26)
+
+Implementation:
+- Refactored `Critter` to use a full `Inventory` instance instead of `held_resource`/`held_quantity`.
+- Updated `_harvest_target` and `_deposit_at_hut` to support multiple resource types with per-resource capacity limits.
+- Updated `CritterInspector` to display all items in a critter's inventory.
+- Updated `SaveSystem` and `test_critter.py` to correctly handle the new inventory-based serialization and assertions.
+
+---
+
 ## Notes
 
 - Tasks marked with `*` are optional and can be skipped for faster MVP delivery

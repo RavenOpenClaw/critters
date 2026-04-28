@@ -418,3 +418,22 @@ On load, the camera was scrolled as far up and to the left as possible (offset 0
 Implementation:
 - Added `Camera.center_on(x, y)` method to `src/camera.py`.
 - Called `camera.center_on(player.x, player.y)` in `main.py` after camera initialization and after in-game load.
+
+---
+
+### [CRIT_MATING_CRASH] Critter crash when depositing at MatingHut
+
+Status: FIXED
+
+Fix commit: (current session)
+
+Expected: 
+Critters assigned to a MatingHut should not attempt to deposit resources if the hut doesn't support storage, or the attempt should fail gracefully.
+
+Actual: 
+Crash with `AttributeError: 'MatingHut' object has no attribute 'storage'` when a critter carrying resources tries to deposit at a MatingHut.
+
+Implementation:
+- Updated `Critter._deposit_at_hut` to check if `assigned_hut` has a `storage` attribute before calling `add()`.
+- If no storage, critters now retain their inventory for future assignments.
+- Also refactored Critter to use a full `Inventory` object, supporting multiple resource types.
