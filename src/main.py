@@ -6,6 +6,7 @@ This module initializes Pygame, creates the game window, and runs the main loop.
 
 import pygame
 import sys
+import math
 from entity import Player
 from input_handler import InputHandler
 from grid_system import GridSystem
@@ -33,6 +34,7 @@ from title_screen import TitleScreen
 from game_state import load_game, new_game
 from constants import (
     HUD_BUILD_BUTTON,
+    HUD_CRAFT_BUTTON,
     HUD_BUFFS_TITLE,
     HUD_BUFFS_NONE,
     DECONSTRUCTION_MODE_LABEL,
@@ -40,6 +42,7 @@ from constants import (
     MESSAGE_DECONSTRUCTED,
     MESSAGE_OUT_OF_RANGE,
     PROMPT_ASSIGN,
+    PROMPT_DIRECT_ASSIGN,
 )
 
 # Resource icon colors (for HUD)
@@ -99,6 +102,38 @@ def render_active_buffs(screen, player, font):
             buff_surface = font.render(text, True, (0, 0, 0))
             screen.blit(buff_surface, (x, y))
             y += 20
+
+def draw_interaction_progress(screen, camera, entity, color, size_scale=1.0):
+    """Draw a clockwise-filling interaction progress circle above an entity."""
+    if entity.interaction_progress <= 0:
+        return
+    
+    # Calculate screen position
+    sx, sy = camera.apply(entity.x, entity.y)
+    
+    # Position circle above head
+    radius = int(12 * size_scale)
+    center = (int(sx), int(sy - entity.radius - radius - 5))
+    
+    # Draw background circle (faint)
+    pygame.draw.circle(screen, (50, 50, 50, 100), center, radius, 1)
+    
+    # Draw progress arc (clockwise)
+    # pygame.draw.arc uses radians. 0 is 3 o'clock. 
+    # We want 12 o'clock to be the start, filling clockwise.
+    # 12 o'clock = -PI/2 or 3PI/2.
+    # Clockwise means decreasing the angle if we use standard math coord system, 
+    # but arc takes [start, end] where it draws counter-clockwise from start to end.
+    # So we define end = start - progress*2PI
+    
+    start_angle = math.pi / 2 # 12 o'clock
+    progress = min(entity.interaction_progress, 1.0)
+    end_angle = start_angle - (progress * 2 * math.pi)
+    
+    # Because pygame.draw.arc only draws CCW, we need to flip the logic
+    # CCW from end_angle back to start_angle will look like CW from start to end.
+    rect = pygame.Rect(center[0] - radius, center[1] - radius, radius * 2, radius * 2)
+    pygame.draw.arc(screen, color, rect, end_angle, start_angle, max(1, int(3 * size_scale)))
 
 def main():
     """Initialize Pygame and run the main game loop."""
@@ -195,6 +230,12 @@ def main():
         hud_button_size,
         hud_button_size
     )
+    hud_craft_button_rect = pygame.Rect(
+        hud_button_margin * 2 + hud_button_size,
+        WINDOW_HEIGHT - hud_button_size - hud_button_margin,
+        hud_button_size,
+        hud_button_size
+    )
 
     running = True
     while running:
@@ -267,10 +308,8 @@ def main():
         camera.map_width = grid.width * cell_size
         camera.map_height = grid.height * cell_size
 
-        # Player interaction (tap = 1, hold = auto-repeat at base rate)
-        for _ in range(input_handler.interact_count):
-            player.interact(world)
-        input_handler.interact_count = 0
+        # Update player interaction progress
+        player.update_interaction(dt, world, input_handler.interact_held)
 
         # Build menu toggle (B key) and mouse handling
         if input_handler.build_toggle:
@@ -281,15 +320,21 @@ def main():
             # Use world coordinates for world-space interactions
             wx, wy = camera.undo(mx, my)
             
-            clicked_hud = hud_button_rect.collidepoint(mx, my)
+            clicked_build_hud = hud_button_rect.collidepoint(mx, my)
+            clicked_craft_hud = hud_craft_button_rect.collidepoint(mx, my)
             clicked_build_menu = False
-            if clicked_hud:
+            clicked_craft_menu = False
+            
+            if clicked_build_hud:
                 build_menu.toggle()
+            elif clicked_craft_hud:
+                crafting_menu.toggle()
             elif build_menu.visible:
                 clicked_build_menu = build_menu.handle_mouse_click((mx, my))
+            # (Crafting menu doesn't have internal mouse click areas yet, just toggling)
 
             # Only act if click was not on HUD or build menu UI
-            if not clicked_hud and not clicked_build_menu:
+            if not clicked_build_hud and not clicked_craft_hud and not clicked_build_menu:
                 inspector_handled = False
 
                 # Deconstruction mode takes precedence over everything
@@ -458,34 +503,31 @@ def main():
                     text_rect = text_surf.get_rect(center=(scx, scy - 20))
                     screen.blit(text_surf, text_rect)
 
-        # Draw interaction prompts for nearby objects
-        for obj in world.current_map.objects:
-            # Get object center
-            if hasattr(obj, 'get_center'):
-                ox, oy = obj.get_center()
+        # Draw interaction prompts for nearest interactable object
+        target_obj = player.get_interactable_target(world)
+        if target_obj:
+            if hasattr(target_obj, 'get_center'):
+                ox, oy = target_obj.get_center()
             else:
-                ox, oy = obj.x, obj.y
+                ox, oy = target_obj.x, target_obj.y
             
-            # 1. Nearby interaction prompts (E key)
-            dx = ox - player.x
-            dy = oy - player.y
-            if dx*dx + dy*dy <= player.interaction_radius ** 2:
-                text = None
-                # If building and following critters, show Assign
-                if isinstance(obj, Building) and player.following_critters:
-                    text = PROMPT_ASSIGN
-                elif hasattr(obj, 'get_interaction_text'):
-                    text = obj.get_interaction_text()
-                
-                if text:
-                    text_surface = font.render(text, True, (0, 0, 0))
-                    sox, soy = camera.apply(ox, oy)
-                    text_rect = text_surface.get_rect(center=(sox, soy - 30))  # raised by 10px
-                    screen.blit(text_surface, text_rect)
+            text = None
+            # If building and following critters, show Assign
+            if isinstance(target_obj, Building) and player.following_critters:
+                text = PROMPT_ASSIGN
+            elif hasattr(target_obj, 'get_interaction_text'):
+                text = target_obj.get_interaction_text()
+            
+            if text:
+                text_surface = font.render(text, True, (0, 0, 0))
+                sox, soy = camera.apply(ox, oy)
+                text_rect = text_surface.get_rect(center=(sox, soy - 30))  # raised by 10px
+                screen.blit(text_surface, text_rect)
 
-            # 2. Remote management hover feedback (Right-click assign)
-            # Only if critter selected in inspector
-            if critter_inspector.visible and critter_inspector.selected_critter:
+        # Draw remote management hover feedback (Right-click assign)
+        # Iterate all objects to find which one is under mouse
+        if critter_inspector.visible and critter_inspector.selected_critter:
+            for obj in world.current_map.objects:
                 if isinstance(obj, Building):
                     mx, my = input_handler.mouse_pos
                     wx, wy = camera.undo(mx, my)
@@ -494,9 +536,13 @@ def main():
                     if (gx, gy) in obj.get_occupied_cells():
                         text = PROMPT_DIRECT_ASSIGN
                         text_surface = font.render(text, True, (0, 0, 150)) # slightly blue for remote actions
-                        # Show near mouse or center of building? Center of building is more stable.
+                        # Show center of building
+                        if hasattr(obj, 'get_center'):
+                            ox, oy = obj.get_center()
+                        else:
+                            ox, oy = obj.x, obj.y
                         sox, soy = camera.apply(ox, oy)
-                        text_rect = text_surface.get_rect(center=(sox, soy - 50)) # Higher up to avoid overlap with E prompt
+                        text_rect = text_surface.get_rect(center=(sox, soy - 50)) # Higher up
                         screen.blit(text_surface, text_rect)
 
         # Draw player as a blue circle
@@ -507,6 +553,8 @@ def main():
             (int(spx), int(spy)),
             player.radius
         )
+        # Progress circle for player (Lime Green)
+        draw_interaction_progress(screen, camera, player, (100, 255, 100))
 
         # Draw critters (red circles) with state labels
         for critter in world.current_map.critters:
@@ -530,6 +578,8 @@ def main():
             label_surface = font.render(label, True, color)
             label_rect = label_surface.get_rect(center=(srx, sry - int(critter.radius) - 10))
             screen.blit(label_surface, label_rect)
+            # Progress circle for critter (Muted Green, smaller)
+            draw_interaction_progress(screen, camera, critter, (150, 200, 150), size_scale=0.8)
 
         # HUD elements (drawn on top of world)
         # Draw HUD (top-left)
@@ -539,6 +589,11 @@ def main():
         pygame.draw.rect(screen, (100, 100, 200), hud_button_rect)
         build_lbl = font.render(HUD_BUILD_BUTTON, True, (255, 255, 255))
         screen.blit(build_lbl, build_lbl.get_rect(center=hud_button_rect.center))
+
+        # Draw HUD craft button (next to build button)
+        pygame.draw.rect(screen, (100, 200, 100), hud_craft_button_rect)
+        craft_lbl = font.render(HUD_CRAFT_BUTTON, True, (255, 255, 255))
+        screen.blit(craft_lbl, craft_lbl.get_rect(center=hud_craft_button_rect.center))
 
         # Buffs display (top-right corner)
         render_active_buffs(screen, player, font)

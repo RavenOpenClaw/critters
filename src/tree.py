@@ -58,3 +58,7 @@ class Tree(WorldObject):
     def get_interaction_text(self):
         """Return prompt for interaction."""
         return "Chop: E"
+
+    def get_interaction_duration(self):
+        """Chopping wood is slow."""
+        return 4.0

@@ -340,8 +340,17 @@ def test_deposit_completes_cycle():
     critter.inventory.add('berry', 1)
     critter.start_return()
 
-    # Run one update; should detect arrival and deposit
+    # Run update; should detect arrival and start interaction
     critter.update(0.05, world, None)
+    assert critter.gathering is True # Interaction phase started
+    
+    # Run second update to actually advance progress
+    critter.update(0.05, world, None)
+    assert critter.interaction_progress > 0
+
+    # Advance time past deposit duration (1.5s)
+    # Using 2.0s to be safe
+    critter.update(2.0, world, None)
 
     assert critter.state == CritterState.IDLE
     assert critter.inventory.get_total_quantity() == 0

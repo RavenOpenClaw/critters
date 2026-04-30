@@ -39,3 +39,7 @@ class Rock(WorldObject):
     def get_interaction_text(self):
         """Return prompt for interaction."""
         return "Mine: E"
+
+    def get_interaction_duration(self):
+        """Mining stone is slow."""
+        return 4.0

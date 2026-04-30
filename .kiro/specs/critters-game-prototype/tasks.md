@@ -996,6 +996,68 @@ Implementation:
 - Updated `CritterInspector` to display all items in a critter's inventory.
 - Updated `SaveSystem` and `test_critter.py` to correctly handle the new inventory-based serialization and assertions.
 
+### Task 53: Timed Interaction System & Visual Progress (Player & Critters)
+**Priority**: High
+**Status**: COMPLETED (2026-04-26)
+
+Implementation:
+- Universalized interaction using `Entity.interaction_progress`.
+- Added clockwise-filling progress circles above entities (Lime for Player, Muted Green for Critters).
+- Integrated critter SPD for fill speed and base durations for different resource types.
+- Supported 'E' and 'Space' for player interaction with immediate reset on release.
+
+### Task 54: Improved Distance & Targeting Logic
+**Priority**: Medium
+**Status**: COMPLETED (2026-04-26)
+
+Implementation:
+- Created `utils.get_distance_to_boundary` for accurate edge-to-edge distance.
+- Updated `Player` and `Critter` to use this for targeting large and small objects consistently.
+
+### Task 55: Variable Interaction Times by Resource Type
+**Priority**: Medium
+**Status**: COMPLETED (2026-04-26)
+
+Implementation:
+- Overrode `get_interaction_duration` in BerryBush (2s), Tree/Rock (4s), and Building (1.5s).
+- Successfully integrated these into the visual progress logic.
+
+### Task 56: Stat-based Critter Coloring (RGB)
+**Priority**: Low
+**Status**: NOT_STARTED
+
+**Description**:
+Visually differentiate critters based on their stats using RGB body coloring.
+
+**Acceptance Criteria**:
+- Critter color calculated as `(STR*2.55, SPD*2.55, END*2.55)`.
+- High STR critters appear Red.
+- High SPD critters appear Green.
+- High END critters appear Blue.
+- Pure White for max stats, Grey for balanced mid-stats.
+
+### Task 57: Strength-based Obstacle Requirements
+**Priority**: Medium
+**Status**: NOT_STARTED
+
+**Description**:
+Implement "Minimum Strength Requirements" for clearing obstacles, allowing groups of critters to work together.
+
+**Acceptance Criteria**:
+- Obstacles can be assigned a `min_strength` requirement.
+- Work progress only advances if `sum(assigned_critter_str) >= min_strength`.
+- STR determines "work units" applied per cycle once requirement is met.
+- Visual feedback if requirement is not met (e.g., progress bar stays grey/locked).
+
+### Task 58: Implement Crafting Menu HUD Button
+**Priority**: Low
+**Status**: COMPLETED (2026-04-26)
+
+Implementation:
+- Added `HUD_CRAFT_BUTTON` to constants.
+- Initialized `hud_craft_button_rect` and implemented click/render logic in `main.py`.
+- Toggles the crafting menu correctly.
+
 ---
 
 ## Notes

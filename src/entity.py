@@ -10,6 +10,9 @@ class Entity:
         self.x = x
         self.y = y
         self.radius = radius
+        # Timed interaction state
+        self.active_target = None
+        self.interaction_progress = 0.0 # 0.0 to 1.0
 
 class Player(Entity):
     """Player entity with movement speed, world bounds, interaction, buffs, and equipment."""
@@ -41,6 +44,55 @@ class Player(Entity):
     def interaction_radius(self):
         """Distance within which the player can interact with objects (fixed 45 pixels)."""
         return 45.0
+
+    def get_interaction_speed_multiplier(self):
+        """Calculate total interaction speed multiplier from active buffs and equipment."""
+        mult = 1.0
+        # Placeholder for future upgrades/buffs
+        for buff in self.active_buffs:
+            if 'interact_speed' in buff.multipliers:
+                mult *= buff.multipliers['interact_speed']
+        return mult
+
+    def update_interaction(self, dt, world, is_key_held):
+        """Update timed interaction progress."""
+        if not is_key_held:
+            self.active_target = None
+            self.interaction_progress = 0.0
+            return
+
+        # If no target or target out of range/empty, find new target
+        target = self.get_interactable_target(world)
+        
+        # If target changed or became None, reset progress
+        if target is None or target != self.active_target:
+            self.active_target = target
+            self.interaction_progress = 0.0
+            if target is None:
+                return
+
+        # Advance progress
+        base_duration = 1.0
+        if hasattr(target, 'get_interaction_duration'):
+            base_duration = target.get_interaction_duration()
+        
+        # Total duration affected by player upgrades/buffs
+        duration = base_duration / self.get_interaction_speed_multiplier()
+        
+        if duration > 0:
+            self.interaction_progress += dt / duration
+        else:
+            self.interaction_progress = 1.0
+
+        # Complete interaction
+        if self.interaction_progress >= 1.0:
+            target.interact(self)
+            # Reset for repetition if target still has resources
+            if self.get_interactable_target(world) == target:
+                self.interaction_progress = 0.0
+            else:
+                self.active_target = None
+                self.interaction_progress = 0.0
 
     def move(self, dx, dy, dt, grid=None):
         """Move the player with collision detection and boundary clamping.
@@ -92,54 +144,51 @@ class Player(Entity):
         return dx*dx + dy*dy <= circle_r*circle_r
 
     def interact(self, world):
-        """Interact with the nearest world object whose collision shape intersects
-        the player's interaction circle (radius 45). The nearest is determined by
-        Euclidean distance to the object's center (for deterministic selection).
-        Non-interactable objects (like Grass) are ignored.
-        """
-        # Local import to avoid circular dependency; Grass is a common non-interactable
+        """Interact with the nearest world object within the player's interaction radius."""
+        nearest = self.get_interactable_target(world)
+        if nearest is not None:
+            nearest.interact(self)
+
+    def get_interactable_target(self, world):
+        """Find the nearest interactable world object within the interaction radius."""
+        from utils import get_distance_to_boundary
         try:
             from grass import Grass
         except ImportError:
             Grass = None
 
         nearest = None
-        min_dist_sq = float('inf')
-        for obj in getattr(world, 'objects', []):
+        min_dist = float('inf')
+        
+        # Check current map objects
+        objects = []
+        if hasattr(world, 'current_map'):
+            objects = world.current_map.objects
+        elif hasattr(world, 'objects'): # Fallback for tests
+            objects = world.objects
+
+        for obj in objects:
             # Skip known non-interactable types (e.g., Grass)
             if Grass is not None and isinstance(obj, Grass):
                 continue
-            # Determine object's collision bounds (AABB) and center
+            
+            # Check for width/height/cell_size which are needed for boundary distance
             if hasattr(obj, 'width') and hasattr(obj, 'height') and hasattr(obj, 'cell_size'):
-                rect_x = obj.x
-                rect_y = obj.y
-                rect_w = obj.width * obj.cell_size
-                rect_h = obj.height * obj.cell_size
-                # Check if player's interaction circle intersects this rectangle
-                if not self._circle_intersects_rect(self.x, self.y, self.interaction_radius, rect_x, rect_y, rect_w, rect_h):
-                    continue  # Skip objects outside interaction range
-                # Use rectangle center for distance ordering
-                center_x = rect_x + rect_w / 2.0
-                center_y = rect_y + rect_h / 2.0
+                dist = get_distance_to_boundary(self, obj)
             else:
-                # Fallback for objects without rectangular bounds (e.g., point-like)
+                # Fallback for point entities (like other Critters)
                 if hasattr(obj, 'get_center'):
-                    center_x, center_y = obj.get_center()
+                    cx, cy = obj.get_center()
                 else:
-                    center_x, center_y = obj.x, obj.y
-                dx = center_x - self.x
-                dy = center_y - self.y
-                if dx*dx + dy*dy > self.interaction_radius**2:
-                    continue
-            # Compute distance to center for nearest selection
-            dx = center_x - self.x
-            dy = center_y - self.y
-            dist_sq = dx*dx + dy*dy
-            if dist_sq < min_dist_sq:
-                min_dist_sq = dist_sq
+                    cx, cy = obj.x, obj.y
+                dx = cx - self.x
+                dy = cy - self.y
+                dist = math.sqrt(dx*dx + dy*dy)
+            
+            if dist <= self.interaction_radius and dist < min_dist:
+                min_dist = dist
                 nearest = obj
-        if nearest is not None:
-            nearest.interact(self)
+        return nearest
 
     def update(self, dt):
         """Update player state: refresh buffs, recalc effective speed, remove expired buffs."""

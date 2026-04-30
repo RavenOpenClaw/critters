@@ -78,6 +78,10 @@ class Building(WorldObject):
         """Returns True if the building supports critter gathering. Base Building returns False."""
         return False
 
+    def get_interaction_duration(self):
+        """Hut and chair interactions are moderate."""
+        return 1.5
+
     def assign_critter(self, critter):
         """Assign a critter to this building. Standard interface for assignment logic."""
         # Standard implementation should handle unassigning from old hut

@@ -46,3 +46,10 @@ class WorldObject(Entity):
         or None if no prompt.
         """
         return None
+
+    def get_interaction_duration(self):
+        """
+        Return the base time (seconds) required to interact with this object.
+        Subclasses should override this for specific timings.
+        """
+        return 1.0 # Default 1 second

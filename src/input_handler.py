@@ -15,8 +15,7 @@ class InputHandler:
         self.move_x = 0
         self.move_y = 0
         self.show_debug = False
-        self.interact = False
-        self.interact_count = 0
+        self.interact_held = False # True if E or Space is held
         self.build_toggle = False
         self.select_gathering_hut = False
         self.crafting_toggle = False
@@ -30,22 +29,21 @@ class InputHandler:
         self.escape_pressed = False  # Escape key to close overlays
         self.f_pressed = False  # F key for critter follow toggle
 
-        # Hold-to-interact state
-        self._e_held = False
-        self._hold_timer = 0.0
-        self._auto_timer = 0.0
-
     def handle_events(self):
         """Process pygame events. Returns False if the app should quit."""
         self.build_toggle = False
         self.select_gathering_hut = False
         self.mouse_clicked = False
         self.mouse_right_clicked = False
-        self.interact = False
         self.save_request = False
         self.load_request = False
         self.escape_pressed = False
         self.f_pressed = False
+        
+        # We check held state using key.get_pressed() in update_movement or here
+        # but for individual presses we use the event queue.
+        # For 'held' status of interaction, let's use the event queue to toggle a flag.
+        
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return False
@@ -54,11 +52,8 @@ class InputHandler:
                     self.show_debug = not self.show_debug
                 if event.key == pygame.K_f:
                     self.f_pressed = True
-                if event.key == pygame.K_e:
-                    self.interact = True
-                    self._e_held = True
-                    self._hold_timer = 0.0
-                    self._auto_timer = 0.0
+                if event.key in (pygame.K_e, pygame.K_SPACE):
+                    self.interact_held = True
                 if event.key == pygame.K_b:
                     self.build_toggle = True
                     # Exiting deconstruct mode if build mode is toggled
@@ -85,10 +80,11 @@ class InputHandler:
                 if event.key in number_keys:
                     self.craft_slot = number_keys.index(event.key) + 1  # 1-indexed
             if event.type == pygame.KEYUP:
-                if event.key == pygame.K_e:
-                    self._e_held = False
-                    self._hold_timer = 0.0
-                    self._auto_timer = 0.0
+                if event.key in (pygame.K_e, pygame.K_SPACE):
+                    # Only release if BOTH are up? 
+                    # Simpler: just check if the released key was one of them.
+                    # If user holds both and releases one, it stops. That's fine.
+                    self.interact_held = False
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:  # Left click
                     self.mouse_clicked = True
@@ -100,32 +96,9 @@ class InputHandler:
 
     def update(self, dt, auto_interact_multiplier=1.0):
         """
-        Update hold-to-interact timers and populate interact_count.
-
-        Args:
-            dt: Delta time in seconds since last frame.
-            auto_interact_multiplier: Multiplier applied to the base interval.
-                Values < 1.0 speed up auto-interact (e.g. 0.5 = twice as fast).
+        InputHandler.update is now a no-op for interaction as it's handled in the main loop/Player.
         """
-        self.interact_count = 1 if self.interact else 0
-
-        if self._e_held:
-            prev_hold = self._hold_timer
-            self._hold_timer += dt
-
-            if self._hold_timer >= HOLD_INTERACT_DELAY:
-                interval = BASE_AUTO_INTERACT_INTERVAL * auto_interact_multiplier
-                # Only count time that has elapsed after the delay threshold
-                time_before = max(0.0, HOLD_INTERACT_DELAY - prev_hold)
-                auto_dt = dt - time_before
-                # Pre-load _auto_timer to interval on the first frame past the delay,
-                # so the first auto-fire triggers immediately when the delay expires.
-                if prev_hold < HOLD_INTERACT_DELAY:
-                    self._auto_timer = interval
-                self._auto_timer += auto_dt
-                while self._auto_timer >= interval:
-                    self._auto_timer -= interval
-                    self.interact_count += 1
+        pass
 
     def update_movement(self):
         """Update movement vector based on current key states (WASD)."""

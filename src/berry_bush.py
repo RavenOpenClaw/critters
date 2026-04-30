@@ -75,3 +75,7 @@ class BerryBush(WorldObject):
     def get_interaction_text(self):
         """Return prompt for interaction."""
         return "Gather: E"
+
+    def get_interaction_duration(self):
+        """Picking berries is relatively fast."""
+        return 2.0

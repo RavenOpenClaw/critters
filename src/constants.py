@@ -3,6 +3,7 @@
 
 # --- HUD ---
 HUD_BUILD_BUTTON = "Build"
+HUD_CRAFT_BUTTON = "Craft"
 HUD_BUFFS_TITLE = "Buffs"
 HUD_BUFFS_NONE = "(none)"
 

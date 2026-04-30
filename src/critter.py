@@ -250,12 +250,16 @@ class Critter(Entity):
         # Update active buffs and remove expired ones
         self._update_buffs(dt)
         if self.state == CritterState.IDLE:
+            self.interaction_progress = 0.0
+            self.active_target = None
             self._update_idle(dt, world)
         elif self.state == CritterState.GATHER:
             self._update_gather(dt, world, pathfinding_system)
         elif self.state == CritterState.RETURN:
             self._update_return(dt, world, pathfinding_system)
         elif self.state == CritterState.FOLLOW:
+            self.interaction_progress = 0.0
+            self.active_target = None
             self._update_follow(dt, world, pathfinding_system)
 
         # Animation update: toggle frame based on interval
@@ -353,6 +357,17 @@ class Critter(Entity):
             return random.choice(candidates)
         return None
 
+    def get_interaction_speed_multiplier(self):
+        """
+        Return multiplier for how fast the interaction circle fills.
+        High SPD critters are faster. Base SPD (50) is 1.0x.
+        Formula: 0.5 + speed_stat / 100.0 (ranges 0.51 to 1.5).
+        """
+        effective_speed = self._effective_stat(self.speed_stat)
+        base_mult = 0.5 + effective_speed / 100.0
+        gather_mult = self._get_gather_multiplier() # Buffs
+        return base_mult * gather_mult
+
     def _update_gather(self, dt, world, pathfinding_system):
         """GATHER behavior: find resource, pathfind to destination, gather over time, then RETURN."""
         # Acquire target if not set
@@ -386,10 +401,6 @@ class Critter(Entity):
                 start_gx, start_gy = grid.world_to_grid(self.x, self.y)
                 self.is_calculating = True
                 self.path = pathfinding_system.find_path((start_gx, start_gy), goal_cell, grid)
-                if self.path is not None:
-                    print(f"[DEBUG] Critter {id(self)} GATHER path to {goal_cell} len={len(self.path)} path={self.path}")
-                else:
-                    print(f"[DEBUG] Critter {id(self)} GATHER no path to {goal_cell}")
                 self.path_index = 0
                 self.goal_cell = goal_cell
                 if self.path is None or not self.path:
@@ -401,11 +412,10 @@ class Critter(Entity):
                 self._follow_path(dt, world)
                 # Check if we've arrived at the goal cell
                 if self.path is None or not self.path:
-                    # Arrived: start gathering timer
+                    # Arrived: start gathering phase
                     self.gathering = True
-                    self.gather_timer = 0.0
-                    gather_rate = self.get_gather_speed()
-                    self.gathering_time_required = 1.0 / gather_rate if gather_rate > 0 else float('inf')
+                    self.interaction_progress = 0.0
+                    self.active_target = self.target_resource
                     # Snap to exact cell center of goal_cell
                     if self.goal_cell is not None:
                         gx, gy = self.goal_cell
@@ -414,11 +424,33 @@ class Critter(Entity):
 
         # If we are in the gathering phase, accumulate time and harvest when ready
         if self.gathering:
-            self.gather_timer += dt
-            while self.gather_timer >= self.gathering_time_required and self.target_resource is not None:
-                self.gather_timer -= self.gathering_time_required
-                self._harvest_target(world)  # may set start_return and break loop
-            # Note: _harvest_target will call start_return when capacity full or target empty
+            # Check if target is still valid/not depleted by others
+            if not self._has_reached_target(self.target_resource) or \
+               not (hasattr(self.target_resource, 'inventory') and self.target_resource.inventory.items):
+                # Target lost or empty: reset and seek new
+                self.gathering = False
+                self.interaction_progress = 0.0
+                self.active_target = None
+                self.target_resource = None
+                self._continue_gathering_or_return(world)
+                return
+
+            base_duration = 1.0
+            if hasattr(self.target_resource, 'get_interaction_duration'):
+                base_duration = self.target_resource.get_interaction_duration()
+            
+            duration = base_duration / self.get_interaction_speed_multiplier()
+            self.interaction_progress += dt / duration
+            
+            if self.interaction_progress >= 1.0:
+                self._harvest_target(world)
+                # _harvest_target sets state to RETURN if full, or clears target_resource if empty
+                if self.state == CritterState.GATHER and self.target_resource:
+                    self.interaction_progress = 0.0 # Repeat
+                else:
+                    self.gathering = False
+                    self.interaction_progress = 0.0
+                    self.active_target = None
 
     def _update_return(self, dt, world, pathfinding_system):
         """RETURN behavior: pathfind back to hut and deposit when adjacent."""
@@ -429,9 +461,31 @@ class Critter(Entity):
         grid = world.grid
         critter_gx, critter_gy = grid.world_to_grid(self.x, self.y)
 
-        # Deposit if adjacent to the hut (Manhattan distance of 1 to any hut cell)
+        # Handle depositing interaction phase
+        if self.gathering: # Borrowing 'gathering' flag for 'in-interaction-phase'
+            # Must stay adjacent
+            if not self._is_adjacent_to_hut(critter_gx, critter_gy):
+                self.gathering = False
+                self.interaction_progress = 0.0
+                self.active_target = None
+                return
+
+            base_duration = 1.5 # Deposit duration
+            duration = base_duration / self.get_interaction_speed_multiplier()
+            self.interaction_progress += dt / duration
+            
+            if self.interaction_progress >= 1.0:
+                self._deposit_at_hut()
+                self.gathering = False
+                self.interaction_progress = 0.0
+                self.active_target = None
+            return
+
+        # Check for arrival
         if self._is_adjacent_to_hut(critter_gx, critter_gy):
-            self._deposit_at_hut()
+            self.gathering = True
+            self.interaction_progress = 0.0
+            self.active_target = self.assigned_hut
             return
 
         # If we don't have a path yet and we have a pathfinding system, compute it
@@ -454,11 +508,6 @@ class Critter(Entity):
             start_gx, start_gy = critter_gx, critter_gy
             self.is_calculating = True
             self.path = pathfinding_system.find_path((start_gx, start_gy), goal_cell, world.grid)
-            # Debug: log computed path
-            if self.path is not None:
-                print(f"[DEBUG] Critter {id(self)} RETURN path to {goal_cell} len={len(self.path)} path={self.path}")
-            else:
-                print(f"[DEBUG] Critter {id(self)} RETURN no path to {goal_cell}")
             self.path_index = 0
             if self.path is None:
                 self.start_idle()
@@ -466,10 +515,6 @@ class Critter(Entity):
 
         # Follow the path
         self._follow_path(dt, world)
-        # After moving, check again for adjacency
-        critter_gx, critter_gy = grid.world_to_grid(self.x, self.y)
-        if self._is_adjacent_to_hut(critter_gx, critter_gy):
-            self._deposit_at_hut()
 
     def _update_follow(self, dt, world, pathfinding_system):
         """FOLLOW behavior: stay near the player using pathfinding."""
@@ -595,18 +640,17 @@ class Critter(Entity):
 
     def _has_reached_target(self, target_obj):
         """
-        Check if critter's interaction circle intersects the target object's bounding box.
-        Uses the same logic as _is_cell_within_radius but based on current position.
+        Check if critter is close enough to interact with the target object.
+        Uses boundary-to-boundary distance for accuracy.
         """
         if target_obj is None:
             return False
-        # Compute target AABB
+        
+        from utils import get_distance_to_boundary
+        
+        # If target has rectangular bounds
         if hasattr(target_obj, 'width') and hasattr(target_obj, 'height') and hasattr(target_obj, 'cell_size'):
-            rect_x = target_obj.x
-            rect_y = target_obj.y
-            rect_w = target_obj.width * target_obj.cell_size
-            rect_h = target_obj.height * target_obj.cell_size
-            return self._circle_intersects_rect(self.x, self.y, self.interaction_radius, rect_x, rect_y, rect_w, rect_h)
+            dist = get_distance_to_boundary(self, target_obj)
         else:
             # For point-like targets, fall back to center distance check
             if hasattr(target_obj, 'get_center'):
@@ -615,8 +659,10 @@ class Critter(Entity):
                 tx, ty = target_obj.x, target_obj.y
             dx = tx - self.x
             dy = ty - self.y
-            dist_sq = dx*dx + dy*dy
-            return dist_sq <= self.interaction_radius * self.interaction_radius
+            import math
+            dist = math.sqrt(dx*dx + dy*dy)
+            
+        return dist <= self.interaction_radius
 
     def _find_free_cell_near(self, grid, gx, gy, max_radius=5):
         """
