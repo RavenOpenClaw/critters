@@ -39,8 +39,13 @@ class GatheringHut(Building):
         # Unassign from previous hut if needed
         if critter.assigned_hut is not None and critter.assigned_hut is not self:
             critter.assigned_hut.unassign_critter(critter)
+        
+        # Consistent behavior: stop following when assigned
+        critter.stop_follow()
+        
         self.assigned_critters.append(critter)
         critter.assigned_hut = self
+        critter.start_idle() # Transition to IDLE state (to be ready for gathering)
 
     def find_resource_in_radius(self, world, critter):
         """

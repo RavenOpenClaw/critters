@@ -24,8 +24,13 @@ class Obstacle(WorldObject):
         # Unassign from previous hut/obstacle if needed
         if critter.assigned_hut is not None and critter.assigned_hut is not self:
             critter.assigned_hut.unassign_critter(critter)
+            
+        # Consistent behavior: stop following when assigned
+        critter.stop_follow()
+
         self.assigned_critters.append(critter)
         critter.assigned_hut = self
+        critter.start_gather(self) # Start working immediately
 
     def unassign_critter(self, critter):
         """Remove a critter from this obstacle's assignment and clear its assigned_hut reference."""

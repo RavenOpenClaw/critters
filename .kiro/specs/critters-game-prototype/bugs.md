@@ -1,3 +1,25 @@
+### [ASSIGN_INCONSISTENCY] Inconsistent behavior between Right-Click and E-Interact assignment
+
+Status: OPEN
+
+Expected: Both Right-Click and E-Interact assignment should:
+1. Stop the critter from following the player.
+2. Assign the critter to the target building.
+3. Transition the critter to the appropriate state (BREED for MatingHut, IDLE for others).
+4. Update the building's interaction prompt correctly (e.g., MatingHut should show "Press E to breed" if 2+ are assigned and player has no followers).
+
+Actual: 
+- Right-click assignment to GatheringHut doesn't always stop 'FOLLOW' state.
+- Right-click assignment to MatingHut sometimes leaves the building in an "Assign" prompt state even when conditions for breeding are met, preventing breeding.
+- E-Interact assignment correctly transitions to "Press E to breed", but Right-click does not.
+
+Reproduce:
+- Get a critter to follow.
+- Right-click assign to MatingHut.
+- Observe that building prompt might still say "Assign: E" instead of breeding prompt.
+
+---
+
 ### [MAIN_CRASH] Crash in main.py line 518 when close to a building
 
 Status: FIXED
