@@ -1,0 +1,1802 @@
+{
+  "version": "1.0",
+  "current_map_name": "main",
+  "maps": [
+    {
+      "name": "main",
+      "width": 67,
+      "height": 50,
+      "cell_size": 24,
+      "objects": [
+        {
+          "type": "BerryBush",
+          "gx": 8,
+          "gy": 8,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {
+            "food": 5
+          },
+          "blocks_movement": true
+        },
+        {
+          "type": "BerryBush",
+          "gx": 12,
+          "gy": 8,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {
+            "food": 5
+          },
+          "blocks_movement": true
+        },
+        {
+          "type": "BerryBush",
+          "gx": 8,
+          "gy": 12,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {
+            "food": 5
+          },
+          "blocks_movement": true
+        },
+        {
+          "type": "BerryBush",
+          "gx": 12,
+          "gy": 12,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {
+            "food": 2
+          },
+          "blocks_movement": true
+        },
+        {
+          "type": "BerryBush",
+          "gx": 10,
+          "gy": 35,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {
+            "food": 5
+          },
+          "blocks_movement": true
+        },
+        {
+          "type": "BerryBush",
+          "gx": 14,
+          "gy": 35,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {
+            "food": 5
+          },
+          "blocks_movement": true
+        },
+        {
+          "type": "BerryBush",
+          "gx": 10,
+          "gy": 39,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {
+            "food": 5
+          },
+          "blocks_movement": true
+        },
+        {
+          "type": "BerryBush",
+          "gx": 14,
+          "gy": 39,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {
+            "food": 5
+          },
+          "blocks_movement": true
+        },
+        {
+          "type": "BerryBush",
+          "gx": 55,
+          "gy": 10,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {
+            "food": 5
+          },
+          "blocks_movement": true
+        },
+        {
+          "type": "BerryBush",
+          "gx": 59,
+          "gy": 10,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {
+            "food": 5
+          },
+          "blocks_movement": true
+        },
+        {
+          "type": "BerryBush",
+          "gx": 55,
+          "gy": 14,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {
+            "food": 5
+          },
+          "blocks_movement": true
+        },
+        {
+          "type": "BerryBush",
+          "gx": 59,
+          "gy": 14,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {
+            "food": 5
+          },
+          "blocks_movement": true
+        },
+        {
+          "type": "BerryBush",
+          "gx": 50,
+          "gy": 40,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {
+            "food": 5
+          },
+          "blocks_movement": true
+        },
+        {
+          "type": "BerryBush",
+          "gx": 54,
+          "gy": 40,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {},
+          "blocks_movement": true
+        },
+        {
+          "type": "BerryBush",
+          "gx": 50,
+          "gy": 44,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {
+            "food": 5
+          },
+          "blocks_movement": true
+        },
+        {
+          "type": "BerryBush",
+          "gx": 54,
+          "gy": 44,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {
+            "food": 5
+          },
+          "blocks_movement": true
+        },
+        {
+          "type": "BerryBush",
+          "gx": 25,
+          "gy": 15,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {
+            "food": 5
+          },
+          "blocks_movement": true
+        },
+        {
+          "type": "BerryBush",
+          "gx": 45,
+          "gy": 15,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {
+            "food": 5
+          },
+          "blocks_movement": true
+        },
+        {
+          "type": "BerryBush",
+          "gx": 25,
+          "gy": 35,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {
+            "food": 5
+          },
+          "blocks_movement": true
+        },
+        {
+          "type": "BerryBush",
+          "gx": 45,
+          "gy": 35,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {},
+          "blocks_movement": true
+        },
+        {
+          "type": "Tree",
+          "gx": 5,
+          "gy": 5,
+          "width": 2,
+          "height": 2,
+          "cell_size": 24,
+          "inventory": {
+            "wood": 4
+          },
+          "blocks_movement": true,
+          "max_wood": 10,
+          "respawn_duration": 30.0,
+          "depleted": false,
+          "time_depleted": 0.0
+        },
+        {
+          "type": "Tree",
+          "gx": 15,
+          "gy": 5,
+          "width": 2,
+          "height": 2,
+          "cell_size": 24,
+          "inventory": {
+            "wood": 10
+          },
+          "blocks_movement": true,
+          "max_wood": 10,
+          "respawn_duration": 30.0,
+          "depleted": false,
+          "time_depleted": 0.0
+        },
+        {
+          "type": "Tree",
+          "gx": 60,
+          "gy": 5,
+          "width": 2,
+          "height": 2,
+          "cell_size": 24,
+          "inventory": {
+            "wood": 10
+          },
+          "blocks_movement": true,
+          "max_wood": 10,
+          "respawn_duration": 30.0,
+          "depleted": false,
+          "time_depleted": 0.0
+        },
+        {
+          "type": "Tree",
+          "gx": 5,
+          "gy": 45,
+          "width": 2,
+          "height": 2,
+          "cell_size": 24,
+          "inventory": {
+            "wood": 10
+          },
+          "blocks_movement": true,
+          "max_wood": 10,
+          "respawn_duration": 30.0,
+          "depleted": false,
+          "time_depleted": 0.0
+        },
+        {
+          "type": "Tree",
+          "gx": 60,
+          "gy": 45,
+          "width": 2,
+          "height": 2,
+          "cell_size": 24,
+          "inventory": {
+            "wood": 10
+          },
+          "blocks_movement": true,
+          "max_wood": 10,
+          "respawn_duration": 30.0,
+          "depleted": false,
+          "time_depleted": 0.0
+        },
+        {
+          "type": "Tree",
+          "gx": 30,
+          "gy": 10,
+          "width": 2,
+          "height": 2,
+          "cell_size": 24,
+          "inventory": {
+            "wood": 5
+          },
+          "blocks_movement": true,
+          "max_wood": 10,
+          "respawn_duration": 30.0,
+          "depleted": false,
+          "time_depleted": 0.0
+        },
+        {
+          "type": "Tree",
+          "gx": 40,
+          "gy": 40,
+          "width": 2,
+          "height": 2,
+          "cell_size": 24,
+          "inventory": {
+            "wood": 10
+          },
+          "blocks_movement": true,
+          "max_wood": 10,
+          "respawn_duration": 30.0,
+          "depleted": false,
+          "time_depleted": 0.0
+        },
+        {
+          "type": "Tree",
+          "gx": 10,
+          "gy": 25,
+          "width": 2,
+          "height": 2,
+          "cell_size": 24,
+          "inventory": {
+            "wood": 9
+          },
+          "blocks_movement": true,
+          "max_wood": 10,
+          "respawn_duration": 30.0,
+          "depleted": false,
+          "time_depleted": 0.0
+        },
+        {
+          "type": "Tree",
+          "gx": 55,
+          "gy": 25,
+          "width": 2,
+          "height": 2,
+          "cell_size": 24,
+          "inventory": {
+            "wood": 1
+          },
+          "blocks_movement": true,
+          "max_wood": 10,
+          "respawn_duration": 30.0,
+          "depleted": false,
+          "time_depleted": 0.0
+        },
+        {
+          "type": "Rock",
+          "gx": 64,
+          "gy": 2,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {
+            "stone": 5
+          },
+          "blocks_movement": true
+        },
+        {
+          "type": "Rock",
+          "gx": 64,
+          "gy": 48,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {
+            "stone": 5
+          },
+          "blocks_movement": true
+        },
+        {
+          "type": "Rock",
+          "gx": 33,
+          "gy": 5,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {
+            "stone": 5
+          },
+          "blocks_movement": true
+        },
+        {
+          "type": "Stick",
+          "gx": 50,
+          "gy": 15,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {
+            "wood": 3
+          },
+          "blocks_movement": true
+        },
+        {
+          "type": "GatheringHut",
+          "gx": 37,
+          "gy": 28,
+          "width": 3,
+          "height": 3,
+          "cell_size": 24,
+          "inventory": {},
+          "blocks_movement": true,
+          "cost": {
+            "wood": 10,
+            "stone": 5
+          },
+          "storage": {
+            "food": 74
+          },
+          "gathering_radius": 240.0
+        },
+        {
+          "type": "Grass",
+          "gx": 32,
+          "gy": 23,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {},
+          "blocks_movement": false,
+          "spread_threshold": 99.2219283610438,
+          "time_accumulator": 266.2189999999647
+        },
+        {
+          "type": "GatheringHut",
+          "gx": 53,
+          "gy": 36,
+          "width": 3,
+          "height": 3,
+          "cell_size": 24,
+          "inventory": {},
+          "blocks_movement": true,
+          "cost": {
+            "wood": 10,
+            "stone": 5
+          },
+          "storage": {
+            "food": 326
+          },
+          "gathering_radius": 240.0
+        },
+        {
+          "type": "Grass",
+          "gx": 32,
+          "gy": 22,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {},
+          "blocks_movement": false,
+          "spread_threshold": 99.2219283610438,
+          "time_accumulator": 266.2189999999647
+        },
+        {
+          "type": "MatingHut",
+          "gx": 43,
+          "gy": 7,
+          "width": 2,
+          "height": 2,
+          "cell_size": 24,
+          "inventory": {},
+          "blocks_movement": true,
+          "cost": {
+            "wood": 15,
+            "stone": 10
+          }
+        },
+        {
+          "type": "Chair",
+          "gx": 39,
+          "gy": 19,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {},
+          "blocks_movement": true,
+          "cost": {
+            "wood": 2
+          }
+        },
+        {
+          "type": "Grass",
+          "gx": 31,
+          "gy": 23,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {},
+          "blocks_movement": false,
+          "spread_threshold": 99.2219283610438,
+          "time_accumulator": 266.2189999999647
+        },
+        {
+          "type": "Grass",
+          "gx": 32,
+          "gy": 21,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {},
+          "blocks_movement": false,
+          "spread_threshold": 99.2219283610438,
+          "time_accumulator": 166.99499999999384
+        },
+        {
+          "type": "GatheringHut",
+          "gx": 10,
+          "gy": 16,
+          "width": 3,
+          "height": 3,
+          "cell_size": 24,
+          "inventory": {},
+          "blocks_movement": true,
+          "cost": {
+            "wood": 10,
+            "stone": 5
+          },
+          "storage": {
+            "food": 274
+          },
+          "gathering_radius": 240.0
+        },
+        {
+          "type": "Grass",
+          "gx": 33,
+          "gy": 23,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {},
+          "blocks_movement": false,
+          "spread_threshold": 99.2219283610438,
+          "time_accumulator": 166.99499999999384
+        },
+        {
+          "type": "Grass",
+          "gx": 33,
+          "gy": 22,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {},
+          "blocks_movement": false,
+          "spread_threshold": 99.2219283610438,
+          "time_accumulator": 166.99499999999384
+        },
+        {
+          "type": "Grass",
+          "gx": 30,
+          "gy": 23,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {},
+          "blocks_movement": false,
+          "spread_threshold": 99.2219283610438,
+          "time_accumulator": 166.99499999999384
+        },
+        {
+          "type": "Grass",
+          "gx": 31,
+          "gy": 21,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {},
+          "blocks_movement": false,
+          "spread_threshold": 99.2219283610438,
+          "time_accumulator": 166.99499999999384
+        },
+        {
+          "type": "Grass",
+          "gx": 32,
+          "gy": 24,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {},
+          "blocks_movement": false,
+          "spread_threshold": 99.2219283610438,
+          "time_accumulator": 63.20700000000314
+        },
+        {
+          "type": "Grass",
+          "gx": 31,
+          "gy": 22,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {},
+          "blocks_movement": false,
+          "spread_threshold": 99.2219283610438,
+          "time_accumulator": 266.2189999999647
+        },
+        {
+          "type": "Grass",
+          "gx": 31,
+          "gy": 24,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {},
+          "blocks_movement": false,
+          "spread_threshold": 99.2219283610438,
+          "time_accumulator": 63.38200000000315
+        },
+        {
+          "type": "Grass",
+          "gx": 33,
+          "gy": 21,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {},
+          "blocks_movement": false,
+          "spread_threshold": 99.2219283610438,
+          "time_accumulator": 67.76600000000249
+        },
+        {
+          "type": "Grass",
+          "gx": 34,
+          "gy": 23,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {},
+          "blocks_movement": false,
+          "spread_threshold": 99.2219283610438,
+          "time_accumulator": 66.25600000000283
+        },
+        {
+          "type": "Grass",
+          "gx": 30,
+          "gy": 22,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {},
+          "blocks_movement": false,
+          "spread_threshold": 99.2219283610438,
+          "time_accumulator": 67.76600000000249
+        },
+        {
+          "type": "Grass",
+          "gx": 32,
+          "gy": 20,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {},
+          "blocks_movement": false,
+          "spread_threshold": 99.2219283610438,
+          "time_accumulator": 67.76600000000249
+        },
+        {
+          "type": "Grass",
+          "gx": 33,
+          "gy": 24,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {},
+          "blocks_movement": false,
+          "spread_threshold": 99.2219283610438,
+          "time_accumulator": 67.76600000000249
+        },
+        {
+          "type": "Grass",
+          "gx": 34,
+          "gy": 22,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {},
+          "blocks_movement": false,
+          "spread_threshold": 99.2219283610438,
+          "time_accumulator": 67.76600000000249
+        },
+        {
+          "type": "Grass",
+          "gx": 29,
+          "gy": 23,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {},
+          "blocks_movement": false,
+          "spread_threshold": 99.2219283610438,
+          "time_accumulator": 67.76600000000249
+        },
+        {
+          "type": "Grass",
+          "gx": 31,
+          "gy": 20,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {},
+          "blocks_movement": false,
+          "spread_threshold": 99.2219283610438,
+          "time_accumulator": 67.76600000000249
+        },
+        {
+          "type": "Grass",
+          "gx": 30,
+          "gy": 24,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {},
+          "blocks_movement": false,
+          "spread_threshold": 99.2219283610438,
+          "time_accumulator": 67.76600000000249
+        },
+        {
+          "type": "Grass",
+          "gx": 34,
+          "gy": 21,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {},
+          "blocks_movement": false,
+          "spread_threshold": 99.2219283610438,
+          "time_accumulator": 67.76600000000249
+        },
+        {
+          "type": "Grass",
+          "gx": 34,
+          "gy": 24,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {},
+          "blocks_movement": false,
+          "spread_threshold": 99.2219283610438,
+          "time_accumulator": 67.76600000000249
+        },
+        {
+          "type": "Grass",
+          "gx": 30,
+          "gy": 21,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {},
+          "blocks_movement": false,
+          "spread_threshold": 99.2219283610438,
+          "time_accumulator": 67.76600000000249
+        },
+        {
+          "type": "Grass",
+          "gx": 33,
+          "gy": 20,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {},
+          "blocks_movement": false,
+          "spread_threshold": 99.2219283610438,
+          "time_accumulator": 67.76600000000249
+        },
+        {
+          "type": "Grass",
+          "gx": 29,
+          "gy": 22,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {},
+          "blocks_movement": false,
+          "spread_threshold": 99.2219283610438,
+          "time_accumulator": 67.76600000000249
+        },
+        {
+          "type": "Grass",
+          "gx": 33,
+          "gy": 25,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {},
+          "blocks_movement": false,
+          "spread_threshold": 99.2219283610438,
+          "time_accumulator": 67.76600000000249
+        },
+        {
+          "type": "Grass",
+          "gx": 35,
+          "gy": 22,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {},
+          "blocks_movement": false,
+          "spread_threshold": 99.2219283610438,
+          "time_accumulator": 67.76600000000249
+        },
+        {
+          "type": "Grass",
+          "gx": 30,
+          "gy": 20,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {},
+          "blocks_movement": false,
+          "spread_threshold": 99.2219283610438,
+          "time_accumulator": 67.76600000000249
+        },
+        {
+          "type": "Grass",
+          "gx": 29,
+          "gy": 24,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {},
+          "blocks_movement": false,
+          "spread_threshold": 99.2219283610438,
+          "time_accumulator": 67.76600000000249
+        },
+        {
+          "type": "Grass",
+          "gx": 35,
+          "gy": 21,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {},
+          "blocks_movement": false,
+          "spread_threshold": 99.2219283610438,
+          "time_accumulator": 67.76600000000249
+        },
+        {
+          "type": "Grass",
+          "gx": 34,
+          "gy": 25,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {},
+          "blocks_movement": false,
+          "spread_threshold": 99.2219283610438,
+          "time_accumulator": 67.76600000000249
+        },
+        {
+          "type": "Grass",
+          "gx": 29,
+          "gy": 21,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {},
+          "blocks_movement": false,
+          "spread_threshold": 99.2219283610438,
+          "time_accumulator": 67.76600000000249
+        },
+        {
+          "type": "Grass",
+          "gx": 35,
+          "gy": 23,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {},
+          "blocks_movement": false,
+          "spread_threshold": 99.2219283610438,
+          "time_accumulator": 66.25600000000283
+        },
+        {
+          "type": "Grass",
+          "gx": 31,
+          "gy": 25,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {},
+          "blocks_movement": false,
+          "spread_threshold": 99.2219283610438,
+          "time_accumulator": 63.38200000000315
+        },
+        {
+          "type": "Grass",
+          "gx": 32,
+          "gy": 25,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {},
+          "blocks_movement": false,
+          "spread_threshold": 99.2219283610438,
+          "time_accumulator": 63.20700000000314
+        }
+      ],
+      "critters": [
+        {
+          "type": "Critter",
+          "x": 1356.0,
+          "y": 876.0,
+          "cell_size": 24,
+          "strength": 25,
+          "speed_stat": 25,
+          "endurance": 25,
+          "state": "IDLE",
+          "is_well_fed": false,
+          "assigned_hut_ref": {
+            "type": "MatingHut",
+            "gx": 43,
+            "gy": 7
+          },
+          "target_resource_ref": null,
+          "inventory": {},
+          "loiter_timer": 1.9368389018017784,
+          "loiter_target": null,
+          "idle_timer": 7.141433739727295,
+          "path": [],
+          "path_index": 0,
+          "following_player_id": null,
+          "follow_timer": 0.0,
+          "follow_recalc_interval": 1.0,
+          "follow_goal": null
+        },
+        {
+          "type": "Critter",
+          "x": 972.0,
+          "y": 765.6,
+          "cell_size": 24,
+          "strength": 75,
+          "speed_stat": 75,
+          "endurance": 75,
+          "state": "IDLE",
+          "is_well_fed": false,
+          "assigned_hut_ref": {
+            "type": "GatheringHut",
+            "gx": 37,
+            "gy": 28
+          },
+          "target_resource_ref": null,
+          "inventory": {},
+          "loiter_timer": 3.3765413865237908,
+          "loiter_target": null,
+          "idle_timer": 10.067657500479818,
+          "path": [],
+          "path_index": 0,
+          "following_player_id": null,
+          "follow_timer": 0.0,
+          "follow_recalc_interval": 1.0,
+          "follow_goal": null
+        },
+        {
+          "type": "Critter",
+          "x": 1236.0,
+          "y": 936.7499999999998,
+          "cell_size": 24,
+          "strength": 50,
+          "speed_stat": 50,
+          "endurance": 50,
+          "state": "GATHER",
+          "is_well_fed": false,
+          "assigned_hut_ref": {
+            "type": "GatheringHut",
+            "gx": 53,
+            "gy": 36
+          },
+          "target_resource_ref": {
+            "type": "BerryBush",
+            "gx": 54,
+            "gy": 40
+          },
+          "inventory": {},
+          "loiter_timer": 3.151099117615072,
+          "loiter_target": null,
+          "idle_timer": -0.01182990753454776,
+          "path": [
+            [
+              51,
+              38
+            ],
+            [
+              51,
+              39
+            ],
+            [
+              52,
+              39
+            ],
+            [
+              53,
+              39
+            ],
+            [
+              54,
+              39
+            ]
+          ],
+          "path_index": 1,
+          "following_player_id": null,
+          "follow_timer": 0.0,
+          "follow_recalc_interval": 1.0,
+          "follow_goal": null
+        },
+        {
+          "type": "Critter",
+          "x": 228.0,
+          "y": 420.0,
+          "cell_size": 24,
+          "strength": 50,
+          "speed_stat": 50,
+          "endurance": 50,
+          "state": "IDLE",
+          "is_well_fed": false,
+          "assigned_hut_ref": {
+            "type": "GatheringHut",
+            "gx": 10,
+            "gy": 16
+          },
+          "target_resource_ref": null,
+          "inventory": {},
+          "loiter_timer": 0.8317781507785093,
+          "loiter_target": null,
+          "idle_timer": 0.349721593343718,
+          "path": [],
+          "path_index": 0,
+          "following_player_id": null,
+          "follow_timer": 0.0,
+          "follow_recalc_interval": 1.0,
+          "follow_goal": null
+        },
+        {
+          "type": "Critter",
+          "x": 924.0,
+          "y": 756.0,
+          "cell_size": 24,
+          "strength": 50,
+          "speed_stat": 50,
+          "endurance": 50,
+          "state": "IDLE",
+          "is_well_fed": false,
+          "assigned_hut_ref": {
+            "type": "GatheringHut",
+            "gx": 37,
+            "gy": 28
+          },
+          "target_resource_ref": null,
+          "inventory": {},
+          "loiter_timer": 0.7151864568621397,
+          "loiter_target": null,
+          "idle_timer": 7.8481825221144215,
+          "path": [],
+          "path_index": 0,
+          "following_player_id": null,
+          "follow_timer": 0.0,
+          "follow_recalc_interval": 1.0,
+          "follow_goal": null
+        },
+        {
+          "type": "Critter",
+          "x": 972.0000164447652,
+          "y": 767.550462948292,
+          "cell_size": 24,
+          "strength": 50,
+          "speed_stat": 50,
+          "endurance": 50,
+          "state": "IDLE",
+          "is_well_fed": false,
+          "assigned_hut_ref": {
+            "type": "GatheringHut",
+            "gx": 37,
+            "gy": 28
+          },
+          "target_resource_ref": null,
+          "inventory": {},
+          "loiter_timer": 1.7944139423749392,
+          "loiter_target": null,
+          "idle_timer": 8.837049156227325,
+          "path": [],
+          "path_index": 0,
+          "following_player_id": null,
+          "follow_timer": 0.0,
+          "follow_recalc_interval": 1.0,
+          "follow_goal": null
+        },
+        {
+          "type": "Critter",
+          "x": 900.0,
+          "y": 828.0,
+          "cell_size": 24,
+          "strength": 50,
+          "speed_stat": 50,
+          "endurance": 50,
+          "state": "IDLE",
+          "is_well_fed": false,
+          "assigned_hut_ref": {
+            "type": "GatheringHut",
+            "gx": 37,
+            "gy": 28
+          },
+          "target_resource_ref": null,
+          "inventory": {},
+          "loiter_timer": 3.8053908202158317,
+          "loiter_target": null,
+          "idle_timer": 9.780998222450629,
+          "path": [],
+          "path_index": 0,
+          "following_player_id": null,
+          "follow_timer": 0.0,
+          "follow_recalc_interval": 1.0,
+          "follow_goal": null
+        },
+        {
+          "type": "Critter",
+          "x": 1260.0,
+          "y": 959.4,
+          "cell_size": 24,
+          "strength": 50,
+          "speed_stat": 50,
+          "endurance": 50,
+          "state": "IDLE",
+          "is_well_fed": false,
+          "assigned_hut_ref": {
+            "type": "GatheringHut",
+            "gx": 53,
+            "gy": 36
+          },
+          "target_resource_ref": null,
+          "inventory": {},
+          "loiter_timer": 1.9005218587458037,
+          "loiter_target": null,
+          "idle_timer": 7.410563112257606,
+          "path": [],
+          "path_index": 0,
+          "following_player_id": null,
+          "follow_timer": 0.0,
+          "follow_recalc_interval": 1.0,
+          "follow_goal": null
+        },
+        {
+          "type": "Critter",
+          "x": 252.0,
+          "y": 372.0,
+          "cell_size": 24,
+          "strength": 50,
+          "speed_stat": 50,
+          "endurance": 50,
+          "state": "IDLE",
+          "is_well_fed": false,
+          "assigned_hut_ref": {
+            "type": "GatheringHut",
+            "gx": 10,
+            "gy": 16
+          },
+          "target_resource_ref": null,
+          "inventory": {},
+          "loiter_timer": 2.212741905192517,
+          "loiter_target": null,
+          "idle_timer": 3.518613650443886,
+          "path": [],
+          "path_index": 0,
+          "following_player_id": null,
+          "follow_timer": 0.0,
+          "follow_recalc_interval": 1.0,
+          "follow_goal": null
+        },
+        {
+          "type": "Critter",
+          "x": 1572.0,
+          "y": 156.0,
+          "cell_size": 24,
+          "strength": 50,
+          "speed_stat": 50,
+          "endurance": 50,
+          "state": "IDLE",
+          "is_well_fed": false,
+          "assigned_hut_ref": {
+            "type": "MatingHut",
+            "gx": 43,
+            "gy": 7
+          },
+          "target_resource_ref": null,
+          "inventory": {},
+          "loiter_timer": 2.044817761146347,
+          "loiter_target": null,
+          "idle_timer": 11.425241198841922,
+          "path": [],
+          "path_index": 0,
+          "following_player_id": null,
+          "follow_timer": 0.0,
+          "follow_recalc_interval": 1.0,
+          "follow_goal": null
+        },
+        {
+          "type": "Critter",
+          "x": 1249.35,
+          "y": 876.0,
+          "cell_size": 24,
+          "strength": 50,
+          "speed_stat": 50,
+          "endurance": 50,
+          "state": "IDLE",
+          "is_well_fed": false,
+          "assigned_hut_ref": {
+            "type": "GatheringHut",
+            "gx": 53,
+            "gy": 36
+          },
+          "target_resource_ref": null,
+          "inventory": {},
+          "loiter_timer": 1.7816108643586832,
+          "loiter_target": null,
+          "idle_timer": 4.760555535142159,
+          "path": [],
+          "path_index": 0,
+          "following_player_id": null,
+          "follow_timer": 0.0,
+          "follow_recalc_interval": 1.0,
+          "follow_goal": null
+        },
+        {
+          "type": "Critter",
+          "x": 1273.8000000000002,
+          "y": 972.0,
+          "cell_size": 24,
+          "strength": 50,
+          "speed_stat": 50,
+          "endurance": 50,
+          "state": "GATHER",
+          "is_well_fed": false,
+          "assigned_hut_ref": {
+            "type": "GatheringHut",
+            "gx": 53,
+            "gy": 36
+          },
+          "target_resource_ref": {
+            "type": "BerryBush",
+            "gx": 50,
+            "gy": 44
+          },
+          "inventory": {
+            "food": 2
+          },
+          "loiter_timer": 1.3918467643047565,
+          "loiter_target": null,
+          "idle_timer": -0.006025276265054329,
+          "path": [
+            [
+              53,
+              40
+            ],
+            [
+              52,
+              40
+            ],
+            [
+              51,
+              40
+            ],
+            [
+              51,
+              41
+            ],
+            [
+              50,
+              41
+            ],
+            [
+              50,
+              42
+            ],
+            [
+              50,
+              43
+            ]
+          ],
+          "path_index": 1,
+          "following_player_id": null,
+          "follow_timer": 0.0,
+          "follow_recalc_interval": 1.0,
+          "follow_goal": null
+        },
+        {
+          "type": "Critter",
+          "x": 324.0,
+          "y": 361.49999999999994,
+          "cell_size": 24,
+          "strength": 50,
+          "speed_stat": 50,
+          "endurance": 50,
+          "state": "IDLE",
+          "is_well_fed": false,
+          "assigned_hut_ref": {
+            "type": "GatheringHut",
+            "gx": 10,
+            "gy": 16
+          },
+          "target_resource_ref": null,
+          "inventory": {},
+          "loiter_timer": 2.486080557523111,
+          "loiter_target": null,
+          "idle_timer": 9.040265244610902,
+          "path": [],
+          "path_index": 0,
+          "following_player_id": null,
+          "follow_timer": 0.0,
+          "follow_recalc_interval": 1.0,
+          "follow_goal": null
+        }
+      ],
+      "trampled": [
+        [
+          9,
+          15,
+          0.36100000000001287
+        ],
+        [
+          42,
+          28,
+          0.2570000000000111
+        ],
+        [
+          37,
+          34,
+          2.6590000000000047
+        ],
+        [
+          44,
+          34,
+          2.642000000000005
+        ],
+        [
+          51,
+          36,
+          0.04900000000000877
+        ],
+        [
+          52,
+          36,
+          0.22200000000001052
+        ],
+        [
+          42,
+          29,
+          0.3780000000000133
+        ],
+        [
+          10,
+          15,
+          2.124000000000007
+        ],
+        [
+          45,
+          34,
+          2.520000000000007
+        ],
+        [
+          46,
+          34,
+          2.3840000000000074
+        ],
+        [
+          42,
+          30,
+          0.9730000000000101
+        ],
+        [
+          9,
+          16,
+          0.9730000000000101
+        ],
+        [
+          46,
+          35,
+          2.124000000000007
+        ],
+        [
+          42,
+          31,
+          1.1090000000000124
+        ],
+        [
+          9,
+          17,
+          1.1270000000000124
+        ],
+        [
+          38,
+          31,
+          1.1270000000000124
+        ],
+        [
+          42,
+          32,
+          1.2340000000000122
+        ],
+        [
+          42,
+          33,
+          1.3590000000000095
+        ],
+        [
+          55,
+          40,
+          1.3950000000000085
+        ],
+        [
+          42,
+          34,
+          2.5550000000000064
+        ],
+        [
+          55,
+          41,
+          1.5560000000000043
+        ],
+        [
+          43,
+          34,
+          2.3840000000000074
+        ],
+        [
+          54,
+          41,
+          1.7270000000000052
+        ],
+        [
+          10,
+          14,
+          1.7270000000000052
+        ],
+        [
+          10,
+          13,
+          1.897000000000007
+        ],
+        [
+          52,
+          37,
+          1.9140000000000073
+        ],
+        [
+          11,
+          13,
+          2.0710000000000073
+        ],
+        [
+          12,
+          13,
+          2.2470000000000065
+        ],
+        [
+          13,
+          13,
+          3.3770000000000002
+        ],
+        [
+          53,
+          41,
+          2.503000000000007
+        ],
+        [
+          13,
+          12,
+          2.591000000000005
+        ],
+        [
+          52,
+          41,
+          2.676000000000005
+        ],
+        [
+          41,
+          34,
+          2.727000000000006
+        ],
+        [
+          44,
+          35,
+          2.780000000000006
+        ],
+        [
+          52,
+          40,
+          4.232999999999995
+        ],
+        [
+          40,
+          34,
+          3.548000000000002
+        ],
+        [
+          52,
+          39,
+          4.054999999999995
+        ],
+        [
+          43,
+          35,
+          3.042000000000004
+        ],
+        [
+          40,
+          33,
+          3.6860000000000013
+        ],
+        [
+          42,
+          35,
+          3.167000000000001
+        ],
+        [
+          51,
+          38,
+          3.167000000000001
+        ],
+        [
+          40,
+          32,
+          3.809999999999999
+        ],
+        [
+          41,
+          35,
+          3.2900000000000014
+        ],
+        [
+          40,
+          35,
+          3.4120000000000004
+        ],
+        [
+          40,
+          31,
+          3.949999999999997
+        ],
+        [
+          13,
+          14,
+          3.548000000000002
+        ],
+        [
+          13,
+          15,
+          3.722000000000001
+        ],
+        [
+          52,
+          38,
+          3.8779999999999997
+        ],
+        [
+          53,
+          40,
+          4.408999999999995
+        ],
+        [
+          51,
+          39,
+          4.983
+        ]
+      ],
+      "portals": {},
+      "neighbors": {
+        "north": "north_woods"
+      }
+    },
+    {
+      "name": "north_woods",
+      "width": 67,
+      "height": 50,
+      "cell_size": 24,
+      "objects": [
+        {
+          "type": "BerryBush",
+          "gx": 5,
+          "gy": 5,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {
+            "food": 5
+          },
+          "blocks_movement": true
+        },
+        {
+          "type": "BerryBush",
+          "gx": 10,
+          "gy": 5,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {
+            "food": 5
+          },
+          "blocks_movement": true
+        },
+        {
+          "type": "BerryBush",
+          "gx": 5,
+          "gy": 10,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {
+            "food": 5
+          },
+          "blocks_movement": true
+        },
+        {
+          "type": "BerryBush",
+          "gx": 12,
+          "gy": 12,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {
+            "food": 5
+          },
+          "blocks_movement": true
+        },
+        {
+          "type": "Tree",
+          "gx": 2,
+          "gy": 5,
+          "width": 2,
+          "height": 2,
+          "cell_size": 24,
+          "inventory": {
+            "wood": 10
+          },
+          "blocks_movement": true,
+          "max_wood": 10,
+          "respawn_duration": 30.0,
+          "depleted": false,
+          "time_depleted": 0.0
+        },
+        {
+          "type": "Tree",
+          "gx": 8,
+          "gy": 3,
+          "width": 2,
+          "height": 2,
+          "cell_size": 24,
+          "inventory": {
+            "wood": 10
+          },
+          "blocks_movement": true,
+          "max_wood": 10,
+          "respawn_duration": 30.0,
+          "depleted": false,
+          "time_depleted": 0.0
+        },
+        {
+          "type": "Tree",
+          "gx": 14,
+          "gy": 8,
+          "width": 2,
+          "height": 2,
+          "cell_size": 24,
+          "inventory": {
+            "wood": 10
+          },
+          "blocks_movement": true,
+          "max_wood": 10,
+          "respawn_duration": 30.0,
+          "depleted": false,
+          "time_depleted": 0.0
+        },
+        {
+          "type": "Rock",
+          "gx": 4,
+          "gy": 8,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {
+            "stone": 5
+          },
+          "blocks_movement": true
+        },
+        {
+          "type": "Rock",
+          "gx": 12,
+          "gy": 2,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {
+            "stone": 5
+          },
+          "blocks_movement": true
+        },
+        {
+          "type": "Stick",
+          "gx": 7,
+          "gy": 6,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {
+            "wood": 3
+          },
+          "blocks_movement": true
+        },
+        {
+          "type": "Stick",
+          "gx": 15,
+          "gy": 4,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {
+            "wood": 3
+          },
+          "blocks_movement": true
+        },
+        {
+          "type": "GatheringHut",
+          "gx": 35,
+          "gy": 27,
+          "width": 3,
+          "height": 3,
+          "cell_size": 24,
+          "inventory": {},
+          "blocks_movement": true,
+          "cost": {
+            "wood": 10,
+            "stone": 5
+          },
+          "storage": {},
+          "gathering_radius": 240.0
+        }
+      ],
+      "critters": [],
+      "trampled": [],
+      "portals": {},
+      "neighbors": {
+        "south": "main"
+      }
+    }
+  ],
+  "player": {
+    "type": "Player",
+    "x": 1152.900000000007,
+    "y": 1101.9999999999966,
+    "radius": 18,
+    "base_speed": 200,
+    "speed": 200.0,
+    "inventory": {
+      "food": 194,
+      "wood": 45,
+      "stone": 10
+    },
+    "active_buffs": [],
+    "unlocked_equipment": [],
+    "equipped": []
+  }
+}

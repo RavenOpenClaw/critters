@@ -68,6 +68,23 @@ class TestCritterAttributes:
         assert c.speed_stat == 70
         assert c.endurance == 80
 
+    def test_critter_rgb_coloring(self):
+        """Task 56: Critter color should be derived from STR, SPD, END stats."""
+        # 100/100/100 -> Pure White (255, 255, 255)
+        c1 = Critter(0, 0, strength=100, speed_stat=100, endurance=100)
+        assert c1.get_color() == (255, 255, 255)
+        
+        # 0/0/0 -> Pure Black (0, 0, 0)
+        c2 = Critter(0, 0, strength=0, speed_stat=0, endurance=0)
+        assert c2.get_color() == (0, 0, 0)
+        
+        # 50/10/1 -> (127, 25, 2)
+        c3 = Critter(0, 0, strength=50, speed_stat=10, endurance=1)
+        # 50 * 2.55 = 127.5 -> 127
+        # 10 * 2.55 = 25.5 -> 25
+        # 1 * 2.55 = 2.55 -> 2
+        assert c3.get_color() == (127, 25, 2)
+
     def test_critter_radius_scales_with_cell_size(self):
         c = Critter(0, 0, cell_size=64)
         assert c.radius == 64 * 0.4

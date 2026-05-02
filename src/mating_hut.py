@@ -88,33 +88,44 @@ class MatingHut(Building):
         return self._breed(parent1, parent2, world)
 
     def _breed(self, parent1, parent2, world):
-        """Internal method to produce offspring from two parents.
+        """Internal method to produce offspring using advanced genetic inheritance."""
+        import random
+        from constants import (
+            BREED_INHERIT_A, BREED_INHERIT_B, BREED_WILDCARD,
+            BREED_WILDCARD_LOG_WEIGHT, BREED_WILDCARD_UNIFORM_WEIGHT,
+            BREED_WILDCARD_LOG_MU, BREED_WILDCARD_LOG_SIGMA,
+            BREED_MUTATION_MIN, BREED_MUTATION_MAX
+        )
 
-        Offspring stats follow the discrete tier system:
-        - weak: (25, 25, 25)
-        - average: (50, 50, 50)
-        - strong: (75, 75, 75)
-
-        Tier determination:
-        - If both parents have the same tier, offspring inherits that tier.
-        - If parents have different tiers, offspring is average (50).
-        """
-        # Helper: determine a critter's tier based on average of its three stats
-        def get_tier(c):
-            avg = (c.strength + c.speed_stat + c.endurance) / 3
-            if avg < 37.5:
-                return 25
-            elif avg < 62.5:
-                return 50
+        def roll_wildcard():
+            """Roll a random stat base value using the wildcard distribution."""
+            r_type = random.random()
+            if r_type < BREED_WILDCARD_UNIFORM_WEIGHT:
+                # 20% Uniform (Chaos)
+                return random.randint(1, 100)
             else:
-                return 75
+                # 80% Log-Normal (Skewed around mode)
+                val = random.lognormvariate(BREED_WILDCARD_LOG_MU, BREED_WILDCARD_LOG_SIGMA)
+                return max(1, min(100, int(val)))
 
-        tier1 = get_tier(parent1)
-        tier2 = get_tier(parent2)
-        offspring_tier = tier1 if tier1 == tier2 else 50
+        def determine_stat(val1, val2):
+            """Determine a single stat value based on inheritance and mutation."""
+            r = random.random()
+            if r < BREED_INHERIT_A:
+                base = val1
+            elif r < BREED_INHERIT_A + BREED_INHERIT_B:
+                base = val2
+            else:
+                base = roll_wildcard()
+            
+            # Apply ±10% mutation
+            mutation = random.uniform(BREED_MUTATION_MIN, BREED_MUTATION_MAX)
+            return max(1, min(100, int(base * mutation)))
 
-        # Assign uniform stats based on offspring tier
-        strength = speed_stat = endurance = offspring_tier
+        # Determine core stats
+        strength = determine_stat(parent1.strength, parent2.strength)
+        speed_stat = determine_stat(parent1.speed_stat, parent2.speed_stat)
+        endurance = determine_stat(parent1.endurance, parent2.endurance)
 
         # Position: center of the hut's area in world coordinates
         world_x = self.x + (self.width * self.cell_size) / 2

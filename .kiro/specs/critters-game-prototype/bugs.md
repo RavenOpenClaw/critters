@@ -1,3 +1,18 @@
+### [MAIN_CRASH] Crash in main.py line 518 when close to a building
+
+Status: FIXED
+
+Expected: Approaching a building with or without following critters should display interaction prompts without crashing.
+
+Actual: Traceback crash at line 518 in `main.py`: `if isinstance(target_obj, Building) and player.following_critters:`.
+
+Fix:
+- Centralized `Building` and `Obstacle` imports at the top of `main.py`.
+- Updated interaction prompt and hover logic to support both `Building` and `Obstacle` for critter assignment.
+- Verified that all necessary classes are correctly imported in the rendering loop scope.
+
+---
+
 ### [GFXCAMP] Campfire and Chair buildings lack visible graphics
 
 Status: FIXED

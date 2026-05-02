@@ -185,25 +185,44 @@ class World:
 
     # Standard API (mostly unchanged)
     def add_object(self, obj):
+        """Add an object to the current map. Returns True if successful, False if blocked or duplicate."""
         # Prevent duplicate Grass at same location
         if isinstance(obj, Grass):
             if (obj.gx, obj.gy) in self.grass_cells:
-                return  # skip adding duplicate grass
+                return False
+        
+        # Check for grid occupancy if object blocks movement
+        if getattr(obj, 'blocks_movement', True):
+            for cell in obj.get_occupied_cells():
+                gx, gy = cell
+                if not self.grid.is_within_bounds(gx, gy):
+                    print(f"Error: Cannot add {type(obj).__name__} at {gx},{gy} - out of bounds.")
+                    return False
+                if self.grid.is_occupied(gx, gy):
+                    print(f"Error: Cannot add {type(obj).__name__} at {gx},{gy} - cell occupied by {type(self.grid.occupied[(gx, gy)]).__name__}.")
+                    return False
+
         if not hasattr(obj, 'cell_size') or obj.cell_size != self.grid.cell_size:
             obj.cell_size = self.grid.cell_size
+
         self.current_map.objects.append(obj)
         self.grid.register(obj)
         obj.world = self
+
         # Track grass cells for spread logic
         if isinstance(obj, Grass):
             self.grass_cells.add((obj.gx, obj.gy))
+        
         # If this object is a Critter, also add to current_map.critters list
         try:
             from critter import Critter
             if isinstance(obj, Critter):
-                self.current_map.critters.append(obj)
+                if obj not in self.current_map.critters:
+                    self.current_map.critters.append(obj)
         except ImportError:
             pass
+        
+        return True
 
     def remove_object(self, obj):
         if obj in self.current_map.objects:

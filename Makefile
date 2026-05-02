@@ -10,6 +10,10 @@ test:
 	@echo "Running tests..."
 	PYTHONPATH=src venv/bin/python -m pytest tst/ -v
 
+breed:
+	@echo "Running breeding simulation..."
+	PYTHONPATH=src venv/bin/python tst/simulate_breeding.py
+
 play:
 	@echo "Lauching Critters..."
 	python3 src/main.py

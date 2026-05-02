@@ -32,6 +32,24 @@ VALUE_ASSIGNED_NONE = "None"
 BUTTON_FOLLOW = "Follow"
 BUTTON_STOP_FOLLOW = "Stop Following"
 
+# --- Breeding Parameters ---
+BREED_INHERIT_A = 0.40
+BREED_INHERIT_B = 0.40
+BREED_WILDCARD = 0.20
+BREED_WILDCARD_LOG_WEIGHT = 0.80
+BREED_WILDCARD_UNIFORM_WEIGHT = 0.20
+BREED_WILDCARD_LOG_MU = 2.8   # Results in mode ~15
+BREED_WILDCARD_LOG_SIGMA = 0.55
+BREED_MUTATION_MIN = 0.9
+BREED_MUTATION_MAX = 1.1
+
+# --- Recycling & Candies ---
+ITEM_CANDY_STR = "Strength Candy"
+ITEM_CANDY_SPD = "Speed Candy"
+ITEM_CANDY_END = "Endurance Candy"
+BUTTON_RELEASE = "Release"
+MESSAGE_RELEASE_SUCCESS = "Critter released. Received {candy}."
+
 # --- Building Interaction Prompts ---
 PROMPT_GATHER = "Press E to collect resources"
 PROMPT_WITHDRAW = "Withdraw (E)"

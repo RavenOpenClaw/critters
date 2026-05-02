@@ -1024,30 +1024,30 @@ Implementation:
 
 ### Task 56: Stat-based Critter Coloring (RGB)
 **Priority**: Low
-**Status**: NOT_STARTED
+**Status**: COMPLETED (2026-05-01)
 
 **Description**:
 Visually differentiate critters based on their stats using RGB body coloring.
 
 **Acceptance Criteria**:
-- Critter color calculated as `(STR*2.55, SPD*2.55, END*2.55)`.
-- High STR critters appear Red.
-- High SPD critters appear Green.
-- High END critters appear Blue.
-- Pure White for max stats, Grey for balanced mid-stats.
+- [x] Critter color calculated as `(STR*2.55, SPD*2.55, END*2.55)`.
+- [x] High STR critters appear Red.
+- [x] High SPD critters appear Green.
+- [x] High END critters appear Blue.
+- [x] Pure White for max stats, Grey for balanced mid-stats.
 
 ### Task 57: Strength-based Obstacle Requirements
 **Priority**: Medium
-**Status**: NOT_STARTED
+**Status**: COMPLETED (2026-05-01)
 
 **Description**:
 Implement "Minimum Strength Requirements" for clearing obstacles, allowing groups of critters to work together.
 
 **Acceptance Criteria**:
-- Obstacles can be assigned a `min_strength` requirement.
-- Work progress only advances if `sum(assigned_critter_str) >= min_strength`.
-- STR determines "work units" applied per cycle once requirement is met.
-- Visual feedback if requirement is not met (e.g., progress bar stays grey/locked).
+- [x] Obstacles can be assigned a `min_strength` requirement.
+- [x] Work progress only advances if `sum(assigned_critter_str) >= min_strength`.
+- [x] STR determines "work units" applied per cycle once requirement is met.
+- [x] Visual feedback if requirement is not met (e.g., progress bar stays grey/locked).
 
 ### Task 58: Implement Crafting Menu HUD Button
 **Priority**: Low
@@ -1057,6 +1057,46 @@ Implementation:
 - Added `HUD_CRAFT_BUTTON` to constants.
 - Initialized `hud_craft_button_rect` and implemented click/render logic in `main.py`.
 - Toggles the crafting menu correctly.
+
+### Task 59: Advanced Probabilistic Breeding System
+**Priority**: High
+**Status**: COMPLETED (2026-05-01)
+
+**Description**:
+Implement a genetic inheritance system (40/40/20) and a skewed mutation model.
+
+**Acceptance Criteria**:
+- [x] Implement 40% inheritance from Parent A, 40% from Parent B, 20% Wildcard per stat.
+- [x] Implement "Wildcard" distribution: 80% Log-Normal (mode 15), 20% Uniform (1-100).
+- [x] Apply ±10% final mutation to all resulting stats.
+- [x] All breeding parameters (weights, log-normal params, mutation range) centralized in `constants.py`.
+- [x] Create `make breed` target that runs a 1000-cycle simulation and prints a report.
+
+### Task 60: Critter Recycling (Release & Candies)
+**Priority**: Medium
+**Status**: COMPLETED (2026-05-01)
+
+**Description**:
+Allow releasing critters to get "Stat Candies" that permanently buff other critters.
+
+**Acceptance Criteria**:
+- [x] Add "Release" button to Critter Inspector.
+- [x] Releasing a critter removes it and adds a candy to inventory (based on its highest stat).
+- [x] Add Strength/Speed/Endurance Candy items to inventory/constants.
+- [x] Implement "Use" logic: clicking a candy in inventory/inspector applies +1 to that stat on the selected critter.
+- [x] Stat boosts are permanent and hereditary.
+
+### Task 61: Dedicated Release Building
+**Priority**: Low
+**Status**: NOT_STARTED
+
+**Description**:
+Create a dedicated building (e.g., "Sacrificial Altar") that automates or formalizes the critter-to-candy conversion.
+
+**Acceptance Criteria**:
+- [ ] New building type that critters can be assigned to.
+- [ ] Assigned critters are eventually processed into candies over time (or instantly via interaction).
+- [ ] Visual design distinct from Mating/Gathering huts.
 
 ---
 

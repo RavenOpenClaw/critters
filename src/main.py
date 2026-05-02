@@ -19,6 +19,7 @@ from rock import Rock
 from stick import Stick
 from build_menu import BuildMenu
 from building import Building
+from obstacle import Obstacle
 from camera import Camera
 from gathering_hut import GatheringHut
 from chair import Chair
@@ -50,8 +51,11 @@ RESOURCE_COLORS = {
     "food": (255, 0, 0),      # Red square for berries/food
     "wood": (101, 67, 33),    # Brown for wood
     "stone": (128, 128, 128), # Gray for stone
-    "stick": (210, 180, 140), # Tan for sticks (unused after stick->wood change)
+    "stick": (210, 180, 140), # Tan for sticks
     "plant": (144, 238, 144), # Light green for plants
+    "Strength Candy": (255, 100, 100), # Light Red
+    "Speed Candy": (100, 255, 100),   # Light Green
+    "Endurance Candy": (100, 100, 255), # Light Blue
 }
 
 # Constants
@@ -361,11 +365,7 @@ def main():
                 if not inspector_handled:
                     # If inspector is visible, let it handle the click first to consume events inside its panel
                     if critter_inspector.visible:
-                        # Check if follow button was clicked
-                        if critter_inspector.follow_button_rect and critter_inspector.follow_button_rect.collidepoint(mx, my):
-                            critter_inspector.toggle_follow(player, world)
-                            inspector_handled = True
-                        elif critter_inspector.handle_mouse_click((mx, my)):
+                        if critter_inspector.handle_mouse_click((mx, my), player, world):
                             inspector_handled = True
                         else:
                             # Click outside the inspector panel: close it and consume the click
@@ -403,18 +403,18 @@ def main():
                 if grid.is_within_bounds(gx, gy):
                     if (gx, gy) in grid.occupied:
                         obj = grid.occupied[(gx, gy)]
-                        if isinstance(obj, Building):
+                        # Standardize assignment to Buildings and Obstacles
+                        if isinstance(obj, (Building, Obstacle)):
                             # Try to assign the critter
                             critter = critter_inspector.selected_critter
-                            # Check if the building supports assignment (has the method and manages assigned_critters)
-                            # We use assign_critter which we just standardized.
+                            # Check if the object supports assignment (has the method and manages assigned_critters)
                             if hasattr(obj, 'assigned_critters'):
                                 obj.assign_critter(critter)
                                 # Success message
-                                building_name = obj.__class__.__name__
-                                world.set_message(f"Critter assigned to {building_name}", 2.0)
+                                obj_name = obj.__class__.__name__
+                                world.set_message(f"Critter assigned to {obj_name}", 2.0)
                             else:
-                                world.set_message("This building does not support assignment", 1.5)
+                                world.set_message(f"This {obj.__class__.__name__.lower()} does not support assignment", 1.5)
 
         # Crafting menu toggle and crafting
         if input_handler.crafting_toggle:
@@ -512,8 +512,8 @@ def main():
                 ox, oy = target_obj.x, target_obj.y
             
             text = None
-            # If building and following critters, show Assign
-            if isinstance(target_obj, Building) and player.following_critters:
+            # If building or obstacle and following critters, show Assign
+            if isinstance(target_obj, (Building, Obstacle)) and player.following_critters:
                 text = PROMPT_ASSIGN
             elif hasattr(target_obj, 'get_interaction_text'):
                 text = target_obj.get_interaction_text()
@@ -528,7 +528,7 @@ def main():
         # Iterate all objects to find which one is under mouse
         if critter_inspector.visible and critter_inspector.selected_critter:
             for obj in world.current_map.objects:
-                if isinstance(obj, Building):
+                if isinstance(obj, (Building, Obstacle)):
                     mx, my = input_handler.mouse_pos
                     wx, wy = camera.undo(mx, my)
                     gx, gy = grid.world_to_grid(wx, wy)
@@ -564,7 +564,7 @@ def main():
             srx, sry = camera.apply(rx, ry)
             pygame.draw.circle(
                 screen,
-                (255, 0, 0),  # Red
+                critter.get_color(),
                 (int(srx), int(sry)),
                 int(critter.radius)
             )
@@ -650,7 +650,7 @@ def main():
             screen.blit(decon_surface, (WINDOW_WIDTH - decon_surface.get_width() - 10, WINDOW_HEIGHT - 30))
 
         # Draw critter inspector UI (if visible)
-        critter_inspector.draw(screen)
+        critter_inspector.draw(screen, player=player)
 
         pygame.display.flip()
 

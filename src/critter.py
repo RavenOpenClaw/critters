@@ -87,6 +87,18 @@ class Critter(Entity):
             return min(stat * 1.1, 100)
         return stat
 
+    def get_color(self):
+        """
+        Calculate body color based on stats (RGB).
+        R: Strength, G: Speed, B: Endurance.
+        Stats are 1-100, mapped to 0-255.
+        Uses integer math to avoid rounding errors.
+        """
+        r = (self.strength * 255) // 100
+        g = (self.speed_stat * 255) // 100
+        b = (self.endurance * 255) // 100
+        return (max(0, min(r, 255)), max(0, min(g, 255)), max(0, min(b, 255)))
+
     def _update_buffs(self, dt):
         """Update active buffs, removing expired ones."""
         still_active = []
@@ -304,8 +316,11 @@ class Critter(Entity):
         # Idle timer counts down to transition to GATHER
         self.idle_timer -= dt
         if self.idle_timer <= 0:
-            # Transition to GATHER only if assigned hut supports gathering
-            if self.assigned_hut and self.assigned_hut.can_gather():
+            # Transition to GATHER only if assigned hut supports gathering or is an obstacle
+            from obstacle import Obstacle
+            if self.assigned_hut and isinstance(self.assigned_hut, Obstacle):
+                self.start_gather(self.assigned_hut)
+            elif self.assigned_hut and self.assigned_hut.can_gather():
                 self.start_gather(None)
             else:
                 # No valid gathering; remain idle with extended timer to avoid constant re-evaluation
@@ -425,8 +440,15 @@ class Critter(Entity):
         # If we are in the gathering phase, accumulate time and harvest when ready
         if self.gathering:
             # Check if target is still valid/not depleted by others
-            if not self._has_reached_target(self.target_resource) or \
-               not (hasattr(self.target_resource, 'inventory') and self.target_resource.inventory.items):
+            from obstacle import Obstacle
+            target_valid = True
+            if isinstance(self.target_resource, Obstacle):
+                if self.target_resource.work_units <= 0:
+                    target_valid = False
+            elif not (hasattr(self.target_resource, 'inventory') and self.target_resource.inventory.items):
+                target_valid = False
+
+            if not self._has_reached_target(self.target_resource) or not target_valid:
                 # Target lost or empty: reset and seek new
                 self.gathering = False
                 self.interaction_progress = 0.0
@@ -690,8 +712,21 @@ class Critter(Entity):
         return random.choice(candidates)
 
     def _harvest_target(self, world):
-        """Harvest one resource from current target during gathering. Transition to RETURN when capacity for that resource is full or target empty."""
+        """Harvest one resource from current target or apply work to obstacle."""
         target = self.target_resource
+        from obstacle import Obstacle
+        if isinstance(target, Obstacle):
+            target.interact(self) # Applies work based on strength
+            if target.work_units <= 0:
+                self.target_resource = None
+                self.start_idle()
+            else:
+                # After one "cycle" of work, take a break (transition to IDLE)
+                # This prevents critters from clearing huge obstacles instantly
+                # and allows others to join/check requirements.
+                self.start_idle()
+            return
+
         if not (hasattr(target, 'inventory') and target.inventory.items):
             self.target_resource = None
             self._continue_gathering_or_return(world)

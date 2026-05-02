@@ -1,0 +1,557 @@
+{
+  "version": "1.0",
+  "current_map_name": "main",
+  "maps": [
+    {
+      "name": "main",
+      "width": 25,
+      "height": 19,
+      "cell_size": 32,
+      "objects": [
+        {
+          "type": "BerryBush",
+          "gx": 5,
+          "gy": 5,
+          "width": 1,
+          "height": 1,
+          "cell_size": 32,
+          "inventory": {
+            "food": 4
+          },
+          "blocks_movement": true
+        },
+        {
+          "type": "BerryBush",
+          "gx": 10,
+          "gy": 5,
+          "width": 1,
+          "height": 1,
+          "cell_size": 32,
+          "inventory": {},
+          "blocks_movement": true
+        },
+        {
+          "type": "BerryBush",
+          "gx": 5,
+          "gy": 10,
+          "width": 1,
+          "height": 1,
+          "cell_size": 32,
+          "inventory": {},
+          "blocks_movement": true
+        },
+        {
+          "type": "BerryBush",
+          "gx": 15,
+          "gy": 5,
+          "width": 1,
+          "height": 1,
+          "cell_size": 32,
+          "inventory": {},
+          "blocks_movement": true
+        },
+        {
+          "type": "BerryBush",
+          "gx": 5,
+          "gy": 15,
+          "width": 1,
+          "height": 1,
+          "cell_size": 32,
+          "inventory": {
+            "food": 5
+          },
+          "blocks_movement": true
+        },
+        {
+          "type": "BerryBush",
+          "gx": 12,
+          "gy": 12,
+          "width": 1,
+          "height": 1,
+          "cell_size": 32,
+          "inventory": {},
+          "blocks_movement": true
+        },
+        {
+          "type": "BerryBush",
+          "gx": 8,
+          "gy": 14,
+          "width": 1,
+          "height": 1,
+          "cell_size": 32,
+          "inventory": {},
+          "blocks_movement": true
+        },
+        {
+          "type": "BerryBush",
+          "gx": 3,
+          "gy": 8,
+          "width": 1,
+          "height": 1,
+          "cell_size": 32,
+          "inventory": {
+            "food": 5
+          },
+          "blocks_movement": true
+        },
+        {
+          "type": "BerryBush",
+          "gx": 18,
+          "gy": 7,
+          "width": 1,
+          "height": 1,
+          "cell_size": 32,
+          "inventory": {},
+          "blocks_movement": true
+        },
+        {
+          "type": "Tree",
+          "gx": 2,
+          "gy": 5,
+          "width": 2,
+          "height": 2,
+          "cell_size": 32,
+          "inventory": {
+            "wood": 10
+          },
+          "blocks_movement": true,
+          "max_wood": 10,
+          "respawn_duration": 30.0,
+          "depleted": false,
+          "time_depleted": 0.0
+        },
+        {
+          "type": "Tree",
+          "gx": 8,
+          "gy": 3,
+          "width": 2,
+          "height": 2,
+          "cell_size": 32,
+          "inventory": {
+            "wood": 10
+          },
+          "blocks_movement": true,
+          "max_wood": 10,
+          "respawn_duration": 30.0,
+          "depleted": false,
+          "time_depleted": 0.0
+        },
+        {
+          "type": "Tree",
+          "gx": 14,
+          "gy": 8,
+          "width": 2,
+          "height": 2,
+          "cell_size": 32,
+          "inventory": {
+            "wood": 10
+          },
+          "blocks_movement": true,
+          "max_wood": 10,
+          "respawn_duration": 30.0,
+          "depleted": false,
+          "time_depleted": 0.0
+        },
+        {
+          "type": "Tree",
+          "gx": 20,
+          "gy": 12,
+          "width": 2,
+          "height": 2,
+          "cell_size": 32,
+          "inventory": {
+            "wood": 10
+          },
+          "blocks_movement": true,
+          "max_wood": 10,
+          "respawn_duration": 30.0,
+          "depleted": false,
+          "time_depleted": 0.0
+        },
+        {
+          "type": "Rock",
+          "gx": 12,
+          "gy": 2,
+          "width": 1,
+          "height": 1,
+          "cell_size": 32,
+          "inventory": {
+            "stone": 5
+          },
+          "blocks_movement": true
+        },
+        {
+          "type": "Rock",
+          "gx": 18,
+          "gy": 10,
+          "width": 1,
+          "height": 1,
+          "cell_size": 32,
+          "inventory": {
+            "stone": 5
+          },
+          "blocks_movement": true
+        },
+        {
+          "type": "Rock",
+          "gx": 6,
+          "gy": 15,
+          "width": 1,
+          "height": 1,
+          "cell_size": 32,
+          "inventory": {
+            "stone": 5
+          },
+          "blocks_movement": true
+        },
+        {
+          "type": "Stick",
+          "gx": 15,
+          "gy": 4,
+          "width": 1,
+          "height": 1,
+          "cell_size": 32,
+          "inventory": {
+            "wood": 3
+          },
+          "blocks_movement": true
+        },
+        {
+          "type": "Stick",
+          "gx": 10,
+          "gy": 16,
+          "width": 1,
+          "height": 1,
+          "cell_size": 32,
+          "inventory": {
+            "wood": 3
+          },
+          "blocks_movement": true
+        },
+        {
+          "type": "GatheringHut",
+          "gx": 16,
+          "gy": 12,
+          "width": 3,
+          "height": 3,
+          "cell_size": 32,
+          "inventory": {},
+          "blocks_movement": true,
+          "cost": {
+            "wood": 10,
+            "stone": 5
+          },
+          "storage": {
+            "food": 15
+          },
+          "gathering_radius": 320.0
+        },
+        {
+          "type": "Grass",
+          "gx": 11,
+          "gy": 7,
+          "width": 1,
+          "height": 1,
+          "cell_size": 32,
+          "inventory": {},
+          "blocks_movement": false,
+          "spread_threshold": 59.4082335950192,
+          "time_accumulator": 53.669999999996634
+        },
+        {
+          "type": "Grass",
+          "gx": 11,
+          "gy": 6,
+          "width": 1,
+          "height": 1,
+          "cell_size": 32,
+          "inventory": {},
+          "blocks_movement": false,
+          "spread_threshold": 59.4082335950192,
+          "time_accumulator": 53.669999999996634
+        }
+      ],
+      "critters": [
+        {
+          "type": "Critter",
+          "x": 624.0,
+          "y": 240.0,
+          "cell_size": 32,
+          "strength": 25,
+          "speed_stat": 25,
+          "endurance": 25,
+          "state": "GATHER",
+          "is_well_fed": false,
+          "assigned_hut_ref": {
+            "type": "GatheringHut",
+            "gx": 16,
+            "gy": 12
+          },
+          "target_resource_ref": {
+            "type": "BerryBush",
+            "gx": 12,
+            "gy": 12
+          },
+          "held_resource": null,
+          "held_quantity": 0,
+          "loiter_timer": 3.8063833707301207,
+          "loiter_target": null,
+          "idle_timer": -0.0004457107619532108,
+          "path": [],
+          "path_index": 14
+        },
+        {
+          "type": "Critter",
+          "x": 368.0,
+          "y": 400.0,
+          "cell_size": 32,
+          "strength": 75,
+          "speed_stat": 75,
+          "endurance": 75,
+          "state": "GATHER",
+          "is_well_fed": false,
+          "assigned_hut_ref": {
+            "type": "GatheringHut",
+            "gx": 16,
+            "gy": 12
+          },
+          "target_resource_ref": {
+            "type": "BerryBush",
+            "gx": 8,
+            "gy": 14
+          },
+          "held_resource": null,
+          "held_quantity": 0,
+          "loiter_timer": 1.1413235577831118,
+          "loiter_target": null,
+          "idle_timer": -0.013700838337332918,
+          "path": [],
+          "path_index": 4
+        },
+        {
+          "type": "Critter",
+          "x": 272.0,
+          "y": 432.0,
+          "cell_size": 32,
+          "strength": 50,
+          "speed_stat": 50,
+          "endurance": 50,
+          "state": "GATHER",
+          "is_well_fed": false,
+          "assigned_hut_ref": {
+            "type": "GatheringHut",
+            "gx": 16,
+            "gy": 12
+          },
+          "target_resource_ref": {
+            "type": "BerryBush",
+            "gx": 12,
+            "gy": 12
+          },
+          "held_resource": null,
+          "held_quantity": 0,
+          "loiter_timer": 2.5418437535738736,
+          "loiter_target": null,
+          "idle_timer": -0.013235869882658444,
+          "path": [],
+          "path_index": 6
+        }
+      ],
+      "trampled": [],
+      "portals": {},
+      "neighbors": {
+        "north": "north_woods"
+      }
+    },
+    {
+      "name": "north_woods",
+      "width": 25,
+      "height": 19,
+      "cell_size": 32,
+      "objects": [
+        {
+          "type": "BerryBush",
+          "gx": 5,
+          "gy": 5,
+          "width": 1,
+          "height": 1,
+          "cell_size": 32,
+          "inventory": {
+            "food": 5
+          },
+          "blocks_movement": true
+        },
+        {
+          "type": "BerryBush",
+          "gx": 10,
+          "gy": 5,
+          "width": 1,
+          "height": 1,
+          "cell_size": 32,
+          "inventory": {
+            "food": 5
+          },
+          "blocks_movement": true
+        },
+        {
+          "type": "BerryBush",
+          "gx": 5,
+          "gy": 10,
+          "width": 1,
+          "height": 1,
+          "cell_size": 32,
+          "inventory": {
+            "food": 5
+          },
+          "blocks_movement": true
+        },
+        {
+          "type": "BerryBush",
+          "gx": 12,
+          "gy": 12,
+          "width": 1,
+          "height": 1,
+          "cell_size": 32,
+          "inventory": {
+            "food": 5
+          },
+          "blocks_movement": true
+        },
+        {
+          "type": "Tree",
+          "gx": 2,
+          "gy": 5,
+          "width": 2,
+          "height": 2,
+          "cell_size": 32,
+          "inventory": {
+            "wood": 10
+          },
+          "blocks_movement": true,
+          "max_wood": 10,
+          "respawn_duration": 30.0,
+          "depleted": false,
+          "time_depleted": 0.0
+        },
+        {
+          "type": "Tree",
+          "gx": 8,
+          "gy": 3,
+          "width": 2,
+          "height": 2,
+          "cell_size": 32,
+          "inventory": {
+            "wood": 10
+          },
+          "blocks_movement": true,
+          "max_wood": 10,
+          "respawn_duration": 30.0,
+          "depleted": false,
+          "time_depleted": 0.0
+        },
+        {
+          "type": "Tree",
+          "gx": 14,
+          "gy": 8,
+          "width": 2,
+          "height": 2,
+          "cell_size": 32,
+          "inventory": {
+            "wood": 10
+          },
+          "blocks_movement": true,
+          "max_wood": 10,
+          "respawn_duration": 30.0,
+          "depleted": false,
+          "time_depleted": 0.0
+        },
+        {
+          "type": "Rock",
+          "gx": 4,
+          "gy": 8,
+          "width": 1,
+          "height": 1,
+          "cell_size": 32,
+          "inventory": {
+            "stone": 5
+          },
+          "blocks_movement": true
+        },
+        {
+          "type": "Rock",
+          "gx": 12,
+          "gy": 2,
+          "width": 1,
+          "height": 1,
+          "cell_size": 32,
+          "inventory": {
+            "stone": 5
+          },
+          "blocks_movement": true
+        },
+        {
+          "type": "Stick",
+          "gx": 7,
+          "gy": 6,
+          "width": 1,
+          "height": 1,
+          "cell_size": 32,
+          "inventory": {
+            "wood": 3
+          },
+          "blocks_movement": true
+        },
+        {
+          "type": "Stick",
+          "gx": 15,
+          "gy": 4,
+          "width": 1,
+          "height": 1,
+          "cell_size": 32,
+          "inventory": {
+            "wood": 3
+          },
+          "blocks_movement": true
+        },
+        {
+          "type": "GatheringHut",
+          "gx": 14,
+          "gy": 11,
+          "width": 3,
+          "height": 3,
+          "cell_size": 32,
+          "inventory": {},
+          "blocks_movement": true,
+          "cost": {
+            "wood": 10,
+            "stone": 5
+          },
+          "storage": {},
+          "gathering_radius": 320.0
+        }
+      ],
+      "critters": [],
+      "trampled": [],
+      "portals": {},
+      "neighbors": {
+        "south": "main"
+      }
+    }
+  ],
+  "player": {
+    "type": "Player",
+    "x": 286.8000000000003,
+    "y": 284.8,
+    "radius": 20,
+    "base_speed": 200,
+    "speed": 200.0,
+    "inventory": {
+      "food": 16,
+      "wood": 6,
+      "stone": 5
+    },
+    "active_buffs": [],
+    "unlocked_equipment": [],
+    "equipped": []
+  }
+}
