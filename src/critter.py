@@ -12,6 +12,7 @@ class CritterState(Enum):
     GATHER = auto()
     RETURN = auto()
     FOLLOW = auto()
+    BREED = auto() # Loitering near Mating Hut
 
 class Critter(Entity):
     """Critter entity with attributes and stat-based behavior."""
@@ -193,6 +194,19 @@ class Critter(Entity):
         self.gathering = False
         self.gather_timer = 0.0
 
+    def start_breed(self):
+        """Enter BREED state: loiter specifically around the Mating Hut."""
+        self.state = CritterState.BREED
+        self.idle_timer = 0.0
+        self.path = None
+        self.path_index = 0
+        self.target_resource = None
+        self.goal_cell = None
+        self.gathering = False
+        self.gather_timer = 0.0
+        self.loiter_timer = random.uniform(1.0, 3.0)
+        self.loiter_target = None
+
     def start_return(self):
         """Enter RETURN state: clear target and path, then compute new path to hut."""
         self.state = CritterState.RETURN
@@ -273,6 +287,10 @@ class Critter(Entity):
             self.interaction_progress = 0.0
             self.active_target = None
             self._update_follow(dt, world, pathfinding_system)
+        elif self.state == CritterState.BREED:
+            self.interaction_progress = 0.0
+            self.active_target = None
+            self._update_breed(dt, world)
 
         # Animation update: toggle frame based on interval
         self.animation_timer += dt
@@ -325,6 +343,53 @@ class Critter(Entity):
             else:
                 # No valid gathering; remain idle with extended timer to avoid constant re-evaluation
                 self.idle_timer = random.uniform(10.0, 20.0)
+
+    def _update_breed(self, dt, world):
+        """BREED behavior: loiter specifically near the assigned Mating Hut."""
+        from mating_hut import MatingHut
+        if not self.assigned_hut or not isinstance(self.assigned_hut, MatingHut):
+            self.start_idle()
+            return
+
+        # Smooth loiter movement (same logic as IDLE but tighter radius)
+        if self.loiter_target is not None:
+            tx, ty = self.loiter_target
+            dx = tx - self.x
+            dy = ty - self.y
+            dist_sq = dx*dx + dy*dy
+            if dist_sq < 1.0:
+                self.x, self.y = self.loiter_target
+                self.loiter_target = None
+                self.loiter_timer = random.uniform(2.0, 4.0)
+            else:
+                speed = self.get_movement_speed() * 0.6 # Move slower near hut
+                move_dist = speed * dt
+                dist = dist_sq ** 0.5
+                if move_dist >= dist:
+                    self.x, self.y = self.loiter_target
+                    self.loiter_target = None
+                    self.loiter_timer = random.uniform(2.0, 4.0)
+                else:
+                    self.x += (dx / dist) * move_dist
+                    self.y += (dy / dist) * move_dist
+        else:
+            self.loiter_timer -= dt
+            if self.loiter_timer <= 0:
+                # Pick a spot adjacent to the hut
+                grid = world.grid
+                hut_cells = self.assigned_hut.get_occupied_cells()
+                adj_candidates = []
+                for hx, hy in hut_cells:
+                    for dx, dy in [(1,0), (-1,0), (0,1), (0,-1), (1,1), (-1,-1), (1,-1), (-1,1)]:
+                        cx, cy = hx + dx, hy + dy
+                        if grid.is_within_bounds(cx, cy) and not grid.is_occupied(cx, cy):
+                            adj_candidates.append((cx, cy))
+                
+                if adj_candidates:
+                    gx, gy = random.choice(adj_candidates)
+                    self.loiter_target = (gx * self.cell_size + self.cell_size / 2,
+                                         gy * self.cell_size + self.cell_size / 2)
+                self.loiter_timer = random.uniform(2.0, 4.0)
 
     def _circle_intersects_rect(self, cx, cy, r, rect_x, rect_y, rect_w, rect_h):
         """Check if a circle (center cx,cy, radius r) intersects an axis-aligned rectangle."""

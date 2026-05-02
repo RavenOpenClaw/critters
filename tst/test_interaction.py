@@ -20,6 +20,7 @@ def _circle_intersects_rect(circle_x, circle_y, circle_r, rect_x, rect_y, rect_w
 
 # Simple mock interactable object for testing interaction targeting
 class MockInteractable(WorldObject):
+    blocks_movement = True
     def __init__(self, x, y, cell_size=1.0, label="obj"):
         # Use WorldObject with grid coordinates as world coordinates directly
         # For simplicity, we treat gx, gy as world coordinates by setting cell_size=1 and width=height=1
@@ -27,6 +28,8 @@ class MockInteractable(WorldObject):
         self.label = label
         self.interact_called = False
         self.interacted_with = None
+        # Add inventory so targeting logic considers it valid
+        self.inventory.add('test_item', 1)
 
     def interact(self, player):
         self.interact_called = True
@@ -74,6 +77,20 @@ class TestInteractionTargeting(unittest.TestCase):
         # Determine expected target using same intersection logic as Player.interact
         candidates = []
         for obj in objects:
+            # New verification: Player logic now checks for items/work
+            is_valid = False
+            # Check for inventory/work (simplified for mock/test)
+            if hasattr(obj, 'inventory') and obj.inventory.items:
+                is_valid = True
+            elif hasattr(obj, 'work_units') and obj.work_units > 0:
+                is_valid = True
+            elif getattr(obj, 'depleted', False) == False and not hasattr(obj, 'inventory'):
+                # Some objects might be valid without inventory if not explicitly depleted
+                is_valid = True
+            
+            if not is_valid:
+                continue
+
             # For objects with width/height/cell_size (WorldObject), use rectangle intersection
             if hasattr(obj, 'width') and hasattr(obj, 'height') and hasattr(obj, 'cell_size'):
                 rect_x = obj.x

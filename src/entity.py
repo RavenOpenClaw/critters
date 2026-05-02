@@ -61,15 +61,31 @@ class Player(Entity):
             self.interaction_progress = 0.0
             return
 
-        # If no target or target out of range/empty, find new target
+        # Acquire target
         target = self.get_interactable_target(world)
         
-        # If target changed or became None, reset progress
-        if target is None or target != self.active_target:
+        # Check if target is valid (has resources or work to do)
+        is_valid = False
+        if target is not None:
+            is_valid = True
+            from obstacle import Obstacle
+            if isinstance(target, Obstacle):
+                if target.work_units <= 0:
+                    is_valid = False
+            elif hasattr(target, 'inventory') and not target.inventory.items:
+                is_valid = False
+            elif getattr(target, 'depleted', False):
+                is_valid = False
+
+        if not is_valid:
+            self.active_target = None
+            self.interaction_progress = 0.0
+            return
+
+        # If target changed, reset progress
+        if target != self.active_target:
             self.active_target = target
             self.interaction_progress = 0.0
-            if target is None:
-                return
 
         # Advance progress
         base_duration = 1.0
@@ -87,12 +103,8 @@ class Player(Entity):
         # Complete interaction
         if self.interaction_progress >= 1.0:
             target.interact(self)
-            # Reset for repetition if target still has resources
-            if self.get_interactable_target(world) == target:
-                self.interaction_progress = 0.0
-            else:
-                self.active_target = None
-                self.interaction_progress = 0.0
+            self.interaction_progress = 0.0
+            # active_target remains set; next frame will check validity and reset if empty
 
     def move(self, dx, dy, dt, grid=None):
         """Move the player with collision detection and boundary clamping.

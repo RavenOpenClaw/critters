@@ -130,7 +130,7 @@ class CritterInspector:
             c.assigned_hut.unassign_critter(c)
         # Stop following
         c.stop_follow()
-        # Remove from world objects
+        # Remove from world and grid
         world.remove_object(c)
 
         # Close inspector

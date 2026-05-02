@@ -574,7 +574,7 @@ class TestCritterFollow:
         assert critter.state == CritterState.IDLE
 
     def test_mating_hut_assigned_critter_idle_safety(self):
-        """A critter assigned to MatingHut should not crash during idle update when timer expires."""
+        """A critter assigned to MatingHut should transition to BREED state and not crash."""
         from mating_hut import MatingHut
         grid = GridSystem(cell_size=24, width=20, height=20)
         world = World(grid)
@@ -584,13 +584,11 @@ class TestCritterFollow:
         hut.assign_critter(critter)
         world.add_object(critter)
 
-        # Set idle_timer to 0 to trigger the check in _update_idle
-        critter.idle_timer = 0
-        # This should not raise AttributeError: 'MatingHut' object has no attribute 'can_gather'
+        # Should be in BREED state after assignment
+        assert critter.state == CritterState.BREED
+        # This should not raise AttributeError or crash
         critter.update(dt=0.1, world=world, pathfinding_system=None)
-        assert critter.state == CritterState.IDLE
-        # It should have reset the idle_timer to a large value because can_gather() is False
-        assert critter.idle_timer > 5.0
+        assert critter.state == CritterState.BREED
 
     def test_critter_gathering_intelligence(self):
         """Task 47: Critters should seek new resource if not full when current resource is depleted."""
