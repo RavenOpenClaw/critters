@@ -231,6 +231,15 @@ class World:
         # Remove from grass_cells if applicable
         if isinstance(obj, Grass):
             self.grass_cells.discard((obj.gx, obj.gy))
+        
+        # If this object is a Critter, also remove from current_map.critters list
+        try:
+            from critter import Critter
+            if isinstance(obj, Critter):
+                if obj in self.current_map.critters:
+                    self.current_map.critters.remove(obj)
+        except ImportError:
+            pass
 
     def mark_trampled(self, gx, gy):
         """Mark a grid cell as trampled, resetting its decay timer.
