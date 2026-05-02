@@ -509,7 +509,7 @@ def main():
                 ox, oy = target_obj.x, target_obj.y
             
             text = None
-            # If building or obstacle and following critters, show Assign
+            # UX Improvement: Priority to Assign prompt if player has followers
             if isinstance(target_obj, (Building, Obstacle)) and player.following_critters:
                 text = PROMPT_ASSIGN
             elif hasattr(target_obj, 'get_interaction_text'):
@@ -531,6 +531,7 @@ def main():
                     gx, gy = grid.world_to_grid(wx, wy)
                     # Check if building occupies this grid cell
                     if (gx, gy) in obj.get_occupied_cells():
+                        # Always show prompt on hover if inspector is visible
                         text = PROMPT_DIRECT_ASSIGN
                         text_surface = font.render(text, True, (0, 0, 150)) # slightly blue for remote actions
                         # Show center of building

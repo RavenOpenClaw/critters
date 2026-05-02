@@ -135,7 +135,7 @@ class MatingHut(Building):
         offspring = Critter(world_x, world_y, cell_size=self.cell_size,
                             strength=strength, speed_stat=speed_stat, endurance=endurance)
         offspring.state = CritterState.IDLE
-        offspring.assigned_hut = self
+        offspring.assigned_hut = None # Start unassigned
 
         # Add to world
         world.add_object(offspring)

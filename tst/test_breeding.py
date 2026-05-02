@@ -47,7 +47,7 @@ class TestBreeding(unittest.TestCase):
 
         self.assertIsNotNone(offspring)
         self.assertEqual(offspring.state, CritterState.IDLE)
-        self.assertIs(offspring.assigned_hut, hut)
+        self.assertIsNone(offspring.assigned_hut)
         # Position should be center of hut
         expected_x = hut.x + (hut.width * hut.cell_size) / 2
         expected_y = hut.y + (hut.height * hut.cell_size) / 2
@@ -104,7 +104,7 @@ class TestMatingHutInteraction(unittest.TestCase):
         self.assertEqual(len(world.current_map.objects), 2)
         offspring = world.current_map.objects[1]
         self.assertIsInstance(offspring, Critter)
-        self.assertIs(offspring.assigned_hut, hut)
+        self.assertIsNone(offspring.assigned_hut)
         self.assertEqual(world.message, MSG_BREED_SUCCESS)
 
     def test_interact_ignores_non_player(self):

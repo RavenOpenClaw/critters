@@ -67,11 +67,21 @@ class Player(Entity):
         # Check if target is valid (has resources or work to do)
         is_valid = False
         if target is not None:
-            is_valid = True
             from obstacle import Obstacle
+            from building import Building
+            is_valid = True
             if isinstance(target, Obstacle):
                 if target.work_units <= 0:
                     is_valid = False
+            elif isinstance(target, Building):
+                # Buildings are always valid if player has followers (for assignment)
+                if not getattr(self, 'following_critters', []):
+                    # Otherwise check storage or specific building logic
+                    has_storage = hasattr(target, 'storage') and target.storage.items
+                    from mating_hut import MatingHut
+                    can_breed = isinstance(target, MatingHut) and len(target.assigned_critters) >= 2
+                    if not (has_storage or can_breed):
+                        is_valid = False
             elif hasattr(target, 'inventory') and not target.inventory.items:
                 is_valid = False
             elif getattr(target, 'depleted', False):
@@ -92,8 +102,20 @@ class Player(Entity):
         if hasattr(target, 'get_interaction_duration'):
             base_duration = target.get_interaction_duration()
         
-        # Total duration affected by player upgrades/buffs
-        duration = base_duration / self.get_interaction_speed_multiplier()
+        # UX Improvement: Fast interaction (0.5s) for assignments and utility
+        from berry_bush import BerryBush
+        from tree import Tree
+        from rock import Rock
+        from obstacle import Obstacle
+        is_gathering = isinstance(target, (BerryBush, Tree, Rock, Obstacle))
+        if not is_gathering:
+            base_duration = 0.5
+        
+        # Scaling: speed for general interactions, gather multiplier for resources
+        if is_gathering:
+            duration = base_duration / self.get_gather_multiplier()
+        else:
+            duration = base_duration / (self.get_interaction_speed_multiplier())
         
         if duration > 0:
             self.interaction_progress += dt / duration
