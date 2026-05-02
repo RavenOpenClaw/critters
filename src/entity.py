@@ -74,14 +74,27 @@ class Player(Entity):
                 if target.work_units <= 0:
                     is_valid = False
             elif isinstance(target, Building):
-                # Buildings are always valid if player has followers (for assignment)
-                if not getattr(self, 'following_critters', []):
-                    # Otherwise check storage or specific building logic
-                    has_storage = hasattr(target, 'storage') and target.storage.items
-                    from mating_hut import MatingHut
-                    can_breed = isinstance(target, MatingHut) and len(target.assigned_critters) >= 2
-                    if not (has_storage or can_breed):
-                        is_valid = False
+                # Buildings are valid if:
+                # 1. Player has followers (for assignment)
+                # 2. It has storage items (for withdrawal)
+                # 3. It's a MatingHut with enough critters (for breeding)
+                # 4. It's a utility building like a Chair (has a specific interaction prompt)
+                
+                has_followers = bool(getattr(self, 'following_critters', []))
+                has_storage = hasattr(target, 'storage') and target.storage.items
+                
+                from mating_hut import MatingHut
+                can_breed = isinstance(target, MatingHut) and len(target.assigned_critters) >= 2
+                
+                # Check for other interaction types (e.g. Chair's "Rest")
+                has_prompt = False
+                if hasattr(target, 'get_interaction_text'):
+                    prompt = target.get_interaction_text()
+                    if prompt is not None:
+                        has_prompt = True
+
+                if not (has_followers or has_storage or can_breed or has_prompt):
+                    is_valid = False
             elif hasattr(target, 'inventory') and not target.inventory.items:
                 is_valid = False
             elif getattr(target, 'depleted', False):

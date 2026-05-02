@@ -86,6 +86,28 @@ class TestChairAndCampfire(unittest.TestCase):
         self.assertEqual(buff.multipliers['speed'], 1.5)
         self.assertEqual(buff.duration, 30.0)
 
+    def test_chair_timed_interaction_works(self):
+        """Verify that Player.update_interaction correctly triggers Chair.interact."""
+        from chair import Chair
+        from world import World
+        from grid_system import GridSystem
+        from map_data import MapData
+
+        grid = GridSystem(cell_size=32, width=10, height=10)
+        world = World(MapData("test", 10, 10, 32))
+        chair = Chair(5, 5, 32)
+        world.add_object(chair)
+        
+        # Position player near chair (chair is at 160, 160)
+        player = Player(170, 170)
+        
+        # Run timed interaction
+        # Utility buildings use 0.5s duration
+        player.update_interaction(dt=0.6, world=world, is_key_held=True)
+        
+        self.assertEqual(len(player.active_buffs), 1)
+        self.assertEqual(player.active_buffs[0].name, "Rested")
+
     def test_campfire_applies_strength_buff(self):
         """Interacting with Campfire applies Strength buff (2.0x gather)."""
         from campfire import Campfire

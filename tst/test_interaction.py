@@ -98,21 +98,21 @@ class TestInteractionTargeting(unittest.TestCase):
                 rect_w = obj.width * obj.cell_size
                 rect_h = obj.height * obj.cell_size
                 if _circle_intersects_rect(player_x, player_y, player.interaction_radius, rect_x, rect_y, rect_w, rect_h):
-                    # Use rectangle center for distance ordering
-                    center_x = rect_x + rect_w / 2.0
-                    center_y = rect_y + rect_h / 2.0
-                    dx = center_x - player_x
-                    dy = center_y - player_y
-                    dist_sq = dx*dx + dy*dy
-                    candidates.append((dist_sq, obj))
+                    # Synchronize with Player logic: use distance to boundary
+                    closest_x = max(rect_x, min(player_x, rect_x + rect_w))
+                    closest_y = max(rect_y, min(player_y, rect_y + rect_h))
+                    dx = player_x - closest_x
+                    dy = player_y - closest_y
+                    dist = (dx*dx + dy*dy)**0.5
+                    candidates.append((dist, obj))
             else:
                 # Fallback to point check using get_center()
                 cx, cy = obj.get_center()
                 dx = cx - player_x
                 dy = cy - player_y
-                dist_sq = dx*dx + dy*dy
-                if dist_sq <= player.interaction_radius ** 2:
-                    candidates.append((dist_sq, obj))
+                dist = (dx*dx + dy*dy)**0.5
+                if dist <= player.interaction_radius:
+                    candidates.append((dist, obj))
 
         if not candidates:
             # No objects within radius: expect no interact called on any object
