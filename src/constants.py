@@ -90,6 +90,10 @@ CRAFT_MSG_NOT_ENOUGH = "Not enough {resource}!"
 CRAFT_MSG_UNLOCKED = "Unlocked: {item}!"
 CRAFT_MSG_CRAFTED = "Crafted: {item}!"
 
+# --- Display Settings ---
+WINDOW_WIDTH = 800
+WINDOW_HEIGHT = 600
+
 # --- Building Labels (for Build Menu) ---
 BUILDING_GATHERING_HUT = "Gathering Hut"
 BUILDING_MATING_HUT = "Mating Hut"

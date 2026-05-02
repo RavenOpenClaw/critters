@@ -1,0 +1,201 @@
+"""
+GameEngine: Manages the core game lifecycle, coordinating managers and running the loop.
+"""
+import pygame
+import sys
+import math
+from constants import (
+    WINDOW_WIDTH, WINDOW_HEIGHT, MESSAGE_DECONSTRUCTED, MESSAGE_OUT_OF_RANGE,
+    PROMPT_DIRECT_ASSIGN, DECONSTRUCTION_MODE_LABEL
+)
+from game_state import new_game, load_game
+from input_handler import InputHandler
+from build_menu import BuildMenu
+from crafting_menu import CraftingMenu
+from critter_inspector import CritterInspector
+from ui_manager import UIManager
+from camera import Camera
+from pathfinding import PathfindingSystem
+from building import Building
+from obstacle import Obstacle
+
+class GameEngine:
+    def __init__(self):
+        pygame.init()
+        self.screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
+        pygame.display.set_caption("Critters Prototype")
+        self.clock = pygame.time.Clock()
+        self.font = pygame.font.SysFont(None, 24)
+        
+        self.input_handler = InputHandler()
+        self.camera = None
+        self.pathfinding = PathfindingSystem()
+        
+        # Initialize UI Components (matching correct constructor signatures)
+        self.build_menu = BuildMenu(24) # cell_size
+        from recipes import RECIPES
+        self.crafting_menu = CraftingMenu(RECIPES) # recipes list
+        self.critter_inspector = CritterInspector(24, self.font, WINDOW_WIDTH, WINDOW_HEIGHT)
+        
+        self.ui_manager = UIManager(
+            WINDOW_WIDTH, WINDOW_HEIGHT, self.font,
+            self.build_menu, self.crafting_menu, self.critter_inspector
+        )
+        
+        self.world = None
+        self.player = None
+        self.running = True
+
+    def setup(self, state_tuple):
+        """Inject world and player from game_state."""
+        self.world, self.player = state_tuple
+        self._update_camera_bounds()
+        if self.camera:
+            self.camera.center_on(self.player.x, self.player.y)
+
+    def _update_camera_bounds(self):
+        """Sync camera constraints with current world grid dimensions."""
+        if not self.world:
+            return
+        grid = self.world.grid
+        map_px_w = grid.width * grid.cell_size
+        map_px_h = grid.height * grid.cell_size
+        
+        if self.camera is None:
+            self.camera = Camera(WINDOW_WIDTH, WINDOW_HEIGHT, map_px_w, map_px_h)
+        else:
+            self.camera.map_width = map_px_w
+            self.camera.map_height = map_px_h
+
+    def run(self):
+        """Main game loop."""
+        while self.running:
+            dt = self.clock.tick(60) / 1000.0
+            
+            self._handle_input()
+            self._update(dt)
+            self._render()
+            
+        pygame.quit()
+        sys.exit()
+
+    def _handle_input(self):
+        if not self.input_handler.handle_events():
+            self.running = False
+            return
+
+        # 1. Unified UI Click Handling
+        if self.input_handler.mouse_clicked:
+            if self.ui_manager.handle_mouse_click(self.input_handler.mouse_pos, self.world, self.player, self.camera):
+                return # UI consumed the click
+
+            # 2. World-space clicks (if UI didn't consume)
+            mx, my = self.input_handler.mouse_pos
+            wx, wy = self.camera.undo(mx, my)
+            gx, gy = self.world.grid.world_to_grid(wx, wy)
+
+            # Deconstruction Mode
+            if self.input_handler.deconstruct_mode:
+                if (gx, gy) in self.world.grid.occupied:
+                    obj = self.world.grid.occupied[(gx, gy)]
+                    if isinstance(obj, Building):
+                        ox, oy = obj.get_center()
+                        dx, dy = self.player.x - ox, self.player.y - oy
+                        if dx*dx + dy*dy <= self.player.interaction_radius**2:
+                            obj.deconstruct(self.world, self.player)
+                            self.world.set_message(MESSAGE_DECONSTRUCTED, 2.0)
+                        else:
+                            self.world.set_message(MESSAGE_OUT_OF_RANGE, 1.5)
+                return
+
+            # Critter Selection
+            clicked_critter = False
+            for c in self.world.current_map.critters:
+                dx, dy = wx - c.x, wy - c.y
+                if dx*dx + dy*dy <= (c.radius + 5) ** 2:
+                    if self.critter_inspector.visible and self.critter_inspector.selected_critter is c:
+                        self.critter_inspector.hide()
+                    else:
+                        self.critter_inspector.toggle(c)
+                    clicked_critter = True
+                    break
+            
+            # Placement Attempt
+            if not clicked_critter and self.build_menu.visible and self.build_menu.selected_building_class:
+                if self.world.grid.is_within_bounds(gx, gy):
+                    self.build_menu.attempt_placement(self.player, self.world, self.world.grid, gx, gy)
+
+        # 3. Right-click Assignment
+        if self.input_handler.mouse_right_clicked:
+            if self.critter_inspector.visible and self.critter_inspector.selected_critter:
+                mx, my = self.input_handler.mouse_pos
+                wx, wy = self.camera.undo(mx, my)
+                gx, gy = self.world.grid.world_to_grid(wx, wy)
+                if (gx, gy) in self.world.grid.occupied:
+                    obj = self.world.grid.occupied[(gx, gy)]
+                    if isinstance(obj, (Building, Obstacle)) and hasattr(obj, 'assign_critter'):
+                        obj.assign_critter(self.critter_inspector.selected_critter)
+                        self.world.set_message(f"Critter assigned to {type(obj).__name__}", 2.0)
+
+        # 4. Keyboard Shortcuts
+        if self.input_handler.escape_pressed:
+            self._close_all_menus()
+        
+        if self.input_handler.f_pressed:
+            if self.critter_inspector.visible and self.critter_inspector.selected_critter:
+                self.critter_inspector.toggle_follow(self.player, self.world)
+                self.critter_inspector.hide()
+
+        # 5. Crafting
+        if self.crafting_menu.visible and self.input_handler.craft_slot is not None:
+            idx = self.input_handler.craft_slot - 1
+            if 0 <= idx < len(self.crafting_menu.recipes):
+                self.crafting_menu.craft_selected(self.player, self.crafting_menu.recipes[idx])
+            self.input_handler.craft_slot = None
+
+    def _update(self, dt):
+        self.player.update(dt)
+        self.player.move(self.input_handler.move_x, self.input_handler.move_y, dt, grid=self.world.grid)
+        self.player.update_interaction(dt, self.world, self.input_handler.interact_held)
+        
+        # Map Transitions
+        if hasattr(self.world, 'check_player_map_transition'):
+            if self.world.check_player_map_transition(self.player):
+                self._update_camera_bounds()
+
+        self.camera.update(self.player.x, self.player.y)
+        self.world.update_trampled(dt)
+        self.world.cleanup_depleted_resources()
+        self.ui_manager.update(dt)
+
+        for c in self.world.current_map.critters:
+            c.update(dt, self.world, self.pathfinding)
+
+    def _render(self):
+        self.screen.fill((200, 200, 200)) # Background
+        self.world.draw(self.screen, self.camera)
+        
+        # Player render
+        spx, spy = self.camera.apply(self.player.x, self.player.y)
+        pygame.draw.circle(self.screen, (0, 0, 255), (int(spx), int(spy)), int(self.player.radius))
+
+        # HUD and UI
+        self.ui_manager.draw(self.screen, self.world, self.player, self.camera)
+        
+        # World Message
+        if self.world.message:
+            msg_surf = self.font.render(self.world.message, True, (0, 0, 0))
+            self.screen.blit(msg_surf, (WINDOW_WIDTH//2 - msg_surf.get_width()//2, 50))
+
+        # Modes
+        if self.input_handler.deconstruct_mode:
+            decon_surf = self.font.render(DECONSTRUCTION_MODE_LABEL, True, (255, 0, 0))
+            self.screen.blit(decon_surf, (WINDOW_WIDTH - decon_surf.get_width() - 10, WINDOW_HEIGHT - 30))
+
+        pygame.display.flip()
+
+    def _close_all_menus(self):
+        self.build_menu.visible = False
+        self.crafting_menu.visible = False
+        self.critter_inspector.hide()
+        self.input_handler.deconstruct_mode = False
