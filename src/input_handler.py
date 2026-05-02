@@ -33,6 +33,7 @@ class InputHandler:
         """Process pygame events. Returns False if the app should quit."""
         self.build_toggle = False
         self.select_gathering_hut = False
+        self.crafting_toggle = False
         self.mouse_clicked = False
         self.mouse_right_clicked = False
         self.save_request = False

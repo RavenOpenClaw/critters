@@ -416,9 +416,6 @@ def main():
                             else:
                                 world.set_message(f"This {obj.__class__.__name__.lower()} does not support assignment", 1.5)
 
-        # Crafting menu toggle and crafting
-        if input_handler.crafting_toggle:
-            crafting_menu.toggle()
         # If menu open and slot selected, craft that recipe
         if crafting_menu.visible and input_handler.craft_slot is not None:
             idx = input_handler.craft_slot - 1

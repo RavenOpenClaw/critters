@@ -6,7 +6,7 @@ from world_object import WorldObject
 from inventory import Inventory
 
 class BerryBush(WorldObject):
-    def __init__(self, gx, gy, cell_size, berries=3, respawn_duration=10.0):
+    def __init__(self, gx, gy, cell_size, berries=5, respawn_duration=10.0):
         inventory = Inventory()
         inventory.add('food', berries)
         super().__init__(gx, gy, width=1, height=1, cell_size=cell_size, inventory=inventory)
