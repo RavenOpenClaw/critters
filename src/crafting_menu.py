@@ -9,12 +9,13 @@ class CraftingMenu:
 
     Displays a list of recipes with required resources and handles crafting.
     """
-    def __init__(self, recipes):
+    def __init__(self, recipes, x=320, y=70, width=300, height=200):
         self.recipes = recipes
         self.visible = False
         self.selected_index = 0  # For arrow-key navigation; optional
         self.last_message = ""  # Message to display after craft attempt
         self.message_timer = 0.0  # Time remaining to show message
+        self.panel_rect = pygame.Rect(x, y, width, height)
 
     def toggle(self):
         """Toggle menu visibility and reset state when closing."""
@@ -80,24 +81,28 @@ class CraftingMenu:
         """Render the crafting menu overlay."""
         if not self.visible:
             return
-        x, y = 320, 70  # Position to the right of build menu
-        overlay = pygame.Surface((300, 200))
-        overlay.set_alpha(200)
-        overlay.fill((255, 255, 255))
-        screen.blit(overlay, (x, y))
+        
+        # Create a transparent surface for the background
+        overlay = pygame.Surface((self.panel_rect.width, self.panel_rect.height), pygame.SRCALPHA)
+        overlay.fill((255, 255, 255, 200))
+        screen.blit(overlay, (self.panel_rect.x, self.panel_rect.y))
+        pygame.draw.rect(screen, (0, 0, 0), self.panel_rect, 2)
+
         # Title
         title = font.render(CRAFTING_MENU_TITLE, True, (0, 0, 0))
-        screen.blit(title, (x + 10, y + 10))
+        screen.blit(title, (self.panel_rect.x + 10, self.panel_rect.y + 10))
+        
         # List recipes
         for idx, recipe in enumerate(self.recipes):
             prefix = " " if idx != self.selected_index else ">"
             line = f"{prefix}{idx+1}. {recipe.name} - {self._format_cost(recipe.cost)}"
             text = font.render(line, True, (0, 0, 0))
-            screen.blit(text, (x + 20, y + 40 + idx * 20))
+            screen.blit(text, (self.panel_rect.x + 20, self.panel_rect.y + 40 + idx * 20))
+        
         # Message line if any
         if self.last_message:
             msg_surface = font.render(self.last_message, True, (0, 128, 0))
-            screen.blit(msg_surface, (x + 10, y + 180))
+            screen.blit(msg_surface, (self.panel_rect.x + 10, self.panel_rect.y + self.panel_rect.height - 25))
 
     def _format_cost(self, cost):
         """Format cost dict as comma-separated resource:amount."""

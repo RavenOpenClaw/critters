@@ -71,6 +71,9 @@ class GameEngine:
         """Main game loop."""
         while self.running:
             dt = self.clock.tick(60) / 1000.0
+            # Debug: print low dt warnings
+            if dt > 0.5:
+                print(f"Warning: large dt ({dt:.3f}s)")
             
             self._handle_input()
             self._update(dt)
@@ -80,6 +83,13 @@ class GameEngine:
         sys.exit()
 
     def _handle_input(self):
+        # Update movement vector from held keys (WASD)
+        self.input_handler.update_movement()
+        
+        # Debug: print movement state if non-zero
+        if self.input_handler.move_x != 0 or self.input_handler.move_y != 0:
+            pass # print(f"Move input: ({self.input_handler.move_x}, {self.input_handler.move_y})")
+
         if not self.input_handler.handle_events():
             self.running = False
             return
@@ -141,6 +151,16 @@ class GameEngine:
         if self.input_handler.escape_pressed:
             self._close_all_menus()
         
+        if self.input_handler.build_toggle:
+            self.build_menu.toggle()
+            if self.build_menu.visible:
+                self.crafting_menu.visible = False
+        
+        if self.input_handler.crafting_toggle:
+            self.crafting_menu.toggle()
+            if self.crafting_menu.visible:
+                self.build_menu.visible = False
+
         if self.input_handler.f_pressed:
             if self.critter_inspector.visible and self.critter_inspector.selected_critter:
                 self.critter_inspector.toggle_follow(self.player, self.world)
@@ -155,6 +175,9 @@ class GameEngine:
 
     def _update(self, dt):
         self.player.update(dt)
+        # Debug: log player state
+        # print(f"Player: ({self.player.x:.1f}, {self.player.y:.1f}) Speed: {self.player.speed:.1f}")
+        
         self.player.move(self.input_handler.move_x, self.input_handler.move_y, dt, grid=self.world.grid)
         self.player.update_interaction(dt, self.world, self.input_handler.interact_held)
         
