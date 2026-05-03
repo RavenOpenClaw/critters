@@ -181,18 +181,18 @@ class GameEngine:
         self.player.move(self.input_handler.move_x, self.input_handler.move_y, dt, grid=self.world.grid)
         self.player.update_interaction(dt, self.world, self.input_handler.interact_held)
         
-        # Map Transitions
-        if hasattr(self.world, 'check_player_map_transition'):
-            if self.world.check_player_map_transition(self.player):
-                self._update_camera_bounds()
+        # Map Transitions (Transport player if they move off-screen)
+        if self.world.check_player_map_transition(self.player):
+            self._update_camera_bounds()
 
         self.camera.update(self.player.x, self.player.y)
         self.world.update_trampled(dt)
         self.world.cleanup_depleted_resources()
+        
+        # Update all objects in the world (includes critters, grass spread, etc.)
+        self.world.update(dt, self.pathfinding)
+        
         self.ui_manager.update(dt)
-
-        for c in self.world.current_map.critters:
-            c.update(dt, self.world, self.pathfinding)
 
     def _render(self):
         self.screen.fill((200, 200, 200)) # Background
