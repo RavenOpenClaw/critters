@@ -182,7 +182,7 @@ class GameEngine:
         self.player.update_interaction(dt, self.world, self.input_handler.interact_held)
         
         # Map Transitions (Transport player if they move off-screen)
-        if self.world.check_player_map_transition(self.player):
+        if self.world.handle_map_transition(self.player):
             self._update_camera_bounds()
 
         self.camera.update(self.player.x, self.player.y)
