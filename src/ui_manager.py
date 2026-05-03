@@ -3,6 +3,7 @@ UIManager: Orchestrates all UI components (HUD, Build Menu, Crafting Menu, Inspe
 Handles UI-level input consumption and unified rendering.
 """
 import pygame
+import math
 from constants import (
     HUD_BUILD_BUTTON, HUD_CRAFT_BUTTON, HUD_BUFFS_TITLE, HUD_BUFFS_NONE,
     DECONSTRUCTION_MODE_LABEL
@@ -88,8 +89,8 @@ class UIManager:
         # Note: This requires access to input_handler state, handled in GameEngine rendering pass
         
         # 6. Menus (Build / Craft / Inspector)
-        self.build_menu.draw(screen)
-        self.crafting_menu.draw(screen)
+        self.build_menu.render(screen, self.font)
+        self.crafting_menu.render(screen, self.font)
         self.critter_inspector.draw(screen, player=player)
 
     def _draw_hud_button(self, screen, rect, text, color):
@@ -133,4 +134,3 @@ class UIManager:
         start_angle = -math.pi / 2
         stop_angle = start_angle + (2 * math.pi * player.interaction_progress)
         pygame.draw.arc(screen, (0, 255, 0), rect, start_angle, stop_angle, 4)
-        import math # ensure math is available for local logic

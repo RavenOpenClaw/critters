@@ -1,6 +1,8 @@
 """
 Critters Game Prototype - Minimal entry point.
 """
+import pygame
+import sys
 from game_engine import GameEngine
 from game_state import new_game, load_game
 from title_screen import TitleScreen
