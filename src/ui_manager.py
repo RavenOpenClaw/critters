@@ -125,27 +125,17 @@ class UIManager:
                 surf = self.font.render(buff_text, True, (0, 100, 0))
                 screen.blit(surf, (x, y))
                 y += 20
-def _draw_progress_circle(self, screen, player, camera):
-    # Progress circle: fills clockwise from the top
-    spx, spy = camera.apply(player.x, player.y)
-    radius = player.radius + 10
-    rect = pygame.Rect(int(spx - radius), int(spy - radius), int(radius * 2), int(radius * 2))
 
-    # In Pygame, arcs are drawn counter-clockwise from start to stop.
-    # To make it look clockwise:
-    # We draw from -90 degrees (top) to (-90 + progress * 360).
-    # But wait, to fill clockwise we actually want to draw from -90 to -90 - (progress * 360).
-    # Actually, the simplest way is to use start = -pi/2 and end = -pi/2 + (2*pi*progress)
-    # and accept the CCW draw if it looks like a clockwise fill.
-    start_angle = -math.pi / 2
-    stop_angle = start_angle + (2 * math.pi * player.interaction_progress)
-
-    # Note: If player.interaction_progress is 0.1, it draws a small arc CCW from top.
-    # The user wants it to look like it's filling clockwise.
-    # Clockwise fill = draw from -pi/2 to -pi/2 + 2pi, but Pygame only does CCW.
-    # So we draw from (top - progress) to (top).
-    # start = -pi/2 - (2*pi*progress), stop = -pi/2
-    start_angle_cw = -math.pi / 2 - (2 * math.pi * player.interaction_progress)
-    stop_angle_cw = -math.pi / 2
-
-    pygame.draw.arc(screen, (0, 255, 0), rect, start_angle_cw, stop_angle_cw, 4)
+    def _draw_progress_circle(self, screen, player, camera):
+        # Progress circle: fills clockwise from the top
+        spx, spy = camera.apply(player.x, player.y)
+        radius = player.radius + 10
+        rect = pygame.Rect(int(spx - radius), int(spy - radius), int(radius * 2), int(radius * 2))
+        
+        # In Pygame, arcs are drawn counter-clockwise from start to stop.
+        # Clockwise fill = draw from (top - progress) to (top).
+        # start = -pi/2 - (2*pi*progress), stop = -pi/2
+        start_angle_cw = -math.pi / 2 - (2 * math.pi * player.interaction_progress)
+        stop_angle_cw = -math.pi / 2
+        
+        pygame.draw.arc(screen, (0, 255, 0), rect, start_angle_cw, stop_angle_cw, 4)
