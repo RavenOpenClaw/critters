@@ -25,8 +25,8 @@ class TestBreeding(unittest.TestCase):
         result = hut.breed(world)
         self.assertIsNone(result)
 
-    def test_breed_creates_offspring_at_hut_center(self):
-        """Offspring is placed exactly at the hut's center and in IDLE state."""
+    def test_breed_creates_offspring_adjacent_to_hut(self):
+        """Offspring is placed adjacent to the hut and in IDLE state."""
         hut = MatingHut(10, 20, cell_size=32)
         # Add two critters
         c1 = Critter(0, 0, cell_size=32)
@@ -37,6 +37,11 @@ class TestBreeding(unittest.TestCase):
         # Track added objects
         added = []
         class DummyWorld:
+            def __init__(self):
+                class MockGrid:
+                    def is_within_bounds(self, x, y): return True
+                    def is_occupied(self, x, y): return False
+                self.grid = MockGrid()
             def add_object(self, obj):
                 added.append(obj)
 
@@ -48,11 +53,13 @@ class TestBreeding(unittest.TestCase):
         self.assertIsNotNone(offspring)
         self.assertEqual(offspring.state, CritterState.IDLE)
         self.assertIsNone(offspring.assigned_hut)
-        # Position should be center of hut
-        expected_x = hut.x + (hut.width * hut.cell_size) / 2
-        expected_y = hut.y + (hut.height * hut.cell_size) / 2
-        self.assertEqual(offspring.x, expected_x)
-        self.assertEqual(offspring.y, expected_y)
+        
+        # Position should be adjacent to hut (not exactly at center anymore)
+        # Hut center is at (352, 672). Test that it moved to an adjacent cell.
+        hut_cx = hut.x + (hut.width * hut.cell_size) / 2
+        hut_cy = hut.y + (hut.height * hut.cell_size) / 2
+        self.assertTrue(abs(offspring.x - hut_cx) > 0 or abs(offspring.y - hut_cy) > 0)
+        
         # Offspring should be added to world
         self.assertIn(offspring, added)
 

@@ -134,12 +134,28 @@ class MatingHut(Building):
         speed_stat = determine_stat(parent1.speed_stat, parent2.speed_stat)
         endurance = determine_stat(parent1.endurance, parent2.endurance)
 
-        # Position: center of the hut's area in world coordinates
-        world_x = self.x + (self.width * self.cell_size) / 2
-        world_y = self.y + (self.height * self.cell_size) / 2
+        # Position: Find an empty adjacent cell to avoid spawning stuck inside collision
+        spawn_x, spawn_y = self.x + (self.width * self.cell_size) / 2, self.y + (self.height * self.cell_size) / 2
+
+        # Look for free adjacent cells
+        grid = world.grid
+        candidates = []
+        for dy in range(-1, self.height + 1):
+            for dx in range(-1, self.width + 1):
+                # Only check perimeter
+                if dx == -1 or dx == self.width or dy == -1 or dy == self.height:
+                    gx, gy = self.gx + dx, self.gy + dy
+                    if grid.is_within_bounds(gx, gy) and not grid.is_occupied(gx, gy):
+                        candidates.append((gx, gy))
+
+        if candidates:
+            # Pick a random free neighbor
+            gx, gy = random.choice(candidates)
+            spawn_x = gx * self.cell_size + self.cell_size / 2
+            spawn_y = gy * self.cell_size + self.cell_size / 2
 
         # Create offspring Critter
-        offspring = Critter(world_x, world_y, cell_size=self.cell_size,
+        offspring = Critter(spawn_x, spawn_y, cell_size=self.cell_size,
                             strength=strength, speed_stat=speed_stat, endurance=endurance)
         offspring.state = CritterState.IDLE
         offspring.assigned_hut = None # Start unassigned
