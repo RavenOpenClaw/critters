@@ -151,6 +151,14 @@ class GameEngine:
         if self.input_handler.escape_pressed:
             self._close_all_menus()
         
+        if self.input_handler.save_request:
+            from save_system import save_game
+            try:
+                save_game(self.world, self.player, "saves/save.json")
+                self.world.set_message("Game Saved!", 2.0)
+            except Exception as e:
+                self.world.set_message(f"Save Failed: {e}", 3.0)
+        
         if self.input_handler.build_toggle:
             self.build_menu.toggle()
             if self.build_menu.visible:
@@ -209,6 +217,27 @@ class GameEngine:
         self.screen.fill((200, 200, 200)) # Background
         self.world.draw(self.screen, self.camera)
         
+        # Interaction Tooltips (Hover prompts)
+        target_obj = self.player.get_interactable_target(self.world)
+        if target_obj:
+            from constants import PROMPT_ASSIGN
+            if hasattr(target_obj, 'get_center'):
+                ox, oy = target_obj.get_center()
+            else:
+                ox, oy = target_obj.x, target_obj.y
+            
+            text = None
+            if isinstance(target_obj, (Building, Obstacle)) and self.player.following_critters:
+                text = PROMPT_ASSIGN
+            elif hasattr(target_obj, 'get_interaction_text'):
+                text = target_obj.get_interaction_text()
+            
+            if text:
+                text_surface = self.font.render(text, True, (0, 0, 0))
+                sox, soy = self.camera.apply(ox, oy)
+                text_rect = text_surface.get_rect(center=(sox, soy - 30))
+                self.screen.blit(text_surface, text_rect)
+
         # Player render
         spx, spy = self.camera.apply(self.player.x, self.player.y)
         pygame.draw.circle(self.screen, (0, 0, 255), (int(spx), int(spy)), int(self.player.radius))

@@ -297,6 +297,13 @@ class World:
         """
         self.update_trampled(dt)
         self.cleanup_depleted_resources()
+        
+        # Update message timer
+        if self.message_timer > 0:
+            self.message_timer -= dt
+            if self.message_timer <= 0:
+                self.message = ""
+                self.message_timer = 0.0
 
         # Update all objects in the current map
         # Use a copy to allow objects to be removed during update (e.g. Grass condition <= 0)

@@ -19,8 +19,9 @@ class UIManager:
         self.critter_inspector = critter_inspector
         
         # HUD Button Rects
-        self.hud_build_rect = pygame.Rect(10, window_height - 40, 80, 30)
-        self.hud_craft_rect = pygame.Rect(100, window_height - 40, 80, 30)
+        self.hud_save_rect = pygame.Rect(10, window_height - 40, 80, 30)
+        self.hud_build_rect = pygame.Rect(100, window_height - 40, 80, 30)
+        self.hud_craft_rect = pygame.Rect(190, window_height - 40, 80, 30)
 
     def handle_mouse_click(self, pos, world, player, camera):
         """
@@ -51,6 +52,18 @@ class UIManager:
                 return True
 
         # 4. HUD Buttons
+        if self.hud_save_rect.collidepoint(pos):
+            from save_system import save_game
+            try:
+                save_game(world, player, "saves/save.json")
+                world.set_message("Game Saved!", 2.0)
+            except Exception as e:
+                world.set_message(f"Save Failed: {e}", 3.0)
+            # Close other menus when saving from HUD if desired
+            self.build_menu.visible = False
+            self.crafting_menu.visible = False
+            return True
+
         if self.hud_build_rect.collidepoint(pos):
             self.build_menu.toggle()
             if self.build_menu.visible:
@@ -72,6 +85,7 @@ class UIManager:
     def draw(self, screen, world, player, camera):
         """Unified rendering of all UI overlays."""
         # 1. HUD Buttons
+        self._draw_hud_button(screen, self.hud_save_rect, "Save", (200, 200, 200))
         self._draw_hud_button(screen, self.hud_build_rect, HUD_BUILD_BUTTON, (100, 100, 250))
         self._draw_hud_button(screen, self.hud_craft_rect, HUD_CRAFT_BUTTON, (100, 250, 100))
 
