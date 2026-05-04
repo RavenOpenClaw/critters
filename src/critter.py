@@ -421,8 +421,11 @@ class Critter(Entity):
             prog_radius = self.radius + 5
             rect = pygame.Rect(int(final_x - prog_radius), int(final_y - prog_radius), 
                                int(prog_radius * 2), int(prog_radius * 2))
-            # Draw clockwise from top
-            start_angle = -math.pi / 2 - (2 * math.pi * self.interaction_progress)
+            # Draw clockwise from top (12 o'clock)
+            # Pygame draws arcs CCW. To make it LOOK clockwise filling from top (-pi/2):
+            # We start at (-pi/2 - sweep) and end at -pi/2.
+            sweep = 2 * math.pi * self.interaction_progress
+            start_angle = -math.pi / 2 - sweep
             stop_angle = -math.pi / 2
             pygame.draw.arc(screen, (0, 255, 0), rect, start_angle, stop_angle, 3)
 

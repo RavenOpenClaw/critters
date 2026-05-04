@@ -125,17 +125,16 @@ class UIManager:
                 surf = self.font.render(buff_text, True, (0, 100, 0))
                 screen.blit(surf, (x, y))
                 y += 20
+def _draw_progress_circle(self, screen, player, camera):
+    # Progress circle: fills clockwise from the top (12 o'clock)
+    spx, spy = camera.apply(player.x, player.y)
+    radius = player.radius + 10
+    rect = pygame.Rect(int(spx - radius), int(spy - radius), int(radius * 2), int(radius * 2))
 
-    def _draw_progress_circle(self, screen, player, camera):
-        # Progress circle: fills clockwise from the top
-        spx, spy = camera.apply(player.x, player.y)
-        radius = player.radius + 10
-        rect = pygame.Rect(int(spx - radius), int(spy - radius), int(radius * 2), int(radius * 2))
-        
-        # In Pygame, arcs are drawn counter-clockwise from start to stop.
-        # Clockwise fill = draw from (top - progress) to (top).
-        # start = -pi/2 - (2*pi*progress), stop = -pi/2
-        start_angle_cw = -math.pi / 2 - (2 * math.pi * player.interaction_progress)
-        stop_angle_cw = -math.pi / 2
-        
-        pygame.draw.arc(screen, (0, 255, 0), rect, start_angle_cw, stop_angle_cw, 4)
+    # Pygame draws arcs CCW. To make it LOOK clockwise filling from top (-pi/2):
+    # We start at (-pi/2 - sweep) and end at -pi/2.
+    sweep = 2 * math.pi * player.interaction_progress
+    start_angle = -math.pi / 2 - sweep
+    stop_angle = -math.pi / 2
+
+    pygame.draw.arc(screen, (0, 255, 0), rect, start_angle, stop_angle, 4)
