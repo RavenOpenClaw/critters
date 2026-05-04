@@ -16,18 +16,21 @@ class Obstacle(WorldObject):
         """Assign a critter to this obstacle.
 
         If the critter is already assigned to another hut/obstacle, unassign it first.
-        If the critter is already assigned to this obstacle, do nothing.
+        If the critter is already assigned to this obstacle, ensure it stops following and works.
         """
-        # If already assigned to this obstacle, nothing to do
+        # Always stop following when assigned/re-assigned
+        critter.stop_follow()
+
+        # If already assigned to this obstacle, ensure state is correct and return
         if critter in self.assigned_critters:
+            if not critter.gathering or critter.target_resource != self:
+                critter.start_gather(self)
             return
+
         # Unassign from previous hut/obstacle if needed
         if critter.assigned_hut is not None and critter.assigned_hut is not self:
             critter.assigned_hut.unassign_critter(critter)
             
-        # Consistent behavior: stop following when assigned
-        critter.stop_follow()
-
         self.assigned_critters.append(critter)
         critter.assigned_hut = self
         critter.start_gather(self) # Start working immediately

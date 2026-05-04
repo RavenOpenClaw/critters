@@ -125,60 +125,79 @@ class World:
     def handle_map_transition(self, player):
         """
         Check if player should transition to another map via portal or edge boundary.
+        Also teleports any following critters to the new map.
         Returns True if a transition occurred, False otherwise.
         """
         # Portal check has priority
         portal = self.get_portal_near(player.x, player.y, radius=player.radius)
+        target_name = None
+        target_portal = None
+        entry_direction = None
+
         if portal:
-            target = self.transition_via_portal(portal)
+            if portal.target_map not in self.maps:
+                raise ValueError(f"Target map {portal.target_map} not found")
+            target_name = portal.target_map
+            target_portal = self.maps[target_name].portals.get(portal.target_portal)
+            if target_portal is None:
+                 raise ValueError(f"Target portal {portal.target_portal} not found on map {portal.target_map}")
+        else:
+            # Boundary-based edge transition using neighbors
             cs = self.grid.cell_size
-            # Place player at the center of the target portal's cell
-            player.x = target.gx * cs + cs/2
-            player.y = target.gy * cs + cs/2
-            return True
+            map_w_px = self.current_map.width * cs
+            map_h_px = self.current_map.height * cs
+            x, y = player.x, player.y
+            neighbors = self.current_map.neighbors or {}
 
-        # Boundary-based edge transition using neighbors
-        cs = self.grid.cell_size
-        map_w_px = self.current_map.width * cs
-        map_h_px = self.current_map.height * cs
-        x, y = player.x, player.y
-        neighbors = self.current_map.neighbors or {}
+            if x < 0:
+                entry_direction = 'west'
+            elif x >= map_w_px:
+                entry_direction = 'east'
+            elif y < 0:
+                entry_direction = 'north'
+            elif y >= map_h_px:
+                entry_direction = 'south'
 
-        direction = None
-        if x < 0:
-            direction = 'west'
-        elif x >= map_w_px:
-            direction = 'east'
-        elif y < 0:
-            direction = 'north'
-        elif y >= map_h_px:
-            direction = 'south'
+            if entry_direction and entry_direction in neighbors:
+                target_name = neighbors[entry_direction]
 
-        if direction and direction in neighbors:
-            target_name = neighbors[direction]
-            if target_name not in self.maps:
-                return False
+        if target_name:
+            # Prepare critters for transport
+            followers = list(getattr(player, 'following_critters', []))
+            for c in followers:
+                self.remove_object(c)
+
+            # Switch Map
             self.switch_map(target_name)
-            # After switching, place player just inside the opposite edge of the new map
+            cs = self.grid.cell_size
             new_map = self.current_map
             new_w_px = new_map.width * cs
             new_h_px = new_map.height * cs
-            if direction == 'west':
-                # leaving west edge, so enter west neighbor at its east edge (right side)
-                player.x = new_w_px - cs/2
-                player.y = max(cs/2, min(y, new_h_px - cs/2))
-            elif direction == 'east':
-                # leaving east edge, enter east neighbor at its west edge (left side)
-                player.x = cs/2
-                player.y = max(cs/2, min(y, new_h_px - cs/2))
-            elif direction == 'north':
-                # leaving north edge, enter north neighbor at its south edge (bottom)
-                player.y = new_h_px - cs/2
-                player.x = max(cs/2, min(x, new_w_px - cs/2))
-            elif direction == 'south':
-                # leaving south edge, enter south neighbor at its north edge (top)
-                player.y = cs/2
-                player.x = max(cs/2, min(x, new_w_px - cs/2))
+
+            if portal:
+                # Place player and critters at the center of the target portal's cell
+                player.x = target_portal.gx * cs + cs/2
+                player.y = target_portal.gy * cs + cs/2
+            else:
+                # Place player just inside the opposite edge of the new map
+                if entry_direction == 'west':
+                    player.x = new_w_px - cs/2
+                    player.y = max(cs/2, min(player.y, new_h_px - cs/2))
+                elif entry_direction == 'east':
+                    player.x = cs/2
+                    player.y = max(cs/2, min(player.y, new_h_px - cs/2))
+                elif entry_direction == 'north':
+                    player.y = new_h_px - cs/2
+                    player.x = max(cs/2, min(player.x, new_w_px - cs/2))
+                elif entry_direction == 'south':
+                    player.y = cs/2
+                    player.x = max(cs/2, min(player.x, new_w_px - cs/2))
+
+            # Re-add critters to the new map near the player
+            for c in followers:
+                c.x, c.y = player.x, player.y
+                self.add_object(c)
+            
             return True
 
         return False

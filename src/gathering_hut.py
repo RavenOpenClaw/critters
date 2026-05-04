@@ -31,17 +31,18 @@ class GatheringHut(Building):
         """Assign a critter to this hut.
 
         If the critter is already assigned to another hut, unassign it first.
-        If the critter is already assigned to this hut, do nothing.
+        If the critter is already assigned to this hut, ensure it stops following.
         """
-        # If already assigned to this hut, nothing to do
+        # Always stop following when assigned/re-assigned
+        critter.stop_follow()
+
+        # If already assigned to this hut, nothing more to do
         if critter in self.assigned_critters:
             return
+
         # Unassign from previous hut if needed
         if critter.assigned_hut is not None and critter.assigned_hut is not self:
             critter.assigned_hut.unassign_critter(critter)
-        
-        # Consistent behavior: stop following when assigned
-        critter.stop_follow()
         
         self.assigned_critters.append(critter)
         critter.assigned_hut = self
@@ -107,7 +108,7 @@ class GatheringHut(Building):
             critter.stop_follow()
             self.assign_critter(critter)
             if hasattr(self, 'world') and self.world is not None:
-                self.world.set_message(MSG_ASSIGN_GATHERING, 2.0)
+                self.world.set_message(MSG_ASSIGN_GATHERING, 3.0)
             return
 
         # Withdraw mode: transfer all storage to player inventory
