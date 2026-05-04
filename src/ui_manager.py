@@ -146,10 +146,10 @@ class UIManager:
         radius = player.radius + 10
         rect = pygame.Rect(int(spx - radius), int(spy - radius), int(radius * 2), int(radius * 2))
         
-        # Pygame draws arcs CCW. To make it LOOK clockwise filling from top (-pi/2):
-        # We start at (-pi/2 - sweep) and end at -pi/2.
+        # Pygame draws arcs CCW. To make it LOOK clockwise filling from top (pi/2):
+        # We start at (pi/2 - sweep) and end at pi/2.
         sweep = 2 * math.pi * player.interaction_progress
-        start_angle = -math.pi / 2 - sweep
-        stop_angle = -math.pi / 2
+        start_angle = math.pi / 2 - sweep
+        stop_angle = math.pi / 2
         
         pygame.draw.arc(screen, (0, 255, 0), rect, start_angle, stop_angle, 4)
