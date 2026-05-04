@@ -186,6 +186,9 @@ class GameEngine:
         # Debug: log player state
         # print(f"Player: ({self.player.x:.1f}, {self.player.y:.1f}) Speed: {self.player.speed:.1f}")
         
+        # Campfire Aura
+        self.world.apply_campfire_aura(self.player)
+        
         self.player.move(self.input_handler.move_x, self.input_handler.move_y, dt, grid=self.world.grid)
         self.player.update_interaction(dt, self.world, self.input_handler.interact_held)
         

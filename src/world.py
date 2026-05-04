@@ -324,6 +324,12 @@ class World:
                 self.message = ""
                 self.message_timer = 0.0
 
+        # Campfire Aura Logic
+        from campfire import Campfire
+        from buff import Buff
+        from constants import BUFF_NAME_WARM
+        campfires = [obj for obj in self.current_map.objects if isinstance(obj, Campfire)]
+        
         # Update all objects in the current map
         # Use a copy to allow objects to be removed during update (e.g. Grass condition <= 0)
         from critter import Critter
@@ -331,8 +337,28 @@ class World:
             if hasattr(obj, 'update'):
                 if isinstance(obj, Critter):
                     obj.update(dt, self, pathfinding_system)
+                    # Apply Campfire aura to critters
+                    for cf in campfires:
+                        cx, cy = cf.get_center()
+                        dx, dy = obj.x - cx, obj.y - cy
+                        if dx*dx + dy*dy <= (3.0 * self.grid.cell_size)**2:
+                            obj.apply_buff(Buff(BUFF_NAME_WARM, {'gather': 2.0}, duration=2.0))
                 else:
                     obj.update(dt)
+
+    def apply_campfire_aura(self, entity):
+        """Apply Warm buff to an entity if near any campfire."""
+        from campfire import Campfire
+        from buff import Buff
+        from constants import BUFF_NAME_WARM
+        for obj in self.current_map.objects:
+            if isinstance(obj, Campfire):
+                cx, cy = obj.get_center()
+                dx, dy = entity.x - cx, entity.y - cy
+                if dx*dx + dy*dy <= (3.0 * self.grid.cell_size)**2:
+                    entity.apply_buff(Buff(BUFF_NAME_WARM, {'gather': 2.0}, duration=2.0))
+                    return True
+        return False
 
     def draw(self, screen, camera=None):
         for obj in self.current_map.objects:

@@ -21,7 +21,9 @@
             "wood": 10,
             "stone": 5
           },
-          "storage": {},
+          "storage": {
+            "food": 23
+          },
           "gathering_radius": 240.0
         },
         {
@@ -58,14 +60,14 @@
           "height": 1,
           "cell_size": 24,
           "inventory": {
-            "food": 4
+            "food": 3
           },
           "blocks_movement": true
         },
         {
           "type": "BerryBush",
-          "gx": 61,
-          "gy": 37,
+          "gx": 19,
+          "gy": 13,
           "width": 1,
           "height": 1,
           "cell_size": 24,
@@ -76,8 +78,8 @@
         },
         {
           "type": "BerryBush",
-          "gx": 17,
-          "gy": 12,
+          "gx": 23,
+          "gy": 22,
           "width": 1,
           "height": 1,
           "cell_size": 24,
@@ -88,7 +90,7 @@
         },
         {
           "type": "BerryBush",
-          "gx": 50,
+          "gx": 57,
           "gy": 16,
           "width": 1,
           "height": 1,
@@ -100,7 +102,7 @@
         },
         {
           "type": "BerryBush",
-          "gx": 61,
+          "gx": 50,
           "gy": 17,
           "width": 1,
           "height": 1,
@@ -112,80 +114,8 @@
         },
         {
           "type": "BerryBush",
-          "gx": 22,
-          "gy": 22,
-          "width": 1,
-          "height": 1,
-          "cell_size": 24,
-          "inventory": {
-            "food": 5
-          },
-          "blocks_movement": true
-        },
-        {
-          "type": "BerryBush",
-          "gx": 13,
-          "gy": 50,
-          "width": 1,
-          "height": 1,
-          "cell_size": 24,
-          "inventory": {
-            "food": 5
-          },
-          "blocks_movement": true
-        },
-        {
-          "type": "BerryBush",
-          "gx": 18,
-          "gy": 42,
-          "width": 1,
-          "height": 1,
-          "cell_size": 24,
-          "inventory": {
-            "food": 5
-          },
-          "blocks_movement": true
-        },
-        {
-          "type": "BerryBush",
-          "gx": 58,
-          "gy": 13,
-          "width": 1,
-          "height": 1,
-          "cell_size": 24,
-          "inventory": {
-            "food": 5
-          },
-          "blocks_movement": true
-        },
-        {
-          "type": "BerryBush",
-          "gx": 47,
-          "gy": 7,
-          "width": 1,
-          "height": 1,
-          "cell_size": 24,
-          "inventory": {
-            "food": 5
-          },
-          "blocks_movement": true
-        },
-        {
-          "type": "BerryBush",
-          "gx": 26,
-          "gy": 19,
-          "width": 1,
-          "height": 1,
-          "cell_size": 24,
-          "inventory": {
-            "food": 5
-          },
-          "blocks_movement": true
-        },
-        {
-          "type": "BerryBush",
           "gx": 19,
-          "gy": 11,
+          "gy": 8,
           "width": 1,
           "height": 1,
           "cell_size": 24,
@@ -196,7 +126,43 @@
         },
         {
           "type": "BerryBush",
-          "gx": 72,
+          "gx": 27,
+          "gy": 38,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {
+            "food": 5
+          },
+          "blocks_movement": true
+        },
+        {
+          "type": "BerryBush",
+          "gx": 17,
+          "gy": 25,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {
+            "food": 5
+          },
+          "blocks_movement": true
+        },
+        {
+          "type": "BerryBush",
+          "gx": 11,
+          "gy": 51,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {
+            "food": 5
+          },
+          "blocks_movement": true
+        },
+        {
+          "type": "BerryBush",
+          "gx": 62,
           "gy": 44,
           "width": 1,
           "height": 1,
@@ -207,101 +173,125 @@
           "blocks_movement": true
         },
         {
-          "type": "Tree",
-          "gx": 29,
-          "gy": 33,
-          "width": 2,
-          "height": 2,
-          "cell_size": 24,
-          "inventory": {
-            "wood": 10
-          },
-          "blocks_movement": true,
-          "max_wood": 10,
-          "respawn_duration": 30.0,
-          "depleted": false,
-          "time_depleted": 0.0
-        },
-        {
-          "type": "Tree",
-          "gx": 55,
-          "gy": 53,
-          "width": 2,
-          "height": 2,
-          "cell_size": 24,
-          "inventory": {
-            "wood": 10
-          },
-          "blocks_movement": true,
-          "max_wood": 10,
-          "respawn_duration": 30.0,
-          "depleted": false,
-          "time_depleted": 0.0
-        },
-        {
-          "type": "Tree",
-          "gx": 40,
-          "gy": 14,
-          "width": 2,
-          "height": 2,
-          "cell_size": 24,
-          "inventory": {
-            "wood": 9
-          },
-          "blocks_movement": true,
-          "max_wood": 10,
-          "respawn_duration": 30.0,
-          "depleted": false,
-          "time_depleted": 0.0
-        },
-        {
-          "type": "Tree",
-          "gx": 59,
-          "gy": 33,
-          "width": 2,
-          "height": 2,
-          "cell_size": 24,
-          "inventory": {
-            "wood": 10
-          },
-          "blocks_movement": true,
-          "max_wood": 10,
-          "respawn_duration": 30.0,
-          "depleted": false,
-          "time_depleted": 0.0
-        },
-        {
-          "type": "Tree",
-          "gx": 57,
-          "gy": 47,
-          "width": 2,
-          "height": 2,
-          "cell_size": 24,
-          "inventory": {
-            "wood": 10
-          },
-          "blocks_movement": true,
-          "max_wood": 10,
-          "respawn_duration": 30.0,
-          "depleted": false,
-          "time_depleted": 0.0
-        },
-        {
-          "type": "Rock",
-          "gx": 46,
-          "gy": 19,
+          "type": "BerryBush",
+          "gx": 17,
+          "gy": 16,
           "width": 1,
           "height": 1,
           "cell_size": 24,
           "inventory": {
-            "stone": 8
+            "food": 5
           },
           "blocks_movement": true
         },
         {
+          "type": "BerryBush",
+          "gx": 73,
+          "gy": 46,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {
+            "food": 5
+          },
+          "blocks_movement": true
+        },
+        {
+          "type": "BerryBush",
+          "gx": 16,
+          "gy": 55,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {
+            "food": 5
+          },
+          "blocks_movement": true
+        },
+        {
+          "type": "Tree",
+          "gx": 25,
+          "gy": 40,
+          "width": 2,
+          "height": 2,
+          "cell_size": 24,
+          "inventory": {
+            "wood": 10
+          },
+          "blocks_movement": true,
+          "max_wood": 10,
+          "respawn_duration": 30.0,
+          "depleted": false,
+          "time_depleted": 0.0
+        },
+        {
+          "type": "Tree",
+          "gx": 46,
+          "gy": 52,
+          "width": 2,
+          "height": 2,
+          "cell_size": 24,
+          "inventory": {
+            "wood": 10
+          },
+          "blocks_movement": true,
+          "max_wood": 10,
+          "respawn_duration": 30.0,
+          "depleted": false,
+          "time_depleted": 0.0
+        },
+        {
+          "type": "Tree",
+          "gx": 69,
+          "gy": 32,
+          "width": 2,
+          "height": 2,
+          "cell_size": 24,
+          "inventory": {
+            "wood": 10
+          },
+          "blocks_movement": true,
+          "max_wood": 10,
+          "respawn_duration": 30.0,
+          "depleted": false,
+          "time_depleted": 0.0
+        },
+        {
+          "type": "Tree",
+          "gx": 30,
+          "gy": 19,
+          "width": 2,
+          "height": 2,
+          "cell_size": 24,
+          "inventory": {
+            "wood": 10
+          },
+          "blocks_movement": true,
+          "max_wood": 10,
+          "respawn_duration": 30.0,
+          "depleted": false,
+          "time_depleted": 0.0
+        },
+        {
+          "type": "Tree",
+          "gx": 7,
+          "gy": 9,
+          "width": 2,
+          "height": 2,
+          "cell_size": 24,
+          "inventory": {
+            "wood": 10
+          },
+          "blocks_movement": true,
+          "max_wood": 10,
+          "respawn_duration": 30.0,
+          "depleted": false,
+          "time_depleted": 0.0
+        },
+        {
           "type": "Rock",
-          "gx": 52,
-          "gy": 8,
+          "gx": 72,
+          "gy": 31,
           "width": 1,
           "height": 1,
           "cell_size": 24,
@@ -313,55 +303,55 @@
         {
           "type": "Rock",
           "gx": 44,
-          "gy": 18,
+          "gy": 17,
           "width": 1,
           "height": 1,
           "cell_size": 24,
           "inventory": {
-            "stone": 13
+            "stone": 9
           },
           "blocks_movement": true
         },
         {
           "type": "Rock",
-          "gx": 43,
-          "gy": 16,
+          "gx": 24,
+          "gy": 15,
           "width": 1,
           "height": 1,
           "cell_size": 24,
           "inventory": {
-            "stone": 12
-          },
-          "blocks_movement": true
-        },
-        {
-          "type": "Rock",
-          "gx": 66,
-          "gy": 46,
-          "width": 1,
-          "height": 1,
-          "cell_size": 24,
-          "inventory": {
-            "stone": 13
-          },
-          "blocks_movement": true
-        },
-        {
-          "type": "Rock",
-          "gx": 63,
-          "gy": 8,
-          "width": 1,
-          "height": 1,
-          "cell_size": 24,
-          "inventory": {
-            "stone": 10
+            "stone": 14
           },
           "blocks_movement": true
         },
         {
           "type": "Rock",
           "gx": 60,
-          "gy": 41,
+          "gy": 25,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {
+            "stone": 6
+          },
+          "blocks_movement": true
+        },
+        {
+          "type": "Rock",
+          "gx": 6,
+          "gy": 10,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {
+            "stone": 8
+          },
+          "blocks_movement": true
+        },
+        {
+          "type": "Rock",
+          "gx": 28,
+          "gy": 48,
           "width": 1,
           "height": 1,
           "cell_size": 24,
@@ -372,44 +362,44 @@
         },
         {
           "type": "Rock",
-          "gx": 28,
-          "gy": 25,
+          "gx": 75,
+          "gy": 15,
           "width": 1,
           "height": 1,
           "cell_size": 24,
           "inventory": {
-            "stone": 12
+            "stone": 9
           },
           "blocks_movement": true
         },
         {
           "type": "Rock",
-          "gx": 9,
+          "gx": 15,
+          "gy": 18,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {
+            "stone": 7
+          },
+          "blocks_movement": true
+        },
+        {
+          "type": "Rock",
+          "gx": 54,
           "gy": 40,
           "width": 1,
           "height": 1,
           "cell_size": 24,
           "inventory": {
-            "stone": 12
-          },
-          "blocks_movement": true
-        },
-        {
-          "type": "Rock",
-          "gx": 52,
-          "gy": 32,
-          "width": 1,
-          "height": 1,
-          "cell_size": 24,
-          "inventory": {
-            "stone": 15
+            "stone": 6
           },
           "blocks_movement": true
         },
         {
           "type": "Stick",
-          "gx": 45,
-          "gy": 19,
+          "gx": 24,
+          "gy": 5,
           "width": 1,
           "height": 1,
           "cell_size": 24,
@@ -420,8 +410,8 @@
         },
         {
           "type": "Stick",
-          "gx": 52,
-          "gy": 54,
+          "gx": 32,
+          "gy": 6,
           "width": 1,
           "height": 1,
           "cell_size": 24,
@@ -432,44 +422,8 @@
         },
         {
           "type": "Stick",
-          "gx": 14,
-          "gy": 34,
-          "width": 1,
-          "height": 1,
-          "cell_size": 24,
-          "inventory": {
-            "wood": 4
-          },
-          "blocks_movement": true
-        },
-        {
-          "type": "Stick",
-          "gx": 37,
-          "gy": 54,
-          "width": 1,
-          "height": 1,
-          "cell_size": 24,
-          "inventory": {
-            "wood": 5
-          },
-          "blocks_movement": true
-        },
-        {
-          "type": "Stick",
-          "gx": 34,
-          "gy": 45,
-          "width": 1,
-          "height": 1,
-          "cell_size": 24,
-          "inventory": {
-            "wood": 2
-          },
-          "blocks_movement": true
-        },
-        {
-          "type": "Stick",
-          "gx": 53,
-          "gy": 10,
+          "gx": 61,
+          "gy": 49,
           "width": 1,
           "height": 1,
           "cell_size": 24,
@@ -480,20 +434,8 @@
         },
         {
           "type": "Stick",
-          "gx": 67,
-          "gy": 20,
-          "width": 1,
-          "height": 1,
-          "cell_size": 24,
-          "inventory": {
-            "wood": 5
-          },
-          "blocks_movement": true
-        },
-        {
-          "type": "Stick",
-          "gx": 13,
-          "gy": 10,
+          "gx": 73,
+          "gy": 11,
           "width": 1,
           "height": 1,
           "cell_size": 24,
@@ -504,8 +446,20 @@
         },
         {
           "type": "Stick",
-          "gx": 37,
-          "gy": 9,
+          "gx": 50,
+          "gy": 12,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {
+            "wood": 3
+          },
+          "blocks_movement": true
+        },
+        {
+          "type": "Stick",
+          "gx": 46,
+          "gy": 25,
           "width": 1,
           "height": 1,
           "cell_size": 24,
@@ -516,20 +470,56 @@
         },
         {
           "type": "Stick",
-          "gx": 70,
-          "gy": 20,
+          "gx": 41,
+          "gy": 55,
           "width": 1,
           "height": 1,
           "cell_size": 24,
           "inventory": {
             "wood": 4
+          },
+          "blocks_movement": true
+        },
+        {
+          "type": "Stick",
+          "gx": 24,
+          "gy": 27,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {
+            "wood": 2
+          },
+          "blocks_movement": true
+        },
+        {
+          "type": "Stick",
+          "gx": 21,
+          "gy": 15,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {
+            "wood": 4
+          },
+          "blocks_movement": true
+        },
+        {
+          "type": "Stick",
+          "gx": 21,
+          "gy": 52,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {
+            "wood": 5
           },
           "blocks_movement": true
         },
         {
           "type": "Stick",
           "gx": 75,
-          "gy": 43,
+          "gy": 7,
           "width": 1,
           "height": 1,
           "cell_size": 24,
@@ -540,20 +530,20 @@
         },
         {
           "type": "Stick",
-          "gx": 10,
-          "gy": 51,
+          "gx": 55,
+          "gy": 10,
           "width": 1,
           "height": 1,
           "cell_size": 24,
           "inventory": {
-            "wood": 4
+            "wood": 5
           },
           "blocks_movement": true
         },
         {
           "type": "Stick",
-          "gx": 74,
-          "gy": 23,
+          "gx": 37,
+          "gy": 31,
           "width": 1,
           "height": 1,
           "cell_size": 24,
@@ -564,190 +554,287 @@
         },
         {
           "type": "Grass",
-          "gx": 27,
+          "gx": 11,
           "gy": 37,
           "width": 1,
           "height": 1,
           "cell_size": 24,
           "inventory": {},
           "blocks_movement": false,
-          "spread_threshold": 44.758188174835404,
-          "time_accumulator": 9.99900000000001
+          "spread_threshold": 115.56005910456311,
+          "time_accumulator": 52.107999999997794
         },
         {
           "type": "Grass",
-          "gx": 48,
-          "gy": 16,
+          "gx": 47,
+          "gy": 47,
           "width": 1,
           "height": 1,
           "cell_size": 24,
           "inventory": {},
           "blocks_movement": false,
-          "spread_threshold": 57.34082541387731,
-          "time_accumulator": 54.76199999999665
+          "spread_threshold": 80.55491019514693,
+          "time_accumulator": 41.56699999999846
         },
         {
           "type": "Grass",
-          "gx": 75,
-          "gy": 6,
+          "gx": 27,
+          "gy": 30,
           "width": 1,
           "height": 1,
           "cell_size": 24,
           "inventory": {},
           "blocks_movement": false,
-          "spread_threshold": 54.42867052835079,
-          "time_accumulator": 0.3210000000000002
+          "spread_threshold": 57.46246336919758,
+          "time_accumulator": 53.361999999997714
         },
         {
           "type": "Grass",
-          "gx": 50,
-          "gy": 22,
-          "width": 1,
-          "height": 1,
-          "cell_size": 24,
-          "inventory": {},
-          "blocks_movement": false,
-          "spread_threshold": 37.90904480445491,
-          "time_accumulator": 16.836999999999914
-        },
-        {
-          "type": "Grass",
-          "gx": 34,
-          "gy": 6,
-          "width": 1,
-          "height": 1,
-          "cell_size": 24,
-          "inventory": {},
-          "blocks_movement": false,
-          "spread_threshold": 71.60742100427923,
-          "time_accumulator": 54.76199999999665
-        },
-        {
-          "type": "Grass",
-          "gx": 70,
-          "gy": 12,
-          "width": 1,
-          "height": 1,
-          "cell_size": 24,
-          "inventory": {},
-          "blocks_movement": false,
-          "spread_threshold": 90.65317312254632,
-          "time_accumulator": 54.76199999999665
-        },
-        {
-          "type": "Grass",
-          "gx": 58,
-          "gy": 43,
-          "width": 1,
-          "height": 1,
-          "cell_size": 24,
-          "inventory": {},
-          "blocks_movement": false,
-          "spread_threshold": 73.88644918373416,
-          "time_accumulator": 54.76199999999665
-        },
-        {
-          "type": "Grass",
-          "gx": 24,
-          "gy": 13,
-          "width": 1,
-          "height": 1,
-          "cell_size": 24,
-          "inventory": {},
-          "blocks_movement": false,
-          "spread_threshold": 90.94500174654797,
-          "time_accumulator": 54.76199999999665
-        },
-        {
-          "type": "Grass",
-          "gx": 29,
-          "gy": 49,
-          "width": 1,
-          "height": 1,
-          "cell_size": 24,
-          "inventory": {},
-          "blocks_movement": false,
-          "spread_threshold": 50.50345703141595,
-          "time_accumulator": 4.249000000000001
-        },
-        {
-          "type": "Grass",
-          "gx": 16,
+          "gx": 23,
           "gy": 24,
           "width": 1,
           "height": 1,
           "cell_size": 24,
           "inventory": {},
           "blocks_movement": false,
-          "spread_threshold": 101.97719140474841,
-          "time_accumulator": 54.76199999999665
+          "spread_threshold": 59.503486951650814,
+          "time_accumulator": 45.20599999999823
         },
         {
           "type": "Grass",
-          "gx": 48,
-          "gy": 21,
+          "gx": 25,
+          "gy": 55,
           "width": 1,
           "height": 1,
           "cell_size": 24,
           "inventory": {},
           "blocks_movement": false,
-          "spread_threshold": 111.4857220890293,
-          "time_accumulator": 54.76199999999665
+          "spread_threshold": 95.16937106138471,
+          "time_accumulator": 92.88600000000396
         },
         {
           "type": "Grass",
-          "gx": 71,
-          "gy": 18,
+          "gx": 10,
+          "gy": 46,
           "width": 1,
           "height": 1,
           "cell_size": 24,
           "inventory": {},
           "blocks_movement": false,
-          "spread_threshold": 117.87662959362206,
-          "time_accumulator": 54.76199999999665
+          "spread_threshold": 87.12376759557608,
+          "time_accumulator": 21.861999999999675
         },
         {
           "type": "Grass",
-          "gx": 28,
-          "gy": 35,
+          "gx": 18,
+          "gy": 43,
           "width": 1,
           "height": 1,
           "cell_size": 24,
           "inventory": {},
           "blocks_movement": false,
-          "spread_threshold": 115.42148439421464,
-          "time_accumulator": 54.76199999999665
+          "spread_threshold": 60.7391186771787,
+          "time_accumulator": 40.26699999999854
         },
         {
           "type": "Grass",
-          "gx": 37,
-          "gy": 13,
+          "gx": 75,
+          "gy": 32,
           "width": 1,
           "height": 1,
           "cell_size": 24,
           "inventory": {},
           "blocks_movement": false,
-          "spread_threshold": 39.68500599868276,
-          "time_accumulator": 14.256999999999996
+          "spread_threshold": 84.31907505834869,
+          "time_accumulator": 30.259999999999135
         },
         {
           "type": "Grass",
-          "gx": 66,
-          "gy": 19,
+          "gx": 69,
+          "gy": 28,
           "width": 1,
           "height": 1,
           "cell_size": 24,
           "inventory": {},
           "blocks_movement": false,
-          "spread_threshold": 52.99832541579582,
-          "time_accumulator": 1.752000000000001
+          "spread_threshold": 72.5438595275365,
+          "time_accumulator": 65.59999999999751
+        },
+        {
+          "type": "Grass",
+          "gx": 15,
+          "gy": 51,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {},
+          "blocks_movement": false,
+          "spread_threshold": 47.883392257842516,
+          "time_accumulator": 43.80699999999832
+        },
+        {
+          "type": "Grass",
+          "gx": 27,
+          "gy": 32,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {},
+          "blocks_movement": false,
+          "spread_threshold": 106.44153882763533,
+          "time_accumulator": 70.35099999999863
+        },
+        {
+          "type": "Grass",
+          "gx": 59,
+          "gy": 55,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {},
+          "blocks_movement": false,
+          "spread_threshold": 107.38781372916398,
+          "time_accumulator": 68.4519999999982
+        },
+        {
+          "type": "Grass",
+          "gx": 58,
+          "gy": 42,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {},
+          "blocks_movement": false,
+          "spread_threshold": 106.69020630049071,
+          "time_accumulator": 69.84899999999853
+        },
+        {
+          "type": "Grass",
+          "gx": 14,
+          "gy": 17,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {},
+          "blocks_movement": false,
+          "spread_threshold": 32.41044545794786,
+          "time_accumulator": 23.924999999999546
+        },
+        {
+          "type": "Grass",
+          "gx": 19,
+          "gy": 47,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {},
+          "blocks_movement": false,
+          "spread_threshold": 111.27239896431087,
+          "time_accumulator": 60.68599999999727
         }
       ],
       "critters": [
         {
           "type": "Critter",
-          "x": 780.0,
+          "x": 372.0,
           "y": 756.0,
+          "cell_size": 24,
+          "strength": 1,
+          "speed_stat": 1,
+          "endurance": 10,
+          "state": "IDLE",
+          "is_well_fed": false,
+          "assigned_hut_ref": null,
+          "target_resource_ref": null,
+          "inventory": {},
+          "loiter_timer": 2.587767167780167,
+          "loiter_target": null,
+          "idle_timer": 13.565211361844446,
+          "path": [],
+          "path_index": 0,
+          "following_player_id": null,
+          "follow_timer": 0.0,
+          "follow_recalc_interval": 1.0,
+          "follow_goal": null
+        },
+        {
+          "type": "Critter",
+          "x": 816.32,
+          "y": 660.0,
+          "cell_size": 24,
+          "strength": 1,
+          "speed_stat": 10,
+          "endurance": 1,
+          "state": "RETURN",
+          "is_well_fed": false,
+          "assigned_hut_ref": {
+            "type": "GatheringHut",
+            "gx": 35,
+            "gy": 28
+          },
+          "target_resource_ref": null,
+          "inventory": {
+            "food": 1
+          },
+          "loiter_timer": 3.2861577505305064,
+          "loiter_target": null,
+          "idle_timer": -0.0023880807156852896,
+          "path": [
+            [
+              32,
+              32
+            ],
+            [
+              32,
+              31
+            ],
+            [
+              32,
+              30
+            ],
+            [
+              32,
+              29
+            ],
+            [
+              32,
+              28
+            ],
+            [
+              32,
+              27
+            ],
+            [
+              33,
+              27
+            ],
+            [
+              34,
+              27
+            ],
+            [
+              35,
+              27
+            ],
+            [
+              36,
+              27
+            ],
+            [
+              37,
+              27
+            ]
+          ],
+          "path_index": 7,
+          "following_player_id": null,
+          "follow_timer": 0.0,
+          "follow_recalc_interval": 1.0,
+          "follow_goal": null
+        },
+        {
+          "type": "Critter",
+          "x": 923.9945908325332,
+          "y": 767.3497742330727,
           "cell_size": 24,
           "strength": 10,
           "speed_stat": 1,
@@ -761,55 +848,9 @@
           },
           "target_resource_ref": null,
           "inventory": {},
-          "loiter_timer": 3.631760259798275,
+          "loiter_timer": 2.4017452250678413,
           "loiter_target": null,
-          "idle_timer": 3.1643859311105627,
-          "path": [],
-          "path_index": 0,
-          "following_player_id": null,
-          "follow_timer": 0.0,
-          "follow_recalc_interval": 1.0,
-          "follow_goal": null
-        },
-        {
-          "type": "Critter",
-          "x": 1668.0,
-          "y": 828.0,
-          "cell_size": 24,
-          "strength": 1,
-          "speed_stat": 10,
-          "endurance": 1,
-          "state": "IDLE",
-          "is_well_fed": false,
-          "assigned_hut_ref": null,
-          "target_resource_ref": null,
-          "inventory": {},
-          "loiter_timer": 2.4520447306436846,
-          "loiter_target": null,
-          "idle_timer": 2.3864317837169575,
-          "path": [],
-          "path_index": 0,
-          "following_player_id": null,
-          "follow_timer": 0.0,
-          "follow_recalc_interval": 1.0,
-          "follow_goal": null
-        },
-        {
-          "type": "Critter",
-          "x": 1668.0,
-          "y": 324.0,
-          "cell_size": 24,
-          "strength": 1,
-          "speed_stat": 1,
-          "endurance": 10,
-          "state": "IDLE",
-          "is_well_fed": false,
-          "assigned_hut_ref": null,
-          "target_resource_ref": null,
-          "inventory": {},
-          "loiter_timer": 3.82785242915943,
-          "loiter_target": null,
-          "idle_timer": 3.113842996487288,
+          "idle_timer": 5.539389663455059,
           "path": [],
           "path_index": 0,
           "following_player_id": null,
@@ -820,64 +861,44 @@
       ],
       "trampled": [
         [
-          38,
-          27,
-          2.605999999999997
-        ],
-        [
-          37,
-          27,
-          2.476999999999997
-        ],
-        [
-          39,
-          27,
-          2.7189999999999976
-        ],
-        [
-          39,
-          28,
-          2.7829999999999973
-        ],
-        [
-          39,
-          29,
-          2.909999999999997
-        ],
-        [
-          39,
+          32,
           30,
-          3.022999999999997
+          1.005000000000001
         ],
         [
-          39,
-          31,
-          3.135999999999997
-        ],
-        [
-          39,
           32,
-          3.263999999999997
+          31,
+          0.6439999999999986
         ],
         [
-          39,
+          38,
+          31,
+          0.22299999999999742
+        ],
+        [
+          32,
+          29,
+          1.3700000000000039
+        ],
+        [
+          32,
+          28,
+          1.726000000000001
+        ],
+        [
+          32,
+          27,
+          2.086000000000001
+        ],
+        [
           33,
-          3.3769999999999976
+          27,
+          2.430000000000001
         ],
         [
-          39,
           34,
-          3.5049999999999972
-        ],
-        [
-          33,
-          31,
-          4.148999999999998
-        ],
-        [
-          32,
-          31,
-          4.630999999999999
+          27,
+          2.7780000000000014
         ]
       ],
       "portals": {},
@@ -893,140 +914,8 @@
       "objects": [
         {
           "type": "BerryBush",
-          "gx": 13,
-          "gy": 43,
-          "width": 1,
-          "height": 1,
-          "cell_size": 24,
-          "inventory": {
-            "food": 5
-          },
-          "blocks_movement": true
-        },
-        {
-          "type": "BerryBush",
-          "gx": 52,
-          "gy": 8,
-          "width": 1,
-          "height": 1,
-          "cell_size": 24,
-          "inventory": {
-            "food": 5
-          },
-          "blocks_movement": true
-        },
-        {
-          "type": "BerryBush",
-          "gx": 56,
-          "gy": 27,
-          "width": 1,
-          "height": 1,
-          "cell_size": 24,
-          "inventory": {
-            "food": 5
-          },
-          "blocks_movement": true
-        },
-        {
-          "type": "BerryBush",
-          "gx": 29,
-          "gy": 13,
-          "width": 1,
-          "height": 1,
-          "cell_size": 24,
-          "inventory": {
-            "food": 5
-          },
-          "blocks_movement": true
-        },
-        {
-          "type": "BerryBush",
-          "gx": 71,
-          "gy": 27,
-          "width": 1,
-          "height": 1,
-          "cell_size": 24,
-          "inventory": {
-            "food": 5
-          },
-          "blocks_movement": true
-        },
-        {
-          "type": "BerryBush",
-          "gx": 75,
-          "gy": 41,
-          "width": 1,
-          "height": 1,
-          "cell_size": 24,
-          "inventory": {
-            "food": 5
-          },
-          "blocks_movement": true
-        },
-        {
-          "type": "BerryBush",
-          "gx": 7,
-          "gy": 33,
-          "width": 1,
-          "height": 1,
-          "cell_size": 24,
-          "inventory": {
-            "food": 5
-          },
-          "blocks_movement": true
-        },
-        {
-          "type": "BerryBush",
-          "gx": 5,
-          "gy": 45,
-          "width": 1,
-          "height": 1,
-          "cell_size": 24,
-          "inventory": {
-            "food": 5
-          },
-          "blocks_movement": true
-        },
-        {
-          "type": "BerryBush",
-          "gx": 71,
-          "gy": 55,
-          "width": 1,
-          "height": 1,
-          "cell_size": 24,
-          "inventory": {
-            "food": 5
-          },
-          "blocks_movement": true
-        },
-        {
-          "type": "BerryBush",
-          "gx": 22,
-          "gy": 28,
-          "width": 1,
-          "height": 1,
-          "cell_size": 24,
-          "inventory": {
-            "food": 5
-          },
-          "blocks_movement": true
-        },
-        {
-          "type": "BerryBush",
-          "gx": 17,
-          "gy": 52,
-          "width": 1,
-          "height": 1,
-          "cell_size": 24,
-          "inventory": {
-            "food": 5
-          },
-          "blocks_movement": true
-        },
-        {
-          "type": "BerryBush",
           "gx": 23,
-          "gy": 28,
+          "gy": 7,
           "width": 1,
           "height": 1,
           "cell_size": 24,
@@ -1037,79 +926,7 @@
         },
         {
           "type": "BerryBush",
-          "gx": 34,
-          "gy": 9,
-          "width": 1,
-          "height": 1,
-          "cell_size": 24,
-          "inventory": {
-            "food": 5
-          },
-          "blocks_movement": true
-        },
-        {
-          "type": "BerryBush",
-          "gx": 73,
-          "gy": 5,
-          "width": 1,
-          "height": 1,
-          "cell_size": 24,
-          "inventory": {
-            "food": 5
-          },
-          "blocks_movement": true
-        },
-        {
-          "type": "BerryBush",
-          "gx": 56,
-          "gy": 55,
-          "width": 1,
-          "height": 1,
-          "cell_size": 24,
-          "inventory": {
-            "food": 5
-          },
-          "blocks_movement": true
-        },
-        {
-          "type": "BerryBush",
-          "gx": 25,
-          "gy": 37,
-          "width": 1,
-          "height": 1,
-          "cell_size": 24,
-          "inventory": {
-            "food": 5
-          },
-          "blocks_movement": true
-        },
-        {
-          "type": "BerryBush",
-          "gx": 36,
-          "gy": 45,
-          "width": 1,
-          "height": 1,
-          "cell_size": 24,
-          "inventory": {
-            "food": 5
-          },
-          "blocks_movement": true
-        },
-        {
-          "type": "BerryBush",
-          "gx": 54,
-          "gy": 17,
-          "width": 1,
-          "height": 1,
-          "cell_size": 24,
-          "inventory": {
-            "food": 5
-          },
-          "blocks_movement": true
-        },
-        {
-          "type": "BerryBush",
-          "gx": 6,
+          "gx": 50,
           "gy": 11,
           "width": 1,
           "height": 1,
@@ -1121,8 +938,212 @@
         },
         {
           "type": "BerryBush",
+          "gx": 24,
+          "gy": 7,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {
+            "food": 5
+          },
+          "blocks_movement": true
+        },
+        {
+          "type": "BerryBush",
+          "gx": 43,
+          "gy": 22,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {
+            "food": 5
+          },
+          "blocks_movement": true
+        },
+        {
+          "type": "BerryBush",
+          "gx": 42,
+          "gy": 25,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {
+            "food": 5
+          },
+          "blocks_movement": true
+        },
+        {
+          "type": "BerryBush",
+          "gx": 17,
+          "gy": 6,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {
+            "food": 5
+          },
+          "blocks_movement": true
+        },
+        {
+          "type": "BerryBush",
+          "gx": 43,
+          "gy": 47,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {
+            "food": 5
+          },
+          "blocks_movement": true
+        },
+        {
+          "type": "BerryBush",
+          "gx": 33,
+          "gy": 12,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {
+            "food": 5
+          },
+          "blocks_movement": true
+        },
+        {
+          "type": "BerryBush",
+          "gx": 67,
+          "gy": 7,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {
+            "food": 5
+          },
+          "blocks_movement": true
+        },
+        {
+          "type": "BerryBush",
           "gx": 34,
-          "gy": 8,
+          "gy": 35,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {
+            "food": 5
+          },
+          "blocks_movement": true
+        },
+        {
+          "type": "BerryBush",
+          "gx": 39,
+          "gy": 41,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {
+            "food": 5
+          },
+          "blocks_movement": true
+        },
+        {
+          "type": "BerryBush",
+          "gx": 44,
+          "gy": 14,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {
+            "food": 5
+          },
+          "blocks_movement": true
+        },
+        {
+          "type": "BerryBush",
+          "gx": 38,
+          "gy": 28,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {
+            "food": 5
+          },
+          "blocks_movement": true
+        },
+        {
+          "type": "BerryBush",
+          "gx": 65,
+          "gy": 17,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {
+            "food": 5
+          },
+          "blocks_movement": true
+        },
+        {
+          "type": "BerryBush",
+          "gx": 12,
+          "gy": 17,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {
+            "food": 5
+          },
+          "blocks_movement": true
+        },
+        {
+          "type": "BerryBush",
+          "gx": 64,
+          "gy": 23,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {
+            "food": 5
+          },
+          "blocks_movement": true
+        },
+        {
+          "type": "BerryBush",
+          "gx": 6,
+          "gy": 48,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {
+            "food": 5
+          },
+          "blocks_movement": true
+        },
+        {
+          "type": "BerryBush",
+          "gx": 61,
+          "gy": 10,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {
+            "food": 5
+          },
+          "blocks_movement": true
+        },
+        {
+          "type": "BerryBush",
+          "gx": 33,
+          "gy": 40,
+          "width": 1,
+          "height": 1,
+          "cell_size": 24,
+          "inventory": {
+            "food": 5
+          },
+          "blocks_movement": true
+        },
+        {
+          "type": "BerryBush",
+          "gx": 16,
+          "gy": 47,
           "width": 1,
           "height": 1,
           "cell_size": 24,
@@ -1133,7 +1154,328 @@
         }
       ],
       "critters": [],
-      "trampled": [],
+      "trampled": [
+        [
+          6,
+          17,
+          0.45199999999999996
+        ],
+        [
+          22,
+          10,
+          2.2429999999999994
+        ],
+        [
+          23,
+          10,
+          2.117
+        ],
+        [
+          8,
+          16,
+          0.03999999999999812
+        ],
+        [
+          31,
+          0,
+          0.03999999999999812
+        ],
+        [
+          32,
+          0,
+          0.07199999999999845
+        ],
+        [
+          33,
+          0,
+          0.19999999999999873
+        ],
+        [
+          34,
+          0,
+          0.30899999999999883
+        ],
+        [
+          34,
+          1,
+          0.3559999999999991
+        ],
+        [
+          35,
+          1,
+          0.4359999999999996
+        ],
+        [
+          35,
+          2,
+          0.46699999999999964
+        ],
+        [
+          35,
+          3,
+          0.5929999999999997
+        ],
+        [
+          8,
+          15,
+          0.6719999999999998
+        ],
+        [
+          35,
+          4,
+          0.72
+        ],
+        [
+          34,
+          4,
+          0.7990000000000003
+        ],
+        [
+          34,
+          5,
+          0.8300000000000001
+        ],
+        [
+          6,
+          16,
+          0.9240000000000009
+        ],
+        [
+          33,
+          5,
+          0.9240000000000009
+        ],
+        [
+          33,
+          6,
+          0.9560000000000012
+        ],
+        [
+          8,
+          14,
+          1.019000000000001
+        ],
+        [
+          32,
+          6,
+          1.0350000000000015
+        ],
+        [
+          32,
+          7,
+          1.066000000000001
+        ],
+        [
+          31,
+          7,
+          1.161000000000001
+        ],
+        [
+          31,
+          8,
+          1.1930000000000012
+        ],
+        [
+          30,
+          8,
+          1.2860000000000005
+        ],
+        [
+          30,
+          9,
+          1.3170000000000008
+        ],
+        [
+          29,
+          9,
+          1.3960000000000015
+        ],
+        [
+          6,
+          15,
+          1.4280000000000013
+        ],
+        [
+          29,
+          10,
+          1.4280000000000013
+        ],
+        [
+          28,
+          10,
+          1.5220000000000011
+        ],
+        [
+          27,
+          10,
+          1.6470000000000011
+        ],
+        [
+          8,
+          13,
+          1.7100000000000015
+        ],
+        [
+          26,
+          10,
+          1.7560000000000007
+        ],
+        [
+          25,
+          10,
+          1.8820000000000001
+        ],
+        [
+          6,
+          14,
+          1.8980000000000001
+        ],
+        [
+          24,
+          10,
+          1.9909999999999997
+        ],
+        [
+          8,
+          12,
+          2.0689999999999995
+        ],
+        [
+          21,
+          10,
+          2.3509999999999995
+        ],
+        [
+          6,
+          13,
+          2.461
+        ],
+        [
+          20,
+          10,
+          2.476
+        ],
+        [
+          19,
+          10,
+          2.6010000000000004
+        ],
+        [
+          8,
+          11,
+          2.664000000000001
+        ],
+        [
+          18,
+          10,
+          2.711000000000001
+        ],
+        [
+          17,
+          10,
+          2.8380000000000023
+        ],
+        [
+          6,
+          12,
+          2.932000000000002
+        ],
+        [
+          16,
+          10,
+          2.9630000000000023
+        ],
+        [
+          8,
+          10,
+          3.921000000000006
+        ],
+        [
+          15,
+          10,
+          3.0740000000000034
+        ],
+        [
+          14,
+          10,
+          3.201000000000004
+        ],
+        [
+          13,
+          10,
+          3.326000000000004
+        ],
+        [
+          9,
+          10,
+          3.7940000000000045
+        ],
+        [
+          6,
+          11,
+          3.421000000000005
+        ],
+        [
+          12,
+          10,
+          3.436000000000005
+        ],
+        [
+          11,
+          10,
+          4.092000000000005
+        ],
+        [
+          10,
+          10,
+          4.687000000000002
+        ],
+        [
+          6,
+          10,
+          4.156000000000005
+        ],
+        [
+          7,
+          10,
+          4.046000000000006
+        ],
+        [
+          5,
+          10,
+          4.466000000000003
+        ],
+        [
+          4,
+          10,
+          4.953
+        ],
+        [
+          3,
+          10,
+          4.513000000000003
+        ],
+        [
+          2,
+          10,
+          4.640000000000002
+        ],
+        [
+          1,
+          10,
+          4.7650000000000015
+        ],
+        [
+          0,
+          10,
+          4.8740000000000006
+        ],
+        [
+          -1,
+          10,
+          5.0
+        ]
+      ],
       "portals": {},
       "neighbors": {
         "west": "main"
@@ -1142,15 +1484,15 @@
   ],
   "player": {
     "type": "Player",
-    "x": 953.5999999999995,
-    "y": 818.2000000000005,
+    "x": 687.9999999999877,
+    "y": 627.1999999999995,
     "radius": 18,
     "base_speed": 200,
     "speed": 200.0,
     "inventory": {
-      "stone": 1,
-      "wood": 9,
-      "food": 1
+      "food": 4,
+      "wood": 3,
+      "stone": 9
     },
     "active_buffs": [],
     "unlocked_equipment": [],

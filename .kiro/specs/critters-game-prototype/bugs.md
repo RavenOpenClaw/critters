@@ -1,3 +1,18 @@
+### [CAMPFIRE_AURA] Campfire fails to apply 'Warm' buff to nearby entities
+
+Status: OPEN
+
+Expected: Entities (Player/Critters) standing within the Campfire's aura radius should receive the 'Warm' buff (gathering speed multiplier).
+
+Actual: No buff is applied when standing near a Campfire.
+
+Reproduce:
+- Build a Campfire.
+- Stand adjacent to it.
+- Check active buffs in HUD (none appear).
+
+---
+
 ### [ASSIGN_INCONSISTENCY] Inconsistent behavior between Right-Click and E-Interact assignment
 
 Status: OPEN
