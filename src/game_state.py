@@ -139,7 +139,7 @@ def new_game(window_width: int = 800, window_height: int = 600) -> tuple[World, 
         if not world.grid.is_occupied(gx, gy):
             world.add_object(Grass(gx, gy, cell_size))
 
-    # --- Specialized Starting Critters ---
+    # --- Specialized Starting Critters (Wild) ---
     # (STR, SPD, END)
     critter_configs = [
         (10, 1, 1),   # Strong
@@ -147,12 +147,22 @@ def new_game(window_width: int = 800, window_height: int = 600) -> tuple[World, 
         (1, 1, 10),   # Hardy
     ]
     from critter import Critter
-    for i, (str_v, spd_v, end_v) in enumerate(critter_configs):
-        cx = gh.x + (gh.width + 1) * cell_size
-        cy = gh.y + (i * cell_size)
-        c = Critter(cx, cy, cell_size=cell_size, strength=str_v, speed_stat=spd_v, endurance=end_v)
-        gh.assign_critter(c) # Start assigned to gathering
-        world.add_object(c)
+    for str_v, spd_v, end_v in critter_configs:
+        # Scatter randomly in the main area
+        while True:
+            gx = random.randint(10, grid_width - 10)
+            gy = random.randint(10, grid_height - 10)
+            
+            # Avoid spawn safe zone
+            if abs(gx - spawn_gx) < 5 and abs(gy - spawn_gy) < 5:
+                continue
+            
+            if not world.grid.is_occupied(gx, gy):
+                cx = gx * cell_size + cell_size/2
+                cy = gy * cell_size + cell_size/2
+                c = Critter(cx, cy, cell_size=cell_size, strength=str_v, speed_stat=spd_v, endurance=end_v)
+                world.add_object(c)
+                break
 
     # --- Populate East Plains (Bonus) ---
     world.switch_map("east_plains")

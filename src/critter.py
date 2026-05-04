@@ -391,6 +391,51 @@ class Critter(Entity):
                                          gy * self.cell_size + self.cell_size / 2)
                 self.loiter_timer = random.uniform(2.0, 4.0)
 
+    def render(self, screen, camera=None):
+        """Draw the critter with procedural animation and stat-based coloring."""
+        import pygame
+        # Calculate screen position
+        draw_x, draw_y = self.x, self.y
+        if camera:
+            draw_x, draw_y = camera.apply(self.x, self.y)
+
+        # Apply state-based procedural offsets (jiggle/wobble)
+        ox, oy = self.get_render_offset()
+        final_x = int(draw_x + ox)
+        final_y = int(draw_y + oy)
+
+        # Draw Body (Stat-based color)
+        color = self.get_color()
+        pygame.draw.circle(screen, color, (final_x, final_y), int(self.radius))
+        # Add outline for definition
+        pygame.draw.circle(screen, (0, 0, 0), (final_x, final_y), int(self.radius), 1)
+
+        # Draw eyes (simple dots)
+        eye_offset = self.radius * 0.4
+        pygame.draw.circle(screen, (255, 255, 255), (int(final_x - eye_offset), int(final_y - eye_offset)), 2)
+        pygame.draw.circle(screen, (255, 255, 255), (int(final_x + eye_offset), int(final_y - eye_offset)), 2)
+
+        # Interaction Progress Circle
+        if self.gathering and self.interaction_progress > 0:
+            import math
+            prog_radius = self.radius + 5
+            rect = pygame.Rect(int(final_x - prog_radius), int(final_y - prog_radius), 
+                               int(prog_radius * 2), int(prog_radius * 2))
+            # Draw clockwise from top
+            start_angle = -math.pi / 2 - (2 * math.pi * self.interaction_progress)
+            stop_angle = -math.pi / 2
+            pygame.draw.arc(screen, (0, 255, 0), rect, start_angle, stop_angle, 3)
+
+    def get_render_offset(self):
+        """Return (dx, dy) pixel offset for animation based on current state and frame."""
+        # Simple procedural animation: wobble or jump
+        if self.state in (CritterState.GATHER, CritterState.RETURN):
+            # Action: left/right wobble (1-pixel shift)
+            return (-1, 0) if self.animation_frame == 0 else (1, 0)
+        else:  # IDLE, BREED, FOLLOW
+            # Subtle hop
+            return (0, -2) if self.animation_frame == 1 else (0, 0)
+
     def _circle_intersects_rect(self, cx, cy, r, rect_x, rect_y, rect_w, rect_h):
         """Check if a circle (center cx,cy, radius r) intersects an axis-aligned rectangle."""
         closest_x = max(rect_x, min(cx, rect_x + rect_w))

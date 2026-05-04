@@ -290,6 +290,24 @@ class World:
         for obj in to_remove:
             self.remove_object(obj)
 
+    def update(self, dt, pathfinding_system=None):
+        """
+        Run one simulation step for the entire world.
+        Updates trampled cells, cleans up resources, and updates all world objects.
+        """
+        self.update_trampled(dt)
+        self.cleanup_depleted_resources()
+
+        # Update all objects in the current map
+        # Use a copy to allow objects to be removed during update (e.g. Grass condition <= 0)
+        from critter import Critter
+        for obj in list(self.current_map.objects):
+            if hasattr(obj, 'update'):
+                if isinstance(obj, Critter):
+                    obj.update(dt, self, pathfinding_system)
+                else:
+                    obj.update(dt)
+
     def draw(self, screen, camera=None):
         for obj in self.current_map.objects:
             if hasattr(obj, 'render'):
