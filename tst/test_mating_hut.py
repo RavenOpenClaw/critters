@@ -35,15 +35,15 @@ class TestMatingHutAssignment(unittest.TestCase):
         self.assertIs(critter.assigned_hut, hut)
 
     @given(n=st.integers(min_value=1, max_value=100))
-    def test_mating_hut_unbounded_assignment(self, n):
-        """Mating Hut can have any number of critters assigned."""
+    def test_mating_hut_capped_assignment(self, n):
+        """Mating Hut assignment is capped at 2 critters (FIFO)."""
         hut = MatingHut(0, 0, cell_size=32)
         critters = [Critter(i*10, i*10, cell_size=32) for i in range(n)]
         for c in critters:
             hut.assign_critter(c)
-        self.assertEqual(len(hut.assigned_critters), n)
-        for c in critters:
-            self.assertIs(c.assigned_hut, hut)
+        
+        expected_count = min(n, 2)
+        self.assertEqual(len(hut.assigned_critters), expected_count)
 
 class TestMatingHutGathering(unittest.TestCase):
     """MatingHut does not provide gathering resources; should return None."""

@@ -15,10 +15,10 @@ class MatingHut(Building):
         self.assigned_critters = []
 
     def assign_critter(self, critter):
-        """Assign a critter to this hut.
-
+        """Assign a critter to this hut. Enforces a maximum of 2 critters.
+        
+        If the hut already has 2 critters, the earliest assigned critter is unassigned.
         If the critter is already assigned to another hut, unassign it first.
-        If the critter is already assigned to this hut, ensure it stops following and transitions to BREED.
         """
         # Always stop following when assigned/re-assigned
         critter.stop_follow()
@@ -28,6 +28,12 @@ class MatingHut(Building):
             if critter.state != CritterState.BREED:
                 critter.start_breed()
             return
+
+        # Enforce 2-critter limit: FIFO queue
+        if len(self.assigned_critters) >= 2:
+            oldest = self.assigned_critters[0]
+            self.unassign_critter(oldest)
+            oldest.start_idle() # Return to wandering
 
         # Unassign from previous hut if needed
         if critter.assigned_hut is not None and critter.assigned_hut is not self:
