@@ -18,7 +18,7 @@ class UIManager:
         self.build_menu = build_menu
         self.crafting_menu = crafting_menu
         self.critter_inspector = critter_inspector
-        self.mating_hut_inspector = MatingHutInspector(10, 10, 320, 260, self.font)
+        self.mating_hut_inspector = MatingHutInspector(10, 10, 320, 300, self.font)
         
         # HUD Button Rects
         self.hud_save_rect = pygame.Rect(10, window_height - 40, 80, 30)
