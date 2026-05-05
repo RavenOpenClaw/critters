@@ -134,6 +134,16 @@ class GameEngine:
             if not clicked_critter and self.build_menu.visible and self.build_menu.selected_building_class:
                 if self.world.grid.is_within_bounds(gx, gy):
                     self.build_menu.attempt_placement(self.player, self.world, self.world.grid, gx, gy)
+                    return
+
+            # Building / Object Selection
+            if not clicked_critter:
+                if (gx, gy) in self.world.grid.occupied:
+                    obj = self.world.grid.occupied[(gx, gy)]
+                    from mating_hut import MatingHut
+                    if isinstance(obj, MatingHut):
+                        self.ui_manager.mating_hut_inspector.toggle(obj)
+                        return
 
         # 3. Right-click Assignment
         if self.input_handler.mouse_right_clicked:

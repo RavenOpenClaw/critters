@@ -1,5 +1,5 @@
 """
-UIManager: Orchestrates all UI components (HUD, Build Menu, Crafting Menu, Inspector).
+UIManager: Orchestrates all UI components (HUD, Build Menu, Crafting Menu, Inspector, Mating Hut Inspector).
 Handles UI-level input consumption and unified rendering.
 """
 import pygame
@@ -8,6 +8,7 @@ from constants import (
     HUD_BUILD_BUTTON, HUD_CRAFT_BUTTON, HUD_BUFFS_TITLE, HUD_BUFFS_NONE,
     DECONSTRUCTION_MODE_LABEL
 )
+from mating_hut_inspector import MatingHutInspector
 
 class UIManager:
     def __init__(self, window_width, window_height, font, build_menu, crafting_menu, critter_inspector):
@@ -17,6 +18,7 @@ class UIManager:
         self.build_menu = build_menu
         self.crafting_menu = crafting_menu
         self.critter_inspector = critter_inspector
+        self.mating_hut_inspector = MatingHutInspector(10, 10, 320, 260, self.font)
         
         # HUD Button Rects
         self.hud_save_rect = pygame.Rect(10, window_height - 40, 80, 30)
@@ -39,19 +41,27 @@ class UIManager:
                 self.critter_inspector.hide()
                 return True
 
-        # 2. Build Menu
+        # 2. Mating Hut Inspector
+        if self.mating_hut_inspector.visible:
+            if self.mating_hut_inspector.handle_mouse_click(pos):
+                return True
+            # Click outside closes it
+            if not self.mating_hut_inspector.panel_rect.collidepoint(pos):
+                self.mating_hut_inspector.hide()
+                return True
+
+        # 3. Build Menu
         if self.build_menu.visible:
             if self.build_menu.handle_mouse_click(pos):
                 return True
 
-        # 3. Crafting Menu
+        # 4. Crafting Menu
         if self.crafting_menu.visible:
-            # Crafting menu doesn't have a specific click handler yet, but we check slots in main
-            # For now, let main handle slot selection but we consume the click area
+            # Crafting menu area consumption
             if self.crafting_menu.panel_rect.collidepoint(pos):
                 return True
 
-        # 4. HUD Buttons
+        # 5. HUD Buttons
         if self.hud_save_rect.collidepoint(pos):
             from save_system import save_game
             try:
@@ -100,12 +110,12 @@ class UIManager:
             self._draw_progress_circle(screen, player, camera)
 
         # 5. Modes (Deconstruction)
-        # Note: This requires access to input_handler state, handled in GameEngine rendering pass
         
-        # 6. Menus (Build / Craft / Inspector)
+        # 6. Menus (Build / Craft / Inspector / Mating Hut)
         self.build_menu.render(screen, self.font)
         self.crafting_menu.render(screen, self.font)
         self.critter_inspector.draw(screen, player=player)
+        self.mating_hut_inspector.draw(screen)
 
     def _draw_hud_button(self, screen, rect, text, color):
         pygame.draw.rect(screen, color, rect)

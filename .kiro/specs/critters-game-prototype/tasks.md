@@ -1098,6 +1098,22 @@ Create a dedicated building (e.g., "Sacrificial Altar") that automates or formal
 - [ ] Assigned critters are eventually processed into candies over time (or instantly via interaction).
 - [ ] Visual design distinct from Mating/Gathering huts.
 
+### Task 62: MatingHut Inspector and Enhanced Critter Stats
+**Priority**: Medium
+**Status**: NOT_STARTED
+
+**Description**:
+Enhance critter stat visibility with a dual-column MatingHut inspector and color-coded stats in the Critter inspector.
+
+**Acceptance Criteria**:
+- [ ] Critter Inspector shows "Stat Total" (STR + SPD + END).
+- [ ] Critter Inspector color-codes stat labels: STR (Red), SPD (Green), END (Blue).
+- [ ] Implement MatingHut Inspector:
+    - [ ] Displays info for both assigned parents in two columns.
+    - [ ] Shows individual stats and stat totals per parent.
+    - [ ] Displays calculated average stats of the two parents below the columns.
+- [ ] MatingHut Inspector updates dynamically when critters are assigned/evicted.
+
 ---
 
 ## Notes

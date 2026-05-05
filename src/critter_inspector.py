@@ -194,14 +194,14 @@ class CritterInspector:
 
         # Core Stats with Candy Indicators
         stat_configs = [
-            (LABEL_STRENGTH, c.strength, "strength", ITEM_CANDY_STR),
-            (LABEL_SPEED, c.speed_stat, "speed_stat", ITEM_CANDY_SPD),
-            (LABEL_ENDURANCE, c.endurance, "endurance", ITEM_CANDY_END)
+            (LABEL_STRENGTH, c.strength, "strength", ITEM_CANDY_STR, (200, 50, 50)), # Red
+            (LABEL_SPEED, c.speed_stat, "speed_stat", ITEM_CANDY_SPD, (50, 150, 50)), # Green
+            (LABEL_ENDURANCE, c.endurance, "endurance", ITEM_CANDY_END, (50, 50, 200)) # Blue
         ]
 
-        for label, val, attr, candy in stat_configs:
+        for label, val, attr, candy, color in stat_configs:
             stat_str = f"{label}{val}"
-            text = self.font.render(stat_str, True, (0, 0, 0))
+            text = self.font.render(stat_str, True, color)
             screen.blit(text, (x0, y_curr))
             
             # If player has candy, show a clickable (+) next to stat
@@ -212,6 +212,12 @@ class CritterInspector:
                 self.stat_rects[attr] = plus_rect
             
             y_curr += line_spacing
+
+        # Stat Total
+        total_str = f"Stat Total: {c.strength + c.speed_stat + c.endurance}"
+        total_text = self.font.render(total_str, True, (0, 0, 0))
+        screen.blit(total_text, (x0, y_curr))
+        y_curr += line_spacing
 
         # Derived stats and inventory
         der_lines = [
