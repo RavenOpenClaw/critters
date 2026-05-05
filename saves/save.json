@@ -22,7 +22,7 @@
             "stone": 5
           },
           "storage": {
-            "food": 655
+            "food": 851
           },
           "gathering_radius": 240.0
         },
@@ -47,9 +47,7 @@
           "width": 1,
           "height": 1,
           "cell_size": 24,
-          "inventory": {
-            "food": 5
-          },
+          "inventory": {},
           "blocks_movement": true
         },
         {
@@ -60,7 +58,7 @@
           "height": 1,
           "cell_size": 24,
           "inventory": {
-            "food": 4
+            "food": 2
           },
           "blocks_movement": true
         },
@@ -95,7 +93,9 @@
           "width": 1,
           "height": 1,
           "cell_size": 24,
-          "inventory": {},
+          "inventory": {
+            "food": 1
+          },
           "blocks_movement": true
         },
         {
@@ -105,9 +105,7 @@
           "width": 1,
           "height": 1,
           "cell_size": 24,
-          "inventory": {
-            "food": 5
-          },
+          "inventory": {},
           "blocks_movement": true
         },
         {
@@ -512,7 +510,7 @@
           "inventory": {},
           "blocks_movement": false,
           "spread_threshold": 115.56005910456311,
-          "time_accumulator": 93.17900000000407
+          "time_accumulator": 51.32999999999661
         },
         {
           "type": "Grass",
@@ -524,7 +522,7 @@
           "inventory": {},
           "blocks_movement": false,
           "spread_threshold": 80.55491019514693,
-          "time_accumulator": 64.40699999999696
+          "time_accumulator": 47.00799999999699
         },
         {
           "type": "Grass",
@@ -536,7 +534,7 @@
           "inventory": {},
           "blocks_movement": false,
           "spread_threshold": 57.46246336919758,
-          "time_accumulator": 0.8360000000000006
+          "time_accumulator": 18.34499999999976
         },
         {
           "type": "Grass",
@@ -548,7 +546,7 @@
           "inventory": {},
           "blocks_movement": false,
           "spread_threshold": 59.503486951650814,
-          "time_accumulator": 28.282999999999237
+          "time_accumulator": 35.600999999997974
         },
         {
           "type": "Grass",
@@ -560,7 +558,7 @@
           "inventory": {},
           "blocks_movement": false,
           "spread_threshold": 95.16937106138471,
-          "time_accumulator": 65.7719999999973
+          "time_accumulator": 85.09300000000228
         },
         {
           "type": "Grass",
@@ -572,7 +570,7 @@
           "inventory": {},
           "blocks_movement": false,
           "spread_threshold": 87.12376759557608,
-          "time_accumulator": 71.29299999999867
+          "time_accumulator": 27.618999999998778
         },
         {
           "type": "Grass",
@@ -584,7 +582,7 @@
           "inventory": {},
           "blocks_movement": false,
           "spread_threshold": 60.7391186771787,
-          "time_accumulator": 1.3060000000000005
+          "time_accumulator": 2.4180000000000015
         },
         {
           "type": "Grass",
@@ -596,7 +594,7 @@
           "inventory": {},
           "blocks_movement": false,
           "spread_threshold": 84.31907505834869,
-          "time_accumulator": 37.27299999999863
+          "time_accumulator": 4.820000000000004
         },
         {
           "type": "Grass",
@@ -608,7 +606,7 @@
           "inventory": {},
           "blocks_movement": false,
           "spread_threshold": 72.5438595275365,
-          "time_accumulator": 45.6239999999981
+          "time_accumulator": 60.27499999999592
         },
         {
           "type": "Grass",
@@ -620,7 +618,7 @@
           "inventory": {},
           "blocks_movement": false,
           "spread_threshold": 47.883392257842516,
-          "time_accumulator": 39.19199999999852
+          "time_accumulator": 8.809000000000006
         },
         {
           "type": "Grass",
@@ -632,7 +630,7 @@
           "inventory": {},
           "blocks_movement": false,
           "spread_threshold": 106.44153882763533,
-          "time_accumulator": 102.11300000000624
+          "time_accumulator": 87.61200000000296
         },
         {
           "type": "Grass",
@@ -644,7 +642,7 @@
           "inventory": {},
           "blocks_movement": false,
           "spread_threshold": 107.38781372916398,
-          "time_accumulator": 65.18499999999717
+          "time_accumulator": 47.84299999999691
         },
         {
           "type": "Grass",
@@ -656,7 +654,7 @@
           "inventory": {},
           "blocks_movement": false,
           "spread_threshold": 106.69020630049071,
-          "time_accumulator": 92.3160000000038
+          "time_accumulator": 77.08899999999996
         },
         {
           "type": "Grass",
@@ -668,7 +666,7 @@
           "inventory": {},
           "blocks_movement": false,
           "spread_threshold": 32.41044545794786,
-          "time_accumulator": 6.807999999999991
+          "time_accumulator": 19.8939999999996
         },
         {
           "type": "Grass",
@@ -680,7 +678,7 @@
           "inventory": {},
           "blocks_movement": false,
           "spread_threshold": 111.27239896431087,
-          "time_accumulator": 24.94799999999945
+          "time_accumulator": 107.2460000000081
         },
         {
           "type": "GatheringHut",
@@ -696,7 +694,7 @@
             "stone": 5
           },
           "storage": {
-            "food": 524
+            "food": 703
           },
           "gathering_radius": 240.0
         },
@@ -731,8 +729,8 @@
       "critters": [
         {
           "type": "Critter",
-          "x": 1235.999999993276,
-          "y": 509.51530455377065,
+          "x": 1248.5055228141305,
+          "y": 419.65832981461494,
           "cell_size": 24,
           "strength": 21,
           "speed_stat": 1,
@@ -745,595 +743,44 @@
             "gy": 18
           },
           "target_resource_ref": null,
-          "inventory": {},
-          "loiter_timer": 4.506930535207562,
-          "loiter_target": [
-            1356.0,
-            492.0
-          ],
-          "idle_timer": -0.0024873272410341624,
-          "path": [
-            [
-              50,
-              16
-            ],
-            [
-              51,
-              16
-            ],
-            [
-              51,
-              17
-            ],
-            [
-              51,
-              18
-            ],
-            [
-              51,
-              19
-            ],
-            [
-              51,
-              20
-            ],
-            [
-              51,
-              21
-            ],
-            [
-              52,
-              21
-            ],
-            [
-              53,
-              21
-            ],
-            [
-              54,
-              21
-            ]
-          ],
-          "path_index": 6,
-          "following_player_id": null,
-          "follow_timer": 0.0,
-          "follow_recalc_interval": 1.0,
-          "follow_goal": null
-        },
-        {
-          "type": "Critter",
-          "x": 1248.7600889083662,
-          "y": 419.74005315891816,
-          "cell_size": 24,
-          "strength": 1,
-          "speed_stat": 9,
-          "endurance": 49,
-          "state": "RETURN",
-          "is_well_fed": false,
-          "assigned_hut_ref": {
-            "type": "GatheringHut",
-            "gx": 53,
-            "gy": 18
-          },
-          "target_resource_ref": null,
-          "inventory": {},
-          "loiter_timer": 0.06548134989576676,
-          "loiter_target": null,
-          "idle_timer": -0.014212608905919674,
-          "path": [
-            [
-              49,
-              17
-            ],
-            [
-              49,
-              16
-            ],
-            [
-              50,
-              16
-            ],
-            [
-              51,
-              16
-            ],
-            [
-              51,
-              17
-            ],
-            [
-              52,
-              17
-            ],
-            [
-              53,
-              17
-            ]
-          ],
-          "path_index": 5,
-          "following_player_id": null,
-          "follow_timer": 0.0,
-          "follow_recalc_interval": 1.0,
-          "follow_goal": null
-        },
-        {
-          "type": "Critter",
-          "x": 1266.284494159994,
-          "y": 515.7928817497433,
-          "cell_size": 24,
-          "strength": 19,
-          "speed_stat": 8,
-          "endurance": 1,
-          "state": "IDLE",
-          "is_well_fed": false,
-          "assigned_hut_ref": {
-            "type": "GatheringHut",
-            "gx": 53,
-            "gy": 18
-          },
-          "target_resource_ref": null,
-          "inventory": {},
-          "loiter_timer": 3.395586911210004,
-          "loiter_target": [
-            1284.0,
-            516.0
-          ],
-          "idle_timer": 3.4733058780516615,
-          "path": [],
-          "path_index": 0,
-          "following_player_id": null,
-          "follow_timer": 0.0,
-          "follow_recalc_interval": 1.0,
-          "follow_goal": null
-        },
-        {
-          "type": "Critter",
-          "x": 1248.7632756221471,
-          "y": 515.9985828566802,
-          "cell_size": 24,
-          "strength": 1,
-          "speed_stat": 1,
-          "endurance": 48,
-          "state": "RETURN",
-          "is_well_fed": false,
-          "assigned_hut_ref": {
-            "type": "GatheringHut",
-            "gx": 53,
-            "gy": 18
-          },
-          "target_resource_ref": null,
-          "inventory": {},
-          "loiter_timer": 0.34690307101355056,
-          "loiter_target": null,
-          "idle_timer": -0.0011915646446767347,
-          "path": [
-            [
-              50,
-              18
-            ],
-            [
-              50,
-              19
-            ],
-            [
-              50,
-              20
-            ],
-            [
-              50,
-              21
-            ],
-            [
-              51,
-              21
-            ],
-            [
-              52,
-              21
-            ],
-            [
-              53,
-              21
-            ],
-            [
-              54,
-              21
-            ],
-            [
-              55,
-              21
-            ],
-            [
-              56,
-              21
-            ]
-          ],
-          "path_index": 5,
-          "following_player_id": null,
-          "follow_timer": 0.0,
-          "follow_recalc_interval": 1.0,
-          "follow_goal": null
-        },
-        {
-          "type": "Critter",
-          "x": 804.0,
-          "y": 804.0,
-          "cell_size": 24,
-          "strength": 1,
-          "speed_stat": 8,
-          "endurance": 46,
-          "state": "IDLE",
-          "is_well_fed": false,
-          "assigned_hut_ref": {
-            "type": "GatheringHut",
-            "gx": 35,
-            "gy": 28
-          },
-          "target_resource_ref": null,
-          "inventory": {},
-          "loiter_timer": 4.120369414231735,
-          "loiter_target": null,
-          "idle_timer": 0.5166769796657221,
-          "path": [],
-          "path_index": 0,
-          "following_player_id": null,
-          "follow_timer": 0.0,
-          "follow_recalc_interval": 1.0,
-          "follow_goal": null
-        },
-        {
-          "type": "Critter",
-          "x": 1248.4734806068168,
-          "y": 443.89532620817096,
-          "cell_size": 24,
-          "strength": 19,
-          "speed_stat": 8,
-          "endurance": 11,
-          "state": "RETURN",
-          "is_well_fed": false,
-          "assigned_hut_ref": {
-            "type": "GatheringHut",
-            "gx": 53,
-            "gy": 18
-          },
-          "target_resource_ref": null,
-          "inventory": {},
-          "loiter_timer": 1.852619020721914,
-          "loiter_target": null,
-          "idle_timer": -0.0021922446455456684,
-          "path": [
-            [
-              50,
-              16
-            ],
-            [
-              51,
-              16
-            ],
-            [
-              51,
-              17
-            ],
-            [
-              51,
-              18
-            ],
-            [
-              52,
-              18
-            ]
-          ],
-          "path_index": 4,
-          "following_player_id": null,
-          "follow_timer": 0.0,
-          "follow_recalc_interval": 1.0,
-          "follow_goal": null
-        },
-        {
-          "type": "Critter",
-          "x": 1248.4710505555995,
-          "y": 491.7492453495841,
-          "cell_size": 24,
-          "strength": 14,
-          "speed_stat": 8,
-          "endurance": 53,
-          "state": "RETURN",
-          "is_well_fed": false,
-          "assigned_hut_ref": {
-            "type": "GatheringHut",
-            "gx": 53,
-            "gy": 18
-          },
-          "target_resource_ref": null,
-          "inventory": {},
-          "loiter_timer": 3.0711076498043828,
-          "loiter_target": null,
-          "idle_timer": -0.009641154054246134,
-          "path": [
-            [
-              51,
-              17
-            ],
-            [
-              51,
-              18
-            ],
-            [
-              51,
-              19
-            ],
-            [
-              51,
-              20
-            ],
-            [
-              52,
-              20
-            ]
-          ],
-          "path_index": 4,
-          "following_player_id": null,
-          "follow_timer": 0.0,
-          "follow_recalc_interval": 1.0,
-          "follow_goal": null
-        },
-        {
-          "type": "Critter",
-          "x": 1248.102000000001,
-          "y": 444.0,
-          "cell_size": 24,
-          "strength": 20,
-          "speed_stat": 8,
-          "endurance": 50,
-          "state": "RETURN",
-          "is_well_fed": false,
-          "assigned_hut_ref": {
-            "type": "GatheringHut",
-            "gx": 53,
-            "gy": 18
-          },
-          "target_resource_ref": null,
-          "inventory": {},
-          "loiter_timer": 1.9238370280075332,
-          "loiter_target": null,
-          "idle_timer": -0.012606893373938374,
-          "path": [
-            [
-              50,
-              18
-            ],
-            [
-              51,
-              18
-            ],
-            [
-              52,
-              18
-            ]
-          ],
-          "path_index": 2,
-          "following_player_id": null,
-          "follow_timer": 0.0,
-          "follow_recalc_interval": 1.0,
-          "follow_goal": null
-        },
-        {
-          "type": "Critter",
-          "x": 1233.56,
-          "y": 516.0,
-          "cell_size": 24,
-          "strength": 20,
-          "speed_stat": 24,
-          "endurance": 54,
-          "state": "RETURN",
-          "is_well_fed": false,
-          "assigned_hut_ref": {
-            "type": "GatheringHut",
-            "gx": 53,
-            "gy": 18
-          },
-          "target_resource_ref": null,
-          "inventory": {},
-          "loiter_timer": 4.463004245913445,
-          "loiter_target": [
-            1428.0,
-            420.0
-          ],
-          "idle_timer": -0.0018307742029807228,
-          "path": [
-            [
-              50,
-              18
-            ],
-            [
-              50,
-              19
-            ],
-            [
-              50,
-              20
-            ],
-            [
-              50,
-              21
-            ],
-            [
-              51,
-              21
-            ],
-            [
-              52,
-              21
-            ],
-            [
-              53,
-              21
-            ],
-            [
-              54,
-              21
-            ]
-          ],
-          "path_index": 4,
-          "following_player_id": null,
-          "follow_timer": 0.0,
-          "follow_recalc_interval": 1.0,
-          "follow_goal": null
-        },
-        {
-          "type": "Critter",
-          "x": 948.0,
-          "y": 756.0,
-          "cell_size": 24,
-          "strength": 20,
-          "speed_stat": 20,
-          "endurance": 54,
-          "state": "IDLE",
-          "is_well_fed": false,
-          "assigned_hut_ref": {
-            "type": "GatheringHut",
-            "gx": 35,
-            "gy": 28
-          },
-          "target_resource_ref": null,
-          "inventory": {},
-          "loiter_timer": 2.6062011158854017,
-          "loiter_target": null,
-          "idle_timer": 0.9207143903253804,
-          "path": [],
-          "path_index": 0,
-          "following_player_id": null,
-          "follow_timer": 0.0,
-          "follow_recalc_interval": 1.0,
-          "follow_goal": null
-        },
-        {
-          "type": "Critter",
-          "x": 828.0,
-          "y": 684.0,
-          "cell_size": 24,
-          "strength": 59,
-          "speed_stat": 20,
-          "endurance": 56,
-          "state": "IDLE",
-          "is_well_fed": false,
-          "assigned_hut_ref": {
-            "type": "GatheringHut",
-            "gx": 35,
-            "gy": 28
-          },
-          "target_resource_ref": null,
-          "inventory": {},
-          "loiter_timer": 3.759980824219517,
-          "loiter_target": null,
-          "idle_timer": 0.10844774256873094,
-          "path": [],
-          "path_index": 0,
-          "following_player_id": null,
-          "follow_timer": 0.0,
-          "follow_recalc_interval": 1.0,
-          "follow_goal": null
-        },
-        {
-          "type": "Critter",
-          "x": 1367.5920000000008,
-          "y": 420.0,
-          "cell_size": 24,
-          "strength": 55,
-          "speed_stat": 19,
-          "endurance": 61,
-          "state": "IDLE",
-          "is_well_fed": false,
-          "assigned_hut_ref": {
-            "type": "GatheringHut",
-            "gx": 53,
-            "gy": 18
-          },
-          "target_resource_ref": null,
-          "inventory": {},
-          "loiter_timer": 2.5957052589023477,
-          "loiter_target": null,
-          "idle_timer": 9.31456843044507,
-          "path": [],
-          "path_index": 0,
-          "following_player_id": null,
-          "follow_timer": 0.0,
-          "follow_recalc_interval": 1.0,
-          "follow_goal": null
-        },
-        {
-          "type": "Critter",
-          "x": 876.0,
-          "y": 780.0,
-          "cell_size": 24,
-          "strength": 57,
-          "speed_stat": 27,
-          "endurance": 64,
-          "state": "IDLE",
-          "is_well_fed": false,
-          "assigned_hut_ref": {
-            "type": "GatheringHut",
-            "gx": 35,
-            "gy": 28
-          },
-          "target_resource_ref": null,
-          "inventory": {},
-          "loiter_timer": 2.138370355887623,
-          "loiter_target": null,
-          "idle_timer": 0.9118036098151922,
-          "path": [],
-          "path_index": 0,
-          "following_player_id": null,
-          "follow_timer": 0.0,
-          "follow_recalc_interval": 1.0,
-          "follow_goal": null
-        },
-        {
-          "type": "Critter",
-          "x": 827.9822917507709,
-          "y": 767.0728046151803,
-          "cell_size": 24,
-          "strength": 62,
-          "speed_stat": 24,
-          "endurance": 9,
-          "state": "RETURN",
-          "is_well_fed": false,
-          "assigned_hut_ref": {
-            "type": "GatheringHut",
-            "gx": 35,
-            "gy": 28
-          },
-          "target_resource_ref": null,
           "inventory": {
             "food": 1
           },
-          "loiter_timer": 4.624723144315355,
+          "loiter_timer": 2.1074636508594997,
           "loiter_target": null,
-          "idle_timer": -0.007835065545585426,
+          "idle_timer": -0.0026392770676214594,
           "path": [
             [
-              33,
-              33
+              50,
+              16
             ],
             [
-              34,
-              33
+              51,
+              16
             ],
             [
-              34,
-              32
+              51,
+              17
             ],
             [
-              34,
-              31
+              52,
+              17
             ],
             [
-              34,
-              30
+              53,
+              17
             ],
             [
-              34,
-              29
+              54,
+              17
+            ],
+            [
+              55,
+              17
+            ],
+            [
+              56,
+              17
             ]
           ],
           "path_index": 3,
@@ -1344,26 +791,32 @@
         },
         {
           "type": "Critter",
-          "x": 924.0,
-          "y": 708.0,
+          "x": 1356.0,
+          "y": 396.0,
           "cell_size": 24,
-          "strength": 58,
-          "speed_stat": 25,
-          "endurance": 64,
-          "state": "IDLE",
+          "strength": 1,
+          "speed_stat": 9,
+          "endurance": 49,
+          "state": "GATHER",
           "is_well_fed": false,
           "assigned_hut_ref": {
             "type": "GatheringHut",
-            "gx": 35,
-            "gy": 28
+            "gx": 53,
+            "gy": 18
           },
-          "target_resource_ref": null,
-          "inventory": {},
-          "loiter_timer": 0.28924324717445427,
+          "target_resource_ref": {
+            "type": "BerryBush",
+            "gx": 57,
+            "gy": 16
+          },
+          "inventory": {
+            "food": 1
+          },
+          "loiter_timer": 3.042827608875241,
           "loiter_target": null,
-          "idle_timer": 1.9478390485807735,
+          "idle_timer": -0.004786618102765802,
           "path": [],
-          "path_index": 0,
+          "path_index": 3,
           "following_player_id": null,
           "follow_timer": 0.0,
           "follow_recalc_interval": 1.0,
@@ -1371,26 +824,292 @@
         },
         {
           "type": "Critter",
-          "x": 1249.103708809706,
-          "y": 515.9273580587312,
+          "x": 1380.0,
+          "y": 372.0,
           "cell_size": 24,
-          "strength": 43,
-          "speed_stat": 27,
-          "endurance": 64,
-          "state": "RETURN",
+          "strength": 19,
+          "speed_stat": 8,
+          "endurance": 1,
+          "state": "GATHER",
           "is_well_fed": false,
           "assigned_hut_ref": {
             "type": "GatheringHut",
             "gx": 53,
             "gy": 18
           },
-          "target_resource_ref": null,
+          "target_resource_ref": {
+            "type": "BerryBush",
+            "gx": 57,
+            "gy": 16
+          },
+          "inventory": {},
+          "loiter_timer": 2.0932081604976727,
+          "loiter_target": null,
+          "idle_timer": -0.0037905870231810107,
+          "path": [],
+          "path_index": 5,
+          "following_player_id": null,
+          "follow_timer": 0.0,
+          "follow_recalc_interval": 1.0,
+          "follow_goal": null
+        },
+        {
+          "type": "Critter",
+          "x": 1380.0,
+          "y": 420.0,
+          "cell_size": 24,
+          "strength": 1,
+          "speed_stat": 1,
+          "endurance": 48,
+          "state": "GATHER",
+          "is_well_fed": false,
+          "assigned_hut_ref": {
+            "type": "GatheringHut",
+            "gx": 53,
+            "gy": 18
+          },
+          "target_resource_ref": {
+            "type": "BerryBush",
+            "gx": 57,
+            "gy": 16
+          },
           "inventory": {
             "food": 1
           },
-          "loiter_timer": 3.9155246696476853,
+          "loiter_timer": 3.5015978465773636,
           "loiter_target": null,
-          "idle_timer": -0.01580682822479161,
+          "idle_timer": -0.0077641534140650975,
+          "path": [],
+          "path_index": 6,
+          "following_player_id": null,
+          "follow_timer": 0.0,
+          "follow_recalc_interval": 1.0,
+          "follow_goal": null
+        },
+        {
+          "type": "Critter",
+          "x": 859.7399999999986,
+          "y": 756.0,
+          "cell_size": 24,
+          "strength": 1,
+          "speed_stat": 8,
+          "endurance": 46,
+          "state": "GATHER",
+          "is_well_fed": false,
+          "assigned_hut_ref": {
+            "type": "GatheringHut",
+            "gx": 35,
+            "gy": 28
+          },
+          "target_resource_ref": {
+            "type": "BerryBush",
+            "gx": 33,
+            "gy": 32
+          },
+          "inventory": {
+            "food": 1
+          },
+          "loiter_timer": 1.5932870564150623,
+          "loiter_target": null,
+          "idle_timer": -0.008782556219483303,
+          "path": [
+            [
+              37,
+              31
+            ],
+            [
+              36,
+              31
+            ],
+            [
+              35,
+              31
+            ],
+            [
+              34,
+              31
+            ],
+            [
+              34,
+              32
+            ],
+            [
+              34,
+              33
+            ],
+            [
+              33,
+              33
+            ]
+          ],
+          "path_index": 2,
+          "following_player_id": null,
+          "follow_timer": 0.0,
+          "follow_recalc_interval": 1.0,
+          "follow_goal": null
+        },
+        {
+          "type": "Critter",
+          "x": 1235.298000000001,
+          "y": 444.0,
+          "cell_size": 24,
+          "strength": 19,
+          "speed_stat": 8,
+          "endurance": 11,
+          "state": "GATHER",
+          "is_well_fed": false,
+          "assigned_hut_ref": {
+            "type": "GatheringHut",
+            "gx": 53,
+            "gy": 18
+          },
+          "target_resource_ref": {
+            "type": "BerryBush",
+            "gx": 57,
+            "gy": 16
+          },
+          "inventory": {},
+          "loiter_timer": 0.8431789768126338,
+          "loiter_target": null,
+          "idle_timer": -0.012856660605093481,
+          "path": [
+            [
+              50,
+              18
+            ],
+            [
+              51,
+              18
+            ],
+            [
+              51,
+              17
+            ],
+            [
+              51,
+              16
+            ],
+            [
+              52,
+              16
+            ],
+            [
+              53,
+              16
+            ],
+            [
+              54,
+              16
+            ],
+            [
+              55,
+              16
+            ],
+            [
+              56,
+              16
+            ]
+          ],
+          "path_index": 2,
+          "following_player_id": null,
+          "follow_timer": 0.0,
+          "follow_recalc_interval": 1.0,
+          "follow_goal": null
+        },
+        {
+          "type": "Critter",
+          "x": 1218.6800373183657,
+          "y": 396.0145955766546,
+          "cell_size": 24,
+          "strength": 14,
+          "speed_stat": 8,
+          "endurance": 53,
+          "state": "GATHER",
+          "is_well_fed": false,
+          "assigned_hut_ref": {
+            "type": "GatheringHut",
+            "gx": 53,
+            "gy": 18
+          },
+          "target_resource_ref": {
+            "type": "BerryBush",
+            "gx": 57,
+            "gy": 16
+          },
+          "inventory": {},
+          "loiter_timer": 3.287713249952968,
+          "loiter_target": null,
+          "idle_timer": -0.006562171316493379,
+          "path": [
+            [
+              49,
+              17
+            ],
+            [
+              49,
+              16
+            ],
+            [
+              50,
+              16
+            ],
+            [
+              51,
+              16
+            ],
+            [
+              52,
+              16
+            ],
+            [
+              53,
+              16
+            ],
+            [
+              54,
+              16
+            ],
+            [
+              55,
+              16
+            ],
+            [
+              56,
+              16
+            ]
+          ],
+          "path_index": 3,
+          "following_player_id": null,
+          "follow_timer": 0.0,
+          "follow_recalc_interval": 1.0,
+          "follow_goal": null
+        },
+        {
+          "type": "Critter",
+          "x": 1284.9300000000028,
+          "y": 396.0,
+          "cell_size": 24,
+          "strength": 20,
+          "speed_stat": 8,
+          "endurance": 50,
+          "state": "GATHER",
+          "is_well_fed": false,
+          "assigned_hut_ref": {
+            "type": "GatheringHut",
+            "gx": 53,
+            "gy": 18
+          },
+          "target_resource_ref": {
+            "type": "BerryBush",
+            "gx": 57,
+            "gy": 16
+          },
+          "inventory": {
+            "food": 1
+          },
+          "loiter_timer": 3.7260482959650965,
+          "loiter_target": null,
+          "idle_timer": -0.01104199324684084,
           "path": [
             [
               50,
@@ -1401,36 +1120,258 @@
               16
             ],
             [
-              51,
-              17
-            ],
-            [
-              51,
-              18
-            ],
-            [
-              51,
-              19
-            ],
-            [
-              51,
-              20
-            ],
-            [
-              51,
-              21
-            ],
-            [
               52,
-              21
+              16
             ],
             [
               53,
-              21
+              16
             ],
             [
               54,
-              21
+              16
+            ],
+            [
+              55,
+              16
+            ],
+            [
+              56,
+              16
+            ],
+            [
+              56,
+              15
+            ],
+            [
+              57,
+              15
+            ],
+            [
+              58,
+              15
+            ],
+            [
+              58,
+              16
+            ]
+          ],
+          "path_index": 4,
+          "following_player_id": null,
+          "follow_timer": 0.0,
+          "follow_recalc_interval": 1.0,
+          "follow_goal": null
+        },
+        {
+          "type": "Critter",
+          "x": 1275.6799999999998,
+          "y": 396.0,
+          "cell_size": 24,
+          "strength": 20,
+          "speed_stat": 24,
+          "endurance": 54,
+          "state": "GATHER",
+          "is_well_fed": false,
+          "assigned_hut_ref": {
+            "type": "GatheringHut",
+            "gx": 53,
+            "gy": 18
+          },
+          "target_resource_ref": {
+            "type": "BerryBush",
+            "gx": 57,
+            "gy": 16
+          },
+          "inventory": {},
+          "loiter_timer": 2.9199821450774572,
+          "loiter_target": null,
+          "idle_timer": -0.015143113723143017,
+          "path": [
+            [
+              49,
+              17
+            ],
+            [
+              49,
+              16
+            ],
+            [
+              50,
+              16
+            ],
+            [
+              51,
+              16
+            ],
+            [
+              52,
+              16
+            ],
+            [
+              53,
+              16
+            ],
+            [
+              54,
+              16
+            ],
+            [
+              55,
+              16
+            ],
+            [
+              56,
+              16
+            ],
+            [
+              56,
+              15
+            ],
+            [
+              57,
+              15
+            ],
+            [
+              58,
+              15
+            ],
+            [
+              58,
+              16
+            ]
+          ],
+          "path_index": 5,
+          "following_player_id": null,
+          "follow_timer": 0.0,
+          "follow_recalc_interval": 1.0,
+          "follow_goal": null
+        },
+        {
+          "type": "Critter",
+          "x": 780.0,
+          "y": 780.0,
+          "cell_size": 24,
+          "strength": 20,
+          "speed_stat": 20,
+          "endurance": 54,
+          "state": "GATHER",
+          "is_well_fed": false,
+          "assigned_hut_ref": {
+            "type": "GatheringHut",
+            "gx": 35,
+            "gy": 28
+          },
+          "target_resource_ref": {
+            "type": "BerryBush",
+            "gx": 33,
+            "gy": 32
+          },
+          "inventory": {
+            "food": 1
+          },
+          "loiter_timer": 2.9750012932381993,
+          "loiter_target": null,
+          "idle_timer": -0.009461854810965606,
+          "path": [],
+          "path_index": 7,
+          "following_player_id": null,
+          "follow_timer": 0.0,
+          "follow_recalc_interval": 1.0,
+          "follow_goal": null
+        },
+        {
+          "type": "Critter",
+          "x": 828.0,
+          "y": 780.0,
+          "cell_size": 24,
+          "strength": 59,
+          "speed_stat": 20,
+          "endurance": 56,
+          "state": "GATHER",
+          "is_well_fed": false,
+          "assigned_hut_ref": {
+            "type": "GatheringHut",
+            "gx": 35,
+            "gy": 28
+          },
+          "target_resource_ref": {
+            "type": "BerryBush",
+            "gx": 33,
+            "gy": 32
+          },
+          "inventory": {},
+          "loiter_timer": 3.2670148934462766,
+          "loiter_target": null,
+          "idle_timer": -0.01410424660504693,
+          "path": [],
+          "path_index": 3,
+          "following_player_id": null,
+          "follow_timer": 0.0,
+          "follow_recalc_interval": 1.0,
+          "follow_goal": null
+        },
+        {
+          "type": "Critter",
+          "x": 1348.7279999999926,
+          "y": 372.0,
+          "cell_size": 24,
+          "strength": 55,
+          "speed_stat": 19,
+          "endurance": 61,
+          "state": "GATHER",
+          "is_well_fed": false,
+          "assigned_hut_ref": {
+            "type": "GatheringHut",
+            "gx": 53,
+            "gy": 18
+          },
+          "target_resource_ref": {
+            "type": "BerryBush",
+            "gx": 57,
+            "gy": 16
+          },
+          "inventory": {
+            "food": 1
+          },
+          "loiter_timer": 2.405749672524429,
+          "loiter_target": null,
+          "idle_timer": -0.002698084393777167,
+          "path": [
+            [
+              50,
+              16
+            ],
+            [
+              50,
+              15
+            ],
+            [
+              51,
+              15
+            ],
+            [
+              52,
+              15
+            ],
+            [
+              53,
+              15
+            ],
+            [
+              54,
+              15
+            ],
+            [
+              55,
+              15
+            ],
+            [
+              56,
+              15
+            ],
+            [
+              57,
+              15
             ]
           ],
           "path_index": 7,
@@ -1441,39 +1382,12 @@
         },
         {
           "type": "Critter",
-          "x": 876.0,
-          "y": 767.216,
+          "x": 780.0,
+          "y": 748.0399999999997,
           "cell_size": 24,
-          "strength": 52,
-          "speed_stat": 13,
-          "endurance": 78,
-          "state": "IDLE",
-          "is_well_fed": false,
-          "assigned_hut_ref": {
-            "type": "GatheringHut",
-            "gx": 35,
-            "gy": 28
-          },
-          "target_resource_ref": null,
-          "inventory": {},
-          "loiter_timer": 0.3428363862183189,
-          "loiter_target": null,
-          "idle_timer": 1.8949996998753014,
-          "path": [],
-          "path_index": 0,
-          "following_player_id": null,
-          "follow_timer": 0.0,
-          "follow_recalc_interval": 1.0,
-          "follow_goal": null
-        },
-        {
-          "type": "Critter",
-          "x": 806.8543006387858,
-          "y": 803.9862528388354,
-          "cell_size": 24,
-          "strength": 83,
-          "speed_stat": 12,
-          "endurance": 11,
+          "strength": 57,
+          "speed_stat": 27,
+          "endurance": 64,
           "state": "GATHER",
           "is_well_fed": false,
           "assigned_hut_ref": {
@@ -1487,10 +1401,34 @@
             "gy": 32
           },
           "inventory": {},
-          "loiter_timer": 0.2596193154372466,
+          "loiter_timer": 3.366065237473561,
           "loiter_target": null,
-          "idle_timer": -0.010485277686237068,
+          "idle_timer": -0.011801120680435359,
           "path": [
+            [
+              32,
+              25
+            ],
+            [
+              32,
+              26
+            ],
+            [
+              32,
+              27
+            ],
+            [
+              32,
+              28
+            ],
+            [
+              32,
+              29
+            ],
+            [
+              32,
+              30
+            ],
             [
               32,
               31
@@ -1524,7 +1462,7 @@
               33
             ]
           ],
-          "path_index": 4,
+          "path_index": 6,
           "following_player_id": null,
           "follow_timer": 0.0,
           "follow_recalc_interval": 1.0,
@@ -1532,26 +1470,90 @@
         },
         {
           "type": "Critter",
-          "x": 852.0,
+          "x": 900.0,
           "y": 756.0,
+          "cell_size": 24,
+          "strength": 62,
+          "speed_stat": 24,
+          "endurance": 9,
+          "state": "RETURN",
+          "is_well_fed": false,
+          "assigned_hut_ref": {
+            "type": "GatheringHut",
+            "gx": 35,
+            "gy": 28
+          },
+          "target_resource_ref": null,
+          "inventory": {
+            "food": 1
+          },
+          "loiter_timer": 4.047227878283998,
+          "loiter_target": null,
+          "idle_timer": -0.01226008807512012,
+          "path": [],
+          "path_index": 0,
+          "following_player_id": null,
+          "follow_timer": 0.0,
+          "follow_recalc_interval": 1.0,
+          "follow_goal": null
+        },
+        {
+          "type": "Critter",
+          "x": 885.5999999999998,
+          "y": 804.0,
           "cell_size": 24,
           "strength": 58,
-          "speed_stat": 29,
-          "endurance": 66,
-          "state": "IDLE",
+          "speed_stat": 25,
+          "endurance": 64,
+          "state": "GATHER",
           "is_well_fed": false,
           "assigned_hut_ref": {
             "type": "GatheringHut",
             "gx": 35,
             "gy": 28
           },
-          "target_resource_ref": null,
-          "inventory": {},
-          "loiter_timer": 1.0799001181570198,
+          "target_resource_ref": {
+            "type": "BerryBush",
+            "gx": 33,
+            "gy": 32
+          },
+          "inventory": {
+            "food": 1
+          },
+          "loiter_timer": 0.7840295331719004,
           "loiter_target": null,
-          "idle_timer": 2.1433840333104763,
-          "path": [],
-          "path_index": 0,
+          "idle_timer": -0.010064050073706574,
+          "path": [
+            [
+              38,
+              32
+            ],
+            [
+              38,
+              33
+            ],
+            [
+              37,
+              33
+            ],
+            [
+              36,
+              33
+            ],
+            [
+              35,
+              33
+            ],
+            [
+              34,
+              33
+            ],
+            [
+              33,
+              33
+            ]
+          ],
+          "path_index": 3,
           "following_player_id": null,
           "follow_timer": 0.0,
           "follow_recalc_interval": 1.0,
@@ -1559,118 +1561,57 @@
         },
         {
           "type": "Critter",
-          "x": 924.0,
-          "y": 780.0,
+          "x": 1281.0319999999997,
+          "y": 372.0,
           "cell_size": 24,
-          "strength": 84,
-          "speed_stat": 28,
-          "endurance": 72,
-          "state": "IDLE",
-          "is_well_fed": false,
-          "assigned_hut_ref": {
-            "type": "GatheringHut",
-            "gx": 35,
-            "gy": 28
-          },
-          "target_resource_ref": null,
-          "inventory": {},
-          "loiter_timer": 2.4464283865480305,
-          "loiter_target": null,
-          "idle_timer": 1.1221102982733906,
-          "path": [],
-          "path_index": 0,
-          "following_player_id": null,
-          "follow_timer": 0.0,
-          "follow_recalc_interval": 1.0,
-          "follow_goal": null
-        },
-        {
-          "type": "Critter",
-          "x": 780.0,
-          "y": 708.0,
-          "cell_size": 24,
-          "strength": 91,
-          "speed_stat": 30,
-          "endurance": 71,
-          "state": "IDLE",
-          "is_well_fed": false,
-          "assigned_hut_ref": {
-            "type": "GatheringHut",
-            "gx": 35,
-            "gy": 28
-          },
-          "target_resource_ref": null,
-          "inventory": {},
-          "loiter_timer": 3.630682012883454,
-          "loiter_target": null,
-          "idle_timer": 2.8560865980001404,
-          "path": [],
-          "path_index": 0,
-          "following_player_id": null,
-          "follow_timer": 0.0,
-          "follow_recalc_interval": 1.0,
-          "follow_goal": null
-        },
-        {
-          "type": "Critter",
-          "x": 828.0,
-          "y": 756.0,
-          "cell_size": 24,
-          "strength": 84,
-          "speed_stat": 32,
-          "endurance": 68,
-          "state": "IDLE",
-          "is_well_fed": false,
-          "assigned_hut_ref": {
-            "type": "GatheringHut",
-            "gx": 35,
-            "gy": 28
-          },
-          "target_resource_ref": null,
-          "inventory": {},
-          "loiter_timer": 3.5976826190044986,
-          "loiter_target": null,
-          "idle_timer": 2.2788534142309778,
-          "path": [],
-          "path_index": 0,
-          "following_player_id": null,
-          "follow_timer": 0.0,
-          "follow_recalc_interval": 1.0,
-          "follow_goal": null
-        },
-        {
-          "type": "Critter",
-          "x": 1284.0,
-          "y": 409.7499999999999,
-          "cell_size": 24,
-          "strength": 88,
-          "speed_stat": 30,
-          "endurance": 71,
-          "state": "RETURN",
+          "strength": 43,
+          "speed_stat": 27,
+          "endurance": 64,
+          "state": "GATHER",
           "is_well_fed": false,
           "assigned_hut_ref": {
             "type": "GatheringHut",
             "gx": 53,
             "gy": 18
           },
-          "target_resource_ref": null,
+          "target_resource_ref": {
+            "type": "BerryBush",
+            "gx": 57,
+            "gy": 16
+          },
           "inventory": {
             "food": 1
           },
-          "loiter_timer": 1.947905926828689,
+          "loiter_timer": 2.141341311010176,
           "loiter_target": null,
-          "idle_timer": -0.011708379269811262,
+          "idle_timer": -0.007467579258271559,
           "path": [
             [
-              57,
+              49,
+              17
+            ],
+            [
+              49,
+              16
+            ],
+            [
+              49,
               15
             ],
             [
-              56,
+              50,
               15
             ],
             [
-              55,
+              51,
+              15
+            ],
+            [
+              52,
+              15
+            ],
+            [
+              53,
               15
             ],
             [
@@ -1678,16 +1619,16 @@
               15
             ],
             [
-              53,
+              55,
               15
             ],
             [
-              53,
-              16
+              56,
+              15
             ],
             [
-              53,
-              17
+              57,
+              15
             ]
           ],
           "path_index": 6,
@@ -1698,26 +1639,61 @@
         },
         {
           "type": "Critter",
-          "x": 1248.3120000000004,
-          "y": 420.0,
+          "x": 804.0,
+          "y": 804.0,
           "cell_size": 24,
-          "strength": 91,
-          "speed_stat": 32,
-          "endurance": 75,
-          "state": "IDLE",
+          "strength": 52,
+          "speed_stat": 13,
+          "endurance": 78,
+          "state": "GATHER",
           "is_well_fed": false,
           "assigned_hut_ref": {
             "type": "GatheringHut",
-            "gx": 53,
-            "gy": 18
+            "gx": 35,
+            "gy": 28
           },
-          "target_resource_ref": null,
+          "target_resource_ref": {
+            "type": "BerryBush",
+            "gx": 33,
+            "gy": 32
+          },
           "inventory": {},
-          "loiter_timer": 3.407483882760354,
+          "loiter_timer": 1.6125924328312873,
           "loiter_target": null,
-          "idle_timer": 10.428167403854305,
+          "idle_timer": -0.0014409933705527012,
           "path": [],
-          "path_index": 0,
+          "path_index": 5,
+          "following_player_id": null,
+          "follow_timer": 0.0,
+          "follow_recalc_interval": 1.0,
+          "follow_goal": null
+        },
+        {
+          "type": "Critter",
+          "x": 780.0,
+          "y": 780.0,
+          "cell_size": 24,
+          "strength": 83,
+          "speed_stat": 12,
+          "endurance": 11,
+          "state": "GATHER",
+          "is_well_fed": false,
+          "assigned_hut_ref": {
+            "type": "GatheringHut",
+            "gx": 35,
+            "gy": 28
+          },
+          "target_resource_ref": {
+            "type": "BerryBush",
+            "gx": 33,
+            "gy": 32
+          },
+          "inventory": {},
+          "loiter_timer": 0.7665478474760972,
+          "loiter_target": null,
+          "idle_timer": -0.008880572605898349,
+          "path": [],
+          "path_index": 5,
           "following_player_id": null,
           "follow_timer": 0.0,
           "follow_recalc_interval": 1.0,
@@ -1728,23 +1704,27 @@
           "x": 804.0,
           "y": 756.0,
           "cell_size": 24,
-          "strength": 97,
-          "speed_stat": 34,
-          "endurance": 73,
-          "state": "IDLE",
+          "strength": 58,
+          "speed_stat": 29,
+          "endurance": 66,
+          "state": "GATHER",
           "is_well_fed": false,
           "assigned_hut_ref": {
             "type": "GatheringHut",
             "gx": 35,
             "gy": 28
           },
-          "target_resource_ref": null,
+          "target_resource_ref": {
+            "type": "BerryBush",
+            "gx": 33,
+            "gy": 32
+          },
           "inventory": {},
-          "loiter_timer": 0.5916395761092766,
+          "loiter_timer": 3.3573009333366084,
           "loiter_target": null,
-          "idle_timer": 2.4175012198120465,
+          "idle_timer": -0.004683059237702611,
           "path": [],
-          "path_index": 0,
+          "path_index": 3,
           "following_player_id": null,
           "follow_timer": 0.0,
           "follow_recalc_interval": 1.0,
@@ -1752,26 +1732,63 @@
         },
         {
           "type": "Critter",
-          "x": 924.0,
-          "y": 756.0,
+          "x": 828.0,
+          "y": 780.0,
           "cell_size": 24,
-          "strength": 83,
+          "strength": 84,
+          "speed_stat": 28,
+          "endurance": 72,
+          "state": "GATHER",
+          "is_well_fed": false,
+          "assigned_hut_ref": {
+            "type": "GatheringHut",
+            "gx": 35,
+            "gy": 28
+          },
+          "target_resource_ref": {
+            "type": "BerryBush",
+            "gx": 33,
+            "gy": 32
+          },
+          "inventory": {},
+          "loiter_timer": 1.7710755905417164,
+          "loiter_target": null,
+          "idle_timer": -0.014944233669084248,
+          "path": [],
+          "path_index": 3,
+          "following_player_id": null,
+          "follow_timer": 0.0,
+          "follow_recalc_interval": 1.0,
+          "follow_goal": null
+        },
+        {
+          "type": "Critter",
+          "x": 780.0,
+          "y": 780.0,
+          "cell_size": 24,
+          "strength": 91,
           "speed_stat": 30,
-          "endurance": 79,
-          "state": "IDLE",
+          "endurance": 71,
+          "state": "GATHER",
           "is_well_fed": false,
           "assigned_hut_ref": {
             "type": "GatheringHut",
             "gx": 35,
             "gy": 28
           },
-          "target_resource_ref": null,
-          "inventory": {},
-          "loiter_timer": 2.388567715970938,
+          "target_resource_ref": {
+            "type": "BerryBush",
+            "gx": 33,
+            "gy": 32
+          },
+          "inventory": {
+            "food": 1
+          },
+          "loiter_timer": 2.679966478354517,
           "loiter_target": null,
-          "idle_timer": 2.861991444015911,
+          "idle_timer": -0.00634877581842451,
           "path": [],
-          "path_index": 0,
+          "path_index": 2,
           "following_player_id": null,
           "follow_timer": 0.0,
           "follow_recalc_interval": 1.0,
@@ -1779,50 +1796,64 @@
         },
         {
           "type": "Critter",
-          "x": 1249.3200000000004,
-          "y": 516.0,
+          "x": 780.0,
+          "y": 780.0,
           "cell_size": 24,
-          "strength": 100,
-          "speed_stat": 35,
-          "endurance": 76,
-          "state": "RETURN",
+          "strength": 84,
+          "speed_stat": 32,
+          "endurance": 68,
+          "state": "GATHER",
+          "is_well_fed": false,
+          "assigned_hut_ref": {
+            "type": "GatheringHut",
+            "gx": 35,
+            "gy": 28
+          },
+          "target_resource_ref": {
+            "type": "BerryBush",
+            "gx": 33,
+            "gy": 32
+          },
+          "inventory": {
+            "food": 1
+          },
+          "loiter_timer": 3.0614630780913212,
+          "loiter_target": null,
+          "idle_timer": -0.01166037811998398,
+          "path": [],
+          "path_index": 4,
+          "following_player_id": null,
+          "follow_timer": 0.0,
+          "follow_recalc_interval": 1.0,
+          "follow_goal": null
+        },
+        {
+          "type": "Critter",
+          "x": 1380.0,
+          "y": 420.0,
+          "cell_size": 24,
+          "strength": 88,
+          "speed_stat": 30,
+          "endurance": 71,
+          "state": "GATHER",
           "is_well_fed": false,
           "assigned_hut_ref": {
             "type": "GatheringHut",
             "gx": 53,
             "gy": 18
           },
-          "target_resource_ref": null,
-          "inventory": {},
-          "loiter_timer": 1.5846305224512962,
+          "target_resource_ref": {
+            "type": "BerryBush",
+            "gx": 57,
+            "gy": 16
+          },
+          "inventory": {
+            "food": 1
+          },
+          "loiter_timer": 2.178505165906321,
           "loiter_target": null,
-          "idle_timer": -0.015061735518987582,
-          "path": [
-            [
-              50,
-              18
-            ],
-            [
-              50,
-              19
-            ],
-            [
-              50,
-              20
-            ],
-            [
-              50,
-              21
-            ],
-            [
-              51,
-              21
-            ],
-            [
-              52,
-              21
-            ]
-          ],
+          "idle_timer": -0.006858092888633802,
+          "path": [],
           "path_index": 5,
           "following_player_id": null,
           "follow_timer": 0.0,
@@ -1831,26 +1862,32 @@
         },
         {
           "type": "Critter",
-          "x": 1248.3120000000004,
-          "y": 420.0,
+          "x": 1380.0,
+          "y": 372.0,
           "cell_size": 24,
-          "strength": 100,
+          "strength": 91,
           "speed_stat": 32,
-          "endurance": 77,
-          "state": "IDLE",
+          "endurance": 75,
+          "state": "GATHER",
           "is_well_fed": false,
           "assigned_hut_ref": {
             "type": "GatheringHut",
             "gx": 53,
             "gy": 18
           },
-          "target_resource_ref": null,
-          "inventory": {},
-          "loiter_timer": 2.501342385281986,
+          "target_resource_ref": {
+            "type": "BerryBush",
+            "gx": 57,
+            "gy": 16
+          },
+          "inventory": {
+            "food": 1
+          },
+          "loiter_timer": 1.1884964911085827,
           "loiter_target": null,
-          "idle_timer": 9.917242229540658,
+          "idle_timer": -0.0015798381613743029,
           "path": [],
-          "path_index": 0,
+          "path_index": 5,
           "following_player_id": null,
           "follow_timer": 0.0,
           "follow_recalc_interval": 1.0,
@@ -1858,25 +1895,161 @@
         },
         {
           "type": "Critter",
-          "x": 1249.2000000000003,
-          "y": 420.0,
+          "x": 828.0,
+          "y": 802.112,
+          "cell_size": 24,
+          "strength": 97,
+          "speed_stat": 34,
+          "endurance": 73,
+          "state": "GATHER",
+          "is_well_fed": false,
+          "assigned_hut_ref": {
+            "type": "GatheringHut",
+            "gx": 35,
+            "gy": 28
+          },
+          "target_resource_ref": {
+            "type": "BerryBush",
+            "gx": 33,
+            "gy": 32
+          },
+          "inventory": {
+            "food": 1
+          },
+          "loiter_timer": 0.6657297271984494,
+          "loiter_target": null,
+          "idle_timer": -0.014593422046123114,
+          "path": [
+            [
+              37,
+              33
+            ],
+            [
+              36,
+              33
+            ],
+            [
+              35,
+              33
+            ],
+            [
+              34,
+              33
+            ],
+            [
+              34,
+              32
+            ],
+            [
+              34,
+              31
+            ],
+            [
+              33,
+              31
+            ]
+          ],
+          "path_index": 4,
+          "following_player_id": null,
+          "follow_timer": 0.0,
+          "follow_recalc_interval": 1.0,
+          "follow_goal": null
+        },
+        {
+          "type": "Critter",
+          "x": 878.8800000000001,
+          "y": 756.0,
+          "cell_size": 24,
+          "strength": 83,
+          "speed_stat": 30,
+          "endurance": 79,
+          "state": "GATHER",
+          "is_well_fed": false,
+          "assigned_hut_ref": {
+            "type": "GatheringHut",
+            "gx": 35,
+            "gy": 28
+          },
+          "target_resource_ref": {
+            "type": "BerryBush",
+            "gx": 33,
+            "gy": 32
+          },
+          "inventory": {
+            "food": 1
+          },
+          "loiter_timer": 3.586369659940981,
+          "loiter_target": null,
+          "idle_timer": -0.015000483200261136,
+          "path": [
+            [
+              38,
+              32
+            ],
+            [
+              38,
+              31
+            ],
+            [
+              37,
+              31
+            ],
+            [
+              36,
+              31
+            ],
+            [
+              35,
+              31
+            ],
+            [
+              34,
+              31
+            ],
+            [
+              34,
+              32
+            ]
+          ],
+          "path_index": 3,
+          "following_player_id": null,
+          "follow_timer": 0.0,
+          "follow_recalc_interval": 1.0,
+          "follow_goal": null
+        },
+        {
+          "type": "Critter",
+          "x": 1235.4957943888862,
+          "y": 434.40587460325895,
           "cell_size": 24,
           "strength": 100,
           "speed_stat": 35,
-          "endurance": 69,
-          "state": "RETURN",
+          "endurance": 76,
+          "state": "GATHER",
           "is_well_fed": false,
           "assigned_hut_ref": {
             "type": "GatheringHut",
             "gx": 53,
             "gy": 18
           },
-          "target_resource_ref": null,
+          "target_resource_ref": {
+            "type": "BerryBush",
+            "gx": 57,
+            "gy": 16
+          },
           "inventory": {},
-          "loiter_timer": 1.6620514750037583,
+          "loiter_timer": 1.7585670028185492,
           "loiter_target": null,
-          "idle_timer": -0.00868779730375134,
+          "idle_timer": -0.013316168483804,
           "path": [
+            [
+              50,
+              18
+            ],
+            [
+              51,
+              18
+            ],
             [
               51,
               17
@@ -1902,11 +2075,11 @@
               17
             ],
             [
-              56,
-              18
+              57,
+              17
             ]
           ],
-          "path_index": 1,
+          "path_index": 2,
           "following_player_id": null,
           "follow_timer": 0.0,
           "follow_recalc_interval": 1.0,
@@ -1914,53 +2087,67 @@
         },
         {
           "type": "Critter",
-          "x": 1249.3200000000004,
-          "y": 516.0,
+          "x": 1252.4142994798099,
+          "y": 420.05519132585545,
           "cell_size": 24,
           "strength": 100,
-          "speed_stat": 35,
-          "endurance": 79,
-          "state": "RETURN",
+          "speed_stat": 32,
+          "endurance": 77,
+          "state": "GATHER",
           "is_well_fed": false,
           "assigned_hut_ref": {
             "type": "GatheringHut",
             "gx": 53,
             "gy": 18
           },
-          "target_resource_ref": null,
-          "inventory": {
-            "food": 2
+          "target_resource_ref": {
+            "type": "BerryBush",
+            "gx": 57,
+            "gy": 16
           },
-          "loiter_timer": 2.3556680995563797,
+          "inventory": {},
+          "loiter_timer": 0.8844184135343169,
           "loiter_target": null,
-          "idle_timer": -0.015726911324813617,
+          "idle_timer": -0.0015732201358724662,
           "path": [
             [
               50,
               18
             ],
             [
-              50,
-              19
-            ],
-            [
-              50,
-              20
-            ],
-            [
-              50,
-              21
+              51,
+              18
             ],
             [
               51,
-              21
+              17
             ],
             [
               52,
-              21
+              17
+            ],
+            [
+              53,
+              17
+            ],
+            [
+              54,
+              17
+            ],
+            [
+              55,
+              17
+            ],
+            [
+              56,
+              17
+            ],
+            [
+              57,
+              17
             ]
           ],
-          "path_index": 5,
+          "path_index": 3,
           "following_player_id": null,
           "follow_timer": 0.0,
           "follow_recalc_interval": 1.0,
@@ -1968,26 +2155,67 @@
         },
         {
           "type": "Critter",
-          "x": 1249.6012383505758,
-          "y": 419.6418840076563,
+          "x": 1332.0,
+          "y": 396.0,
           "cell_size": 24,
           "strength": 100,
-          "speed_stat": 37,
-          "endurance": 84,
-          "state": "IDLE",
+          "speed_stat": 35,
+          "endurance": 69,
+          "state": "GATHER",
           "is_well_fed": false,
           "assigned_hut_ref": {
             "type": "GatheringHut",
             "gx": 53,
             "gy": 18
           },
-          "target_resource_ref": null,
+          "target_resource_ref": {
+            "type": "BerryBush",
+            "gx": 57,
+            "gy": 16
+          },
           "inventory": {},
-          "loiter_timer": 4.912887712158016,
+          "loiter_timer": 3.825797771350852,
           "loiter_target": null,
-          "idle_timer": 10.607003144533573,
-          "path": [],
-          "path_index": 0,
+          "idle_timer": -0.0055713885164951765,
+          "path": [
+            [
+              50,
+              18
+            ],
+            [
+              51,
+              18
+            ],
+            [
+              51,
+              17
+            ],
+            [
+              51,
+              16
+            ],
+            [
+              52,
+              16
+            ],
+            [
+              53,
+              16
+            ],
+            [
+              54,
+              16
+            ],
+            [
+              55,
+              16
+            ],
+            [
+              56,
+              16
+            ]
+          ],
+          "path_index": 8,
           "following_player_id": null,
           "follow_timer": 0.0,
           "follow_recalc_interval": 1.0,
@@ -1995,8 +2223,117 @@
         },
         {
           "type": "Critter",
-          "x": 1020.0,
-          "y": 685.1904,
+          "x": 1356.960000000001,
+          "y": 372.0,
+          "cell_size": 24,
+          "strength": 100,
+          "speed_stat": 35,
+          "endurance": 79,
+          "state": "GATHER",
+          "is_well_fed": false,
+          "assigned_hut_ref": {
+            "type": "GatheringHut",
+            "gx": 53,
+            "gy": 18
+          },
+          "target_resource_ref": {
+            "type": "BerryBush",
+            "gx": 57,
+            "gy": 16
+          },
+          "inventory": {
+            "food": 1
+          },
+          "loiter_timer": 0.0546984717514299,
+          "loiter_target": null,
+          "idle_timer": -0.008847613611711255,
+          "path": [
+            [
+              50,
+              18
+            ],
+            [
+              51,
+              18
+            ],
+            [
+              51,
+              17
+            ],
+            [
+              51,
+              16
+            ],
+            [
+              51,
+              15
+            ],
+            [
+              52,
+              15
+            ],
+            [
+              53,
+              15
+            ],
+            [
+              54,
+              15
+            ],
+            [
+              55,
+              15
+            ],
+            [
+              56,
+              15
+            ],
+            [
+              57,
+              15
+            ]
+          ],
+          "path_index": 10,
+          "following_player_id": null,
+          "follow_timer": 0.0,
+          "follow_recalc_interval": 1.0,
+          "follow_goal": null
+        },
+        {
+          "type": "Critter",
+          "x": 1380.0,
+          "y": 420.0,
+          "cell_size": 24,
+          "strength": 100,
+          "speed_stat": 37,
+          "endurance": 84,
+          "state": "GATHER",
+          "is_well_fed": false,
+          "assigned_hut_ref": {
+            "type": "GatheringHut",
+            "gx": 53,
+            "gy": 18
+          },
+          "target_resource_ref": {
+            "type": "BerryBush",
+            "gx": 57,
+            "gy": 16
+          },
+          "inventory": {},
+          "loiter_timer": 0.5957709614187965,
+          "loiter_target": null,
+          "idle_timer": -0.004763585387215871,
+          "path": [],
+          "path_index": 4,
+          "following_player_id": null,
+          "follow_timer": 0.0,
+          "follow_recalc_interval": 1.0,
+          "follow_goal": null
+        },
+        {
+          "type": "Critter",
+          "x": 1048.9660469824125,
+          "y": 664.9660469824128,
           "cell_size": 24,
           "strength": 100,
           "speed_stat": 37,
@@ -2010,10 +2347,10 @@
           },
           "target_resource_ref": null,
           "inventory": {},
-          "loiter_timer": 2.437136263597624,
+          "loiter_timer": 3.0118651822739873,
           "loiter_target": [
-            1020.0,
-            732.0
+            1044.0,
+            660.0
           ],
           "idle_timer": 0.0,
           "path": [],
@@ -2025,26 +2362,59 @@
         },
         {
           "type": "Critter",
-          "x": 828.0,
-          "y": 684.0,
+          "x": 876.0,
+          "y": 804.0,
           "cell_size": 24,
           "strength": 100,
           "speed_stat": 35,
           "endurance": 84,
-          "state": "IDLE",
+          "state": "GATHER",
           "is_well_fed": false,
           "assigned_hut_ref": {
             "type": "GatheringHut",
             "gx": 35,
             "gy": 28
           },
-          "target_resource_ref": null,
+          "target_resource_ref": {
+            "type": "BerryBush",
+            "gx": 33,
+            "gy": 32
+          },
           "inventory": {},
-          "loiter_timer": 4.640606553959563,
+          "loiter_timer": 3.046085920423604,
           "loiter_target": null,
-          "idle_timer": 2.0696395137578576,
-          "path": [],
-          "path_index": 0,
+          "idle_timer": -0.0043960252191863475,
+          "path": [
+            [
+              38,
+              32
+            ],
+            [
+              38,
+              33
+            ],
+            [
+              37,
+              33
+            ],
+            [
+              36,
+              33
+            ],
+            [
+              35,
+              33
+            ],
+            [
+              34,
+              33
+            ],
+            [
+              33,
+              33
+            ]
+          ],
+          "path_index": 4,
           "following_player_id": null,
           "follow_timer": 0.0,
           "follow_recalc_interval": 1.0,
@@ -2052,8 +2422,8 @@
         },
         {
           "type": "Critter",
-          "x": 1092.0,
-          "y": 732.0,
+          "x": 1056.9207274246442,
+          "y": 671.6930908584519,
           "cell_size": 24,
           "strength": 100,
           "speed_stat": 37,
@@ -2067,8 +2437,11 @@
           },
           "target_resource_ref": null,
           "inventory": {},
-          "loiter_timer": 1.985772879043937,
-          "loiter_target": null,
+          "loiter_timer": 2.778754148087358,
+          "loiter_target": [
+            1020.0,
+            684.0
+          ],
           "idle_timer": 0.0,
           "path": [],
           "path_index": 0,
@@ -2080,314 +2453,604 @@
       ],
       "trampled": [
         [
-          57,
-          17,
-          1.873999999999999
-        ],
-        [
-          35,
-          31,
-          1.352999999999999
-        ],
-        [
-          51,
-          17,
-          3.741000000000004
-        ],
-        [
-          51,
-          16,
-          3.505000000000004
-        ],
-        [
-          38,
-          31,
-          3.8200000000000043
-        ],
-        [
-          50,
-          16,
-          3.2550000000000043
+          34,
+          32,
+          4.792
         ],
         [
           55,
           17,
-          1.8099999999999992
-        ],
-        [
-          56,
-          16,
-          1.7779999999999991
-        ],
-        [
-          56,
-          15,
-          2.484000000000001
-        ],
-        [
-          54,
-          17,
-          2.060999999999999
-        ],
-        [
-          56,
-          17,
-          2.169999999999999
-        ],
-        [
-          53,
-          17,
-          3.599000000000004
-        ],
-        [
-          52,
-          17,
-          3.6310000000000042
-        ],
-        [
-          51,
-          18,
-          3.9790000000000054
-        ],
-        [
-          44,
-          28,
-          3.599000000000004
-        ],
-        [
-          57,
-          15,
-          2.2489999999999997
+          3.9589999999999987
         ],
         [
           34,
           30,
-          1.3369999999999986
+          1.844999999999997
         ],
         [
-          54,
-          15,
-          2.9270000000000027
-        ],
-        [
-          34,
-          29,
-          4.527000000000002
-        ],
-        [
-          50,
-          18,
-          3.8840000000000052
-        ],
-        [
-          58,
-          15,
-          1.5569999999999993
-        ],
-        [
-          53,
-          15,
-          3.146000000000004
-        ],
-        [
-          52,
-          15,
-          2.801000000000003
-        ],
-        [
-          51,
-          15,
-          3.005000000000002
-        ],
-        [
-          49,
+          56,
           16,
-          2.405
+          1.8769999999999971
         ],
         [
-          35,
-          32,
-          0.018000000000000335
-        ],
-        [
-          49,
+          57,
           17,
-          2.1859999999999995
+          4.373999999999999
         ],
         [
-          38,
-          30,
-          1.5409999999999993
-        ],
-        [
-          33,
-          31,
-          0.8369999999999994
-        ],
-        [
-          35,
-          33,
-          0.3830000000000028
-        ],
-        [
-          32,
-          31,
-          0.7290000000000006
-        ],
-        [
-          43,
-          28,
-          1.4929999999999992
-        ],
-        [
-          34,
-          31,
-          4.479000000000002
-        ],
-        [
-          55,
+          56,
           15,
-          2.7070000000000025
-        ],
-        [
-          38,
-          29,
-          1.7939999999999992
-        ],
-        [
-          42,
-          28,
-          1.825999999999999
-        ],
-        [
-          34,
-          32,
-          4.211000000000003
-        ],
-        [
-          55,
-          16,
-          1.9829999999999992
-        ],
-        [
-          34,
-          33,
-          3.963000000000005
-        ],
-        [
-          50,
-          19,
-          4.148000000000003
+          4.952
         ],
         [
           54,
-          16,
-          2.1859999999999995
-        ],
-        [
-          33,
-          33,
-          4.796000000000001
-        ],
-        [
-          53,
-          16,
-          3.365000000000004
-        ],
-        [
-          51,
-          19,
-          4.211000000000003
-        ],
-        [
-          52,
-          18,
-          3.2090000000000045
-        ],
-        [
-          52,
-          16,
-          2.5960000000000023
-        ],
-        [
-          50,
-          20,
-          4.4010000000000025
-        ],
-        [
-          51,
-          20,
-          4.448000000000002
-        ],
-        [
-          50,
-          21,
-          4.669000000000001
-        ],
-        [
-          52,
-          20,
-          3.2090000000000045
-        ],
-        [
-          38,
-          32,
-          3.3810000000000042
-        ],
-        [
-          51,
-          21,
-          4.905
-        ],
-        [
-          39,
-          31,
-          3.8520000000000048
-        ],
-        [
-          45,
-          29,
-          3.947000000000005
+          17,
+          3.558999999999999
         ],
         [
           36,
           32,
-          3.963000000000005
+          3.8309999999999986
+        ],
+        [
+          36,
+          33,
+          4.984
+        ],
+        [
+          34,
+          33,
+          4.888
+        ],
+        [
+          53,
+          17,
+          3.7669999999999986
+        ],
+        [
+          56,
+          17,
+          4.165999999999999
         ],
         [
           52,
-          21,
-          4.937
+          15,
+          4.678999999999999
         ],
         [
-          32,
-          32,
-          4.133000000000004
+          33,
+          31,
+          2.981999999999998
         ],
         [
-          32,
+          33,
           30,
-          4.195000000000003
+          2.773999999999998
+        ],
+        [
+          35,
+          31,
+          4.936
+        ],
+        [
+          52,
+          17,
+          4.968
+        ],
+        [
+          55,
+          15,
+          4.678999999999999
+        ],
+        [
+          51,
+          17,
+          4.742999999999999
+        ],
+        [
+          54,
+          15,
+          4.470999999999999
+        ],
+        [
+          51,
+          16,
+          4.454999999999999
+        ],
+        [
+          53,
+          15,
+          4.92
+        ],
+        [
+          50,
+          16,
+          4.710999999999999
+        ],
+        [
+          51,
+          18,
+          4.824
+        ],
+        [
+          36,
+          31,
+          4.92
+        ],
+        [
+          51,
+          15,
+          4.437999999999999
+        ],
+        [
+          50,
+          18,
+          4.598999999999999
+        ],
+        [
+          35,
+          32,
+          4.518999999999999
+        ],
+        [
+          35,
+          33,
+          4.678999999999999
+        ],
+        [
+          33,
+          33,
+          4.470999999999999
+        ],
+        [
+          33,
+          29,
+          0.5959999999999962
+        ],
+        [
+          57,
+          16,
+          0.003999999999996229
+        ],
+        [
+          27,
+          31,
+          0.11699999999999657
+        ],
+        [
+          27,
+          32,
+          0.22799999999999665
+        ],
+        [
+          57,
+          15,
+          2.324999999999998
+        ],
+        [
+          27,
+          33,
+          0.35599999999999676
+        ],
+        [
+          37,
+          31,
+          4.694999999999999
+        ],
+        [
+          27,
+          34,
+          0.46799999999999653
+        ],
+        [
+          34,
+          31,
+          3.4949999999999988
+        ],
+        [
+          27,
+          35,
+          0.5959999999999962
+        ],
+        [
+          27,
+          36,
+          0.7079999999999963
+        ],
+        [
+          43,
+          29,
+          0.7719999999999965
+        ],
+        [
+          43,
+          27,
+          4.872
+        ],
+        [
+          27,
+          37,
+          0.8359999999999965
+        ],
+        [
+          43,
+          28,
+          0.8839999999999966
+        ],
+        [
+          28,
+          37,
+          0.9159999999999962
+        ],
+        [
+          29,
+          37,
+          1.0279999999999963
+        ],
+        [
+          32,
+          31,
+          4.968
+        ],
+        [
+          29,
+          38,
+          1.0919999999999963
+        ],
+        [
+          55,
+          16,
+          4.904
+        ],
+        [
+          30,
+          38,
+          1.1549999999999963
+        ],
+        [
+          44,
+          28,
+          4.421999999999999
+        ],
+        [
+          30,
+          39,
+          1.2189999999999963
+        ],
+        [
+          31,
+          39,
+          1.2669999999999964
+        ],
+        [
+          31,
+          40,
+          1.3309999999999964
+        ],
+        [
+          32,
+          32,
+          4.614999999999999
+        ],
+        [
+          32,
+          40,
+          1.3949999999999965
+        ],
+        [
+          44,
+          29,
+          1.4599999999999964
+        ],
+        [
+          32,
+          41,
+          1.4599999999999964
+        ],
+        [
+          33,
+          41,
+          1.5079999999999965
         ],
         [
           45,
-          30,
-          4.289000000000002
+          29,
+          1.5569999999999968
         ],
         [
-          32,
+          34,
           29,
-          4.4010000000000025
+          1.6049999999999969
+        ],
+        [
+          33,
+          42,
+          1.5729999999999968
         ],
         [
           32,
           33,
-          4.464000000000002
+          1.636999999999997
         ],
         [
           34,
+          42,
+          1.636999999999997
+        ],
+        [
+          45,
+          27,
+          1.684999999999997
+        ],
+        [
+          35,
+          42,
+          1.748999999999997
+        ],
+        [
+          37,
+          33,
+          4.742999999999999
+        ],
+        [
+          36,
+          42,
+          1.8769999999999971
+        ],
+        [
+          30,
+          32,
+          1.9419999999999975
+        ],
+        [
+          37,
+          42,
+          1.9899999999999975
+        ],
+        [
+          38,
+          33,
+          4.502999999999999
+        ],
+        [
+          32,
+          26,
+          3.7669999999999986
+        ],
+        [
+          38,
+          42,
+          2.1179999999999977
+        ],
+        [
+          31,
+          32,
+          2.164999999999998
+        ],
+        [
+          50,
+          15,
+          4.197999999999999
+        ],
+        [
+          39,
+          42,
+          2.228999999999998
+        ],
+        [
+          32,
+          25,
+          2.340999999999998
+        ],
+        [
+          38,
+          32,
+          4.261999999999999
+        ],
+        [
+          40,
+          42,
+          2.356999999999998
+        ],
+        [
+          49,
+          15,
+          3.9589999999999987
+        ],
+        [
+          41,
+          42,
+          2.469999999999998
+        ],
+        [
+          49,
+          16,
+          4.341999999999999
+        ],
+        [
+          42,
+          42,
+          2.5979999999999976
+        ],
+        [
+          43,
+          42,
+          2.7099999999999977
+        ],
+        [
+          49,
+          17,
+          3.9589999999999987
+        ],
+        [
+          44,
+          42,
+          2.837999999999998
+        ],
+        [
+          44,
+          43,
+          2.917999999999998
+        ],
+        [
+          45,
+          43,
+          2.949999999999998
+        ],
+        [
+          45,
+          44,
+          3.029999999999998
+        ],
+        [
+          46,
+          44,
+          3.077999999999998
+        ],
+        [
+          46,
+          45,
+          3.1569999999999983
+        ],
+        [
+          47,
+          45,
+          3.1889999999999983
+        ],
+        [
+          49,
+          18,
+          3.2209999999999983
+        ],
+        [
+          47,
+          46,
+          3.2689999999999984
+        ],
+        [
+          47,
+          47,
+          3.3969999999999985
+        ],
+        [
+          47,
+          48,
+          3.510999999999999
+        ],
+        [
+          48,
+          48,
+          3.590999999999999
+        ],
+        [
+          32,
+          29,
+          4.486999999999999
+        ],
+        [
+          48,
+          49,
+          3.638999999999999
+        ],
+        [
+          49,
+          49,
+          3.702999999999999
+        ],
+        [
+          50,
+          49,
+          3.8309999999999986
+        ],
+        [
+          50,
+          48,
+          3.9269999999999987
+        ],
+        [
+          32,
+          30,
+          4.726999999999999
+        ],
+        [
+          51,
+          48,
+          3.9429999999999987
+        ],
+        [
+          32,
+          27,
+          4.006999999999999
+        ],
+        [
+          38,
+          31,
+          4.470999999999999
+        ],
+        [
+          51,
+          47,
+          4.054999999999999
+        ],
+        [
+          51,
+          46,
+          4.165999999999999
+        ],
+        [
+          32,
           28,
-          4.717000000000001
+          4.245999999999999
+        ],
+        [
+          52,
+          16,
+          4.726999999999999
+        ],
+        [
+          51,
+          45,
+          4.293999999999999
+        ],
+        [
+          51,
+          44,
+          4.405999999999999
+        ],
+        [
+          53,
+          16,
+          4.968
+        ],
+        [
+          51,
+          43,
+          4.534999999999999
+        ],
+        [
+          51,
+          42,
+          4.646999999999999
+        ],
+        [
+          44,
+          27,
+          4.678999999999999
+        ],
+        [
+          54,
+          16,
+          4.694999999999999
+        ],
+        [
+          51,
+          41,
+          4.776
+        ],
+        [
+          51,
+          40,
+          4.888
         ]
       ],
       "portals": {},
@@ -2973,8 +3636,8 @@
   ],
   "player": {
     "type": "Player",
-    "x": 1141.9999999999925,
-    "y": 698.6999999999995,
+    "x": 1224.5999999999935,
+    "y": 964.3000000000033,
     "radius": 18,
     "base_speed": 200,
     "speed": 200.0,

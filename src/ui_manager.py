@@ -33,22 +33,20 @@ class UIManager:
         mx, my = pos
 
         # 1. Critter Inspector (Top Layer)
+        critter_handled = False
         if self.critter_inspector.visible:
             if self.critter_inspector.handle_mouse_click(pos, player, world):
                 return True
-            # Click outside inspector closes it
-            if not self.critter_inspector.panel_rect.collidepoint(pos):
-                self.critter_inspector.hide()
-                return True
+            if self.critter_inspector.panel_rect.collidepoint(pos):
+                critter_handled = True
 
         # 2. Mating Hut Inspector
+        mating_handled = False
         if self.mating_hut_inspector.visible:
             if self.mating_hut_inspector.handle_mouse_click(pos):
                 return True
-            # Click outside closes it
-            if not self.mating_hut_inspector.panel_rect.collidepoint(pos):
-                self.mating_hut_inspector.hide()
-                return True
+            if self.mating_hut_inspector.panel_rect.collidepoint(pos):
+                mating_handled = True
 
         # 3. Build Menu
         if self.build_menu.visible:
@@ -57,7 +55,6 @@ class UIManager:
 
         # 4. Crafting Menu
         if self.crafting_menu.visible:
-            # Crafting menu area consumption
             if self.crafting_menu.panel_rect.collidepoint(pos):
                 return True
 
@@ -69,7 +66,6 @@ class UIManager:
                 world.set_message("Game Saved!", 2.0)
             except Exception as e:
                 world.set_message(f"Save Failed: {e}", 3.0)
-            # Close other menus when saving from HUD if desired
             self.build_menu.visible = False
             self.crafting_menu.visible = False
             return True
@@ -85,6 +81,14 @@ class UIManager:
             if self.crafting_menu.visible:
                 self.build_menu.visible = False
             return True
+
+        # 6. Global Close: If click was in neither active inspector, hide them
+        # This handles clicking on the world grid
+        if (self.critter_inspector.visible and not critter_handled) or \
+           (self.mating_hut_inspector.visible and not mating_handled):
+            self.critter_inspector.hide()
+            self.mating_hut_inspector.hide()
+            # We don't return True here so the click can still select a new critter/hut in the same frame
 
         return False
 
@@ -109,9 +113,7 @@ class UIManager:
         if player.interaction_progress > 0 and player.active_target:
             self._draw_progress_circle(screen, player, camera)
 
-        # 5. Modes (Deconstruction)
-        
-        # 6. Menus (Build / Craft / Inspector / Mating Hut)
+        # 5. Menus (Build / Craft / Inspector / Mating Hut)
         self.build_menu.render(screen, self.font)
         self.crafting_menu.render(screen, self.font)
         self.critter_inspector.draw(screen, player=player)

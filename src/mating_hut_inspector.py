@@ -60,7 +60,7 @@ class MatingHutInspector:
         # Column setup
         col1_x = self.panel_rect.x + 20
         col2_x = self.panel_rect.x + (self.panel_rect.width // 2) + 10
-        y_start = self.panel_rect.y + 45
+        y_start = self.panel_rect.y + 60 # Increased from 45 to avoid title overlap
         line_spacing = self.font.get_linesize() + 4
 
         labels = ["Strength", "Speed", "Endurance", "Total"]
