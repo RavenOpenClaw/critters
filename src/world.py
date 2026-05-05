@@ -341,8 +341,8 @@ class World:
                     for cf in campfires:
                         cx, cy = cf.get_center()
                         dx, dy = obj.x - cx, obj.y - cy
-                        if dx*dx + dy*dy <= (3.0 * self.grid.cell_size)**2:
-                            obj.apply_buff(Buff(BUFF_NAME_WARM, {'gather': 2.0}, duration=2.0))
+                        if dx*dx + dy*dy <= (5.0 * self.grid.cell_size)**2:
+                            obj.apply_buff(Buff(BUFF_NAME_WARM, {'gather': 2.0}, duration=20.0))
                 else:
                     obj.update(dt)
 
@@ -355,8 +355,8 @@ class World:
             if isinstance(obj, Campfire):
                 cx, cy = obj.get_center()
                 dx, dy = entity.x - cx, entity.y - cy
-                if dx*dx + dy*dy <= (3.0 * self.grid.cell_size)**2:
-                    entity.apply_buff(Buff(BUFF_NAME_WARM, {'gather': 2.0}, duration=2.0))
+                if dx*dx + dy*dy <= (5.0 * self.grid.cell_size)**2:
+                    entity.apply_buff(Buff(BUFF_NAME_WARM, {'gather': 2.0}, duration=20.0))
                     return True
         return False
 
