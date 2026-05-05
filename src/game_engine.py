@@ -104,46 +104,59 @@ class GameEngine:
             wx, wy = self.camera.undo(mx, my)
             gx, gy = self.world.grid.world_to_grid(wx, wy)
 
-            # Deconstruction Mode
-            if self.input_handler.deconstruct_mode:
-                if (gx, gy) in self.world.grid.occupied:
-                    obj = self.world.grid.occupied[(gx, gy)]
-                    if isinstance(obj, Building):
-                        ox, oy = obj.get_center()
-                        dx, dy = self.player.x - ox, self.player.y - oy
-                        if dx*dx + dy*dy <= self.player.interaction_radius**2:
-                            obj.deconstruct(self.world, self.player)
-                            self.world.set_message(MESSAGE_DECONSTRUCTED, 2.0)
-                        else:
-                            self.world.set_message(MESSAGE_OUT_OF_RANGE, 1.5)
-                return
-
-            # Critter Selection
-            clicked_critter = False
+            # --- Target Identification ---
+            
+            # Check for Critter
+            target_critter = None
             for c in self.world.current_map.critters:
                 dx, dy = wx - c.x, wy - c.y
                 if dx*dx + dy*dy <= (c.radius + 5) ** 2:
-                    if self.critter_inspector.visible and self.critter_inspector.selected_critter is c:
-                        self.critter_inspector.hide()
-                    else:
-                        self.critter_inspector.toggle(c)
-                    clicked_critter = True
+                    target_critter = c
                     break
             
-            # Placement Attempt
-            if not clicked_critter and self.build_menu.visible and self.build_menu.selected_building_class:
+            # Check for Building/Obstacle
+            target_obj = self.world.grid.occupied.get((gx, gy))
+            
+            # --- Logic Pass ---
+
+            # Deconstruction Mode (Priority)
+            if self.input_handler.deconstruct_mode:
+                if isinstance(target_obj, Building):
+                    ox, oy = target_obj.get_center()
+                    dx, dy = self.player.x - ox, self.player.y - oy
+                    if dx*dx + dy*dy <= self.player.interaction_radius**2:
+                        target_obj.deconstruct(self.world, self.player)
+                        self.world.set_message(MESSAGE_DECONSTRUCTED, 2.0)
+                    else:
+                        self.world.set_message(MESSAGE_OUT_OF_RANGE, 1.5)
+                return
+
+            # Selection handling: don't close windows if we are picking a NEW relevant target
+            is_selecting_new = False
+
+            if target_critter:
+                if self.critter_inspector.visible and self.critter_inspector.selected_critter is target_critter:
+                    self.critter_inspector.hide()
+                else:
+                    self.critter_inspector.toggle(target_critter)
+                is_selecting_new = True
+            
+            elif self.build_menu.visible and self.build_menu.selected_building_class:
                 if self.world.grid.is_within_bounds(gx, gy):
                     self.build_menu.attempt_placement(self.player, self.world, self.world.grid, gx, gy)
-                    return
+                    is_selecting_new = True # Consider placement an 'interactive' action
 
-            # Building / Object Selection
-            if not clicked_critter:
-                if (gx, gy) in self.world.grid.occupied:
-                    obj = self.world.grid.occupied[(gx, gy)]
-                    from mating_hut import MatingHut
-                    if isinstance(obj, MatingHut):
-                        self.ui_manager.mating_hut_inspector.toggle(obj)
-                        return
+            elif target_obj:
+                from mating_hut import MatingHut
+                if isinstance(target_obj, MatingHut):
+                    self.ui_manager.mating_hut_inspector.toggle(target_obj)
+                    is_selecting_new = True
+                # Add other assignable/inspectable buildings here if needed
+            
+            # Global Close: Only if we didn't click a UI element AND didn't select a new interactive target
+            if not is_selecting_new:
+                self.critter_inspector.hide()
+                self.mating_hut_inspector.hide()
 
         # 3. Right-click Assignment
         if self.input_handler.mouse_right_clicked:
