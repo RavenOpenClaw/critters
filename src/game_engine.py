@@ -156,7 +156,7 @@ class GameEngine:
             # Global Close: Only if we didn't click a UI element AND didn't select a new interactive target
             if not is_selecting_new:
                 self.critter_inspector.hide()
-                self.mating_hut_inspector.hide()
+                self.ui_manager.mating_hut_inspector.hide()
 
         # 3. Right-click Assignment
         if self.input_handler.mouse_right_clicked:
