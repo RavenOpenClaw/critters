@@ -20,8 +20,9 @@ class Grass(WorldObject):
         # Condition system: 0-100, starts full
         self.condition = 100.0
         self.max_condition = 100.0
-        # Recovery rate (per second) when not trampled
-        self.recovery_rate = 2.0
+        # Recovery rate (per second) when not trampled.
+        # Reduced to 0.1 for very slow regrowth.
+        self.recovery_rate = 0.1
         # Note: world reference will be set by World.add_object
 
     def get_occupied_cells(self):

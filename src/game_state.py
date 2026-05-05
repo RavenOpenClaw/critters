@@ -130,14 +130,12 @@ def new_game(window_width: int = 800, window_height: int = 600) -> tuple[World, 
         if not world.grid.is_occupied(gx, gy):
             world.add_object(Stick(gx, gy, cell_size, sticks=random.randint(2, 5)))
 
-    # Add Grass (scattered)
+    # Add Grass (Global coverage)
     from grass import Grass
-    for _ in range(15):
-        gx = random.randint(5, grid_width-5)
-        gy = random.randint(5, grid_height-5)
-        if abs(gx - spawn_gx) < 3 and abs(gy - spawn_gy) < 3: continue
-        if not world.grid.is_occupied(gx, gy):
-            world.add_object(Grass(gx, gy, cell_size))
+    for gy in range(grid_height):
+        for gx in range(grid_width):
+            if not world.grid.is_occupied(gx, gy):
+                world.add_object(Grass(gx, gy, cell_size))
 
     # --- Specialized Starting Critters (Wild) ---
     # (STR, SPD, END)
