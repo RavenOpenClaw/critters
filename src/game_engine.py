@@ -271,6 +271,21 @@ class GameEngine:
         # HUD and UI
         self.ui_manager.draw(self.screen, self.world, self.player, self.camera)
         
+        # Debug Overlay (F3)
+        if self.input_handler.show_debug:
+            # 1. World-space debug (inventory counts)
+            self.world.draw_debug(self.screen, self.camera, self.font)
+            
+            # 2. HUD-space debug (coords, FPS)
+            debug_lines = [
+                f"Player: ({self.player.x:.1f}, {self.player.y:.1f})",
+                f"FPS: {self.clock.get_fps():.1f}",
+                f"Map: {self.world.current_map.name}"
+            ]
+            for i, line in enumerate(debug_lines):
+                surf = self.font.render(line, True, (255, 0, 0))
+                self.screen.blit(surf, (10, 150 + i * 20))
+        
         # World Message
         if self.world.message:
             msg_surf = self.font.render(self.world.message, True, (0, 0, 0))

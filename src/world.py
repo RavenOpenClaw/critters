@@ -360,6 +360,29 @@ class World:
                     return True
         return False
 
+    def draw_debug(self, screen, camera, font):
+        """Render debug information for world objects (e.g. inventory counts)."""
+        import pygame
+        for obj in self.current_map.objects:
+            if hasattr(obj, 'inventory') and obj.inventory is not None:
+                total_items = obj.inventory.get_total_quantity()
+                if total_items > 0:
+                    text = font.render(str(total_items), True, (255, 255, 255))
+                    # Center on object
+                    ox, oy = obj.x, obj.y
+                    if hasattr(obj, 'get_center'):
+                        ox, oy = obj.get_center()
+                    
+                    if camera:
+                        dx, dy = camera.apply(ox, oy)
+                    else:
+                        dx, dy = ox, oy
+                    
+                    text_rect = text.get_rect(center=(int(dx), int(dy)))
+                    # Draw a small dark background for readability
+                    pygame.draw.rect(screen, (0, 0, 0), text_rect.inflate(4, 2))
+                    screen.blit(text, text_rect)
+
     def draw(self, screen, camera=None):
         for obj in self.current_map.objects:
             if hasattr(obj, 'render'):
