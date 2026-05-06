@@ -6,6 +6,7 @@ from gathering_hut import GatheringHut
 from chair import Chair
 from campfire import Campfire
 from mating_hut import MatingHut
+from release_building import ReleaseBuilding
 from constants import (
     HUD_BUILD_BUTTON,
     BUILD_MENU_TITLE,
@@ -26,6 +27,7 @@ class BuildMenu:
         self.buildings = [
             (GatheringHut, BUILDING_GATHERING_HUT),
             (MatingHut, BUILDING_MATING_HUT),
+            (ReleaseBuilding, "Release Altar"),
             (Chair, BUILDING_CHAIR),
             (Campfire, BUILDING_CAMPFIRE),
         ]

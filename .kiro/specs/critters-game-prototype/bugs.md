@@ -1,3 +1,18 @@
+### [UI_ANCHORING] UI elements do not reposition on window resize
+
+Status: OPEN
+
+Expected: HUD buttons (Save, Build, Craft) should stay at the bottom-left, and inspectors/menus should stay anchored to their intended corners (top-right for Critter Inspector/Buffs) when the window is resized or maximized.
+
+Actual: UI elements stay at fixed pixel coordinates, floating in the middle of the screen when resolution increases.
+
+Reproduce:
+- Start the game.
+- Maximize the window.
+- Observe that the HUD buttons and Critter Inspector are no longer at the edges.
+
+---
+
 ### [CAMPFIRE_AURA] Campfire fails to apply 'Warm' buff to nearby entities
 
 Status: OPEN
