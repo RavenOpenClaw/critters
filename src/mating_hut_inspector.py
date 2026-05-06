@@ -6,12 +6,24 @@ import pygame
 class MatingHutInspector:
     """Displays a two-column comparison of assigned parent stats and their averages."""
     def __init__(self, x, y, width, height, font):
-        self.panel_rect = pygame.Rect(x, y, width, height)
         self.font = font
+        self.width = width
+        self.height = height
+        self.panel_margin = x # Use initial x as margin
         self.visible = False
         self.selected_hut = None
+        self.reposition(800, 600) # Default setup
+
+    def reposition(self, screen_width, screen_height):
+        """Update panel position. Anchored to top-left with fixed margin."""
+        self.panel_rect = pygame.Rect(self.panel_margin, self.panel_margin, self.width, self.height)
         self.close_button_size = 20
-        self.close_button_rect = pygame.Rect(x + width - self.close_button_size - 5, y + 5, self.close_button_size, self.close_button_size)
+        self.close_button_rect = pygame.Rect(
+            self.panel_rect.right - self.close_button_size - 5,
+            self.panel_rect.top + 5,
+            self.close_button_size,
+            self.close_button_size
+        )
 
     def toggle(self, hut=None):
         """Toggle visibility. If a hut is provided, show that hut's assigned critters."""

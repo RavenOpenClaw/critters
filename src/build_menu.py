@@ -43,12 +43,19 @@ class BuildMenu:
         # Calculate height based on number of buildings
         self.menu_height = self.header_height + len(self.buildings) * (self.button_height + self.button_margin) + self.footer_height
         
+        # Position (can be updated by UIManager)
+        self.x, self.y = 10, 70
+
         self.bg_color = (255, 255, 255, 200)  # semi-transparent white
         self.button_color = (100, 100, 200)
         self.button_hover_color = (120, 120, 220)
         self.selected_color = (0, 128, 0)
         self.text_color = (0, 0, 0)
         self.cost_color = (80, 80, 80)  # darker gray for cost text
+
+    def reposition(self, screen_width, screen_height):
+        """Update position to stay anchored relative to the top-left area."""
+        self.x, self.y = 10, 70
 
     def toggle(self):
         """Toggle the build menu visibility."""
@@ -131,7 +138,8 @@ class BuildMenu:
 
         # Add building to world (this registers it with the grid)
         try:
-            world.add_object(building)
+            if not world.add_object(building):
+                return False
         except ValueError:
             # Overlap or invalid placement; do not deduct resources
             return False
@@ -161,7 +169,7 @@ class BuildMenu:
             return
 
         # Draw menu background
-        x, y = 10, 70  # below debug display
+        x, y = self.x, self.y
         menu_rect = pygame.Rect(x, y, self.menu_width, self.menu_height)
         # Create a transparent surface
         bg = pygame.Surface((self.menu_width, self.menu_height), pygame.SRCALPHA)

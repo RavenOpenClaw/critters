@@ -9,22 +9,27 @@ class CritterInspector:
     def __init__(self, cell_size, font, screen_width, screen_height):
         self.cell_size = cell_size
         self.font = font
-        self.screen_width = screen_width
-        self.screen_height = screen_height
         self.visible = False
         self.selected_critter = None
         # Panel dimensions
         self.panel_width = 220
-        self.panel_height = 320
+        self.panel_height = 360 # Increased slightly for stat totals
         self.panel_margin = 10
-        # Position: top-right corner
+        self.reposition(screen_width, screen_height)
+        
+        # Follow button rect (below stats)
+        self.follow_button_rect = None
+        self.release_button_rect = None
+        self.stat_rects = {} # Map stat names to rects for 'Use Candy' clicks
+
+    def reposition(self, screen_width, screen_height):
+        """Update panel position to stay anchored to the top-right corner."""
         self.panel_rect = pygame.Rect(
             screen_width - self.panel_width - self.panel_margin,
             self.panel_margin,
             self.panel_width,
             self.panel_height
         )
-        # Close button rect (small X at top-right of panel)
         self.close_button_size = 20
         self.close_button_rect = pygame.Rect(
             self.panel_rect.right - self.close_button_size - 5,
@@ -32,10 +37,6 @@ class CritterInspector:
             self.close_button_size,
             self.close_button_size
         )
-        # Follow button rect (below stats)
-        self.follow_button_rect = None
-        self.release_button_rect = None
-        self.stat_rects = {} # Map stat names to rects for 'Use Candy' clicks
 
     def toggle(self, critter=None):
         """Toggle visibility. If a critter is provided, show that critter's stats."""

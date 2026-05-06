@@ -12,18 +12,20 @@ from mating_hut_inspector import MatingHutInspector
 
 class UIManager:
     def __init__(self, window_width, window_height, font, build_menu, crafting_menu, critter_inspector):
-        self.width = window_width
-        self.height = window_height
         self.font = font
         self.build_menu = build_menu
         self.crafting_menu = crafting_menu
         self.critter_inspector = critter_inspector
         self.mating_hut_inspector = MatingHutInspector(10, 10, 320, 300, self.font)
-        
-        # HUD Button Rects
-        self.hud_save_rect = pygame.Rect(10, window_height - 40, 80, 30)
-        self.hud_build_rect = pygame.Rect(100, window_height - 40, 80, 30)
-        self.hud_craft_rect = pygame.Rect(190, window_height - 40, 80, 30)
+
+    def _get_hud_rects(self, screen_w, screen_h):
+        """Calculate HUD button rectangles based on current screen size."""
+        y = screen_h - 40
+        return {
+            'save': pygame.Rect(10, y, 80, 30),
+            'build': pygame.Rect(100, y, 80, 30),
+            'craft': pygame.Rect(190, y, 80, 30)
+        }
 
     def handle_mouse_click(self, pos, world, player, camera):
         """
@@ -31,6 +33,8 @@ class UIManager:
         Returns True if the click was consumed by a UI element.
         """
         mx, my = pos
+        screen_w, screen_h = pygame.display.get_surface().get_size()
+        hud_rects = self._get_hud_rects(screen_w, screen_h)
 
         # 1. Critter Inspector (Top Layer)
         critter_handled = False
@@ -59,7 +63,7 @@ class UIManager:
                 return True
 
         # 5. HUD Buttons
-        if self.hud_save_rect.collidepoint(pos):
+        if hud_rects['save'].collidepoint(pos):
             from save_system import save_game
             try:
                 save_game(world, player, "saves/save.json")
@@ -70,17 +74,24 @@ class UIManager:
             self.crafting_menu.visible = False
             return True
 
-        if self.hud_build_rect.collidepoint(pos):
+        if hud_rects['build'].collidepoint(pos):
             self.build_menu.toggle()
             if self.build_menu.visible:
                 self.crafting_menu.visible = False
             return True
             
-        if self.hud_craft_rect.collidepoint(pos):
+        if hud_rects['craft'].collidepoint(pos):
             self.crafting_menu.toggle()
             if self.crafting_menu.visible:
                 self.build_menu.visible = False
             return True
+
+        # 6. Global Close: If click was in neither active inspector, hide them
+        # This handles clicking on the world grid
+        if (self.critter_inspector.visible and not critter_handled) or \
+           (self.mating_hut_inspector.visible and not mating_handled):
+            self.critter_inspector.hide()
+            self.mating_hut_inspector.hide()
 
         return False
 
@@ -90,22 +101,37 @@ class UIManager:
 
     def draw(self, screen, world, player, camera):
         """Unified rendering of all UI overlays."""
+        sw, sh = screen.get_size()
+        hud_rects = self._get_hud_rects(sw, sh)
+
         # 1. HUD Buttons
-        self._draw_hud_button(screen, self.hud_save_rect, "Save", (200, 200, 200))
-        self._draw_hud_button(screen, self.hud_build_rect, HUD_BUILD_BUTTON, (100, 100, 250))
-        self._draw_hud_button(screen, self.hud_craft_rect, HUD_CRAFT_BUTTON, (100, 250, 100))
+        self._draw_hud_button(screen, hud_rects['save'], "Save", (200, 200, 200))
+        self._draw_hud_button(screen, hud_rects['build'], HUD_BUILD_BUTTON, (100, 100, 250))
+        self._draw_hud_button(screen, hud_rects['craft'], HUD_CRAFT_BUTTON, (100, 250, 100))
 
         # 2. Resource List (Top Left)
         self._draw_resource_list(screen, player)
 
         # 3. Active Buffs (Top Right)
-        self._draw_buffs(screen, player)
+        self._draw_buffs(screen, player, sw)
 
         # 4. Interaction Progress
         if player.interaction_progress > 0 and player.active_target:
             self._draw_progress_circle(screen, player, camera)
 
-        # 5. Menus (Build / Craft / Inspector / Mating Hut)
+        # 5. Modes (Deconstruction)
+        
+        # 6. Menus (Build / Craft / Inspector / Mating Hut)
+        # Ensure menus and inspectors update their internal positioning
+        if hasattr(self.build_menu, 'reposition'):
+            self.build_menu.reposition(sw, sh)
+        if hasattr(self.crafting_menu, 'reposition'):
+            self.crafting_menu.reposition(sw, sh)
+        if hasattr(self.critter_inspector, 'reposition'):
+            self.critter_inspector.reposition(sw, sh)
+        if hasattr(self.mating_hut_inspector, 'reposition'):
+            self.mating_hut_inspector.reposition(sw, sh)
+
         self.build_menu.render(screen, self.font)
         self.crafting_menu.render(screen, self.font)
         self.critter_inspector.draw(screen, player=player)
@@ -128,8 +154,8 @@ class UIManager:
             screen.blit(text, (30, y_offset))
             y_offset += 25
 
-    def _draw_buffs(self, screen, player):
-        x = self.width - 150
+    def _draw_buffs(self, screen, player, screen_w):
+        x = screen_w - 150
         y = 10
         title = self.font.render(HUD_BUFFS_TITLE, True, (0, 0, 0))
         screen.blit(title, (x, y))

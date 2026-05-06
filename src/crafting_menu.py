@@ -16,6 +16,14 @@ class CraftingMenu:
         self.last_message = ""  # Message to display after craft attempt
         self.message_timer = 0.0  # Time remaining to show message
         self.panel_rect = pygame.Rect(x, y, width, height)
+        self.x = x
+        self.y = y
+
+    def reposition(self, screen_width, screen_height):
+        """Update position to stay anchored relative to the top-left area."""
+        self.x, self.y = 320, 70
+        self.panel_rect.x = self.x
+        self.panel_rect.y = self.y
 
     def toggle(self):
         """Toggle menu visibility and reset state when closing."""
