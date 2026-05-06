@@ -168,6 +168,12 @@ def new_game(window_width: int = 800, window_height: int = 600) -> tuple[World, 
         gx, gy = random.randint(5, 75), random.randint(5, 55)
         if not world.grid.is_occupied(gx, gy):
             world.add_object(BerryBush(gx, gy, cell_size))
+    
+    # Add some test dots of grass to the east map
+    for _ in range(5):
+        gx, gy = random.randint(5, 75), random.randint(5, 55)
+        if not world.grid.is_occupied(gx, gy):
+            world.add_object(Grass(gx, gy, cell_size))
 
     # Return to main map for start
     world.switch_map("main")

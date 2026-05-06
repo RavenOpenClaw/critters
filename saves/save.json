@@ -22,7 +22,7 @@
             "stone": 5
           },
           "storage": {
-            "food": 1156
+            "food": 3531
           },
           "gathering_radius": 240.0
         },
@@ -47,9 +47,7 @@
           "width": 1,
           "height": 1,
           "cell_size": 24,
-          "inventory": {
-            "food": 5
-          },
+          "inventory": {},
           "blocks_movement": true
         },
         {
@@ -59,7 +57,9 @@
           "width": 1,
           "height": 1,
           "cell_size": 24,
-          "inventory": {},
+          "inventory": {
+            "food": 5
+          },
           "blocks_movement": true
         },
         {
@@ -106,7 +106,7 @@
           "height": 1,
           "cell_size": 24,
           "inventory": {
-            "food": 4
+            "food": 5
           },
           "blocks_movement": true
         },
@@ -512,7 +512,7 @@
           "inventory": {},
           "blocks_movement": false,
           "spread_threshold": 115.56005910456311,
-          "time_accumulator": 39.61399999999757
+          "time_accumulator": 16.52499999999992
         },
         {
           "type": "Grass",
@@ -524,7 +524,7 @@
           "inventory": {},
           "blocks_movement": false,
           "spread_threshold": 80.55491019514693,
-          "time_accumulator": 14.189000000000009
+          "time_accumulator": 64.01099999999586
         },
         {
           "type": "Grass",
@@ -536,7 +536,7 @@
           "inventory": {},
           "blocks_movement": false,
           "spread_threshold": 57.46246336919758,
-          "time_accumulator": 9.146000000000004
+          "time_accumulator": 6.131000000000014
         },
         {
           "type": "Grass",
@@ -548,7 +548,7 @@
           "inventory": {},
           "blocks_movement": false,
           "spread_threshold": 59.503486951650814,
-          "time_accumulator": 10.090000000000005
+          "time_accumulator": 54.95999999999657
         },
         {
           "type": "Grass",
@@ -560,7 +560,7 @@
           "inventory": {},
           "blocks_movement": false,
           "spread_threshold": 95.16937106138471,
-          "time_accumulator": 59.76199999999591
+          "time_accumulator": 22.981999999999378
         },
         {
           "type": "Grass",
@@ -572,7 +572,7 @@
           "inventory": {},
           "blocks_movement": false,
           "spread_threshold": 87.12376759557608,
-          "time_accumulator": 42.52999999999728
+          "time_accumulator": 58.12799999999629
         },
         {
           "type": "Grass",
@@ -584,7 +584,7 @@
           "inventory": {},
           "blocks_movement": false,
           "spread_threshold": 60.7391186771787,
-          "time_accumulator": 27.757999999998763
+          "time_accumulator": 58.015999999996296
         },
         {
           "type": "Grass",
@@ -596,7 +596,7 @@
           "inventory": {},
           "blocks_movement": false,
           "spread_threshold": 84.31907505834869,
-          "time_accumulator": 33.75799999999814
+          "time_accumulator": 82.75800000000116
         },
         {
           "type": "Grass",
@@ -608,7 +608,7 @@
           "inventory": {},
           "blocks_movement": false,
           "spread_threshold": 72.5438595275365,
-          "time_accumulator": 2.9670000000000014
+          "time_accumulator": 50.530999999996915
         },
         {
           "type": "Grass",
@@ -620,7 +620,7 @@
           "inventory": {},
           "blocks_movement": false,
           "spread_threshold": 47.883392257842516,
-          "time_accumulator": 28.3569999999987
+          "time_accumulator": 15.725999999999967
         },
         {
           "type": "Grass",
@@ -632,7 +632,7 @@
           "inventory": {},
           "blocks_movement": false,
           "spread_threshold": 106.44153882763533,
-          "time_accumulator": 5.911000000000007
+          "time_accumulator": 61.72399999999599
         },
         {
           "type": "Grass",
@@ -644,7 +644,7 @@
           "inventory": {},
           "blocks_movement": false,
           "spread_threshold": 107.38781372916398,
-          "time_accumulator": 68.83699999999727
+          "time_accumulator": 92.48300000000418
         },
         {
           "type": "Grass",
@@ -656,7 +656,7 @@
           "inventory": {},
           "blocks_movement": false,
           "spread_threshold": 106.69020630049071,
-          "time_accumulator": 100.84400000000596
+          "time_accumulator": 41.49299999999773
         },
         {
           "type": "Grass",
@@ -668,7 +668,7 @@
           "inventory": {},
           "blocks_movement": false,
           "spread_threshold": 32.41044545794786,
-          "time_accumulator": 16.593999999999955
+          "time_accumulator": 28.368999999998803
         },
         {
           "type": "Grass",
@@ -680,7 +680,7 @@
           "inventory": {},
           "blocks_movement": false,
           "spread_threshold": 111.27239896431087,
-          "time_accumulator": 1.4140000000000004
+          "time_accumulator": 4.275999999999996
         },
         {
           "type": "GatheringHut",
@@ -696,7 +696,7 @@
             "stone": 5
           },
           "storage": {
-            "food": 963
+            "food": 3073
           },
           "gathering_radius": 240.0
         },
@@ -731,8 +731,8 @@
       "critters": [
         {
           "type": "Critter",
-          "x": 1248.8299329253803,
-          "y": 443.9998231912219,
+          "x": 1356.0,
+          "y": 444.0,
           "cell_size": 24,
           "strength": 21,
           "speed_stat": 1,
@@ -746,9 +746,9 @@
           },
           "target_resource_ref": null,
           "inventory": {},
-          "loiter_timer": 2.422215097263897,
+          "loiter_timer": 1.4514521061392855,
           "loiter_target": null,
-          "idle_timer": 2.0059486446562595,
+          "idle_timer": 2.3804588676567104,
           "path": [],
           "path_index": 0,
           "following_player_id": null,
@@ -758,8 +758,8 @@
         },
         {
           "type": "Critter",
-          "x": 1249.0558257421562,
-          "y": 515.9434550996685,
+          "x": 1284.0,
+          "y": 420.0,
           "cell_size": 24,
           "strength": 1,
           "speed_stat": 9,
@@ -773,9 +773,9 @@
           },
           "target_resource_ref": null,
           "inventory": {},
-          "loiter_timer": 0.41670589676790815,
+          "loiter_timer": 2.2416427551050613,
           "loiter_target": null,
-          "idle_timer": 6.2885215458203785,
+          "idle_timer": 2.6550236290410996,
           "path": [],
           "path_index": 0,
           "following_player_id": null,
@@ -785,13 +785,13 @@
         },
         {
           "type": "Critter",
-          "x": 1215.2340000000002,
-          "y": 444.0,
+          "x": 1236.0,
+          "y": 420.0,
           "cell_size": 24,
           "strength": 19,
           "speed_stat": 8,
           "endurance": 1,
-          "state": "RETURN",
+          "state": "IDLE",
           "is_well_fed": false,
           "assigned_hut_ref": {
             "type": "GatheringHut",
@@ -799,36 +799,65 @@
             "gy": 18
           },
           "target_resource_ref": null,
-          "inventory": {
-            "food": 1
-          },
-          "loiter_timer": 0.40084826870635903,
+          "inventory": {},
+          "loiter_timer": 0.8777034736627293,
           "loiter_target": null,
-          "idle_timer": -0.011098846168146367,
+          "idle_timer": 0.33224896409562565,
+          "path": [],
+          "path_index": 0,
+          "following_player_id": null,
+          "follow_timer": 0.0,
+          "follow_recalc_interval": 1.0,
+          "follow_goal": null
+        },
+        {
+          "type": "Critter",
+          "x": 1284.0,
+          "y": 372.39200000000005,
+          "cell_size": 24,
+          "strength": 1,
+          "speed_stat": 1,
+          "endurance": 48,
+          "state": "GATHER",
+          "is_well_fed": false,
+          "assigned_hut_ref": {
+            "type": "GatheringHut",
+            "gx": 53,
+            "gy": 18
+          },
+          "target_resource_ref": {
+            "type": "BerryBush",
+            "gx": 57,
+            "gy": 16
+          },
+          "inventory": {},
+          "loiter_timer": 2.971308290610247,
+          "loiter_target": null,
+          "idle_timer": -0.012230229035421578,
           "path": [
             [
-              50,
-              18
-            ],
-            [
-              51,
-              18
-            ],
-            [
-              51,
-              17
-            ],
-            [
-              52,
-              17
+              53,
+              16
             ],
             [
               53,
-              17
+              15
             ],
             [
               54,
-              17
+              15
+            ],
+            [
+              55,
+              15
+            ],
+            [
+              56,
+              15
+            ],
+            [
+              57,
+              15
             ]
           ],
           "path_index": 1,
@@ -839,34 +868,7 @@
         },
         {
           "type": "Critter",
-          "x": 1248.471684043031,
-          "y": 515.5789373099892,
-          "cell_size": 24,
-          "strength": 1,
-          "speed_stat": 1,
-          "endurance": 48,
-          "state": "IDLE",
-          "is_well_fed": false,
-          "assigned_hut_ref": {
-            "type": "GatheringHut",
-            "gx": 53,
-            "gy": 18
-          },
-          "target_resource_ref": null,
-          "inventory": {},
-          "loiter_timer": 0.5815186867444674,
-          "loiter_target": null,
-          "idle_timer": 6.309354926075715,
-          "path": [],
-          "path_index": 0,
-          "following_player_id": null,
-          "follow_timer": 0.0,
-          "follow_recalc_interval": 1.0,
-          "follow_goal": null
-        },
-        {
-          "type": "Critter",
-          "x": 876.0,
+          "x": 900.0,
           "y": 756.0,
           "cell_size": 24,
           "strength": 1,
@@ -881,9 +883,9 @@
           },
           "target_resource_ref": null,
           "inventory": {},
-          "loiter_timer": 3.175830577678735,
+          "loiter_timer": 3.2118498572400296,
           "loiter_target": null,
-          "idle_timer": 3.6691318211792123,
+          "idle_timer": 8.844536543475787,
           "path": [],
           "path_index": 0,
           "following_player_id": null,
@@ -893,30 +895,29 @@
         },
         {
           "type": "Critter",
-          "x": 1188.0,
-          "y": 420.0,
+          "x": 1255.7759999999998,
+          "y": 540.0,
           "cell_size": 24,
           "strength": 19,
           "speed_stat": 8,
           "endurance": 11,
-          "state": "GATHER",
+          "state": "IDLE",
           "is_well_fed": false,
           "assigned_hut_ref": {
             "type": "GatheringHut",
             "gx": 53,
             "gy": 18
           },
-          "target_resource_ref": {
-            "type": "BerryBush",
-            "gx": 50,
-            "gy": 17
-          },
+          "target_resource_ref": null,
           "inventory": {},
-          "loiter_timer": 2.9839481922538345,
-          "loiter_target": null,
-          "idle_timer": -0.005845277582838579,
+          "loiter_timer": 4.653859549949287,
+          "loiter_target": [
+            1212.0,
+            540.0
+          ],
+          "idle_timer": 0.04952080763210849,
           "path": [],
-          "path_index": 6,
+          "path_index": 0,
           "following_player_id": null,
           "follow_timer": 0.0,
           "follow_recalc_interval": 1.0,
@@ -924,8 +925,8 @@
         },
         {
           "type": "Critter",
-          "x": 1248.6632175426012,
-          "y": 515.5777048534615,
+          "x": 1248.1801336546819,
+          "y": 443.9997414001904,
           "cell_size": 24,
           "strength": 14,
           "speed_stat": 8,
@@ -939,9 +940,9 @@
           },
           "target_resource_ref": null,
           "inventory": {},
-          "loiter_timer": 0.53453780344745,
+          "loiter_timer": 0.4092268497521071,
           "loiter_target": null,
-          "idle_timer": 5.73356427044052,
+          "idle_timer": 6.322057009047321,
           "path": [],
           "path_index": 0,
           "following_player_id": null,
@@ -951,8 +952,8 @@
         },
         {
           "type": "Critter",
-          "x": 1248.8915634213927,
-          "y": 491.99457544830364,
+          "x": 1259.2905956873483,
+          "y": 374.97866062659733,
           "cell_size": 24,
           "strength": 20,
           "speed_stat": 8,
@@ -966,9 +967,12 @@
           },
           "target_resource_ref": null,
           "inventory": {},
-          "loiter_timer": 0.9923360429049681,
-          "loiter_target": null,
-          "idle_timer": 3.0590061987657458,
+          "loiter_timer": 4.677181002716877,
+          "loiter_target": [
+            1260.0,
+            372.0
+          ],
+          "idle_timer": 5.536933361238071,
           "path": [],
           "path_index": 0,
           "following_player_id": null,
@@ -978,8 +982,8 @@
         },
         {
           "type": "Critter",
-          "x": 1298.3179999999993,
-          "y": 564.0,
+          "x": 1260.0,
+          "y": 396.0,
           "cell_size": 24,
           "strength": 20,
           "speed_stat": 24,
@@ -993,12 +997,9 @@
           },
           "target_resource_ref": null,
           "inventory": {},
-          "loiter_timer": 3.1899107294441884,
-          "loiter_target": [
-            1308.0,
-            564.0
-          ],
-          "idle_timer": 2.099759370822996,
+          "loiter_timer": 0.6373436775806749,
+          "loiter_target": null,
+          "idle_timer": 4.147157808033539,
           "path": [],
           "path_index": 0,
           "following_player_id": null,
@@ -1008,8 +1009,8 @@
         },
         {
           "type": "Critter",
-          "x": 828.0,
-          "y": 732.0,
+          "x": 924.0,
+          "y": 767.0399999999995,
           "cell_size": 24,
           "strength": 20,
           "speed_stat": 20,
@@ -1023,9 +1024,9 @@
           },
           "target_resource_ref": null,
           "inventory": {},
-          "loiter_timer": 2.269853537687709,
+          "loiter_timer": 0.125880461705013,
           "loiter_target": null,
-          "idle_timer": 2.819889465078809,
+          "idle_timer": 6.199931372898064,
           "path": [],
           "path_index": 0,
           "following_player_id": null,
@@ -1035,8 +1036,8 @@
         },
         {
           "type": "Critter",
-          "x": 828.0,
-          "y": 804.0,
+          "x": 924.0,
+          "y": 767.0399999999995,
           "cell_size": 24,
           "strength": 59,
           "speed_stat": 20,
@@ -1050,9 +1051,9 @@
           },
           "target_resource_ref": null,
           "inventory": {},
-          "loiter_timer": 4.022226307685439,
+          "loiter_timer": 0.9093672971623215,
           "loiter_target": null,
-          "idle_timer": 4.786495912756782,
+          "idle_timer": 6.9347317585922275,
           "path": [],
           "path_index": 0,
           "following_player_id": null,
@@ -1077,9 +1078,9 @@
           },
           "target_resource_ref": null,
           "inventory": {},
-          "loiter_timer": 2.7395318166718257,
+          "loiter_timer": 2.8910156114783185,
           "loiter_target": null,
-          "idle_timer": 3.881604648027531,
+          "idle_timer": 5.942158325660249,
           "path": [],
           "path_index": 0,
           "following_player_id": null,
@@ -1089,8 +1090,8 @@
         },
         {
           "type": "Critter",
-          "x": 850.5046881586194,
-          "y": 660.0029965659736,
+          "x": 900.0,
+          "y": 756.0,
           "cell_size": 24,
           "strength": 57,
           "speed_stat": 27,
@@ -1104,12 +1105,9 @@
           },
           "target_resource_ref": null,
           "inventory": {},
-          "loiter_timer": 3.4025011522056383,
-          "loiter_target": [
-            876.0,
-            660.0
-          ],
-          "idle_timer": 6.135229286157761,
+          "loiter_timer": 2.2616415014753315,
+          "loiter_target": null,
+          "idle_timer": 8.94919975521411,
           "path": [],
           "path_index": 0,
           "following_player_id": null,
@@ -1120,7 +1118,7 @@
         {
           "type": "Critter",
           "x": 828.0,
-          "y": 785.0860000000001,
+          "y": 708.0,
           "cell_size": 24,
           "strength": 62,
           "speed_stat": 24,
@@ -1134,9 +1132,9 @@
           },
           "target_resource_ref": null,
           "inventory": {},
-          "loiter_timer": 1.0699454362429734,
+          "loiter_timer": 1.3537448836770456,
           "loiter_target": null,
-          "idle_timer": 1.307734635137546,
+          "idle_timer": 1.744454253152742,
           "path": [],
           "path_index": 0,
           "following_player_id": null,
@@ -1146,8 +1144,8 @@
         },
         {
           "type": "Critter",
-          "x": 828.0,
-          "y": 780.0,
+          "x": 924.0,
+          "y": 767.1999999999998,
           "cell_size": 24,
           "strength": 58,
           "speed_stat": 25,
@@ -1161,9 +1159,9 @@
           },
           "target_resource_ref": null,
           "inventory": {},
-          "loiter_timer": 3.8859159503487573,
+          "loiter_timer": 0.8147882262671096,
           "loiter_target": null,
-          "idle_timer": 5.228137687446474,
+          "idle_timer": 7.926916066306493,
           "path": [],
           "path_index": 0,
           "following_player_id": null,
@@ -1173,8 +1171,8 @@
         },
         {
           "type": "Critter",
-          "x": 1236.0,
-          "y": 444.0,
+          "x": 1249.1812243688287,
+          "y": 420.3215851417832,
           "cell_size": 24,
           "strength": 43,
           "speed_stat": 27,
@@ -1188,9 +1186,9 @@
           },
           "target_resource_ref": null,
           "inventory": {},
-          "loiter_timer": 2.0070830610407278,
+          "loiter_timer": 1.4355083168487321,
           "loiter_target": null,
-          "idle_timer": 3.799112394248388,
+          "idle_timer": 4.319946099380643,
           "path": [],
           "path_index": 0,
           "following_player_id": null,
@@ -1200,8 +1198,8 @@
         },
         {
           "type": "Critter",
-          "x": 827.0878786412785,
-          "y": 778.1511053539427,
+          "x": 900.0,
+          "y": 756.0,
           "cell_size": 24,
           "strength": 52,
           "speed_stat": 13,
@@ -1215,12 +1213,9 @@
           },
           "target_resource_ref": null,
           "inventory": {},
-          "loiter_timer": 3.4752126697080694,
-          "loiter_target": [
-            828.0,
-            780.0
-          ],
-          "idle_timer": 5.952929411257343,
+          "loiter_timer": 2.5462554576442473,
+          "loiter_target": null,
+          "idle_timer": 8.695769569439394,
           "path": [],
           "path_index": 0,
           "following_player_id": null,
@@ -1230,8 +1225,8 @@
         },
         {
           "type": "Critter",
-          "x": 816.9425944606757,
-          "y": 684.3741088874148,
+          "x": 900.0,
+          "y": 756.0,
           "cell_size": 24,
           "strength": 83,
           "speed_stat": 12,
@@ -1245,9 +1240,9 @@
           },
           "target_resource_ref": null,
           "inventory": {},
-          "loiter_timer": 0.5047973547711447,
+          "loiter_timer": 1.612686373603379,
           "loiter_target": null,
-          "idle_timer": 4.056649791923716,
+          "idle_timer": 6.835708287127469,
           "path": [],
           "path_index": 0,
           "following_player_id": null,
@@ -1257,8 +1252,8 @@
         },
         {
           "type": "Critter",
-          "x": 828.0,
-          "y": 780.0,
+          "x": 924.0,
+          "y": 767.9040000000003,
           "cell_size": 24,
           "strength": 58,
           "speed_stat": 29,
@@ -1272,9 +1267,9 @@
           },
           "target_resource_ref": null,
           "inventory": {},
-          "loiter_timer": 1.0154744910819962,
+          "loiter_timer": 1.564029507588645,
           "loiter_target": null,
-          "idle_timer": 4.265481019800391,
+          "idle_timer": 6.7726973513256725,
           "path": [],
           "path_index": 0,
           "following_player_id": null,
@@ -1284,8 +1279,8 @@
         },
         {
           "type": "Critter",
-          "x": 828.0,
-          "y": 804.0,
+          "x": 924.0,
+          "y": 766.4319999999998,
           "cell_size": 24,
           "strength": 84,
           "speed_stat": 28,
@@ -1299,9 +1294,9 @@
           },
           "target_resource_ref": null,
           "inventory": {},
-          "loiter_timer": 2.4642797744614167,
+          "loiter_timer": 1.1757412269054606,
           "loiter_target": null,
-          "idle_timer": 4.322994595343364,
+          "idle_timer": 7.78507222527681,
           "path": [],
           "path_index": 0,
           "following_player_id": null,
@@ -1311,8 +1306,8 @@
         },
         {
           "type": "Critter",
-          "x": 804.0,
-          "y": 756.0,
+          "x": 924.0,
+          "y": 767.6800000000001,
           "cell_size": 24,
           "strength": 91,
           "speed_stat": 30,
@@ -1326,9 +1321,9 @@
           },
           "target_resource_ref": null,
           "inventory": {},
-          "loiter_timer": 1.8698381341168617,
+          "loiter_timer": 1.5991223842322566,
           "loiter_target": null,
-          "idle_timer": 4.248212590733096,
+          "idle_timer": 7.617004539175208,
           "path": [],
           "path_index": 0,
           "following_player_id": null,
@@ -1339,7 +1334,7 @@
         {
           "type": "Critter",
           "x": 900.0,
-          "y": 804.0,
+          "y": 756.0,
           "cell_size": 24,
           "strength": 84,
           "speed_stat": 32,
@@ -1353,9 +1348,9 @@
           },
           "target_resource_ref": null,
           "inventory": {},
-          "loiter_timer": 2.7042230904593434,
+          "loiter_timer": 2.0128582431916775,
           "loiter_target": null,
-          "idle_timer": 6.204761242383806,
+          "idle_timer": 8.40418516325909,
           "path": [],
           "path_index": 0,
           "following_player_id": null,
@@ -1365,8 +1360,8 @@
         },
         {
           "type": "Critter",
-          "x": 1249.2899999999995,
-          "y": 444.0,
+          "x": 1260.0,
+          "y": 468.0,
           "cell_size": 24,
           "strength": 88,
           "speed_stat": 30,
@@ -1380,9 +1375,9 @@
           },
           "target_resource_ref": null,
           "inventory": {},
-          "loiter_timer": 0.5727615686556712,
+          "loiter_timer": 4.009539604435815,
           "loiter_target": null,
-          "idle_timer": 3.97652129954578,
+          "idle_timer": 3.241872121767617,
           "path": [],
           "path_index": 0,
           "following_player_id": null,
@@ -1392,8 +1387,8 @@
         },
         {
           "type": "Critter",
-          "x": 1308.0,
-          "y": 420.0,
+          "x": 1260.0,
+          "y": 516.0,
           "cell_size": 24,
           "strength": 91,
           "speed_stat": 32,
@@ -1407,9 +1402,9 @@
           },
           "target_resource_ref": null,
           "inventory": {},
-          "loiter_timer": 1.692873319622115,
+          "loiter_timer": 3.6459105689996596,
           "loiter_target": null,
-          "idle_timer": 3.2685644291260645,
+          "idle_timer": 2.9282075458042542,
           "path": [],
           "path_index": 0,
           "following_player_id": null,
@@ -1419,8 +1414,8 @@
         },
         {
           "type": "Critter",
-          "x": 828.0,
-          "y": 780.0,
+          "x": 897.9805829098732,
+          "y": 760.9383042937518,
           "cell_size": 24,
           "strength": 97,
           "speed_stat": 34,
@@ -1434,9 +1429,12 @@
           },
           "target_resource_ref": null,
           "inventory": {},
-          "loiter_timer": 1.0769504115028004,
-          "loiter_target": null,
-          "idle_timer": 4.590035028894209,
+          "loiter_timer": 3.206924747063613,
+          "loiter_target": [
+            876.0,
+            756.0
+          ],
+          "idle_timer": 7.532596180853298,
           "path": [],
           "path_index": 0,
           "following_player_id": null,
@@ -1446,8 +1444,8 @@
         },
         {
           "type": "Critter",
-          "x": 828.0,
-          "y": 708.0,
+          "x": 900.0,
+          "y": 756.0,
           "cell_size": 24,
           "strength": 83,
           "speed_stat": 30,
@@ -1461,9 +1459,9 @@
           },
           "target_resource_ref": null,
           "inventory": {},
-          "loiter_timer": 2.5834082757608776,
+          "loiter_timer": 2.292105513301072,
           "loiter_target": null,
-          "idle_timer": 4.657145606194018,
+          "idle_timer": 8.67377728263815,
           "path": [],
           "path_index": 0,
           "following_player_id": null,
@@ -1473,7 +1471,7 @@
         },
         {
           "type": "Critter",
-          "x": 1260.0,
+          "x": 1236.0,
           "y": 540.0,
           "cell_size": 24,
           "strength": 100,
@@ -1488,9 +1486,9 @@
           },
           "target_resource_ref": null,
           "inventory": {},
-          "loiter_timer": 1.229837304727588,
+          "loiter_timer": 3.3615304031118263,
           "loiter_target": null,
-          "idle_timer": 4.96297575206903,
+          "idle_timer": 4.364125718658958,
           "path": [],
           "path_index": 0,
           "following_player_id": null,
@@ -1500,8 +1498,8 @@
         },
         {
           "type": "Critter",
-          "x": 1260.0,
-          "y": 444.0,
+          "x": 1212.0,
+          "y": 516.0,
           "cell_size": 24,
           "strength": 100,
           "speed_stat": 32,
@@ -1515,9 +1513,9 @@
           },
           "target_resource_ref": null,
           "inventory": {},
-          "loiter_timer": 1.1532071849262704,
+          "loiter_timer": 1.6664058099511863,
           "loiter_target": null,
-          "idle_timer": 3.9241747887504883,
+          "idle_timer": 3.777511134119764,
           "path": [],
           "path_index": 0,
           "following_player_id": null,
@@ -1528,7 +1526,7 @@
         {
           "type": "Critter",
           "x": 1260.0,
-          "y": 468.0,
+          "y": 492.0,
           "cell_size": 24,
           "strength": 100,
           "speed_stat": 35,
@@ -1542,9 +1540,9 @@
           },
           "target_resource_ref": null,
           "inventory": {},
-          "loiter_timer": 1.462390424867218,
+          "loiter_timer": 1.4237462821611166,
           "loiter_target": null,
-          "idle_timer": 3.18055027935173,
+          "idle_timer": 3.2347800989699516,
           "path": [],
           "path_index": 0,
           "following_player_id": null,
@@ -1554,8 +1552,8 @@
         },
         {
           "type": "Critter",
-          "x": 1249.4400000000005,
-          "y": 420.0,
+          "x": 1260.0,
+          "y": 372.0,
           "cell_size": 24,
           "strength": 100,
           "speed_stat": 35,
@@ -1569,9 +1567,9 @@
           },
           "target_resource_ref": null,
           "inventory": {},
-          "loiter_timer": 1.9164720247254698,
+          "loiter_timer": 1.8711810710189898,
           "loiter_target": null,
-          "idle_timer": 4.942264320796169,
+          "idle_timer": 4.485105664388573,
           "path": [],
           "path_index": 0,
           "following_player_id": null,
@@ -1581,7 +1579,7 @@
         },
         {
           "type": "Critter",
-          "x": 1284.0,
+          "x": 1308.0,
           "y": 420.0,
           "cell_size": 24,
           "strength": 100,
@@ -1596,9 +1594,63 @@
           },
           "target_resource_ref": null,
           "inventory": {},
-          "loiter_timer": 3.0389390766871016,
+          "loiter_timer": 1.8716947849810373,
           "loiter_target": null,
-          "idle_timer": 2.9369011806162213,
+          "idle_timer": 3.6102095665349805,
+          "path": [],
+          "path_index": 0,
+          "following_player_id": null,
+          "follow_timer": 0.0,
+          "follow_recalc_interval": 1.0,
+          "follow_goal": null
+        },
+        {
+          "type": "Critter",
+          "x": 1068.0,
+          "y": 660.0,
+          "cell_size": 24,
+          "strength": 100,
+          "speed_stat": 37,
+          "endurance": 90,
+          "state": "BREED",
+          "is_well_fed": false,
+          "assigned_hut_ref": {
+            "type": "MatingHut",
+            "gx": 43,
+            "gy": 28
+          },
+          "target_resource_ref": null,
+          "inventory": {},
+          "loiter_timer": 2.7719193888018645,
+          "loiter_target": null,
+          "idle_timer": 0.0,
+          "path": [],
+          "path_index": 0,
+          "following_player_id": null,
+          "follow_timer": 0.0,
+          "follow_recalc_interval": 1.0,
+          "follow_goal": null
+        },
+        {
+          "type": "Critter",
+          "x": 828.0000000000002,
+          "y": 766.0800000000003,
+          "cell_size": 24,
+          "strength": 100,
+          "speed_stat": 35,
+          "endurance": 84,
+          "state": "IDLE",
+          "is_well_fed": false,
+          "assigned_hut_ref": {
+            "type": "GatheringHut",
+            "gx": 35,
+            "gy": 28
+          },
+          "target_resource_ref": null,
+          "inventory": {},
+          "loiter_timer": 1.9074193092278735,
+          "loiter_target": null,
+          "idle_timer": 9.677067978686635,
           "path": [],
           "path_index": 0,
           "following_player_id": null,
@@ -1613,60 +1665,6 @@
           "cell_size": 24,
           "strength": 100,
           "speed_stat": 37,
-          "endurance": 90,
-          "state": "BREED",
-          "is_well_fed": false,
-          "assigned_hut_ref": {
-            "type": "MatingHut",
-            "gx": 43,
-            "gy": 28
-          },
-          "target_resource_ref": null,
-          "inventory": {},
-          "loiter_timer": 1.083445156459423,
-          "loiter_target": null,
-          "idle_timer": 0.0,
-          "path": [],
-          "path_index": 0,
-          "following_player_id": null,
-          "follow_timer": 0.0,
-          "follow_recalc_interval": 1.0,
-          "follow_goal": null
-        },
-        {
-          "type": "Critter",
-          "x": 828.0,
-          "y": 804.0,
-          "cell_size": 24,
-          "strength": 100,
-          "speed_stat": 35,
-          "endurance": 84,
-          "state": "IDLE",
-          "is_well_fed": false,
-          "assigned_hut_ref": {
-            "type": "GatheringHut",
-            "gx": 35,
-            "gy": 28
-          },
-          "target_resource_ref": null,
-          "inventory": {},
-          "loiter_timer": 0.10618234585698097,
-          "loiter_target": null,
-          "idle_timer": 3.800212203293175,
-          "path": [],
-          "path_index": 0,
-          "following_player_id": null,
-          "follow_timer": 0.0,
-          "follow_recalc_interval": 1.0,
-          "follow_goal": null
-        },
-        {
-          "type": "Critter",
-          "x": 1020.0,
-          "y": 660.0,
-          "cell_size": 24,
-          "strength": 100,
-          "speed_stat": 37,
           "endurance": 93,
           "state": "BREED",
           "is_well_fed": false,
@@ -1677,7 +1675,7 @@
           },
           "target_resource_ref": null,
           "inventory": {},
-          "loiter_timer": 2.9043595826637523,
+          "loiter_timer": 0.1898690180700976,
           "loiter_target": null,
           "idle_timer": 0.0,
           "path": [],
@@ -1691,158 +1689,173 @@
       "trampled": [
         [
           34,
-          32,
-          4.8519999999999985
-        ],
-        [
-          33,
-          31,
-          1.744999999999997
-        ],
-        [
-          34,
-          33,
-          3.985999999999997
-        ],
-        [
-          50,
-          18,
-          1.312999999999997
+          29,
+          2.6319999999999917
         ],
         [
           51,
-          19,
-          0.5609999999999963
-        ],
-        [
-          52,
-          18,
-          2.786999999999999
-        ],
-        [
-          52,
-          19,
-          1.728999999999997
-        ],
-        [
-          44,
-          29,
-          2.2899999999999983
-        ],
-        [
-          43,
-          28,
-          0.3529999999999961
-        ],
-        [
-          43,
-          27,
-          4.464999999999997
-        ],
-        [
-          50,
-          19,
-          0.9459999999999976
-        ],
-        [
-          44,
-          27,
-          0.705999999999997
-        ],
-        [
-          52,
-          22,
-          2.642999999999999
-        ],
-        [
-          55,
-          17,
-          0.8979999999999974
-        ],
-        [
-          49,
-          19,
-          0.9619999999999976
-        ],
-        [
-          52,
-          23,
-          1.1369999999999973
-        ],
-        [
-          49,
-          18,
-          1.344999999999997
-        ],
-        [
-          49,
-          17,
-          1.728999999999997
-        ],
-        [
-          53,
-          17,
-          4.576999999999997
-        ],
-        [
-          54,
-          17,
-          4.384999999999997
-        ],
-        [
-          45,
-          28,
-          2.738999999999999
+          21,
+          1.5769999999999929
         ],
         [
           35,
           31,
-          2.866999999999999
+          0.6600000000000023
         ],
         [
           34,
+          32,
+          1.3479999999999932
+        ],
+        [
+          51,
+          17,
+          0.7720000000000011
+        ],
+        [
+          50,
+          21,
+          1.7909999999999924
+        ],
+        [
+          37,
+          31,
+          4.887
+        ],
+        [
+          34,
+          31,
+          1.5769999999999929
+        ],
+        [
+          44,
           30,
-          3.4739999999999998
-        ],
-        [
-          34,
-          29,
-          3.1059999999999994
+          0.19600000000000406
         ],
         [
           36,
           31,
-          3.2499999999999996
+          1.1559999999999957
+        ],
+        [
+          36,
+          33,
+          0.7080000000000019
         ],
         [
           37,
           33,
-          3.602
+          0.19600000000000406
         ],
         [
-          51,
-          18,
-          3.777999999999999
+          38,
+          33,
+          0.7240000000000019
         ],
         [
-          53,
-          23,
-          4.738999999999998
+          38,
+          32,
+          0.9479999999999991
         ],
         [
-          42,
-          27,
-          4.786999999999998
+          34,
+          28,
+          2.3859999999999917
+        ],
+        [
+          44,
+          29,
+          3.106999999999992
         ],
         [
           35,
-          27,
-          4.901999999999999
+          32,
+          1.1399999999999961
+        ],
+        [
+          36,
+          32,
+          0.9319999999999995
+        ],
+        [
+          52,
+          22,
+          4.204999999999996
+        ],
+        [
+          38,
+          31,
+          1.1719999999999957
+        ],
+        [
+          52,
+          19,
+          0.7880000000000011
+        ],
+        [
+          52,
+          20,
+          4.627999999999998
+        ],
+        [
+          52,
+          16,
+          4.4979999999999976
+        ],
+        [
+          53,
+          17,
+          3.6679999999999935
         ],
         [
           54,
-          23,
-          4.984
+          17,
+          2.4669999999999916
+        ],
+        [
+          56,
+          18,
+          2.6319999999999917
+        ],
+        [
+          45,
+          28,
+          2.7139999999999915
+        ],
+        [
+          52,
+          15,
+          4.8709999999999996
+        ],
+        [
+          44,
+          28,
+          3.437999999999993
+        ],
+        [
+          53,
+          16,
+          3.7159999999999935
+        ],
+        [
+          44,
+          27,
+          3.7649999999999935
+        ],
+        [
+          51,
+          22,
+          4.286999999999996
+        ],
+        [
+          53,
+          15,
+          4.789999999999999
+        ],
+        [
+          52,
+          21,
+          4.8389999999999995
         ]
       ],
       "portals": {},
@@ -2428,8 +2441,8 @@
   ],
   "player": {
     "type": "Player",
-    "x": 942.9999999999897,
-    "y": 374.8999999999977,
+    "x": 1185.1999999999932,
+    "y": 727.6999999999985,
     "radius": 18,
     "base_speed": 200,
     "speed": 200.0,

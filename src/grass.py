@@ -10,9 +10,9 @@ class Grass(WorldObject):
     def __init__(self, gx, gy, cell_size, spread_threshold=None):
         # Grass has no inventory
         super().__init__(gx, gy, width=1, height=1, cell_size=cell_size, inventory=None)
-        # Use provided threshold or randomize between 30-120 seconds for natural variation
+        # Use provided threshold or randomize between 120-300 seconds (2-5 mins)
         if spread_threshold is None:
-            spread_threshold = random.uniform(30.0, 120.0)
+            spread_threshold = random.uniform(120.0, 300.0)
         self.spread_threshold = spread_threshold
         self.time_accumulator = 0.0
         # Grass does not block movement; critters can walk over it
