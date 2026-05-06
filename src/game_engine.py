@@ -157,18 +157,46 @@ class GameEngine:
             if not is_selecting_new:
                 self.critter_inspector.hide()
                 self.ui_manager.mating_hut_inspector.hide()
+                self.ui_manager.multi_select_inspector.hide()
+
+        # 2b. Multi-Select Completion (Mouse Released)
+        if self.input_handler.mouse_released and self.input_handler.drag_start_final:
+            x1, y1 = self.camera.undo(*self.input_handler.drag_start_final)
+            x2, y2 = self.camera.undo(*self.input_handler.drag_end_pos)
+            
+            sel_rect = pygame.Rect(min(x1, x2), min(y1, y2), abs(x1 - x2), abs(y1 - y2))
+            
+            selected_critters = []
+            for c in self.world.current_map.critters:
+                if sel_rect.collidepoint(c.x, c.y):
+                    selected_critters.append(c)
+            
+            if len(selected_critters) > 1:
+                self.ui_manager.multi_select_inspector.toggle(selected_critters)
+                self.critter_inspector.hide()
+                self.ui_manager.mating_hut_inspector.hide()
+            elif len(selected_critters) == 1:
+                self.critter_inspector.toggle(selected_critters[0])
+                self.ui_manager.multi_select_inspector.hide()
 
         # 3. Right-click Assignment
         if self.input_handler.mouse_right_clicked:
-            if self.critter_inspector.visible and self.critter_inspector.selected_critter:
-                mx, my = self.input_handler.mouse_pos
-                wx, wy = self.camera.undo(mx, my)
-                gx, gy = self.world.grid.world_to_grid(wx, wy)
-                if (gx, gy) in self.world.grid.occupied:
-                    obj = self.world.grid.occupied[(gx, gy)]
-                    if isinstance(obj, (Building, Obstacle)) and hasattr(obj, 'assign_critter'):
-                        obj.assign_critter(self.critter_inspector.selected_critter)
-                        self.world.set_message(f"Critter assigned to {type(obj).__name__}", 2.0)
+            mx, my = self.input_handler.mouse_pos
+            wx, wy = self.camera.undo(mx, my)
+            gx, gy = self.world.grid.world_to_grid(wx, wy)
+            
+            target_obj = self.world.grid.occupied.get((gx, gy))
+            if target_obj and hasattr(target_obj, 'assign_critter'):
+                # Priority 1: Multi-Select
+                if self.ui_manager.multi_select_inspector.visible:
+                    for c in self.ui_manager.multi_select_inspector.selected_critters:
+                        target_obj.assign_critter(c)
+                    self.world.set_message(f"Group assigned to {type(target_obj).__name__}", 2.0)
+                
+                # Priority 2: Single Critter
+                elif self.critter_inspector.visible and self.critter_inspector.selected_critter:
+                    target_obj.assign_critter(self.critter_inspector.selected_critter)
+                    self.world.set_message(f"Critter assigned to {type(target_obj).__name__}", 2.0)
 
         # 4. Keyboard Shortcuts
         if self.input_handler.escape_pressed:
@@ -295,6 +323,19 @@ class GameEngine:
         if self.input_handler.deconstruct_mode:
             decon_surf = self.font.render(DECONSTRUCTION_MODE_LABEL, True, (255, 0, 0))
             self.screen.blit(decon_surf, (WINDOW_WIDTH - decon_surf.get_width() - 10, WINDOW_HEIGHT - 30))
+
+        # Selection Marquee (Drag)
+        if self.input_handler.is_dragging and self.input_handler.drag_start:
+            x1, y1 = self.input_handler.drag_start
+            x2, y2 = self.input_handler.mouse_pos
+            rect = pygame.Rect(min(x1, x2), min(y1, y2), abs(x1 - x2), abs(y1 - y2))
+            
+            # Draw translucent fill
+            overlay = pygame.Surface((rect.width, rect.height), pygame.SRCALPHA)
+            overlay.fill((0, 255, 0, 50)) # Translucent green
+            self.screen.blit(overlay, (rect.x, rect.y))
+            # Draw outline
+            pygame.draw.rect(self.screen, (0, 255, 0), rect, 1)
 
         pygame.display.flip()
 

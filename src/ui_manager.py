@@ -9,6 +9,7 @@ from constants import (
     DECONSTRUCTION_MODE_LABEL
 )
 from mating_hut_inspector import MatingHutInspector
+from multi_select_inspector import MultiSelectInspector
 
 class UIManager:
     def __init__(self, window_width, window_height, font, build_menu, crafting_menu, critter_inspector):
@@ -17,6 +18,7 @@ class UIManager:
         self.crafting_menu = crafting_menu
         self.critter_inspector = critter_inspector
         self.mating_hut_inspector = MatingHutInspector(10, 10, 320, 300, self.font)
+        self.multi_select_inspector = MultiSelectInspector(24, self.font, window_width, window_height)
 
     def _get_hud_rects(self, screen_w, screen_h):
         """Calculate HUD button rectangles based on current screen size."""
@@ -44,7 +46,15 @@ class UIManager:
             if self.critter_inspector.panel_rect.collidepoint(pos):
                 critter_handled = True
 
-        # 2. Mating Hut Inspector
+        # 2. Multi-Select Inspector
+        multi_handled = False
+        if self.multi_select_inspector.visible:
+            if self.multi_select_inspector.handle_mouse_click(pos, player, world):
+                return True
+            if self.multi_select_inspector.panel_rect.collidepoint(pos):
+                multi_handled = True
+
+        # 3. Mating Hut Inspector
         mating_handled = False
         if self.mating_hut_inspector.visible:
             if self.mating_hut_inspector.handle_mouse_click(pos):
@@ -52,7 +62,7 @@ class UIManager:
             if self.mating_hut_inspector.panel_rect.collidepoint(pos):
                 mating_handled = True
 
-        # 3. Build Menu
+        # 4. Build Menu
         if self.build_menu.visible:
             if self.build_menu.handle_mouse_click(pos):
                 return True
@@ -89,8 +99,10 @@ class UIManager:
         # 6. Global Close: If click was in neither active inspector, hide them
         # This handles clicking on the world grid
         if (self.critter_inspector.visible and not critter_handled) or \
+           (self.multi_select_inspector.visible and not multi_handled) or \
            (self.mating_hut_inspector.visible and not mating_handled):
             self.critter_inspector.hide()
+            self.multi_select_inspector.hide()
             self.mating_hut_inspector.hide()
 
         return False
@@ -131,11 +143,14 @@ class UIManager:
             self.critter_inspector.reposition(sw, sh)
         if hasattr(self.mating_hut_inspector, 'reposition'):
             self.mating_hut_inspector.reposition(sw, sh)
+        if hasattr(self.multi_select_inspector, 'reposition'):
+            self.multi_select_inspector.reposition(sw, sh)
 
         self.build_menu.render(screen, self.font)
         self.crafting_menu.render(screen, self.font)
         self.critter_inspector.draw(screen, player=player)
         self.mating_hut_inspector.draw(screen)
+        self.multi_select_inspector.draw(screen)
 
     def _draw_hud_button(self, screen, rect, text, color):
         pygame.draw.rect(screen, color, rect)

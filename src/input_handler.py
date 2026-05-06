@@ -22,7 +22,12 @@ class InputHandler:
         self.craft_slot = None
         self.mouse_clicked = False
         self.mouse_right_clicked = False
+        self.mouse_released = False
         self.mouse_pos = (0, 0)
+        self.drag_start = None  # (x, y) where dragging started
+        self.drag_start_final = None # Saved start pos when drag ends
+        self.drag_end_pos = None    # Saved end pos when drag ends
+        self.is_dragging = False # True if left mouse is held and moving
         self.save_request = False
         self.load_request = False
         self.deconstruct_mode = False
@@ -36,6 +41,9 @@ class InputHandler:
         self.crafting_toggle = False
         self.mouse_clicked = False
         self.mouse_right_clicked = False
+        self.mouse_released = False
+        self.drag_start_final = None
+        self.drag_end_pos = None
         self.save_request = False
         self.load_request = False
         self.escape_pressed = False
@@ -90,9 +98,28 @@ class InputHandler:
                 if event.button == 1:  # Left click
                     self.mouse_clicked = True
                     self.mouse_pos = event.pos
+                    self.drag_start = event.pos
+                    self.is_dragging = False # Start as click
                 if event.button == 3:  # Right click
                     self.mouse_right_clicked = True
                     self.mouse_pos = event.pos
+            if event.type == pygame.MOUSEMOTION:
+                self.mouse_pos = event.pos
+                if self.drag_start is not None:
+                    # If moved more than 5 pixels, consider it a drag
+                    dx = event.pos[0] - self.drag_start[0]
+                    dy = event.pos[1] - self.drag_start[1]
+                    if dx*dx + dy*dy > 25:
+                        self.is_dragging = True
+            if event.type == pygame.MOUSEBUTTONUP:
+                if event.button == 1:
+                    # End drag
+                    if self.is_dragging:
+                        self.mouse_released = True
+                        self.drag_start_final = self.drag_start
+                        self.drag_end_pos = event.pos
+                    self.drag_start = None
+                    self.is_dragging = False
         return True
 
     def update(self, dt, auto_interact_multiplier=1.0):
