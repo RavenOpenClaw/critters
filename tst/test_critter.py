@@ -487,23 +487,22 @@ class TestCritterFollow:
         assert critter1.state == CritterState.FOLLOW
         assert critter2.state == CritterState.FOLLOW
 
-    def test_start_follow_capacity_limit(self):
-        """When a third critter tries to follow, the oldest (first) follower should be evicted."""
+    def test_start_follow_unlimited_capacity(self):
+        """Verify that any number of critters can follow the player (no hard limit)."""
         player = Player(200, 100)
         critter1 = Critter(50, 100, cell_size=24)
         critter2 = Critter(60, 100, cell_size=24)
         critter3 = Critter(70, 100, cell_size=24)
         critter1.start_follow(player)
         critter2.start_follow(player)
-        assert len(player.following_critters) == 2
-        # Third follow should evict the oldest (critter1)
         critter3.start_follow(player)
-        assert len(player.following_critters) == 2
-        assert critter1 not in player.following_critters
-        assert critter1.state == CritterState.IDLE
+        
+        # All three should be following
+        assert len(player.following_critters) == 3
+        assert critter1 in player.following_critters
         assert critter2 in player.following_critters
         assert critter3 in player.following_critters
-        assert player.following_critter is critter2  # first in list
+        assert critter1.state == CritterState.FOLLOW
         assert critter2.state == CritterState.FOLLOW
         assert critter3.state == CritterState.FOLLOW
 

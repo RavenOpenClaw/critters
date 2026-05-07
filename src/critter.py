@@ -226,11 +226,8 @@ class Critter(Entity):
         # Ensure we are not already in player's list (remove if present)
         if self in player.following_critters:
             player.following_critters.remove(self)
-        # Manage capacity: if player already has 2 followers, remove the oldest
-        if len(player.following_critters) >= 2:
-            old = player.following_critters.pop(0)
-            old.stop_follow()
-        # Add this critter to following list
+        
+        # Add this critter to following list (No hard limit)
         player.following_critters.append(self)
         self.state = CritterState.FOLLOW
         self.following_player = player

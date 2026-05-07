@@ -127,7 +127,7 @@ Allow mass management of critters using a selection marquee.
 - [ ] Multi-select Inspector appears:
     - [ ] Shows count of selected critters.
     - [ ] Shows average STR, SPD, END.
-    - [ ] "Follow" button makes all selected critters follow (up to capacity).
+    - [ ] "Follow" button makes all selected critters follow (no hard limit).
 - [ ] Right-clicking a building with multiple critters selected assigns as many as possible to that building (FIFO if full).
 
 ## Technical Notes

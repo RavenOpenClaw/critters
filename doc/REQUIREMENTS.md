@@ -13,6 +13,7 @@ A top-down, grid-based creature collector and incremental simulation. The player
 * **Crafting:** Menu-based crafting (no physical bench required for now).  
 * **Infinite Inventory:** Simplified resource management for the prototype.  
 * **Building:** Placing structures on the grid to provide buffs or task-hubs.
+* **Following:** Any number of critters can follow the player simultaneously (no hard limit).
 
 ### **2. Buildings & Buffs**
 

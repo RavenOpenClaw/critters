@@ -65,13 +65,10 @@ class MultiSelectInspector:
         return False
 
     def mass_follow(self, player, world):
-        """Make all selected critters follow the player up to capacity."""
+        """Make all selected critters follow the player."""
         for c in self.selected_critters:
-            if len(player.following_critters) < 2:
-                if c.state != CritterState.FOLLOW:
-                    c.start_follow(player)
-            else:
-                break
+            if c.state != CritterState.FOLLOW:
+                c.start_follow(player)
         world.set_message("Group follow command issued.", 2.0)
 
     def draw(self, screen):

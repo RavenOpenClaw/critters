@@ -59,8 +59,8 @@ def test_multi_select_inspector_stats():
     assert avg_spd == 40
     assert avg_end == 50
 
-def test_mass_follow_limit():
-    """Verify group follow respects player capacity (max 2)."""
+def test_mass_follow_unlimited():
+    """Verify group follow allows all selected critters to follow (no hard limit)."""
     grid = GridSystem(cell_size=24)
     world = World(MapData("test", 10, 10, 24))
     player = Player(0, 0)
@@ -75,11 +75,11 @@ def test_mass_follow_limit():
     
     inspector.mass_follow(player, world)
     
-    # Player capacity is 2
-    assert len(player.following_critters) == 2
+    # No limit
+    assert len(player.following_critters) == 3
     assert c1 in player.following_critters
     assert c2 in player.following_critters
-    assert c3 not in player.following_critters
+    assert c3 in player.following_critters
 
 def test_mass_assignment_fifo():
     """Verify mass assignment respects building capacity (MatingHut limit 2)."""
