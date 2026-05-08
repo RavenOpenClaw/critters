@@ -202,8 +202,8 @@ def test_idle_state_spatial_constraint():
     world.add_object(hut)
     critter = Critter(hut.x, hut.y, cell_size=cell_size)
     hut.assign_critter(critter)
-    # Critter should enter IDLE automatically
-    assert critter.state == CritterState.IDLE
+    # Critter should enter RETURN to move to hut center
+    assert critter.state == CritterState.RETURN
 
     # Simulate several updates; position should not change significantly
     initial_x, initial_y = critter.x, critter.y
@@ -573,8 +573,11 @@ class TestCritterFollow:
         assert critter.state == CritterState.IDLE
 
     def test_mating_hut_assigned_critter_idle_safety(self):
-        """A critter assigned to MatingHut should transition to BREED state and not crash."""
+        """A critter assigned to MatingHut should transition to RETURN state and not crash."""
         from mating_hut import MatingHut
+        class DummyPathfinder:
+            def find_path(self, start, end, grid): return [(start[0], start[1])]
+
         grid = GridSystem(cell_size=24, width=20, height=20)
         world = World(grid)
         hut = MatingHut(5, 5, 24)
@@ -583,12 +586,11 @@ class TestCritterFollow:
         hut.assign_critter(critter)
         world.add_object(critter)
 
-        # Should be in BREED state after assignment
-        assert critter.state == CritterState.BREED
+        # Should be in RETURN state after assignment
+        assert critter.state == CritterState.RETURN
         # This should not raise AttributeError or crash
-        critter.update(dt=0.1, world=world, pathfinding_system=None)
-        assert critter.state == CritterState.BREED
-
+        critter.update(dt=0.1, world=world, pathfinding_system=DummyPathfinder())
+        assert critter.state == CritterState.RETURN
     def test_critter_gathering_intelligence(self):
         """Task 47: Critters should seek new resource if not full when current resource is depleted."""
         cell_size = 24

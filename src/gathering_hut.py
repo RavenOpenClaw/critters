@@ -24,8 +24,8 @@ class GatheringHut(Building):
         self.storage = Inventory()
         # List of assigned critter references (to be defined later when Critter exists)
         self.assigned_critters = []
-        # Gathering radius in world units (10 grid cells)
-        self.gathering_radius = 10.0 * cell_size
+        # Gathering radius in world units (20 grid cells)
+        self.gathering_radius = 20.0 * cell_size
 
     def assign_critter(self, critter):
         """Assign a critter to this hut.
@@ -46,7 +46,7 @@ class GatheringHut(Building):
         
         self.assigned_critters.append(critter)
         critter.assigned_hut = self
-        critter.start_idle() # Transition to IDLE state (to be ready for gathering)
+        critter.start_return() # Travel back to hut first thing
 
     def find_resource_in_radius(self, world, critter):
         """

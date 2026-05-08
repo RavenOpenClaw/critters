@@ -33,7 +33,7 @@ class Obstacle(WorldObject):
             
         self.assigned_critters.append(critter)
         critter.assigned_hut = self
-        critter.start_gather(self) # Start working immediately
+        critter.start_return() # Travel to obstacle first thing
 
     def unassign_critter(self, critter):
         """Remove a critter from this obstacle's assignment and clear its assigned_hut reference."""

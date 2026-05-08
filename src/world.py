@@ -384,15 +384,15 @@ class World:
                     screen.blit(text, text_rect)
 
     def draw(self, screen, camera=None):
+        # Pass 1: Draw Grass (Bottom Layer)
         for obj in self.current_map.objects:
-            if hasattr(obj, 'render'):
+            if isinstance(obj, Grass):
+                obj.render(screen, camera=camera)
+        
+        # Pass 2: Draw Everything Else
+        for obj in self.current_map.objects:
+            if not isinstance(obj, Grass) and hasattr(obj, 'render'):
                 if camera:
-                    # Some objects might need camera-aware rendering
-                    # but for now we'll assume they just draw at self.x, self.y
-                    # We can either pass camera to render, or temporarily shift object
-                    # Passing camera is cleaner if we update all render methods.
-                    # For now, let's just use the camera.apply in common cases if we can.
-                    # Actually, better to pass camera to the render methods.
                     obj.render(screen, camera=camera)
                 else:
                     obj.render(screen)

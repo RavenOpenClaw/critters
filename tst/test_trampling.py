@@ -66,17 +66,12 @@ class TestTrampling:
         assert initial_count == 1
 
         dt = spread_threshold + 0.01
-        new_objects = []
-        for obj in world.objects:
+        for obj in list(world.objects):
             if isinstance(obj, Grass):
-                result = obj.update(dt)
-                if result is not None:
-                    new_objects.append(result)
-        world.objects.extend(new_objects)
+                obj.update(dt)
 
         final_grass = [o for o in world.objects if isinstance(o, Grass)]
-        assert len(final_grass) == 2
-        # The new grass should be at (6,5) or another non-trampled neighbor.
+        assert len(final_grass) == 2        # The new grass should be at (6,5) or another non-trampled neighbor.
         new_grass = [g for g in final_grass if g is not grass][0]
         # Verify it's not in the trampled set
         assert not world.is_trampled(new_grass.gx, new_grass.gy)

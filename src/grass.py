@@ -63,25 +63,31 @@ class Grass(WorldObject):
             for dx, dy in [(-1,0), (1,0), (0,-1), (0,1)]:
                 nx = self.gx + dx
                 ny = self.gy + dy
-                if grid.width is not None and grid.height is not None:
-                    if not (0 <= nx < grid.width and 0 <= ny < grid.height):
-                        continue
+                if not grid.is_within_bounds(nx, ny):
+                    continue
+                # Important: check world.grass_cells to avoid overlapping grass
                 if not grid.is_occupied(nx, ny) and (nx, ny) not in world.grass_cells and not world.is_trampled(nx, ny):
                     neighbors.append((nx, ny))
             if neighbors:
                 ngx, ngy = random.choice(neighbors)
-                new_grass = Grass(ngx, ngy, self.cell_size, spread_threshold=self.spread_threshold)
+                new_grass = Grass(ngx, ngy, self.cell_size) # Random threshold for new grass
+                world.add_object(new_grass)
                 # Reset accumulator after spreading
                 self.time_accumulator = 0.0
                 return new_grass
+            else:
+                # If blocked, try again soon
+                self.time_accumulator = self.spread_threshold - 10.0
         return None
 
     def render(self, screen, camera=None):
-        """Render grass as a green square, color varies with condition."""
+        """Render grass as a green square, fading to brown as condition degrades."""
         factor = max(0.0, self.condition / self.max_condition)
-        r = int(144 * factor)
-        g = int(238 * factor)
-        b = int(144 * factor)
+        
+        # Interpolate between Green (144, 238, 144) and Brown (101, 67, 33)
+        r = int(101 + (144 - 101) * factor)
+        g = int(67 + (238 - 67) * factor)
+        b = int(33 + (144 - 33) * factor)
         
         draw_x, draw_y = self.x, self.y
         if camera:

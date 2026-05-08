@@ -713,7 +713,7 @@ class Critter(Entity):
         # else: no valid target; loiter_target stays None; timer will retry later
 
     def _deposit_at_hut(self):
-        """Deposit held resources at the assigned hut and transition to IDLE."""
+        """Deposit held resources at the assigned hut and transition to IDLE or BREED."""
         if self.inventory.items:
             # Check if building supports storage (e.g. GatheringHut has storage, MatingHut does not)
             if hasattr(self.assigned_hut, 'storage'):
@@ -722,9 +722,14 @@ class Critter(Entity):
                     self.inventory.remove(resource_type, quantity)
             else:
                 # If hut has no storage, critter just stops at the hut but keeps their items
-                # for potential future assignment to a storage-capable building.
                 pass
-        self.start_idle()
+        
+        # Determine next state based on hut type
+        from mating_hut import MatingHut
+        if isinstance(self.assigned_hut, MatingHut):
+            self.start_breed()
+        else:
+            self.start_idle()
 
     def _is_adjacent_to_hut(self, critter_gx, critter_gy):
         """Check if the critter is adjacent (including diagonally) to any cell occupied by the assigned hut."""

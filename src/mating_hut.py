@@ -41,7 +41,7 @@ class MatingHut(Building):
             
         self.assigned_critters.append(critter)
         critter.assigned_hut = self
-        critter.start_breed() # Transition to BREED state
+        critter.start_return() # Travel back to hut first thing
     def get_interaction_text(self):
         """Return prompt if breeding is possible (at least 2 assigned critters)."""
         if len(self.assigned_critters) >= 2:

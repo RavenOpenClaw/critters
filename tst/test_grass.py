@@ -31,18 +31,13 @@ class TestGrassPropagation:
 
         # Simulate one update cycle with enough dt to trigger spread
         dt = spread_threshold + 0.01
-        new_objects = []
-        for obj in world.objects:
+        for obj in list(world.objects):
             if isinstance(obj, Grass):
-                result = obj.update(dt)
-                if result is not None:
-                    new_objects.append(result)
-        world.objects.extend(new_objects)
+                obj.update(dt)
 
         # After spread, there should be exactly 2 grass objects
         final_grass = [o for o in world.objects if isinstance(o, Grass)]
         assert len(final_grass) == 2
-
         # Identify the new grass (different object from original)
         new_grass = final_grass[1] if final_grass[0] is grass else final_grass[0]
         ngx, ngy = new_grass.gx, new_grass.gy

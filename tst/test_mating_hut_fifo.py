@@ -15,7 +15,7 @@ def test_mating_hut_assignment_limit():
     # Assign 1st
     hut.assign_critter(c1)
     assert c1 in hut.assigned_critters
-    assert c1.state == CritterState.BREED
+    assert c1.state == CritterState.RETURN
     
     # Assign 2nd
     hut.assign_critter(c2)

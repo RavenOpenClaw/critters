@@ -113,25 +113,37 @@ Enhance critter stat visibility with a dual-column MatingHut inspector and color
     - [x] Shows individual stats and stat totals per parent.
     - [x] Displays calculated average stats of the two parents below the columns.
 - [x] MatingHut Inspector updates dynamically when critters are assigned/evicted.
-
 ### Task 63: Click-and-Drag Multi-Select Selection Square
 **Priority**: High
-**Status**: NOT_STARTED
+**Status**: COMPLETED (2026-05-01)
 
 **Description**:
 Allow mass management of critters using a selection marquee.
 
 **Acceptance Criteria**:
-- [ ] Click and drag on empty ground to draw a selection rectangle.
-- [ ] All critters inside the rectangle become "selected".
-- [ ] Multi-select Inspector appears:
-    - [ ] Shows count of selected critters.
-    - [ ] Shows average STR, SPD, END.
-    - [ ] "Follow" button makes all selected critters follow (no hard limit).
-- [ ] Right-clicking a building with multiple critters selected assigns as many as possible to that building (FIFO if full).
+- [x] Click and drag on empty ground to draw a selection rectangle.
+- [x] All critters inside the rectangle become "selected".
+- [x] Multi-select Inspector appears:
+    - [x] Shows count of selected critters.
+    - [x] Shows average STR, SPD, END.
+    - [x] "Follow" button makes all selected critters follow (no hard limit).
+- [x] Right-clicking a building with multiple critters selected assigns as many as possible to that building (FIFO if full).
 
-## Technical Notes
+### Task 64: Assignment State Refinement & World Balancing
+**Priority**: Medium
+**Status**: NOT_STARTED
 
+**Description**:
+Improve critter behavior upon assignment and balance world resources.
+
+**Acceptance Criteria**:
+- [ ] Assignment to any building sets critter state to `RETURN` (so they travel to the hut immediately).
+- [ ] Double `GatheringHut` radius from 10 to 20 tiles.
+- [ ] Investigate and fix grass spreading mechanic (ensure it propagates correctly over time).
+
+---
+
+## Notes
 - The project uses `pygame` for graphics and input.
 - Testing is done via `pytest` and `hypothesis`.
 - All code should be committed to feature branches and merged after tests pass

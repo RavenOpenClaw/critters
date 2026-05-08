@@ -101,9 +101,9 @@ class TestGatheringHut(unittest.TestCase):
         self.assertEqual(hut.assigned_critters, [])
 
     def test_gathering_hut_gathering_radius(self):
-        """GatheringHut gathering_radius equals 10.0 * cell_size."""
+        """GatheringHut gathering_radius equals 20.0 * cell_size."""
         hut = GatheringHut(0, 0, cell_size=32.0)
-        self.assertEqual(hut.gathering_radius, 320.0)
+        self.assertEqual(hut.gathering_radius, 640.0)
 
 class TestCritterAssignment(unittest.TestCase):
     """Tests for Task 12: Critter assignment to Gathering Hut."""
