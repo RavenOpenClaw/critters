@@ -19,7 +19,6 @@ class CritterInspector:
         
         # Follow button rect (below stats)
         self.follow_button_rect = None
-        self.release_button_rect = None
         self.stat_rects = {} # Map stat names to rects for 'Use Candy' clicks
 
     def reposition(self, screen_width, screen_height):
@@ -63,9 +62,6 @@ class CritterInspector:
             elif self.follow_button_rect and self.follow_button_rect.collidepoint(pos):
                 if player and world:
                     self.toggle_follow(player, world)
-            elif self.release_button_rect and self.release_button_rect.collidepoint(pos):
-                if player and world:
-                    self.release_critter(player, world)
             else:
                 # Check for stat candy clicks
                 for stat_name, rect in self.stat_rects.items():
@@ -101,41 +97,6 @@ class CritterInspector:
                 world.set_message("Stat is already at maximum (100).", 1.5)
         else:
             world.set_message(f"You don't have any {candy_item}.", 1.5)
-
-    def release_critter(self, player, world):
-        """Release the selected critter, granting a candy to the player."""
-        if self.selected_critter is None:
-            return
-        
-        c = self.selected_critter
-        from constants import ITEM_CANDY_STR, ITEM_CANDY_SPD, ITEM_CANDY_END, MESSAGE_RELEASE_SUCCESS
-        import random
-
-        # Determine highest stat
-        stats = {
-            ITEM_CANDY_STR: c.strength,
-            ITEM_CANDY_SPD: c.speed_stat,
-            ITEM_CANDY_END: c.endurance
-        }
-        max_val = max(stats.values())
-        tied_candies = [name for name, val in stats.items() if val == max_val]
-        chosen_candy = random.choice(tied_candies)
-
-        # Award candy to player
-        player.inventory.add(chosen_candy, 1)
-        world.set_message(MESSAGE_RELEASE_SUCCESS.format(candy=chosen_candy), 3.0)
-
-        # Remove critter from world
-        # Unassign from hut first
-        if getattr(c, 'assigned_hut', None):
-            c.assigned_hut.unassign_critter(c)
-        # Stop following
-        c.stop_follow()
-        # Remove from world and grid
-        world.remove_object(c)
-
-        # Close inspector
-        self.hide()
 
     def toggle_follow(self, player, world):
         """Toggle follow mode for the selected critter.
@@ -273,19 +234,3 @@ class CritterInspector:
         pygame.draw.rect(screen, (0, 0, 0), btn_rect, 1)
         text_rect.center = btn_rect.center
         screen.blit(text_surf, text_rect)
-
-        # Draw "Release" button next to Follow button
-        from constants import BUTTON_RELEASE
-        rel_text_surf = self.font.render(BUTTON_RELEASE, True, (255, 255, 255))
-        rel_text_rect = rel_text_surf.get_rect()
-        rel_btn_rect = pygame.Rect(
-            btn_rect.right + 10,
-            btn_y,
-            rel_text_rect.width + 16,
-            line_spacing + 6
-        )
-        self.release_button_rect = rel_btn_rect
-        pygame.draw.rect(screen, (200, 100, 100), rel_btn_rect) # Reddish for release
-        pygame.draw.rect(screen, (0, 0, 0), rel_btn_rect, 1)
-        rel_text_rect.center = rel_btn_rect.center
-        screen.blit(rel_text_surf, rel_text_rect)

@@ -47,7 +47,6 @@ BREED_MUTATION_MAX = 1.1
 ITEM_CANDY_STR = "Strength Candy"
 ITEM_CANDY_SPD = "Speed Candy"
 ITEM_CANDY_END = "Endurance Candy"
-BUTTON_RELEASE = "Release"
 MESSAGE_RELEASE_SUCCESS = "Critter released. Received {candy}."
 
 # --- Building Interaction Prompts ---
@@ -57,6 +56,20 @@ PROMPT_BREED = "Press E to breed critters"
 PROMPT_REST = "Rest on Chair (E)"
 PROMPT_ASSIGN = "Assign: E"
 PROMPT_DIRECT_ASSIGN = "Right-click: Assign"
+
+# --- Building Costs ---
+BUILDING_GATHERING_HUT_COST = {"wood": 10, "stone": 5}
+BUILDING_MATING_HUT_COST = {"wood": 15, "stone": 10}
+BUILDING_RELEASE_ALTAR_COST = {"stone": 15}
+BUILDING_CHAIR_COST = {"wood": 4}
+BUILDING_CAMPFIRE_COST = {"wood": 2, "stone": 2}
+
+# --- Item Types ---
+ITEM_FOOD = "food"
+ITEM_WOOD = "wood"
+ITEM_STONE = "stone"
+ITEM_SAPLING = "sapling"
+ITEM_STICK = "stick"
 
 # --- Building Interaction Feedback Messages ---
 MSG_ASSIGN_GATHERING = "Critter assigned to Gathering Hut."

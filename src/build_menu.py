@@ -7,6 +7,8 @@ from chair import Chair
 from campfire import Campfire
 from mating_hut import MatingHut
 from release_building import ReleaseBuilding
+from lumber_mill import LumberMill
+from sapling import Sapling
 from constants import (
     HUD_BUILD_BUTTON,
     BUILD_MENU_TITLE,
@@ -27,9 +29,11 @@ class BuildMenu:
         self.buildings = [
             (GatheringHut, BUILDING_GATHERING_HUT),
             (MatingHut, BUILDING_MATING_HUT),
+            (LumberMill, "Lumber Mill"),
             (ReleaseBuilding, "Release Altar"),
             (Chair, BUILDING_CHAIR),
             (Campfire, BUILDING_CAMPFIRE),
+            (Sapling, "Plant Sapling"),
         ]
         # Button rectangles for mouse interaction (computed in render)
         self.button_rects = {}  # maps building class to rect
@@ -107,18 +111,15 @@ class BuildMenu:
     def attempt_placement(self, player, world, grid, mouse_grid_x, mouse_grid_y):
         """
         Attempt to place the selected building at the given grid coordinates.
-
-        Args:
-            player: Player instance with inventory
-            world: World instance to add the building to
-            grid: GridSystem for occupancy checks
-            mouse_grid_x, mouse_grid_y: grid coordinates for placement
-
-        Returns:
-            True if placement succeeded, False otherwise.
         """
         if self.selected_building_class is None:
             return False
+
+        # Custom Placement Constraint (Sapling)
+        if hasattr(self.selected_building_class, 'can_place_at'):
+            if not self.selected_building_class.can_place_at(world, mouse_grid_x, mouse_grid_y):
+                world.set_message("Need empty surrounding space!", 2.0)
+                return False
 
         # Create building instance at the grid position
         building = self.selected_building_class(
@@ -128,50 +129,43 @@ class BuildMenu:
         )
 
         # Check if player has resources
-        if not building.can_place(player.inventory):
+        from constants import BUILDING_RELEASE_ALTAR_COST
+        # Standard cost check from class attr, but we also have centralized ones
+        # For prototype, we'll favor the class 'cost' attr if present
+        cost = getattr(self.selected_building_class, 'cost', {})
+        
+        # Override for Altar specifically as requested
+        if self.selected_building_class == ReleaseBuilding:
+            cost = BUILDING_RELEASE_ALTAR_COST
+
+        if not building.can_place(player.inventory, cost_override=cost):
             return False
 
-        # Pre-check occupancy: ensure all cells in the building footprint are unoccupied
+        # Pre-check occupancy
         for cell in building.get_occupied_cells():
             if grid.is_occupied(*cell):
                 return False
 
-        # Add building to world (this registers it with the grid)
-        try:
-            if not world.add_object(building):
-                return False
-        except ValueError:
-            # Overlap or invalid placement; do not deduct resources
+        # Add building to world
+        if not world.add_object(building):
             return False
 
-        # Deduct resources only after successful placement
-        for resource, amount in building.cost.items():
+        # Deduct resources
+        for resource, amount in cost.items():
             player.inventory.remove(resource, amount)
 
         return True
 
     def render(self, screen, font, hud_button_rect=None):
         """
-        Render the build menu overlay when visible, and optionally a HUD toggle button.
-
-        Args:
-            screen: Pygame surface to draw on.
-            font: Pygame font for text.
-            hud_button_rect: If provided, draw a small button in the HUD area to toggle menu.
+        Render the build menu overlay when visible.
         """
-        # Draw HUD toggle button if requested
-        if hud_button_rect:
-            pygame.draw.rect(screen, self.button_color, hud_button_rect)
-            btn_text = font.render(HUD_BUILD_BUTTON, True, (255, 255, 255))
-            screen.blit(btn_text, btn_text.get_rect(center=hud_button_rect.center))
-
         if not self.visible:
             return
 
         # Draw menu background
         x, y = self.x, self.y
         menu_rect = pygame.Rect(x, y, self.menu_width, self.menu_height)
-        # Create a transparent surface
         bg = pygame.Surface((self.menu_width, self.menu_height), pygame.SRCALPHA)
         bg.fill(self.bg_color)
         screen.blit(bg, (x, y))
@@ -184,27 +178,34 @@ class BuildMenu:
         # Compute button rects for each building
         self.button_rects = {}
         btn_x = x + 20
+        from release_building import ReleaseBuilding
+        from constants import BUILDING_RELEASE_ALTAR_COST
+        
         for idx, (building_class, label) in enumerate(self.buildings):
             btn_y = y + self.header_height + idx * (self.button_height + self.button_margin)
             rect = pygame.Rect(btn_x, btn_y, self.menu_width - 40, self.button_height)
             self.button_rects[building_class] = rect
-            # Draw button with state
+            
             is_selected = (self.selected_building_class is building_class)
             mouse_over = rect.collidepoint(pygame.mouse.get_pos())
             color = self.selected_color if is_selected else (self.button_hover_color if mouse_over else self.button_color)
             pygame.draw.rect(screen, color, rect)
-            # Button label (top half)
+            
             lbl_surface = font.render(label, True, (255, 255, 255))
             lbl_rect = lbl_surface.get_rect(center=(rect.centerx, rect.centery - 10))
             screen.blit(lbl_surface, lbl_rect)
-            # Cost string (bottom half)
+            
+            # Cost
             cost_dict = getattr(building_class, 'cost', {})
+            if building_class == ReleaseBuilding:
+                cost_dict = BUILDING_RELEASE_ALTAR_COST
+                
             if cost_dict:
                 cost_parts = [f"{qty} {res}" for res, qty in cost_dict.items()]
                 cost_str = "Cost: " + ", ".join(cost_parts)
             else:
                 cost_str = "Free"
-            cost_surface = font.render(cost_str, True, (240, 240, 240)) # slightly brighter cost text
+            cost_surface = font.render(cost_str, True, (240, 240, 240))
             cost_rect = cost_surface.get_rect(center=(rect.centerx, rect.centery + 10))
             screen.blit(cost_surface, cost_rect)
 

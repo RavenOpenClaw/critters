@@ -361,27 +361,47 @@ class World:
         return False
 
     def draw_debug(self, screen, camera, font):
-        """Render debug information for world objects (e.g. inventory counts)."""
+        """Render debug information for world objects (e.g. inventory counts, growth timers)."""
         import pygame
+        from gathering_hut import GatheringHut
+        from lumber_mill import LumberMill
+        from sapling import Sapling
+        
         for obj in self.current_map.objects:
-            if hasattr(obj, 'inventory') and obj.inventory is not None:
+            debug_text = None
+            
+            # 1. Inventory Counts (for Huts/Mills)
+            if isinstance(obj, (GatheringHut, LumberMill)):
+                if hasattr(obj, 'storage'):
+                    total = obj.storage.get_total_quantity()
+                    debug_text = f"Storage: {total}"
+            
+            # 2. Resource Counts (for natural nodes)
+            elif hasattr(obj, 'inventory') and obj.inventory is not None:
                 total_items = obj.inventory.get_total_quantity()
                 if total_items > 0:
-                    text = font.render(str(total_items), True, (255, 255, 255))
-                    # Center on object
-                    ox, oy = obj.x, obj.y
-                    if hasattr(obj, 'get_center'):
-                        ox, oy = obj.get_center()
-                    
-                    if camera:
-                        dx, dy = camera.apply(ox, oy)
-                    else:
-                        dx, dy = ox, oy
-                    
-                    text_rect = text.get_rect(center=(int(dx), int(dy)))
-                    # Draw a small dark background for readability
-                    pygame.draw.rect(screen, (0, 0, 0), text_rect.inflate(4, 2))
-                    screen.blit(text, text_rect)
+                    debug_text = str(total_items)
+            
+            # 3. Growth Timers (for Saplings)
+            elif isinstance(obj, Sapling):
+                debug_text = f"{obj.growth_timer:.1f}s"
+
+            if debug_text:
+                text = font.render(debug_text, True, (255, 255, 255))
+                # Center on object
+                ox, oy = obj.x, obj.y
+                if hasattr(obj, 'get_center'):
+                    ox, oy = obj.get_center()
+                
+                if camera:
+                    dx, dy = camera.apply(ox, oy)
+                else:
+                    dx, dy = ox, oy
+                
+                text_rect = text.get_rect(center=(int(dx), int(dy)))
+                # Draw a small dark background for readability
+                pygame.draw.rect(screen, (0, 0, 0), text_rect.inflate(4, 2))
+                screen.blit(text, text_rect)
 
     def draw(self, screen, camera=None):
         # Pass 1: Draw Grass (Bottom Layer)

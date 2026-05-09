@@ -20,17 +20,19 @@ class Building(WorldObject):
         super().__init__(gx, gy, width, height, cell_size, inventory=inventory)
         self.cost = cost if cost is not None else {}
 
-    def can_place(self, player_inventory):
+    def can_place(self, player_inventory, cost_override=None):
         """
         Check if the player has sufficient resources to place this building.
 
         Args:
             player_inventory: Inventory instance representing player's resources
+            cost_override: optional dict to use instead of self.cost
 
         Returns:
             True if all required resources are present in sufficient quantity; False otherwise.
         """
-        for resource, required in self.cost.items():
+        check_cost = cost_override if cost_override is not None else self.cost
+        for resource, required in check_cost.items():
             if not player_inventory.has(resource, required):
                 return False
         return True

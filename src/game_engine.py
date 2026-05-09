@@ -122,13 +122,8 @@ class GameEngine:
             # Deconstruction Mode (Priority)
             if self.input_handler.deconstruct_mode:
                 if isinstance(target_obj, Building):
-                    ox, oy = target_obj.get_center()
-                    dx, dy = self.player.x - ox, self.player.y - oy
-                    if dx*dx + dy*dy <= self.player.interaction_radius**2:
-                        target_obj.deconstruct(self.world, self.player)
-                        self.world.set_message(MESSAGE_DECONSTRUCTED, 2.0)
-                    else:
-                        self.world.set_message(MESSAGE_OUT_OF_RANGE, 1.5)
+                    target_obj.deconstruct(self.world, self.player)
+                    self.world.set_message(MESSAGE_DECONSTRUCTED, 2.0)
                 return
 
             # Selection handling: don't close windows if we are picking a NEW relevant target

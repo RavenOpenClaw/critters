@@ -218,10 +218,10 @@ def _serialize_world_object(obj: WorldObject) -> Dict[str, Any]:
         data["spread_threshold"] = obj.spread_threshold
         data["time_accumulator"] = obj.time_accumulator
     if isinstance(obj, Tree):
-        data["max_wood"] = obj.max_wood
+        data["max_food"] = obj.max_food
         data["respawn_duration"] = obj.respawn_duration
-        data["depleted"] = obj.depleted
         data["time_depleted"] = obj.time_depleted
+        data["depleted"] = obj.depleted
     return data
 
 def _deserialize_world_object(data: Dict[str, Any]) -> WorldObject:
