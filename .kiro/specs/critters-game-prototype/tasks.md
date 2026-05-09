@@ -131,15 +131,42 @@ Allow mass management of critters using a selection marquee.
 
 ### Task 64: Assignment State Refinement & World Balancing
 **Priority**: Medium
-**Status**: NOT_STARTED
+**Status**: COMPLETED (2026-05-01)
 
 **Description**:
 Improve critter behavior upon assignment and balance world resources.
 
 **Acceptance Criteria**:
-- [ ] Assignment to any building sets critter state to `RETURN` (so they travel to the hut immediately).
-- [ ] Double `GatheringHut` radius from 10 to 20 tiles.
-- [ ] Investigate and fix grass spreading mechanic (ensure it propagates correctly over time).
+- [x] Assignment to any building sets critter state to `RETURN` (so they travel to the hut immediately).
+- [x] Double `GatheringHut` radius from 10 to 20 tiles.
+- [x] Investigate and fix grass spreading mechanic (ensure it propagates correctly over time).
+
+### Task 65: Interaction & UI Refinements
+**Priority**: Medium
+**Status**: NOT_STARTED
+
+**Description**:
+Refine the Altar cost, remove legacy Release buttons, and unbind deconstruction from player range.
+
+**Acceptance Criteria**:
+- [ ] Update Release Altar cost to 15 stone in `constants.py`.
+- [ ] Remove the "Release" button from `CritterInspector`.
+- [ ] Remove the distance check for deconstructing buildings in `GameEngine`.
+
+### Task 66: Advanced Wood & Forestry System
+**Priority**: High
+**Status**: NOT_STARTED
+
+**Description**:
+Implement a complete renewable tree lifecycle and automated Lumber Mill. **Refer to `doc/WOOD_AND_FORESTRY_DESIGN.md` for full implementation details.**
+
+**Acceptance Criteria**:
+- [ ] Trees refactored to 1x1 size with finite Wood inventory.
+- [ ] Depleted trees drop bonus wood and 1-2 Saplings before removal.
+- [ ] Implement `Sapling` object (1x1) with 8-neighbor placement requirement.
+- [ ] Saplings grow into fully grown Trees after 2-3 minutes.
+- [ ] Create `LumberMill` building for automated wood gathering.
+- [ ] Display growth timers and building inventories in Debug (F3) mode.
 
 ---
 
