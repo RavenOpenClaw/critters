@@ -370,21 +370,21 @@ class World:
         for obj in self.current_map.objects:
             debug_text = None
             
-            # 1. Inventory Counts (for Huts/Mills)
-            if isinstance(obj, (GatheringHut, LumberMill)):
+            # 1. Growth Timers (for Saplings) - High priority
+            if isinstance(obj, Sapling):
+                debug_text = f"{obj.growth_timer:.1f}s"
+            
+            # 2. Inventory Counts (for Huts/Mills)
+            elif isinstance(obj, (GatheringHut, LumberMill)):
                 if hasattr(obj, 'storage'):
                     total = obj.storage.get_total_quantity()
                     debug_text = f"Storage: {total}"
             
-            # 2. Resource Counts (for natural nodes)
+            # 3. Resource Counts (for natural nodes)
             elif hasattr(obj, 'inventory') and obj.inventory is not None:
                 total_items = obj.inventory.get_total_quantity()
                 if total_items > 0:
                     debug_text = str(total_items)
-            
-            # 3. Growth Timers (for Saplings)
-            elif isinstance(obj, Sapling):
-                debug_text = f"{obj.growth_timer:.1f}s"
 
             if debug_text:
                 text = font.render(debug_text, True, (255, 255, 255))

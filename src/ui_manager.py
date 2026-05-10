@@ -96,15 +96,6 @@ class UIManager:
                 self.build_menu.visible = False
             return True
 
-        # 6. Global Close: If click was in neither active inspector, hide them
-        # This handles clicking on the world grid
-        if (self.critter_inspector.visible and not critter_handled) or \
-           (self.multi_select_inspector.visible and not multi_handled) or \
-           (self.mating_hut_inspector.visible and not mating_handled):
-            self.critter_inspector.hide()
-            self.multi_select_inspector.hide()
-            self.mating_hut_inspector.hide()
-
         return False
 
     def update(self, dt):
