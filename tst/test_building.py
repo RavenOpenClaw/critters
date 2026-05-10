@@ -62,8 +62,9 @@ class TestBuildingPlacement(unittest.TestCase):
         world = World(grid)
         # Define a test building class with fixed cost and size (1x1) that matches BuildMenu signature
         class TestBuilding(Building):
+            cost = {'wood': 5, 'stone': 3}
             def __init__(self, gx, gy, cell_size):
-                super().__init__(gx, gy, width=1, height=1, cell_size=cell_size, cost={'wood': 5, 'stone': 3})
+                super().__init__(gx, gy, width=1, height=1, cell_size=cell_size, cost=self.cost)
             def render(self, screen):
                 pass  # No rendering needed for test
         # Build menu with this building selected

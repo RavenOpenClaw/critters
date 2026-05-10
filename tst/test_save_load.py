@@ -162,7 +162,7 @@ def test_tree_serialization_roundtrip():
     t = trees[0]
     assert t.gx == 5 and t.gy == 5
     assert t.inventory.get_item_count('wood') == 10
-    assert t.max_wood == 10
+    assert t.max_food == 10
     assert t.respawn_duration == 20.0
     assert not t.depleted
 

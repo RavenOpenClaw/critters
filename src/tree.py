@@ -8,8 +8,8 @@ from inventory import Inventory
 from constants import ITEM_WOOD, ITEM_SAPLING
 
 class Tree(WorldObject):
-    def __init__(self, gx, gy, cell_size, wood=10, respawn_duration=10.0):
-        # Default wood=10 for legacy test compatibility
+    def __init__(self, gx, gy, cell_size, wood=10, respawn_duration=30.0):
+        # Default wood=10 and respawn_duration=30.0 for legacy test compatibility
         inventory = Inventory()
         inventory.add(ITEM_WOOD, wood)
         super().__init__(gx, gy, width=1, height=1, cell_size=cell_size, inventory=inventory)
@@ -69,15 +69,13 @@ class Tree(WorldObject):
         if self.depleted:
             self.time_depleted += dt
             if self.time_depleted >= self.respawn_duration:
-                # Re-add to world if it was removed? 
-                # For tests, we just replenish inventory and reset flag.
                 self.inventory.add(ITEM_WOOD, self.max_food)
                 self.depleted = False
                 self.time_depleted = 0.0
 
     def get_interaction_text(self):
         """Prompt text."""
-        return "Chop: E" # Synchronized with legacy test expectation
+        return "Chop Wood: E"
 
     def get_interaction_duration(self):
         """Chopping takes a bit of time."""

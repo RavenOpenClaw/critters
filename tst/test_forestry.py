@@ -89,10 +89,6 @@ class TestForestry:
         mill.assign_critter(critter)
         
         # 3. Simulate AI cycle
-        # Critter starts in RETURN, moves to mill
-        # Then goes to GATHER, finds tree, moves to tree
-        # Then interacts
-        
         # Force critter to arrived at mill
         critter.x, critter.y = mill.get_center()
         self.world.update(0.1) # Transition to IDLE/GATHER
@@ -107,30 +103,34 @@ class TestForestry:
 
     def test_deconstruction_unbind_range(self):
         """Verify that deconstruction no longer checks for player distance."""
-        # This is a GameEngine logic test, we verify the engine handles the call
         from game_engine import GameEngine
-        from build_menu import BuildMenu
         from chair import Chair
+        from unittest.mock import MagicMock
+        
+        pygame.init()
+        pygame.display.set_mode((800, 600))
         
         engine = GameEngine()
-        grid = GridSystem(24)
-        world = World(MapData("test", 10, 10, 24))
+        # Mock handle_events to do nothing (preserve our manual flags)
+        engine.input_handler.handle_events = MagicMock(return_value=True)
+        
+        map_data = MapData("test", 20, 20, 24)
+        world = World(map_data)
         player = Player(0, 0)
         engine.setup((world, player))
         
-        # Chair at (8, 8) - far from player
-        chair = Chair(8, 8, 24)
+        chair = Chair(15, 15, 24)
         world.add_object(chair)
         
-        # Simulate click in deconstruct mode
+        # Set flags AFTER engine.setup
         engine.input_handler.deconstruct_mode = True
         engine.input_handler.mouse_clicked = True
-        # Mock click on chair
-        mx, my = engine.camera.apply(chair.x, chair.y)
+        cx, cy = chair.get_center()
+        mx, my = engine.camera.apply(cx, cy)
         engine.input_handler.mouse_pos = (mx, my)
         
-        # Handle input
+        # Process input
         engine._handle_input()
         
-        # Chair should be removed despite distance
         assert chair not in world.objects
+        pygame.quit()

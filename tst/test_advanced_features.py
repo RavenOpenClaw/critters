@@ -4,6 +4,7 @@ Tests for Task 59 (Advanced Breeding) and Task 60 (Recycling & Candies).
 import pytest
 from critter import Critter, CritterState
 from mating_hut import MatingHut
+from release_building import ReleaseBuilding
 from world import World
 from grid_system import GridSystem
 from map_data import MapData
@@ -16,6 +17,8 @@ class TestAdvancedSystems:
         self.m = MapData(name="main", width=10, height=10, cell_size=24)
         self.world = World(self.m)
         self.player = Player(0, 0)
+        # Add player directly to objects (bypassing add_object collision check for entities)
+        self.world.current_map.objects.append(self.player)
 
     def test_breeding_inheritance_and_bounds(self):
         """Verify offspring stats are within valid bounds and not just discrete tiers."""
@@ -33,22 +36,21 @@ class TestAdvancedSystems:
             assert 1 <= child.endurance <= 100
 
         # With 80 and 20 parents, we should see a variety of stats, not just 50.
-        # (Though we can't strictly assert randomness, we can check for variance)
         unique_str = set(s[0] for s in offspring_stats)
         assert len(unique_str) > 1
 
     def test_release_critter_yields_candy(self):
-        """Verify releasing a critter adds the correct candy to player inventory."""
-        from critter_inspector import CritterInspector
-        inspector = CritterInspector(24, None, 800, 600)
+        """Verify releasing a critter via Release Altar adds the correct candy to player inventory."""
+        altar = ReleaseBuilding(5, 5, 24)
+        self.world.add_object(altar)
         
-        # Critter with high strength
+        # Critter with high strength following player
         c = Critter(0, 0, strength=90, speed_stat=10, endurance=10)
         self.world.add_object(c)
-        inspector.toggle(c)
+        c.start_follow(self.player)
         
-        # Release it
-        inspector.release_critter(self.player, self.world)
+        # Release via altar interaction
+        altar.interact(self.player)
         
         # Check world and inventory
         assert c not in self.world.objects
@@ -56,15 +58,15 @@ class TestAdvancedSystems:
 
     def test_release_critter_tie_break(self):
         """Verify releasing a critter with tied stats still yields a valid candy."""
-        from critter_inspector import CritterInspector
-        inspector = CritterInspector(24, None, 800, 600)
+        altar = ReleaseBuilding(5, 5, 24)
+        self.world.add_object(altar)
         
         # Critter with tied high stats
         c = Critter(0, 0, strength=50, speed_stat=50, endurance=10)
         self.world.add_object(c)
-        inspector.toggle(c)
+        c.start_follow(self.player)
         
-        inspector.release_critter(self.player, self.world)
+        altar.interact(self.player)
         
         total_candies = (self.player.inventory.get_item_count(ITEM_CANDY_STR) + 
                          self.player.inventory.get_item_count(ITEM_CANDY_SPD))
