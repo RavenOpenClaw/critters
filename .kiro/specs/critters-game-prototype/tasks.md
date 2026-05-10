@@ -143,30 +143,30 @@ Improve critter behavior upon assignment and balance world resources.
 
 ### Task 65: Interaction & UI Refinements
 **Priority**: Medium
-**Status**: NOT_STARTED
+**Status**: COMPLETED (2026-05-09)
 
 **Description**:
 Refine the Altar cost, remove legacy Release buttons, and unbind deconstruction from player range.
 
 **Acceptance Criteria**:
-- [ ] Update Release Altar cost to 15 stone in `constants.py`.
-- [ ] Remove the "Release" button from `CritterInspector`.
-- [ ] Remove the distance check for deconstructing buildings in `GameEngine`.
+- [x] Update Release Altar cost to 15 stone in `constants.py`.
+- [x] Remove the "Release" button from `CritterInspector`.
+- [x] Remove the distance check for deconstructing buildings in `GameEngine`.
 
 ### Task 66: Advanced Wood & Forestry System
 **Priority**: High
-**Status**: NOT_STARTED
+**Status**: COMPLETED (2026-05-09)
 
 **Description**:
 Implement a complete renewable tree lifecycle and automated Lumber Mill. **Refer to `doc/WOOD_AND_FORESTRY_DESIGN.md` for full implementation details.**
 
 **Acceptance Criteria**:
-- [ ] Trees refactored to 1x1 size with finite Wood inventory.
-- [ ] Depleted trees drop bonus wood and 1-2 Saplings before removal.
-- [ ] Implement `Sapling` object (1x1) with 8-neighbor placement requirement.
-- [ ] Saplings grow into fully grown Trees after 2-3 minutes.
-- [ ] Create `LumberMill` building for automated wood gathering.
-- [ ] Display growth timers and building inventories in Debug (F3) mode.
+- [x] Trees refactored to 1x1 size with finite Wood inventory.
+- [x] Depleted trees drop bonus wood and 1-2 Saplings before removal.
+- [x] Implement `Sapling` object (1x1) with 8-neighbor placement requirement.
+- [x] Saplings grow into fully grown Trees after 2-3 minutes.
+- [x] Create `LumberMill` building for automated wood gathering.
+- [x] Display growth timers and building inventories in Debug (F3) mode.
 
 ---
 
