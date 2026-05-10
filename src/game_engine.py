@@ -69,16 +69,24 @@ class GameEngine:
 
     def run(self):
         """Main game loop."""
+        self.running = True
         while self.running:
             dt = self.clock.tick(60) / 1000.0
-            # Debug: print low dt warnings
-            if dt > 0.5:
-                print(f"Warning: large dt ({dt:.3f}s)")
             
-            self._handle_input()
-            self._update(dt)
-            self._render()
-            
+            try:
+                self._handle_input()
+                self._update(dt)
+                self._render()
+                pygame.display.flip()
+            except Exception as e:
+                import traceback
+                print(f"GAME ENGINE ERROR: {e}")
+                traceback.print_exc()
+                if self.world:
+                    self.world.set_message(f"Error: {e}", 5.0)
+                # Reset click state to prevent infinite error loops if triggered by click
+                self.input_handler.mouse_clicked = False
+
         pygame.quit()
         sys.exit()
 
@@ -121,7 +129,7 @@ class GameEngine:
 
             # Deconstruction Mode (Priority)
             if self.input_handler.deconstruct_mode:
-                if isinstance(target_obj, Building):
+                if target_obj is not None and isinstance(target_obj, Building):
                     target_obj.deconstruct(self.world, self.player)
                     self.world.set_message(MESSAGE_DECONSTRUCTED, 2.0)
                 return

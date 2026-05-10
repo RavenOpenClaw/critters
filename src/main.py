@@ -16,7 +16,7 @@ RESOURCE_COLORS = {
     "wood": (101, 67, 33),    # Brown for wood
     "stone": (128, 128, 128), # Gray for stone
     "stick": (210, 180, 140), # Tan for sticks
-    "plant": (144, 238, 144), # Light green for plants
+    "sapling": (34, 139, 34), # Forest green for saplings
     "Strength Candy": (255, 100, 100), # Light Red
     "Speed Candy": (100, 255, 100),   # Light Green
     "Endurance Candy": (100, 100, 255), # Light Blue

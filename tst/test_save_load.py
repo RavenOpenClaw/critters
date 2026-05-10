@@ -15,7 +15,12 @@ from obstacle import Obstacle
 from tree import Tree
 from rock import Rock
 from stick import Stick
-# No MatingHut needed for current tests
+from mating_hut import MatingHut
+from release_building import ReleaseBuilding
+from lumber_mill import LumberMill
+from sapling import Sapling
+from chair import Chair
+from campfire import Campfire
 
 def make_test_world():
     """Create a small world with a variety of entities for testing."""
@@ -165,6 +170,48 @@ def test_tree_serialization_roundtrip():
     assert t.max_food == 10
     assert t.respawn_duration == 20.0
     assert not t.depleted
+
+def test_lumber_mill_serialization_roundtrip():
+    cell_size = 32
+    world = World(MapData("test", 10, 10, cell_size))
+    mill = LumberMill(2, 2, cell_size)
+    mill.storage.add('wood', 50)
+    world.add_object(mill)
+    
+    data = serialize_world(world)
+    new_world = deserialize_world(data)
+    mills = [o for o in new_world.current_map.objects if isinstance(o, LumberMill)]
+    assert len(mills) == 1
+    m = mills[0]
+    assert m.gx == 2 and m.gy == 2
+    assert m.storage.get_item_count('wood') == 50
+
+def test_release_building_serialization_roundtrip():
+    cell_size = 24
+    world = World(MapData("test", 10, 10, cell_size))
+    altar = ReleaseBuilding(1, 1, cell_size)
+    world.add_object(altar)
+    
+    data = serialize_world(world)
+    new_world = deserialize_world(data)
+    altars = [o for o in new_world.current_map.objects if isinstance(o, ReleaseBuilding)]
+    assert len(altars) == 1
+    a = altars[0]
+    assert a.gx == 1 and a.gy == 1
+
+def test_sapling_serialization_roundtrip():
+    cell_size = 24
+    world = World(MapData("test", 10, 10, cell_size))
+    sapling = Sapling(3, 3, cell_size, growth_timer=42.0)
+    world.add_object(sapling)
+    
+    data = serialize_world(world)
+    new_world = deserialize_world(data)
+    saplings = [o for o in new_world.current_map.objects if isinstance(o, Sapling)]
+    assert len(saplings) == 1
+    s = saplings[0]
+    assert s.gx == 3 and s.gy == 3
+    assert s.growth_timer == 42.0
 
 def test_rock_serialization_roundtrip():
     cell_size = 32

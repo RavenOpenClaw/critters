@@ -32,6 +32,14 @@ class Sapling(WorldObject):
                 return new_tree
         return None
 
+    def can_place(self, inventory, cost_override=None):
+        """Check if inventory has enough saplings to place this seedling."""
+        check_cost = cost_override if cost_override is not None else self.cost
+        for resource, amount in check_cost.items():
+            if not inventory.has(resource, amount):
+                return False
+        return True
+
     @classmethod
     def can_place_at(cls, world, gx, gy):
         """Custom placement check: must have 8 empty surrounding cells."""

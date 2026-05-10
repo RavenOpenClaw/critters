@@ -1,3 +1,20 @@
+### [SAPLING_PLACE_CRASH] Sapling placement crashes game with AttributeError: 'Sapling' object has no attribute 'can_place'
+
+Status: OPEN
+
+Expected: Selecting "Plant Sapling" in the build menu and clicking a valid world location should place a sapling without crashing.
+
+Actual: The game crashes with `AttributeError: 'Sapling' object has no attribute 'can_place'` and returns to the title screen. This is because `BuildMenu.attempt_placement` expects all placeable objects to have a `can_place` method (inherited by `Building` subclasses), but `Sapling` only inherits from `WorldObject`.
+
+Reproduce:
+- Chop a tree until it drops a sapling.
+- Open build menu (`B`).
+- Select "Plant Sapling".
+- Click on empty ground.
+- Observe crash and exit to title screen.
+
+---
+
 ### [UI_ANCHORING] UI elements do not reposition on window resize
 
 Status: OPEN

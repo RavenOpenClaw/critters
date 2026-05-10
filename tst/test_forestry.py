@@ -101,6 +101,30 @@ class TestForestry:
         tree.interact(critter)
         assert critter.inventory.get_item_count(ITEM_WOOD) > 0
 
+    def test_sapling_placement_via_build_menu(self):
+        """Verify that Sapling can be correctly placed using the BuildMenu system."""
+        from build_menu import BuildMenu
+        
+        # 1. Give player a sapling
+        self.player.inventory.add(ITEM_SAPLING, 1)
+        
+        # 2. Setup BuildMenu
+        menu = BuildMenu(self.cell_size)
+        menu.selected_building_class = Sapling
+        
+        # 3. Attempt placement at (10, 10)
+        # Ensure it's clear
+        assert self.world.grid.is_occupied(10, 10) is False
+        
+        success = menu.attempt_placement(self.player, self.world, self.world.grid, 10, 10)
+        
+        # 4. Verify
+        assert success is True
+        assert self.player.inventory.get_item_count(ITEM_SAPLING) == 0
+        saplings = [obj for obj in self.world.objects if isinstance(obj, Sapling)]
+        assert len(saplings) == 1
+        assert saplings[0].gx == 10 and saplings[0].gy == 10
+
     def test_deconstruction_unbind_range(self):
         """Verify that deconstruction no longer checks for player distance."""
         from game_engine import GameEngine
