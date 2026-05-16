@@ -20,6 +20,7 @@ from gathering_hut import GatheringHut
 from mating_hut import MatingHut
 from release_building import ReleaseBuilding
 from lumber_mill import LumberMill
+from forester_hut import ForesterHut
 from sapling import Sapling
 from chair import Chair
 from campfire import Campfire
@@ -218,6 +219,9 @@ def _serialize_world_object(obj: WorldObject) -> Dict[str, Any]:
     if isinstance(obj, LumberMill):
         data["storage"] = _serialize_inventory(obj.storage)
         data["gathering_radius"] = obj.gathering_radius
+    if isinstance(obj, ForesterHut):
+        data["storage"] = _serialize_inventory(obj.storage)
+        data["gathering_radius"] = obj.gathering_radius
     if isinstance(obj, Sapling):
         data["growth_timer"] = obj.growth_timer
     if isinstance(obj, Obstacle):
@@ -323,6 +327,17 @@ def _deserialize_world_object(data: Dict[str, Any]) -> WorldObject:
         return obj
     elif classname == "LumberMill":
         obj = LumberMill(gx, gy, cell_size)
+        if "storage" in data:
+            obj.storage = _deserialize_inventory(data["storage"])
+        if "cost" in data:
+            obj.cost = data["cost"]
+        if "gathering_radius" in data:
+            obj.gathering_radius = data["gathering_radius"]
+        obj.inventory = inventory
+        obj.blocks_movement = blocks_movement
+        return obj
+    elif classname == "ForesterHut":
+        obj = ForesterHut(gx, gy, cell_size)
         if "storage" in data:
             obj.storage = _deserialize_inventory(data["storage"])
         if "cost" in data:
@@ -488,12 +503,12 @@ def _rebuild_assigned_critters(world: World):
     """Populate assigned_critters lists for all relevant buildings based on critters' assigned_hut."""
     for m in world.maps.values():
         # Collect all buildings that support assignment
-        huts = [obj for obj in m.objects if isinstance(obj, (GatheringHut, MatingHut, LumberMill, ReleaseBuilding))]
+        huts = [obj for obj in m.objects if isinstance(obj, (GatheringHut, MatingHut, LumberMill, ReleaseBuilding, ForesterHut))]
         for hut in huts:
             hut.assigned_critters = []  # ensure clear
         # Assign critters
         for critter in m.critters:
-            if critter.assigned_hut is not None and isinstance(critter.assigned_hut, (GatheringHut, MatingHut, LumberMill, ReleaseBuilding)):
+            if critter.assigned_hut is not None and isinstance(critter.assigned_hut, (GatheringHut, MatingHut, LumberMill, ReleaseBuilding, ForesterHut)):
                 critter.assigned_hut.assigned_critters.append(critter)
 
 def save_game(world: World, player: Player, filepath: str | Path) -> None:

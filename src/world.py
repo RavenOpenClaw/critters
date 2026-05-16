@@ -365,6 +365,7 @@ class World:
         import pygame
         from gathering_hut import GatheringHut
         from lumber_mill import LumberMill
+        from forester_hut import ForesterHut
         from sapling import Sapling
         
         for obj in self.current_map.objects:
@@ -375,7 +376,7 @@ class World:
                 debug_text = f"{obj.growth_timer:.1f}s"
             
             # 2. Inventory Counts (for Huts/Mills)
-            elif isinstance(obj, (GatheringHut, LumberMill)):
+            elif isinstance(obj, (GatheringHut, LumberMill, ForesterHut)):
                 if hasattr(obj, 'storage'):
                     total = obj.storage.get_total_quantity()
                     debug_text = f"Storage: {total}"

@@ -8,6 +8,7 @@ from campfire import Campfire
 from mating_hut import MatingHut
 from release_building import ReleaseBuilding
 from lumber_mill import LumberMill
+from forester_hut import ForesterHut
 from sapling import Sapling
 from constants import (
     HUD_BUILD_BUTTON,
@@ -17,6 +18,8 @@ from constants import (
     BUILDING_MATING_HUT,
     BUILDING_CHAIR,
     BUILDING_CAMPFIRE,
+    BUILDING_LUMBER_MILL,
+    BUILDING_FORESTER_HUT,
 )
 
 class BuildMenu:
@@ -29,7 +32,8 @@ class BuildMenu:
         self.buildings = [
             (GatheringHut, BUILDING_GATHERING_HUT),
             (MatingHut, BUILDING_MATING_HUT),
-            (LumberMill, "Lumber Mill"),
+            (LumberMill, BUILDING_LUMBER_MILL),
+            (ForesterHut, BUILDING_FORESTER_HUT),
             (ReleaseBuilding, "Release Altar"),
             (Chair, BUILDING_CHAIR),
             (Campfire, BUILDING_CAMPFIRE),

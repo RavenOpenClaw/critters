@@ -61,6 +61,8 @@ PROMPT_DIRECT_ASSIGN = "Right-click: Assign"
 BUILDING_GATHERING_HUT_COST = {"wood": 10, "stone": 5}
 BUILDING_MATING_HUT_COST = {"wood": 15, "stone": 10}
 BUILDING_RELEASE_ALTAR_COST = {"stone": 15}
+BUILDING_LUMBER_MILL_COST = {"wood": 20}
+BUILDING_FORESTER_HUT_COST = {"wood": 15, "stone": 5}
 BUILDING_CHAIR_COST = {"wood": 4}
 BUILDING_CAMPFIRE_COST = {"wood": 2, "stone": 2}
 
@@ -70,6 +72,15 @@ ITEM_WOOD = "wood"
 ITEM_STONE = "stone"
 ITEM_SAPLING = "sapling"
 ITEM_STICK = "stick"
+
+# --- Building Labels ---
+BUILDING_GATHERING_HUT = "Gathering Hut"
+BUILDING_MATING_HUT = "Mating Hut"
+BUILDING_LUMBER_MILL = "Lumber Mill"
+BUILDING_FORESTER_HUT = "Forester's Hut"
+BUILDING_RELEASE_ALTAR = "Release Altar"
+BUILDING_CHAIR = "Chair"
+BUILDING_CAMPFIRE = "Campfire"
 
 # --- Building Interaction Feedback Messages ---
 MSG_ASSIGN_GATHERING = "Critter assigned to Gathering Hut."
