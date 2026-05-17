@@ -328,6 +328,7 @@ class Critter(Entity):
         from sapling import Sapling
 
         if self.inventory.get_item_count(ITEM_SAPLING) <= 0:
+            print(f"[DEBUG] Critter {id(self)} in PLANT state but no saplings. Returning.")
             self.start_return()
             return
 
@@ -336,12 +337,14 @@ class Critter(Entity):
         # 1. Seek spot if we don't have one
         if self.goal_cell is None:
             if not isinstance(self.assigned_hut, ForesterHut):
+                print(f"[DEBUG] Critter {id(self)} in PLANT state but hut is {type(self.assigned_hut)}. Resting.")
                 self.start_rest()
                 return
                 
             hut_cx, hut_cy = self.assigned_hut.get_center()
             center_gx, center_gy = grid.world_to_grid(hut_cx, hut_cy)
             
+            print(f"[DEBUG] Critter {id(self)} searching for spot near {center_gx}, {center_gy} (radius {PLANT_RADIUS})")
             # [PLANT_RADIUS] Ring-based search to favor closer cells
             for r in range(1, PLANT_RADIUS + 1):
                 ring_candidates = []
@@ -360,6 +363,7 @@ class Critter(Entity):
                 
                 if ring_candidates:
                     self.goal_cell = random.choice(ring_candidates)
+                    print(f"[DEBUG] Critter {id(self)} chose spot {self.goal_cell} at ring {r}")
                     break
             
             if self.goal_cell:
@@ -369,10 +373,12 @@ class Critter(Entity):
                 self.path_index = 0
                 
                 if self.path is None:
-                    # Unreachable spot, clear and try again next tick
+                    print(f"[DEBUG] Critter {id(self)} failed to find path to {self.goal_cell}. Clearing goal.")
                     self.goal_cell = None
                     return
+                print(f"[DEBUG] Critter {id(self)} found path of length {len(self.path)}")
             else:
+                print(f"[DEBUG] Critter {id(self)} found NO valid planting spots in radius.")
                 self.start_rest()
                 return
 
@@ -382,40 +388,50 @@ class Critter(Entity):
 
         # 3. Check for arrival (path finished or already there)
         if self.path is None and not self.gathering and self.goal_cell is not None:
-            # [PLANT_REVALIDATE] Arrived: re-verify spot is still valid
             gx, gy = self.goal_cell
+            print(f"[DEBUG] Critter {id(self)} arrived at {gx}, {gy}. Re-validating.")
+            # [PLANT_REVALIDATE] Arrived: re-verify spot is still valid
             if grid.is_occupied(gx, gy) or not Sapling.can_place_at(world, gx, gy):
-                # Spot invalidated while walking; pick a new one next tick
+                print(f"[DEBUG] Critter {id(self)} spot {gx}, {gy} is now INVALID. Re-seeking.")
                 self.goal_cell = None
                 return
                 
+            print(f"[DEBUG] Critter {id(self)} spot valid. Starting interaction phase.")
             self.gathering = True # Use gathering flag for interaction phase
             self.interaction_progress = 0.0
 
         # 4. Planting Interaction
         if self.gathering:
-            duration = 1.0 / self.get_interaction_speed_multiplier()
+            mult = self.get_interaction_speed_multiplier()
+            duration = 1.0 / mult
             self.interaction_progress += dt / duration
+            if int(self.interaction_progress * 10) % 5 == 0: # Log every ~20%
+                 print(f"[DEBUG] Critter {id(self)} planting progress: {self.interaction_progress:.2f} (duration: {duration:.2f}s)")
+            
             if self.interaction_progress >= 1.0:
+                print(f"[DEBUG] Critter {id(self)} interaction complete. Attempting to add Sapling to world.")
                 # [PLANT_REVALIDATE] Final check before adding to world
                 gx, gy = self.goal_cell
                 if not grid.is_occupied(gx, gy) and Sapling.can_place_at(world, gx, gy):
                     # [PLANT_WORLD_ADD] Place object and ensure grid registration
                     new_sapling = Sapling(gx, gy, self.cell_size)
                     if world.add_object(new_sapling):
+                        print(f"[DEBUG] Critter {id(self)} successfully added Sapling to world at {gx}, {gy}.")
                         self.inventory.remove(ITEM_SAPLING, 1)
                         world.set_message("Critter planted a sapling!", 2.0)
                     else:
+                        print(f"[DEBUG] Critter {id(self)} world.add_object failed for Sapling at {gx}, {gy}.")
                         world.set_message("Critter failed to plant (blocked)", 2.0)
                 else:
+                    print(f"[DEBUG] Critter {id(self)} final validation failed for {gx}, {gy}. Spot occupied or invalid.")
                     world.set_message("Critter spot invalidated", 2.0)
                 
                 self.gathering = False
                 self.interaction_progress = 0.0
                 self.goal_cell = None
                 # Transition back to RETURN to check for more saplings in hut
+                print(f"[DEBUG] Critter {id(self)} transitioning to RETURN.")
                 self.start_return()
-
     def _update_rest(self, dt, world):
         """REST behavior: loiter near hut with smooth movement, wait for rest duration, then transition to GATHER or PLANT."""
         # If we have a loiter_target, move towards it smoothly
@@ -639,8 +655,10 @@ class Critter(Entity):
         effective_speed = self._effective_stat(self.speed_stat)
         base_mult = 0.5 + effective_speed / 100.0
         gather_mult = self._get_gather_multiplier() # Buffs
-        return base_mult * gather_mult
-
+        mult = base_mult * gather_mult
+        if mult <= 0:
+            print(f"[DEBUG] Critter {id(self)} has 0 interaction speed! base={base_mult}, gather={gather_mult}")
+        return mult
     def _update_gather(self, dt, world, pathfinding_system):
         """GATHER behavior: find resource, pathfind to destination, gather over time, then RETURN."""
         # Acquire target if not set
