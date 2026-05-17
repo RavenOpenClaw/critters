@@ -545,6 +545,26 @@ Fix Details:
 
 ---
 
+### [FORESTRY_TREE_DEPLETION] Critters do not remove trees when inventory reaches zero
+
+Status: FIXED
+
+Fix commit: (current session)
+
+Expected: When a critter reduces a tree's wood inventory to zero, the tree should be removed from the world, and the critter should receive a bonus of 3-5 wood and 1-2 saplings (80%/20% chance).
+
+Actual: Critters can reduce a tree's inventory to zero, but the tree remains in the world with 0 wood. The critter then repeatedly targets the empty tree or cycles through other empty trees, as they are not removed. The bonus wood and saplings are not awarded to the critter.
+
+Fix Details:
+- **Plan**: Ensure critters use the `interact` method of resource nodes instead of direct inventory manipulation.
+- **Implementation**: 
+    1. Added a public `get_gather_multiplier` method to `Critter` for compatibility with `Tree.interact`.
+    2. Refactored `src/critter.py`'s `_harvest_target` to prefer calling `target.interact(self)` if available.
+    3. Added logic to detect if the target was removed during interaction (e.g., tree cut down) and transition correctly.
+- **Testing**: Verified with `tst/repro_forestry_bugs.py`.
+
+---
+
 ### [MULTIMAP_SIM] Passive maps are not simulated when not active
 
 Status: OPEN
