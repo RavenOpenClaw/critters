@@ -333,136 +333,88 @@ class Critter(Entity):
 
         grid = world.grid
         
-        # 1. Seek spot if we don't have one and HAVE a sapling
-        if self.inventory.get_item_count(ITEM_SAPLING) > 0:
-            if self.goal_cell is None:
-                if not isinstance(self.assigned_hut, ForesterHut):
-                    self.start_rest()
-                    return
-                    
-                hut_cx, hut_cy = self.assigned_hut.get_center()
-                center_gx, center_gy = grid.world_to_grid(hut_cx, hut_cy)
+        # 1. Seek spot if we don't have one
+        if self.goal_cell is None:
+            if not isinstance(self.assigned_hut, ForesterHut):
+                self.start_rest()
+                return
                 
-                # [PLANT_RADIUS] Ring-based search to favor closer cells
-                # Radius 1-10 cells
-                for r in range(1, PLANT_RADIUS + 1):
-                    ring_candidates = []
-                    # Sample points at exactly distance r (square ring)
-                    # Vertical edges
-                    for dy in range(-r, r + 1):
-                        for dx in [-r, r]:
-                            gx, gy = center_gx + dx, center_gy + dy
-                            if grid.is_within_bounds(gx, gy) and not grid.is_occupied(gx, gy):
-                                if Sapling.can_place_at(world, gx, gy):
-                                    ring_candidates.append((gx, gy))
-                    # Horizontal edges (excluding corners already added)
-                    for dx in range(-(r-1), r):
-                        for dy in [-r, r]:
-                            gx, gy = center_gx + dx, center_gy + dy
-                            if grid.is_within_bounds(gx, gy) and not grid.is_occupied(gx, gy):
-                                if Sapling.can_place_at(world, gx, gy):
-                                    ring_candidates.append((gx, gy))
-                    
-                    if ring_candidates:
-                        self.goal_cell = random.choice(ring_candidates)
-                        break
-                
-                if self.goal_cell:
-                    start_gx, start_gy = grid.world_to_grid(self.x, self.y)
-                    self.is_calculating = True
-                    self.path = pathfinding_system.find_path((start_gx, start_gy), self.goal_cell, grid)
-                    self.path_index = 0
-                else:
-                    # No spots found in any ring, rest for a bit
-                    self.start_rest()
-                    return
-
-            # Follow path to planting spot
-            if self.path:
-                self._follow_path(dt, world)
-                if self.path is None:
-                    # [PLANT_REVALIDATE] Arrived: re-verify spot is still valid
-                    gx, gy = self.goal_cell
-                    if grid.is_occupied(gx, gy) or not Sapling.can_place_at(world, gx, gy):
-                        # Spot invalidated while walking; pick a new one next tick
-                        self.goal_cell = None
-                        return
-                        
-                    self.gathering = True # Use gathering flag for interaction phase
-                    self.interaction_progress = 0.0
-
-            # Planting Interaction
-            if self.gathering:
-                duration = 1.0 / self.get_interaction_speed_multiplier()
-                self.interaction_progress += dt / duration
-                if self.interaction_progress >= 1.0:
-                    # [PLANT_REVALIDATE] Final check before adding to world
-                    gx, gy = self.goal_cell
-                    if not grid.is_occupied(gx, gy) and Sapling.can_place_at(world, gx, gy):
-                        # [PLANT_WORLD_ADD] Place object and ensure grid registration
-                        new_sapling = Sapling(gx, gy, self.cell_size)
-                        if world.add_object(new_sapling):
-                            self.inventory.remove(ITEM_SAPLING, 1)
-                        else:
-                            # Registration failed (unlikely due to check, but possible if world state changed)
-                            pass
-                    
-                    self.gathering = False
-                    self.interaction_progress = 0.0
-                    self.goal_cell = None
-                    # Transition back to RETURN to check for more saplings in hut
-                    self.start_return()
-        else:
-            # We are empty, we need to FETCH from a target (Hut or Mill)
-            if self.target_resource is None:
-                if isinstance(self.assigned_hut, ForesterHut):
-                    self.target_resource = self.assigned_hut.find_resource_in_radius(world, self)
+            hut_cx, hut_cy = self.assigned_hut.get_center()
+            center_gx, center_gy = grid.world_to_grid(hut_cx, hut_cy)
             
-            if self.target_resource is None:
+            # [PLANT_RADIUS] Ring-based search to favor closer cells
+            for r in range(1, PLANT_RADIUS + 1):
+                ring_candidates = []
+                for dy in range(-r, r + 1):
+                    for dx in [-r, r]:
+                        gx, gy = center_gx + dx, center_gy + dy
+                        if grid.is_within_bounds(gx, gy) and not grid.is_occupied(gx, gy):
+                            if Sapling.can_place_at(world, gx, gy):
+                                ring_candidates.append((gx, gy))
+                for dx in range(-(r-1), r):
+                    for dy in [-r, r]:
+                        gx, gy = center_gx + dx, center_gy + dy
+                        if grid.is_within_bounds(gx, gy) and not grid.is_occupied(gx, gy):
+                            if Sapling.can_place_at(world, gx, gy):
+                                ring_candidates.append((gx, gy))
+                
+                if ring_candidates:
+                    self.goal_cell = random.choice(ring_candidates)
+                    break
+            
+            if self.goal_cell:
+                start_gx, start_gy = grid.world_to_grid(self.x, self.y)
+                self.is_calculating = True
+                self.path = pathfinding_system.find_path((start_gx, start_gy), self.goal_cell, grid)
+                self.path_index = 0
+                
+                if self.path is None:
+                    # Unreachable spot, clear and try again next tick
+                    self.goal_cell = None
+                    return
+            else:
                 self.start_rest()
                 return
 
-            # Pathfind to FETCH target
-            if self.path is None:
-                start_gx, start_gy = grid.world_to_grid(self.x, self.y)
-                # Find free cell near target
-                tx, ty = self.target_resource.get_center()
-                tgx, tgy = grid.world_to_grid(tx, ty)
-                self.goal_cell = self._find_free_cell_near(grid, tgx, tgy)
-                if self.goal_cell:
-                    self.is_calculating = True
-                    self.path = pathfinding_system.find_path((start_gx, start_gy), self.goal_cell, grid)
-                if self.path is None:
-                    self.goal_cell = None
-                    self.target_resource = None
-                    return
-                self.path_index = 0
+        # 2. Follow path to planting spot
+        if self.path is not None:
+            self._follow_path(dt, world)
 
-            # Follow path to FETCH target
-            if self.path:
-                self._follow_path(dt, world)
-                if self.path is None:
-                    self.gathering = True # Trigger interaction
-            
-            # Interaction (Fetching)
-            if self.gathering:
-                # Use same interaction logic as gathering but for fetching
-                duration = 1.0 / self.get_interaction_speed_multiplier()
-                self.interaction_progress += dt / duration
-                if self.interaction_progress >= 1.0:
-                    # Logic to take sapling from target storage
-                    source_inv = getattr(self.target_resource, 'storage', None)
-                    if source_inv is None: source_inv = getattr(self.target_resource, 'inventory', None)
-                    
-                    if source_inv and source_inv.get_item_count(ITEM_SAPLING) > 0:
-                        source_inv.remove(ITEM_SAPLING, 1)
-                        self.inventory.add(ITEM_SAPLING, 1)
-                    
-                    self.gathering = False
-                    self.interaction_progress = 0.0
-                    self.target_resource = None
-                    self.goal_cell = None
-                    # Next update will seek a planting spot because we now have a sapling
+        # 3. Check for arrival (path finished or already there)
+        if self.path is None and not self.gathering and self.goal_cell is not None:
+            # [PLANT_REVALIDATE] Arrived: re-verify spot is still valid
+            gx, gy = self.goal_cell
+            if grid.is_occupied(gx, gy) or not Sapling.can_place_at(world, gx, gy):
+                # Spot invalidated while walking; pick a new one next tick
+                self.goal_cell = None
+                return
+                
+            self.gathering = True # Use gathering flag for interaction phase
+            self.interaction_progress = 0.0
+
+        # 4. Planting Interaction
+        if self.gathering:
+            duration = 1.0 / self.get_interaction_speed_multiplier()
+            self.interaction_progress += dt / duration
+            if self.interaction_progress >= 1.0:
+                # [PLANT_REVALIDATE] Final check before adding to world
+                gx, gy = self.goal_cell
+                if not grid.is_occupied(gx, gy) and Sapling.can_place_at(world, gx, gy):
+                    # [PLANT_WORLD_ADD] Place object and ensure grid registration
+                    new_sapling = Sapling(gx, gy, self.cell_size)
+                    if world.add_object(new_sapling):
+                        self.inventory.remove(ITEM_SAPLING, 1)
+                        world.set_message("Critter planted a sapling!", 2.0)
+                    else:
+                        world.set_message("Critter failed to plant (blocked)", 2.0)
+                else:
+                    world.set_message("Critter spot invalidated", 2.0)
+                
+                self.gathering = False
+                self.interaction_progress = 0.0
+                self.goal_cell = None
+                # Transition back to RETURN to check for more saplings in hut
+                self.start_return()
 
     def _update_rest(self, dt, world):
         """REST behavior: loiter near hut with smooth movement, wait for rest duration, then transition to GATHER or PLANT."""
@@ -729,19 +681,19 @@ class Critter(Entity):
                     return
 
             # Follow the path if we have one and not yet gathering
-            if self.path:
+            if self.path is not None:
                 self._follow_path(dt, world)
-                # Check if we've arrived at the goal cell
-                if self.path is None or not self.path:
-                    # Arrived: start gathering phase
-                    self.gathering = True
-                    self.interaction_progress = 0.0
-                    self.active_target = self.target_resource
-                    # Snap to exact cell center of goal_cell
-                    if self.goal_cell is not None:
-                        gx, gy = self.goal_cell
-                        self.x = gx * self.cell_size + self.cell_size / 2
-                        self.y = gy * self.cell_size + self.cell_size / 2
+                
+            # Check for arrival (path finished or already there)
+            if self.path is None and not self.gathering and self.goal_cell is not None:
+                # Arrived: start gathering phase
+                self.gathering = True
+                self.interaction_progress = 0.0
+                self.active_target = self.target_resource
+                # Snap to exact cell center of goal_cell
+                gx, gy = self.goal_cell
+                self.x = gx * self.cell_size + self.cell_size / 2
+                self.y = gy * self.cell_size + self.cell_size / 2
 
         # If we are in the gathering phase, accumulate time and harvest when ready
         if self.gathering:
@@ -842,7 +794,21 @@ class Critter(Entity):
                 return
 
         # Follow the path
-        self._follow_path(dt, world)
+        if self.path is not None:
+            self._follow_path(dt, world)
+            
+        # Check for arrival
+        if self.path is None and not self.gathering:
+             if self._is_adjacent_to_hut(critter_gx, critter_gy):
+                self.gathering = True
+                self.interaction_progress = 0.0
+                self.active_target = self.assigned_hut
+                return
+             else:
+                # If path finished but not adjacent, we might have been pushed
+                # Clear path to trigger recalculation next tick
+                self.path = None
+                return
 
     def _update_follow(self, dt, world, pathfinding_system):
         """FOLLOW behavior: stay near the player using pathfinding."""
@@ -950,7 +916,12 @@ class Critter(Entity):
         Move along the current path using movement speed.
         Uses simple waypoint following: head to next grid cell center.
         """
+        if self.path is None:
+            return
+            
         if not self.path or self.path_index >= len(self.path):
+            self.path = None
+            self.path_index = 0
             return
 
         # Current target waypoint in grid coordinates
@@ -964,11 +935,14 @@ class Critter(Entity):
         dx = target_x - self.x
         dy = target_y - self.y
         dist = (dx*dx + dy*dy) ** 0.5
+        
+        # Consistent arrival threshold
         if dist < 1.0:
             # Reached this waypoint; advance to next
             self.path_index += 1
             if self.path_index >= len(self.path):
                 self.path = None
+                self.path_index = 0
             return
 
         # Move towards target at current speed
@@ -981,6 +955,7 @@ class Critter(Entity):
             self.path_index += 1
             if self.path_index >= len(self.path):
                 self.path = None
+                self.path_index = 0
         else:
             # Partial move
             self.x += (dx / dist) * move_dist
