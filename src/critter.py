@@ -392,9 +392,7 @@ class Critter(Entity):
         if self.gathering:
             mult = self.get_interaction_speed_multiplier()
             duration = 1.0 / mult
-            self.interaction_progress += dt / duration
-            if int(self.interaction_progress * 10) % 5 == 0: # Log every ~20%
-            
+            self.interaction_progress += dt / duration            
             if self.interaction_progress >= 1.0:
                 # [PLANT_REVALIDATE] Final check before adding to world
                 gx, gy = self.goal_cell
@@ -639,7 +637,7 @@ class Critter(Entity):
         gather_mult = self._get_gather_multiplier() # Buffs
         mult = base_mult * gather_mult
         if mult <= 0:
-        return mult
+            return mult
     def _update_gather(self, dt, world, pathfinding_system):
         """GATHER behavior: find resource, pathfind to destination, gather over time, then RETURN."""
         # Acquire target if not set

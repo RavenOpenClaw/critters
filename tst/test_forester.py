@@ -11,7 +11,7 @@ from map_data import MapData
 from grid_system import GridSystem
 from entity import Player
 from critter import Critter, CritterState
-from constants import ITEM_SAPLING
+from constants import ITEM_WOOD, ITEM_SAPLING
 
 class TestForester:
     def setup_method(self):
@@ -86,7 +86,7 @@ class TestForester:
         base_speed = critter.get_movement_speed()
         
         # Overburden: 2 items
-        critter.inventory.add("wood", 2)
+        critter.inventory.add(ITEM_WOOD, 2)
         penalty_speed = critter.get_movement_speed()
         
         assert penalty_speed == base_speed * 0.5

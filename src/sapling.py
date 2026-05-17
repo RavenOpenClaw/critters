@@ -5,9 +5,10 @@ Requires 8 empty surrounding cells to be placed.
 import random
 import pygame
 from world_object import WorldObject
+from constants import ITEM_SAPLING
 
 class Sapling(WorldObject):
-    cost = {"sapling": 1} # Built from Build Menu
+    cost = {ITEM_SAPLING: 1} # Built from Build Menu
 
     def __init__(self, gx, gy, cell_size, growth_timer=None):
         super().__init__(gx, gy, width=1, height=1, cell_size=cell_size, inventory=None)

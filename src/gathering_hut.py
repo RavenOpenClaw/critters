@@ -5,11 +5,11 @@ from building import Building
 from inventory import Inventory
 from entity import Player
 from berry_bush import BerryBush
-from constants import PROMPT_GATHER, MSG_ASSIGN_GATHERING, PROMPT_WITHDRAW
+from constants import PROMPT_GATHER, MSG_ASSIGN_GATHERING, PROMPT_WITHDRAW, ITEM_WOOD, ITEM_STONE
 
 class GatheringHut(Building):
     """Gathering Hut building (3x3) with storage and critter assignment."""
-    cost = {"wood": 10, "stone": 5}  # class attribute for UI display
+    cost = {ITEM_WOOD: 10, ITEM_STONE: 5}  # class attribute for UI display
 
     def __init__(self, gx, gy, cell_size):
         """

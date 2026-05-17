@@ -9,6 +9,7 @@ import pygame
 from entity import Player
 from world_object import WorldObject
 from berry_bush import BerryBush
+from constants import ITEM_FOOD
 
 def _circle_intersects_rect(circle_x, circle_y, circle_r, rect_x, rect_y, rect_w, rect_h):
     """Check if a circle intersects an axis-aligned rectangle."""
@@ -143,25 +144,25 @@ class TestResourceTransferConservation(unittest.TestCase):
         bush = BerryBush(gx=0, gy=0, cell_size=1, berries=bush_food)
         # Create a player with given food in inventory
         player = Player(0, 0, radius=20)
-        player.inventory.add('food', player_food)
+        player.inventory.add(ITEM_FOOD, player_food)
 
-        total_before = bush.inventory.get_item_count('food') + player.inventory.get_item_count('food')
+        total_before = bush.inventory.get_item_count(ITEM_FOOD) + player.inventory.get_item_count(ITEM_FOOD)
 
         # Perform interaction (bush.interact(player))
         bush.interact(player)
 
-        total_after = bush.inventory.get_item_count('food') + player.inventory.get_item_count('food')
+        total_after = bush.inventory.get_item_count(ITEM_FOOD) + player.inventory.get_item_count(ITEM_FOOD)
 
         self.assertEqual(total_after, total_before, "Total food count should be conserved during transfer")
 
         # Additionally, if bush had food, exactly one transferred
         if bush_food > 0:
-            self.assertEqual(bush.inventory.get_item_count('food'), bush_food - 1)
-            self.assertEqual(player.inventory.get_item_count('food'), player_food + 1)
+            self.assertEqual(bush.inventory.get_item_count(ITEM_FOOD), bush_food - 1)
+            self.assertEqual(player.inventory.get_item_count(ITEM_FOOD), player_food + 1)
         else:
             # No transfer occurred; inventories unchanged
-            self.assertEqual(bush.inventory.get_item_count('food'), 0)
-            self.assertEqual(player.inventory.get_item_count('food'), player_food)
+            self.assertEqual(bush.inventory.get_item_count(ITEM_FOOD), 0)
+            self.assertEqual(player.inventory.get_item_count(ITEM_FOOD), player_food)
 
 if __name__ == '__main__':
     unittest.main()

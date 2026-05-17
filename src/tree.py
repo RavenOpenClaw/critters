@@ -5,7 +5,7 @@ import random
 import pygame
 from world_object import WorldObject
 from inventory import Inventory
-from constants import ITEM_WOOD, ITEM_SAPLING
+from constants import ITEM_WOOD, ITEM_SAPLING, PROMPT_CHOP
 
 class Tree(WorldObject):
     def __init__(self, gx, gy, cell_size, wood=10, respawn_duration=30.0):
@@ -75,7 +75,7 @@ class Tree(WorldObject):
 
     def get_interaction_text(self):
         """Prompt text."""
-        return "Chop Wood: E"
+        return PROMPT_CHOP
 
     def get_interaction_duration(self):
         """Chopping takes a bit of time."""

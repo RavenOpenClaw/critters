@@ -10,7 +10,7 @@ from critter import Critter, CritterState
 from grid_system import GridSystem
 from world import World
 from entity import Player
-from constants import MSG_BREED_SUCCESS, MSG_ASSIGN_MATING, MSG_BREED_NEED_TWO, MSG_BREED_NEED_FOOD
+from constants import MSG_BREED_SUCCESS, MSG_ASSIGN_MATING, MSG_BREED_NEED_TWO, MSG_BREED_NEED_FOOD, ITEM_FOOD
 
 class TestBreeding(unittest.TestCase):
     def test_breed_requires_two_critters(self):
@@ -70,13 +70,13 @@ class TestMatingHutInteraction(unittest.TestCase):
         hut = MatingHut(5, 5, 32)
         world.add_object(hut)
         player = Player(100, 100)
-        player.inventory.add("food", 10)
+        player.inventory.add(ITEM_FOOD, 10)
         critter = Critter(0, 0, cell_size=32)
         hut.assign_critter(critter)
         hut.interact(player)
         self.assertEqual(len(world.current_map.objects), 1)
         self.assertEqual(world.message, MSG_BREED_NEED_TWO)
-        self.assertEqual(player.inventory.get_item_count("food"), 10)
+        self.assertEqual(player.inventory.get_item_count(ITEM_FOOD), 10)
 
     def test_interact_requires_food(self):
         grid = GridSystem(32, 10, 10)
@@ -84,7 +84,7 @@ class TestMatingHutInteraction(unittest.TestCase):
         hut = MatingHut(5, 5, 32)
         world.add_object(hut)
         player = Player(100, 100)
-        player.inventory.add("food", 3)
+        player.inventory.add(ITEM_FOOD, 3)
         c1 = Critter(0, 0, cell_size=32)
         c2 = Critter(10, 10, cell_size=32)
         hut.assign_critter(c1)
@@ -92,7 +92,7 @@ class TestMatingHutInteraction(unittest.TestCase):
         hut.interact(player)
         self.assertEqual(len(world.current_map.objects), 1)
         self.assertEqual(world.message, MSG_BREED_NEED_FOOD.format(5))
-        self.assertEqual(player.inventory.get_item_count("food"), 3)
+        self.assertEqual(player.inventory.get_item_count(ITEM_FOOD), 3)
 
     def test_interact_breeds_successfully(self):
         grid = GridSystem(32, 10, 10)
@@ -100,14 +100,14 @@ class TestMatingHutInteraction(unittest.TestCase):
         hut = MatingHut(5, 5, 32)
         world.add_object(hut)
         player = Player(100, 100)
-        player.inventory.add("food", 10)
+        player.inventory.add(ITEM_FOOD, 10)
         c1 = Critter(0, 0, cell_size=32, strength=50, speed_stat=50, endurance=50)
         c2 = Critter(10, 10, cell_size=32, strength=70, speed_stat=70, endurance=70)
         hut.assign_critter(c1)
         hut.assign_critter(c2)
         with patch('random.randint', return_value=0):
             hut.interact(player)
-        self.assertEqual(player.inventory.get_item_count("food"), 5)
+        self.assertEqual(player.inventory.get_item_count(ITEM_FOOD), 5)
         self.assertEqual(len(world.current_map.objects), 2)
         offspring = world.current_map.objects[1]
         self.assertIsInstance(offspring, Critter)

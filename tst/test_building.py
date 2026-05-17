@@ -14,6 +14,7 @@ from world import World
 from build_menu import BuildMenu
 from entity import Player
 from critter import Critter
+from constants import ITEM_WOOD, ITEM_STONE
 
 class TestBuilding(unittest.TestCase):
     def test_building_base_find_resource_in_radius_returns_none(self):
@@ -28,25 +29,25 @@ class TestBuilding(unittest.TestCase):
 
     def test_can_place_with_insufficient_one_resource(self):
         """Building.can_place returns False when any resource is insufficient."""
-        cost = {'wood': 5, 'stone': 3}
+        cost = {ITEM_WOOD: 5, 'stone': 3}
         building = Building(0, 0, width=2, height=2, cell_size=1.0, cost=cost)
         player_inv = Inventory()
-        player_inv.add('wood', 10)
+        player_inv.add(ITEM_WOOD, 10)
         player_inv.add('stone', 2)  # Not enough stone
         self.assertFalse(building.can_place(player_inv))
 
     def test_can_place_with_missing_resource(self):
         """Building.can_place returns False when a required resource is absent."""
-        cost = {'wood': 5, 'stone': 3}
+        cost = {ITEM_WOOD: 5, 'stone': 3}
         building = Building(0, 0, width=2, height=2, cell_size=1.0, cost=cost)
         player_inv = Inventory()
-        player_inv.add('wood', 10)
+        player_inv.add(ITEM_WOOD, 10)
         # No stone added
         self.assertFalse(building.can_place(player_inv))
 
     def test_building_cost_attribute(self):
         """Building stores cost dict correctly."""
-        cost = {'wood': 5}
+        cost = {ITEM_WOOD: 5}
         building = Building(0, 0, width=2, height=2, cell_size=1.0, cost=cost)
         self.assertEqual(building.cost, cost)
 
@@ -62,7 +63,7 @@ class TestBuildingPlacement(unittest.TestCase):
         world = World(grid)
         # Define a test building class with fixed cost and size (1x1) that matches BuildMenu signature
         class TestBuilding(Building):
-            cost = {'wood': 5, 'stone': 3}
+            cost = {ITEM_WOOD: 5, 'stone': 3}
             def __init__(self, gx, gy, cell_size):
                 super().__init__(gx, gy, width=1, height=1, cell_size=cell_size, cost=self.cost)
             def render(self, screen):
@@ -73,15 +74,15 @@ class TestBuildingPlacement(unittest.TestCase):
         menu.visible = True
         # Player with given resources
         player = Player(0, 0, radius=20)
-        player.inventory.add('wood', wood)
+        player.inventory.add(ITEM_WOOD, wood)
         player.inventory.add('stone', stone)
-        starting_wood = player.inventory.get_item_count('wood')
+        starting_wood = player.inventory.get_item_count(ITEM_WOOD)
         starting_stone = player.inventory.get_item_count('stone')
         # Attempt placement at grid (10, 10) – empty area
         success = menu.attempt_placement(player, world, grid, 10, 10)
         self.assertTrue(success, "Placement should succeed with sufficient resources")
         # Verify deduction
-        self.assertEqual(player.inventory.get_item_count('wood'), starting_wood - 5)
+        self.assertEqual(player.inventory.get_item_count(ITEM_WOOD), starting_wood - 5)
         self.assertEqual(player.inventory.get_item_count('stone'), starting_stone - 3)
 
 class TestGatheringHut(unittest.TestCase):
@@ -134,22 +135,22 @@ class TestBuildingCosts(unittest.TestCase):
     def test_gathering_hut_cost(self):
         """GatheringHut has correct cost."""
         hut = GatheringHut(0, 0, cell_size=32)
-        self.assertEqual(hut.cost, {"wood": 10, "stone": 5})
+        self.assertEqual(hut.cost, {ITEM_WOOD: 10, ITEM_STONE: 5})
 
     def test_chair_cost(self):
         """Chair has correct cost."""
         chair = Chair(0, 0, cell_size=32)
-        self.assertEqual(chair.cost, {"wood": 2})
+        self.assertEqual(chair.cost, {ITEM_WOOD: 2})
 
     def test_campfire_cost(self):
         """Campfire has correct cost."""
         cf = Campfire(0, 0, cell_size=32)
-        self.assertEqual(cf.cost, {"wood": 5, "stone": 2})
+        self.assertEqual(cf.cost, {ITEM_WOOD: 5, ITEM_STONE: 2})
 
     def test_mating_hut_cost(self):
         """MatingHut has correct cost."""
         mh = MatingHut(0, 0, cell_size=32)
-        self.assertEqual(mh.cost, {"wood": 15, "stone": 10})
+        self.assertEqual(mh.cost, {ITEM_WOOD: 15, ITEM_STONE: 10})
 
     def test_gathering_hut_placement_deducts_cost(self):
         """Placing a GatheringHut deducts exact cost from player inventory."""
@@ -160,13 +161,13 @@ class TestBuildingCosts(unittest.TestCase):
         menu.selected_building_class = GatheringHut
         menu.visible = True
         player = Player(0, 0, radius=20)
-        player.inventory.add('wood', 100)
+        player.inventory.add(ITEM_WOOD, 100)
         player.inventory.add('stone', 100)
-        start_wood = player.inventory.get_item_count('wood')
+        start_wood = player.inventory.get_item_count(ITEM_WOOD)
         start_stone = player.inventory.get_item_count('stone')
         success = menu.attempt_placement(player, world, grid, 5, 5)
         self.assertTrue(success, "Placement should succeed with sufficient resources")
-        self.assertEqual(player.inventory.get_item_count('wood'), start_wood - 10)
+        self.assertEqual(player.inventory.get_item_count(ITEM_WOOD), start_wood - 10)
         self.assertEqual(player.inventory.get_item_count('stone'), start_stone - 5)
 
     def test_gathering_hut_placement_fails_without_resources(self):
@@ -178,13 +179,13 @@ class TestBuildingCosts(unittest.TestCase):
         menu.selected_building_class = GatheringHut
         menu.visible = True
         player = Player(0, 0, radius=20)
-        player.inventory.add('wood', 5)  # not enough wood (need 10)
+        player.inventory.add(ITEM_WOOD, 5)  # not enough wood (need 10)
         player.inventory.add('stone', 10)
-        start_wood = player.inventory.get_item_count('wood')
+        start_wood = player.inventory.get_item_count(ITEM_WOOD)
         start_stone = player.inventory.get_item_count('stone')
         success = menu.attempt_placement(player, world, grid, 5, 5)
         self.assertFalse(success, "Placement should fail with insufficient resources")
-        self.assertEqual(player.inventory.get_item_count('wood'), start_wood)
+        self.assertEqual(player.inventory.get_item_count(ITEM_WOOD), start_wood)
         self.assertEqual(player.inventory.get_item_count('stone'), start_stone)
 
     def test_chair_placement_deducts_cost(self):
@@ -196,11 +197,11 @@ class TestBuildingCosts(unittest.TestCase):
         menu.selected_building_class = Chair
         menu.visible = True
         player = Player(0, 0, radius=20)
-        player.inventory.add('wood', 50)
-        start_wood = player.inventory.get_item_count('wood')
+        player.inventory.add(ITEM_WOOD, 50)
+        start_wood = player.inventory.get_item_count(ITEM_WOOD)
         success = menu.attempt_placement(player, world, grid, 2, 2)
         self.assertTrue(success)
-        self.assertEqual(player.inventory.get_item_count('wood'), start_wood - 2)
+        self.assertEqual(player.inventory.get_item_count(ITEM_WOOD), start_wood - 2)
 
     def test_campfire_placement_deducts_cost(self):
         """Placing a Campfire deducts wood and stone."""
@@ -211,13 +212,13 @@ class TestBuildingCosts(unittest.TestCase):
         menu.selected_building_class = Campfire
         menu.visible = True
         player = Player(0, 0, radius=20)
-        player.inventory.add('wood', 50)
+        player.inventory.add(ITEM_WOOD, 50)
         player.inventory.add('stone', 50)
-        start_wood = player.inventory.get_item_count('wood')
+        start_wood = player.inventory.get_item_count(ITEM_WOOD)
         start_stone = player.inventory.get_item_count('stone')
         success = menu.attempt_placement(player, world, grid, 3, 3)
         self.assertTrue(success)
-        self.assertEqual(player.inventory.get_item_count('wood'), start_wood - 5)
+        self.assertEqual(player.inventory.get_item_count(ITEM_WOOD), start_wood - 5)
         self.assertEqual(player.inventory.get_item_count('stone'), start_stone - 2)
 
     def test_mating_hut_placement_deducts_cost(self):
@@ -229,13 +230,13 @@ class TestBuildingCosts(unittest.TestCase):
         menu.selected_building_class = MatingHut
         menu.visible = True
         player = Player(0, 0, radius=20)
-        player.inventory.add('wood', 100)
+        player.inventory.add(ITEM_WOOD, 100)
         player.inventory.add('stone', 100)
-        start_wood = player.inventory.get_item_count('wood')
+        start_wood = player.inventory.get_item_count(ITEM_WOOD)
         start_stone = player.inventory.get_item_count('stone')
         success = menu.attempt_placement(player, world, grid, 4, 4)
         self.assertTrue(success)
-        self.assertEqual(player.inventory.get_item_count('wood'), start_wood - 15)
+        self.assertEqual(player.inventory.get_item_count(ITEM_WOOD), start_wood - 15)
         self.assertEqual(player.inventory.get_item_count('stone'), start_stone - 10)
 
 

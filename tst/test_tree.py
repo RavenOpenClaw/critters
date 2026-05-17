@@ -5,6 +5,7 @@ import pytest
 from hypothesis import given, strategies as st
 from tree import Tree
 from inventory import Inventory
+from constants import ITEM_WOOD
 
 class TestTreeInstantiation:
     """Unit tests for Tree construction."""
@@ -15,14 +16,14 @@ class TestTreeInstantiation:
         assert tree.cell_size == 1.0
         assert tree.width == 1 # Refactored to 1x1
         assert tree.height == 1
-        assert tree.inventory.get_item_count('wood') == 10
+        assert tree.inventory.get_item_count(ITEM_WOOD) == 10
         assert tree.max_food == 10
         assert tree.respawn_duration == 20.0
         assert not tree.depleted
 
     def test_tree_default_values(self):
         tree = Tree(0, 0, cell_size=1.0)
-        assert tree.inventory.get_item_count('wood') == 10
+        assert tree.inventory.get_item_count(ITEM_WOOD) == 10
         assert tree.respawn_duration == 30.0
 
     def test_tree_position_to_world_coords(self):
@@ -47,7 +48,7 @@ class TestTreeRegeneration:
 
         # Initially not depleted
         assert not tree.depleted
-        assert tree.inventory.get_item_count('wood') == initial_wood
+        assert tree.inventory.get_item_count(ITEM_WOOD) == initial_wood
 
         # Deplete the tree completely via interact (so depleted flag is set)
         # Create a mock player with large multiplier to finish it in one interact call if needed
@@ -59,13 +60,13 @@ class TestTreeRegeneration:
         tree.interact(player)
         
         assert tree.depleted
-        assert tree.inventory.get_item_count('wood') == 0
+        assert tree.inventory.get_item_count(ITEM_WOOD) == 0
 
         # Simulate time passing enough to exceed respawn duration
         tree.update(respawn_duration + 0.001)
         # After respawn, tree should no longer be depleted and wood replenished to max_food
         assert not tree.depleted
-        assert tree.inventory.get_item_count('wood') == initial_wood
+        assert tree.inventory.get_item_count(ITEM_WOOD) == initial_wood
 
 class TestTreeInteraction:
     """Unit tests for tree interaction."""
@@ -80,8 +81,8 @@ class TestTreeInteraction:
         player = MockPlayer()
         tree.interact(player)
         # Should take some amount; with multiplier 1, takes at least 1
-        assert tree.inventory.get_item_count('wood') < 5
-        assert player.inventory.has('wood', 1)
+        assert tree.inventory.get_item_count(ITEM_WOOD) < 5
+        assert player.inventory.has(ITEM_WOOD, 1)
 
     def test_tree_interact_respects_gather_multiplier(self):
         tree = Tree(0, 0, cell_size=1.0, wood=10)
@@ -93,8 +94,8 @@ class TestTreeInteraction:
         player = MockPlayer()
         # Interact once: should take 3
         tree.interact(player)
-        assert tree.inventory.get_item_count('wood') == 7
-        assert player.inventory.get_item_count('wood') == 3
+        assert tree.inventory.get_item_count(ITEM_WOOD) == 7
+        assert player.inventory.get_item_count(ITEM_WOOD) == 3
 
     def test_tree_get_interaction_text(self):
         tree = Tree(0, 0, cell_size=1.0)

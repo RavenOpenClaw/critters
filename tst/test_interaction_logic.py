@@ -14,6 +14,7 @@ from tree import Tree
 from world import World
 from grid_system import GridSystem
 from utils import get_distance_to_boundary
+from constants import ITEM_FOOD
 
 class TestInteractionLogic(unittest.TestCase):
     def setUp(self):
@@ -62,11 +63,11 @@ class TestInteractionLogic(unittest.TestCase):
         # Hold key for 1 second
         self.player.update_interaction(1.0, self.world, True)
         self.assertAlmostEqual(self.player.interaction_progress, 0.5)
-        self.assertEqual(self.player.inventory.get_item_count('food'), 0)
+        self.assertEqual(self.player.inventory.get_item_count(ITEM_FOOD), 0)
         
         # Hold for another 1.1 seconds (triggers)
         self.player.update_interaction(1.1, self.world, True)
-        self.assertEqual(self.player.inventory.get_item_count('food'), 1)
+        self.assertEqual(self.player.inventory.get_item_count(ITEM_FOOD), 1)
         # Progress resets to 0.1 because 0.5 + 0.55 = 1.05 -> triggers, then 0.05 left?
         # My implementation resets to 0.0 if still targetable. 
         # Actually it resets to 0.0, then continues. Let's check implementation.

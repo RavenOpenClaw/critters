@@ -4,6 +4,7 @@ Tests for Stick world object (Task 33.3).
 import pytest
 from stick import Stick
 from inventory import Inventory
+from constants import ITEM_WOOD
 
 class TestStickInstantiation:
     def test_stick_creates_with_valid_parameters(self):
@@ -12,11 +13,11 @@ class TestStickInstantiation:
         assert stick.gy == 1
         assert stick.width == 1
         assert stick.height == 1
-        assert stick.inventory.get_item_count('wood') == 4
+        assert stick.inventory.get_item_count(ITEM_WOOD) == 4
 
     def test_stick_default_stick_count(self):
         stick = Stick(0, 0, cell_size=1.0)
-        assert stick.inventory.get_item_count('wood') == 2
+        assert stick.inventory.get_item_count(ITEM_WOOD) == 2
 
     def test_stick_position_conversion(self):
         stick = Stick(3, 3, cell_size=32)
@@ -36,8 +37,8 @@ class TestStickInteraction:
                 return 1.0
         player = MockPlayer()
         stick.interact(player)
-        assert stick.inventory.get_item_count('wood') < 5
-        assert player.inventory.has('wood', 1)
+        assert stick.inventory.get_item_count(ITEM_WOOD) < 5
+        assert player.inventory.has(ITEM_WOOD, 1)
 
     def test_stick_get_interaction_text(self):
         stick = Stick(0, 0, cell_size=1.0)

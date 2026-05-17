@@ -18,7 +18,7 @@ from berry_bush import BerryBush
 from pathfinding import PathfindingSystem
 from buff import Buff
 from entity import Player
-from constants import MESSAGE_FOLLOW_START, MESSAGE_FOLLOW_STOP
+from constants import MESSAGE_FOLLOW_START, MESSAGE_FOLLOW_STOP, ITEM_FOOD
 
 # Feature: critters-game-prototype
 
@@ -620,10 +620,10 @@ class TestCritterFollow:
         # First harvest from bush1
         # Instead of calling _harvest_target which immediately seeks a new one,
         # we harvest manually so we can control the timing of the 'depleted' flag.
-        bush1.inventory.remove("food", 1)
+        bush1.inventory.remove(ITEM_FOOD, 1)
         bush1.update(0.1)
         assert bush1.depleted is True
-        critter.inventory.add("food", 1)
+        critter.inventory.add(ITEM_FOOD, 1)
 
         # Trigger update to select new target
         class DummyPF:

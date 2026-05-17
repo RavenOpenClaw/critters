@@ -7,14 +7,14 @@ from gathering_hut import GatheringHut
 from world import World
 from grid_system import GridSystem
 from critter import Critter
-from constants import PROMPT_GATHER, MSG_ASSIGN_GATHERING, PROMPT_WITHDRAW
+from constants import PROMPT_GATHER, MSG_ASSIGN_GATHERING, PROMPT_WITHDRAW, ITEM_FOOD, ITEM_WOOD
 
 
 def test_hud_shows_player_inventory():
     """Test that HUD displays player inventory correctly."""
     player = Player(0, 0)
-    player.inventory.add("food", 5)
-    player.inventory.add("wood", 2)
+    player.inventory.add(ITEM_FOOD, 5)
+    player.inventory.add(ITEM_WOOD, 2)
 
     mock_font = Mock()
     def mock_render(text, antialias, fg_color, bg=None):
@@ -37,16 +37,16 @@ def test_gathering_hut_withdraw_interaction():
     grid = GridSystem(cell_size=32, width=25, height=19)
     world = World(grid)
     hut = GatheringHut(0, 0, 32)
-    hut.storage.add("food", 10)
+    hut.storage.add(ITEM_FOOD, 10)
     world.add_object(hut)
 
     player = Player(60, 60)  # within interaction radius
-    player.inventory.add("wood", 5)
+    player.inventory.add(ITEM_WOOD, 5)
 
     player.interact(world)
 
-    assert player.inventory.get_item_count("food") == 10
-    assert player.inventory.get_item_count("wood") == 5
+    assert player.inventory.get_item_count(ITEM_FOOD) == 10
+    assert player.inventory.get_item_count(ITEM_WOOD) == 5
     assert hut.storage.items == {}
 
 
@@ -56,7 +56,7 @@ def test_gathering_hut_interaction_prompt():
     assert empty_hut.get_interaction_text() is None
 
     full_hut = GatheringHut(0, 0, 32)
-    full_hut.storage.add("food", 3)
+    full_hut.storage.add(ITEM_FOOD, 3)
     assert full_hut.get_interaction_text() == PROMPT_WITHDRAW
 
 
@@ -66,16 +66,16 @@ def test_gathering_hut_interaction_at_edge():
     grid = GridSystem(cell_size=32, width=25, height=19)
     world = World(grid)
     hut = GatheringHut(0, 0, 32)  # rectangle: (0,0) to (96,96)
-    hut.storage.add("food", 10)
+    hut.storage.add(ITEM_FOOD, 10)
     world.add_object(hut)
 
     # Player at (130, 48): center distance ~82 > 45, but circle overlaps right edge (96) because leftmost point = 85.
     player = Player(130, 48)
-    player.inventory.add("wood", 5)
+    player.inventory.add(ITEM_WOOD, 5)
 
     player.interact(world)
 
-    assert player.inventory.get_item_count("food") == 10
+    assert player.inventory.get_item_count(ITEM_FOOD) == 10
     assert hut.storage.items == {}
 
 
@@ -84,17 +84,17 @@ def test_gathering_hut_no_interaction_when_far():
     grid = GridSystem(cell_size=32, width=25, height=19)
     world = World(grid)
     hut = GatheringHut(0, 0, 32)
-    hut.storage.add("food", 10)
+    hut.storage.add(ITEM_FOOD, 10)
     world.add_object(hut)
 
     # Player at x=200, far enough that circle (radius 45) does not reach hut (right edge 96)
     player = Player(200, 48)
-    player.inventory.add("wood", 5)
+    player.inventory.add(ITEM_WOOD, 5)
 
     player.interact(world)
 
-    assert player.inventory.get_item_count("food") == 0
-    assert hut.storage.get_item_count("food") == 10
+    assert player.inventory.get_item_count(ITEM_FOOD) == 0
+    assert hut.storage.get_item_count(ITEM_FOOD) == 10
 
 
 class TestGatheringHutAssignmentViaInteract(unittest.TestCase):

@@ -7,6 +7,7 @@ from entity import Player
 from world import World
 from map_data import MapData
 from berry_bush import BerryBush
+from constants import ITEM_FOOD
 
 class TestMultiMap(unittest.TestCase):
     def setUp(self):
@@ -46,9 +47,9 @@ class TestMultiMap(unittest.TestCase):
         bush_a = BerryBush(5, 5, cell_size=32, berries=5)
         self.world.add_object(bush_a)
         # Deplete it partially
-        self.assertEqual(bush_a.inventory.get_item_count('food'), 5)
-        bush_a.inventory.remove('food', 3)
-        self.assertEqual(bush_a.inventory.get_item_count('food'), 2)
+        self.assertEqual(bush_a.inventory.get_item_count(ITEM_FOOD), 5)
+        bush_a.inventory.remove(ITEM_FOOD, 3)
+        self.assertEqual(bush_a.inventory.get_item_count(ITEM_FOOD), 2)
         # Transition to map_b (by placing player off east edge)
         self.player.x = self.world.current_map.cell_size * self.world.current_map.width
         self.player.y = self.world.current_map.cell_size * 5
@@ -60,7 +61,7 @@ class TestMultiMap(unittest.TestCase):
         self.world.handle_map_transition(self.player)
         self.assertEqual(self.world.current_map.name, 'map_a')
         # The bush on map_a should still have 2 food
-        self.assertEqual(bush_a.inventory.get_item_count('food'), 2)
+        self.assertEqual(bush_a.inventory.get_item_count(ITEM_FOOD), 2)
 
     def test_transition_only_with_neighbor(self):
         """Transition does not occur if no neighbor in that direction."""

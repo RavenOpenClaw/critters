@@ -8,6 +8,7 @@ from stick import Stick
 from rock import Rock
 from berry_bush import BerryBush
 from inventory import Inventory
+from constants import ITEM_WOOD, ITEM_STONE
 
 class MockPlayer:
     def __init__(self):
@@ -23,7 +24,7 @@ def test_stick_removed_when_depleted():
     world.add_object(stick)
     player = MockPlayer()
     stick.interact(player)  # takes 1, empties
-    assert stick.inventory.get_item_count('wood') == 0
+    assert stick.inventory.get_item_count(ITEM_WOOD) == 0
     assert stick in world.current_map.objects
     world.cleanup_depleted_resources()
     assert stick not in world.current_map.objects
@@ -51,7 +52,7 @@ def test_non_renewable_not_removed_if_not_empty():
     world.add_object(stick)
     player = MockPlayer()
     stick.interact(player)  # takes 1, leaves 2
-    assert stick.inventory.get_item_count('wood') == 2
+    assert stick.inventory.get_item_count(ITEM_WOOD) == 2
     world.cleanup_depleted_resources()
     assert stick in world.current_map.objects
 

@@ -12,7 +12,7 @@ from gathering_hut import GatheringHut
 from critter import Critter
 from chair import Chair
 from campfire import Campfire
-
+from constants import ITEM_FOOD, ITEM_WOOD, ITEM_STONE
 
 class DummyWorld:
     """A minimal world-like object for testing deconstruct removal."""
@@ -30,13 +30,13 @@ def test_deconstruct_refund_half_round_up():
     world = DummyWorld()
     player = Player(0, 0, radius=20, speed=200)
     # cost: food=10 -> 5, wood=5 -> 3, stone=1 -> 1
-    building = Building(0, 0, 1, 1, cell_size, cost={'food': 10, 'wood': 5, 'stone': 1})
+    building = Building(0, 0, 1, 1, cell_size, cost={ITEM_FOOD: 10, ITEM_WOOD: 5, 'stone': 1})
     world.objects.append(building)
 
     building.deconstruct(world, player)
 
-    assert player.inventory.items['food'] == 5
-    assert player.inventory.items['wood'] == 3
+    assert player.inventory.items[ITEM_FOOD] == 5
+    assert player.inventory.items[ITEM_WOOD] == 3
     assert player.inventory.items['stone'] == 1
     assert building not in world.objects
 
@@ -61,7 +61,7 @@ def test_deconstruct_removes_building_from_real_world():
     map_data = MapData(name="test", width=10, height=10, cell_size=cell_size)
     world = World(map_data)
     player = Player(100, 100, radius=20, speed=200)
-    building = Building(5, 5, 2, 2, cell_size, cost={'wood': 4})
+    building = Building(5, 5, 2, 2, cell_size, cost={ITEM_WOOD: 4})
     world.add_object(building)
     assert building in world.objects
 
@@ -69,7 +69,7 @@ def test_deconstruct_removes_building_from_real_world():
 
     assert building not in world.objects
     # Also ensure player received refund
-    assert player.inventory.items['wood'] == 2  # half of 4
+    assert player.inventory.items[ITEM_WOOD] == 2  # half of 4
 
 
 def test_deconstruct_unassigns_critters_on_hut():

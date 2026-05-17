@@ -6,6 +6,7 @@ Feature: critters-game-prototype, Property 22: Tree Regeneration After Depletion
 import pytest
 from hypothesis import given, strategies as st
 from berry_bush import BerryBush
+from constants import ITEM_FOOD
 
 class TestBerryBushRegeneration:
     """Property tests for berry bush regeneration after depletion."""
@@ -21,21 +22,21 @@ class TestBerryBushRegeneration:
 
         # Initially not depleted
         assert not bush.depleted
-        assert bush.inventory.get_item_count('food') == initial_food
+        assert bush.inventory.get_item_count(ITEM_FOOD) == initial_food
 
         # Deplete the bush completely
-        bush.inventory.remove('food', initial_food)
+        bush.inventory.remove(ITEM_FOOD, initial_food)
         # Trigger depletion detection via update (dt=0)
         bush.update(0.0)
         assert bush.depleted
         assert bush.time_depleted == 0.0
-        assert bush.inventory.get_item_count('food') == 0
+        assert bush.inventory.get_item_count(ITEM_FOOD) == 0
 
         # Simulate time passing enough to exceed respawn duration
         bush.update(respawn_duration + 0.001)
         # After respawn, bush should no longer be depleted and food replenished
         assert not bush.depleted
-        assert bush.inventory.get_item_count('food') == initial_food
+        assert bush.inventory.get_item_count(ITEM_FOOD) == initial_food
 
     @given(
         initial_food=st.integers(min_value=1, max_value=19),  # less than max_food (20)
@@ -51,13 +52,13 @@ class TestBerryBushRegeneration:
         bush.max_food = max_food
         # Remove enough food to reach the desired initial count
         to_remove = max_food - initial_food
-        bush.inventory.remove('food', to_remove)
-        assert bush.inventory.get_item_count('food') == initial_food
+        bush.inventory.remove(ITEM_FOOD, to_remove)
+        assert bush.inventory.get_item_count(ITEM_FOOD) == initial_food
         assert not bush.depleted  # Not depleted since count > 0
 
         # Simulate time passing longer than respawn_duration
         bush.update(respawn_duration + 0.01)
         # After regrowth, bush should have max food
-        assert bush.inventory.get_item_count('food') == max_food
+        assert bush.inventory.get_item_count(ITEM_FOOD) == max_food
         assert not bush.depleted
         assert bush.time_depleted == 0.0

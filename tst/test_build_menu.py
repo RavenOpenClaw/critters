@@ -14,11 +14,12 @@ from build_menu import BuildMenu
 from gathering_hut import GatheringHut
 from chair import Chair
 from campfire import Campfire
+from constants import ITEM_FOOD, ITEM_STONE, ITEM_WOOD
 
 class DummyPlayer:
     def __init__(self):
         self.inventory = MagicMock()
-        self.inventory.items = {"wood": 10, "stone": 10, "stick": 10, "food": 10}
+        self.inventory.items = {ITEM_WOOD: 10, ITEM_STONE: 10, ITEM_FOOD: 10}
 
 class DummyWorld:
     def __init__(self):

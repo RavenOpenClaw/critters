@@ -3,11 +3,11 @@ MatingHut: A 2x2 building where critters can be assigned for breeding.
 """
 from building import Building
 from critter import Critter, CritterState
-from constants import PROMPT_BREED, MSG_ASSIGN_MATING, MSG_BREED_NEED_TWO, MSG_BREED_NEED_FOOD, MSG_BREED_SUCCESS
+from constants import PROMPT_BREED, MSG_ASSIGN_MATING, MSG_BREED_NEED_TWO, MSG_BREED_NEED_FOOD, MSG_BREED_SUCCESS, ITEM_FOOD, ITEM_WOOD, ITEM_STONE
 
 class MatingHut(Building):
     """Mating Hut building (2x2) for critter building."""
-    cost = {"wood": 15, "stone": 10}  # class attribute for UI display
+    cost = {ITEM_WOOD: 15, ITEM_STONE: 10}  # class attribute for UI display
     BREED_FOOD_COST = 5  # food cost per breeding
 
     def __init__(self, gx, gy, cell_size):
@@ -75,12 +75,12 @@ class MatingHut(Building):
                 self.world.set_message(MSG_BREED_NEED_TWO, 2.0)
             return
 
-        if not player.inventory.has("food", self.BREED_FOOD_COST):
+        if not player.inventory.has(ITEM_FOOD, self.BREED_FOOD_COST):
             if hasattr(self, 'world') and self.world is not None:
                 self.world.set_message(MSG_BREED_NEED_FOOD.format(self.BREED_FOOD_COST), 2.0)
             return
 
-        player.inventory.remove("food", self.BREED_FOOD_COST)
+        player.inventory.remove(ITEM_FOOD, self.BREED_FOOD_COST)
         if not hasattr(self, 'world') or self.world is None:
             return
         offspring = self.breed(self.world)

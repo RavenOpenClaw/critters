@@ -9,7 +9,7 @@ from constants import MSG_ASSIGN_GATHERING, PROMPT_WITHDRAW, ITEM_WOOD, ITEM_SAP
 
 class LumberMill(Building):
     """Lumber Mill building (3x3) with storage and critter assignment for wood."""
-    cost = {"wood": 20} # Costs only wood
+    cost = {ITEM_WOOD: 20} # Costs only wood
 
     def __init__(self, gx, gy, cell_size):
         super().__init__(gx, gy, width=3, height=3, cell_size=cell_size, cost=self.cost)

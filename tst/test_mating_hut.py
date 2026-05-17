@@ -5,6 +5,7 @@ import unittest
 from hypothesis import given, strategies as st
 from mating_hut import MatingHut
 from critter import Critter
+from constants import ITEM_WOOD, ITEM_STONE
 
 class TestMatingHut(unittest.TestCase):
     def test_mating_hut_dimensions(self):
@@ -21,7 +22,7 @@ class TestMatingHut(unittest.TestCase):
     def test_mating_hut_cost_attribute(self):
         """MatingHut has correct building cost."""
         hut = MatingHut(0, 0, cell_size=1.0)
-        self.assertEqual(hut.cost, {"wood": 15, "stone": 10})
+        self.assertEqual(hut.cost, {ITEM_WOOD: 15, ITEM_STONE: 10})
 
 class TestMatingHutAssignment(unittest.TestCase):
     """Assignment behavior for MatingHut."""

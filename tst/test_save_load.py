@@ -21,6 +21,7 @@ from lumber_mill import LumberMill
 from sapling import Sapling
 from chair import Chair
 from campfire import Campfire
+from constants import ITEM_FOOD, ITEM_WOOD, ITEM_STONE
 
 def make_test_world():
     """Create a small world with a variety of entities for testing."""
@@ -31,7 +32,7 @@ def make_test_world():
     world = World(map_data)
     # Player with some inventory and buffs
     player = Player(100, 80, radius=20, speed=200)
-    player.inventory.items = {"food": 5}
+    player.inventory.items = {ITEM_FOOD: 5}
     # Buff: add a simple buff if Buff class is available; skip to avoid extra imports
     # Add various world objects
     bush = BerryBush(5, 5, cell_size=cell_size, berries=3)
@@ -166,7 +167,7 @@ def test_tree_serialization_roundtrip():
     assert len(trees) == 1
     t = trees[0]
     assert t.gx == 5 and t.gy == 5
-    assert t.inventory.get_item_count('wood') == 10
+    assert t.inventory.get_item_count(ITEM_WOOD) == 10
     assert t.max_food == 10
     assert t.respawn_duration == 20.0
     assert not t.depleted
@@ -175,7 +176,7 @@ def test_lumber_mill_serialization_roundtrip():
     cell_size = 32
     world = World(MapData("test", 10, 10, cell_size))
     mill = LumberMill(2, 2, cell_size)
-    mill.storage.add('wood', 50)
+    mill.storage.add(ITEM_WOOD, 50)
     world.add_object(mill)
     
     data = serialize_world(world)
@@ -184,7 +185,7 @@ def test_lumber_mill_serialization_roundtrip():
     assert len(mills) == 1
     m = mills[0]
     assert m.gx == 2 and m.gy == 2
-    assert m.storage.get_item_count('wood') == 50
+    assert m.storage.get_item_count(ITEM_WOOD) == 50
 
 def test_release_building_serialization_roundtrip():
     cell_size = 24
@@ -239,4 +240,4 @@ def test_stick_serialization_roundtrip():
     assert len(sticks) == 1
     s = sticks[0]
     assert s.gx == 2 and s.gy == 2
-    assert s.inventory.get_item_count('wood') == 3
+    assert s.inventory.get_item_count(ITEM_WOOD) == 3

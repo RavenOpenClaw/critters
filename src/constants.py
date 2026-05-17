@@ -51,6 +51,8 @@ MESSAGE_RELEASE_SUCCESS = "Critter released. Received {candy}."
 
 # --- Building Interaction Prompts ---
 PROMPT_GATHER = "Gather (E)"
+PROMPT_CHOP = "Chop (E)"
+PROMPT_MINE = "Mine (E)"
 PROMPT_WITHDRAW = "Withdraw (E)"
 PROMPT_DEPOSIT = "Deposit (F)"
 PROMPT_BREED = "Breed (E)"
@@ -58,14 +60,20 @@ PROMPT_REST = "Rest (E)"
 PROMPT_ASSIGN = "Assign critter (E)"
 PROMPT_DIRECT_ASSIGN = "Asign critter (Right-click)"
 
+# --- Item names ---
+ITEM_FOOD = "Food"
+ITEM_WOOD = "Wood"
+ITEM_STONE = "Stone"
+ITEM_SAPLING = "Sapling"
+
 # --- Building Costs ---
-BUILDING_GATHERING_HUT_COST = {"wood": 10, "stone": 5}
-BUILDING_MATING_HUT_COST = {"wood": 15, "stone": 10}
-BUILDING_RELEASE_ALTAR_COST = {"stone": 15}
-BUILDING_LUMBER_MILL_COST = {"wood": 20}
-BUILDING_FORESTER_HUT_COST = {"wood": 15, "stone": 5}
-BUILDING_CHAIR_COST = {"wood": 4}
-BUILDING_CAMPFIRE_COST = {"wood": 2, "stone": 2}
+BUILDING_GATHERING_HUT_COST = {ITEM_WOOD: 10, ITEM_STONE: 5}
+BUILDING_MATING_HUT_COST = {ITEM_WOOD: 15, ITEM_STONE: 10}
+BUILDING_RELEASE_ALTAR_COST = {ITEM_STONE: 15}
+BUILDING_LUMBER_MILL_COST = {ITEM_WOOD: 20}
+BUILDING_FORESTER_HUT_COST = {ITEM_WOOD: 15, ITEM_STONE: 5}
+BUILDING_CHAIR_COST = {ITEM_WOOD: 4}
+BUILDING_CAMPFIRE_COST = {ITEM_WOOD: 2, ITEM_STONE: 2}
 
 # --- Forestry Parameters ---
 PLANT_RADIUS = 10  # Max distance from Forester Hut for planting (in cells)
@@ -73,11 +81,6 @@ PLANT_RADIUS = 10  # Max distance from Forester Hut for planting (in cells)
 # --- Resource Respawn Durations ---
 BERRY_BUSH_RESPAWN_DURATION = 100.0
 TREE_RESPAWN_DURATION = 300.0  # Placeholder, trees are currently destroyed
-ITEM_FOOD = "Food"
-ITEM_WOOD = "Wood"
-ITEM_STONE = "Stone"
-ITEM_SAPLING = "Sapling"
-ITEM_STICK = "stick"
 
 # --- Building Labels ---
 BUILDING_GATHERING_HUT = "Gathering Hut"

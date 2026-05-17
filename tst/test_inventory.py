@@ -7,6 +7,7 @@ import unittest
 from hypothesis import given, strategies as st
 
 from inventory import Inventory
+from constants import ITEM_WOOD
 
 class TestInventory(unittest.TestCase):
     @given(item_name=st.text(min_size=1), quantity=st.integers(min_value=1, max_value=100))
@@ -66,13 +67,13 @@ class TestInventory(unittest.TestCase):
         """Test adding negative quantity raises ValueError."""
         inventory = Inventory()
         with self.assertRaises(ValueError):
-            inventory.add("wood", -5)
+            inventory.add(ITEM_WOOD, -5)
 
     def test_remove_negative_quantity_raises_error(self):
         """Test removing negative quantity raises ValueError."""
         inventory = Inventory()
         with self.assertRaises(ValueError):
-            inventory.remove("wood", -5)
+            inventory.remove(ITEM_WOOD, -5)
 
 if __name__ == '__main__':
     unittest.main()

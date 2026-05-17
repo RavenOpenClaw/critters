@@ -5,12 +5,12 @@ import pygame
 from world_object import WorldObject
 from inventory import Inventory
 
-from constants import BERRY_BUSH_RESPAWN_DURATION
+from constants import BERRY_BUSH_RESPAWN_DURATION, ITEM_FOOD
 
 class BerryBush(WorldObject):
     def __init__(self, gx, gy, cell_size, berries=5, respawn_duration=BERRY_BUSH_RESPAWN_DURATION):
         inventory = Inventory()
-        inventory.add('food', berries)
+        inventory.add(ITEM_FOOD, berries)
         super().__init__(gx, gy, width=1, height=1, cell_size=cell_size, inventory=inventory)
         self.max_food = berries
         self.respawn_duration = respawn_duration
@@ -19,17 +19,17 @@ class BerryBush(WorldObject):
 
     def update(self, dt):
         """Update regeneration timer and regrow food when not at max."""
-        current = self.inventory.get_item_count('food')
+        current = self.inventory.get_item_count(ITEM_FOOD)
         if current < self.max_food:
             self.time_depleted += dt
             if self.time_depleted >= self.respawn_duration:
                 # Replenish food to max
-                self.inventory.add('food', self.max_food - current)
+                self.inventory.add(ITEM_FOOD, self.max_food - current)
                 self.time_depleted = 0.0
         else:
             self.time_depleted = 0.0
         # Depleted flag indicates whether bush is empty (zero food)
-        self.depleted = (self.inventory.get_item_count('food') == 0)
+        self.depleted = (self.inventory.get_item_count(ITEM_FOOD) == 0)
 
     def render(self, screen, camera=None):
         # Draw a green square at the bush's grid-aligned position
@@ -46,7 +46,7 @@ class BerryBush(WorldObject):
         pygame.draw.rect(screen, (0, 200, 0), rect)  # Green
 
         # Draw berries as small red circles if present
-        food_count = self.inventory.get_item_count('food')
+        food_count = self.inventory.get_item_count(ITEM_FOOD)
         if food_count > 0:
             # Determine positions: up to 5 berries arranged in a small pattern within the cell
             cell_size = self.cell_size
@@ -65,14 +65,14 @@ class BerryBush(WorldObject):
 
     def interact(self, player):
         """Transfer berries from this bush to the player's inventory, affected by gather buffs."""
-        if self.inventory.has('food', 1):
+        if self.inventory.has(ITEM_FOOD, 1):
             # Determine quantity based on player's gather multiplier
             mult = player.get_gather_multiplier()
             qty = max(1, int(round(mult)))
-            available = self.inventory.get_item_count('food')
+            available = self.inventory.get_item_count(ITEM_FOOD)
             taken = min(qty, available)
-            self.inventory.remove('food', taken)
-            player.inventory.add('food', taken)
+            self.inventory.remove(ITEM_FOOD, taken)
+            player.inventory.add(ITEM_FOOD, taken)
 
     def get_interaction_text(self):
         """Return prompt for interaction."""
