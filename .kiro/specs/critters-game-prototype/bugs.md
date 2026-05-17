@@ -571,69 +571,35 @@ Desired fix:
 
 ### [PLANT_RADIUS] Critter in PLANT state picks planting spots too far from the ForesterHut
 
-Status: OPEN
+Status: FIXED
 
-Expected: When a critter enters PLANT state, it should search for a valid planting spot within a reasonable radius of the ForesterHut — roughly 10 cells. Candidates should be weighted toward closer cells (so the critter prefers nearby spots) but still feel randomized, not patterned. The critter should wander and search, not beeline to a distant corner.
+Fix commit: (current session)
 
-Actual: The candidate search uses `self.assigned_hut.gathering_radius` (defined as `20.0 * cell_size` in `ForesterHut.__init__`), which is 20 cells. Combined with `random.randint(-radius, radius)` on both axes, the critter can pick spots up to ~28 cells away diagonally. In practice this means critters walk very far from the hut to plant.
-
-Root cause (`src/critter.py`, `_update_plant`):
-```python
-radius = int(self.assigned_hut.gathering_radius / self.cell_size)  # = 20
-gx = center_gx + random.randint(-radius, radius)
-gy = center_gy + random.randint(-radius, radius)
-```
-The `gathering_radius` is designed for resource *gathering* (finding trees/bushes), not for planting. Planting should use a separate, smaller radius — around 10 cells — and should prefer cells closer to the hut.
-
-Desired fix:
-- Use a dedicated planting radius constant (e.g., `PLANT_RADIUS = 10`) instead of `gathering_radius`.
-- Weight candidate selection toward closer cells: e.g., sample in expanding rings (radius 1, 2, 3 … 10) and pick randomly from the first ring that has valid candidates, or assign inverse-distance weights to candidates before `random.choice`.
-- This gives the "waddling around nearby" feel — the critter naturally gravitates close to the hut but still picks a random valid spot.
+Fix Details:
+- Introduced `PLANT_RADIUS = 10` in `src/constants.py`.
+- Implemented expanding ring search in `Critter._update_plant` to favor closer valid spots.
 
 ---
 
 ### [PLANT_REVALIDATE] Critter does not re-check planting validity on arrival; silently fails to plant
 
-Status: OPEN
+Status: FIXED
 
-Expected: When a critter in PLANT state arrives at its chosen `goal_cell`, it should re-verify that the cell is still a valid planting location (i.e., `Sapling.can_place_at(world, gx, gy)` returns True). If the spot is no longer valid (another sapling was planted there by a different critter, or an obstacle appeared), the critter should clear `goal_cell`, pick a new candidate, and try again — visibly wandering to find a better spot.
+Fix commit: (current session)
 
-Actual: The critter picks a `goal_cell` once, pathfinds there, and immediately starts the planting interaction timer regardless of whether the spot is still valid on arrival. If the spot became invalid in the meantime, `world.add_object(new_sapling)` is called anyway, potentially placing a sapling in an invalid location or causing a silent failure.
-
-Additionally, `Sapling.can_place_at` requires all 8 surrounding cells to be empty. The candidate search in `_update_plant` checks this at selection time, but by the time the critter arrives (which can take several seconds), another critter may have already planted in an adjacent cell, invalidating the spot.
-
-Root cause (`src/critter.py`, `_update_plant`, planting interaction block):
-```python
-if self.interaction_progress >= 1.0:
-    from sapling import Sapling
-    gx, gy = self.goal_cell
-    new_sapling = Sapling(gx, gy, self.cell_size)
-    world.add_object(new_sapling)   # no re-validation before this
-    self.inventory.remove(ITEM_SAPLING, 1)
-```
-
-Desired fix:
-- On arrival (when `self.path` becomes `None` and `self.gathering` is set to `True`), immediately call `Sapling.can_place_at(world, gx, gy)`.
-- If it returns `False`, clear `goal_cell` and `gathering`, and loop back to spot-selection on the next update tick (the critter will visibly wander to a new spot).
-- If it returns `True`, proceed with the interaction timer as normal.
-- Also re-check at the moment of planting (`interaction_progress >= 1.0`) as a final guard.
+Fix Details:
+- Added re-validation check upon arrival at `goal_cell` in `_update_plant`.
+- Added final re-validation check immediately before object creation and world addition.
+- Critter now clears `goal_cell` and searches again if the spot is invalidated.
 
 ---
 
 ### [PLANT_WORLD_ADD] Critters cannot place objects into the world (new capability needed)
 
-Status: OPEN
+Status: FIXED
 
-Expected: A critter in PLANT state should be able to call `world.add_object(sapling)` to place a new `Sapling` into the world, just as the player can when using the build menu.
+Fix commit: (current session)
 
-Actual: The code in `_update_plant` already calls `world.add_object(new_sapling)`, so the *call* is there. However, the feature has never worked end-to-end in practice. The likely issue is that `world.add_object` may require the object to be registered on the grid (occupying cells), and the grid's `is_occupied` check may not be updated correctly when a critter places an object — as opposed to the player's build flow which goes through `BuildMenu.attempt_placement` and handles grid registration explicitly.
-
-Specifically, `Sapling.can_place_at` checks `grid.is_occupied`, but `world.add_object` may not call `grid.mark_occupied` for the new sapling's cell. If the grid is not updated, subsequent `can_place_at` checks by other critters will not see the newly planted sapling as occupying that cell, leading to double-planting.
-
-Investigation needed:
-- Trace `world.add_object` → confirm it calls `grid.mark_occupied(gx, gy)` for the sapling.
-- Confirm `Sapling.__init__` sets `self.gx`, `self.gy`, `self.blocks_movement = True` correctly so the grid registration works.
-- Compare with the player's `BuildMenu.attempt_placement` path to find any steps that are skipped when a critter places an object.
-- If `world.add_object` does not register the object on the grid, add that call, or create a helper `world.place_object(obj)` that handles both adding to the object list and updating the grid.
-
-Note: This is genuinely new behavior — critters have never placed objects before. The planting interaction timer logic is correct in structure; the gap is likely in grid registration after placement.
+Fix Details:
+- Verified `world.add_object` correctly handles grid registration via `grid.register`.
+- Ensured `Critter._update_plant` checks the return value of `world.add_object` and correctly handles the removal of the sapling from inventory only upon successful placement.

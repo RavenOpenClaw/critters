@@ -67,6 +67,9 @@ BUILDING_FORESTER_HUT_COST = {"wood": 15, "stone": 5}
 BUILDING_CHAIR_COST = {"wood": 4}
 BUILDING_CAMPFIRE_COST = {"wood": 2, "stone": 2}
 
+# --- Forestry Parameters ---
+PLANT_RADIUS = 10  # Max distance from Forester Hut for planting (in cells)
+
 # --- Resource Respawn Durations ---
 BERRY_BUSH_RESPAWN_DURATION = 100.0
 TREE_RESPAWN_DURATION = 300.0  # Placeholder, trees are currently destroyed

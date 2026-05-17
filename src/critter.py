@@ -323,7 +323,10 @@ class Critter(Entity):
 
     def _update_plant(self, dt, world, pathfinding_system):
         """PLANT behavior: seek valid planting spot, move there, and plant."""
-        from constants import ITEM_SAPLING
+        from constants import ITEM_SAPLING, PLANT_RADIUS
+        from forester_hut import ForesterHut
+        from sapling import Sapling
+
         if self.inventory.get_item_count(ITEM_SAPLING) <= 0:
             self.start_return()
             return
@@ -333,34 +336,44 @@ class Critter(Entity):
         # 1. Seek spot if we don't have one and HAVE a sapling
         if self.inventory.get_item_count(ITEM_SAPLING) > 0:
             if self.goal_cell is None:
-                # Seek planting spot
-                from forester_hut import ForesterHut
                 if not isinstance(self.assigned_hut, ForesterHut):
                     self.start_rest()
                     return
                     
                 hut_cx, hut_cy = self.assigned_hut.get_center()
                 center_gx, center_gy = grid.world_to_grid(hut_cx, hut_cy)
-                radius = int(self.assigned_hut.gathering_radius / self.cell_size)
                 
-                # Look for random empty cells within radius
-                from sapling import Sapling
-                candidates = []
-                for _ in range(20): # Try 20 random spots
-                    gx = center_gx + random.randint(-radius, radius)
-                    gy = center_gy + random.randint(-radius, radius)
-                    if grid.is_within_bounds(gx, gy) and not grid.is_occupied(gx, gy):
-                        if Sapling.can_place_at(world, gx, gy):
-                            candidates.append((gx, gy))
+                # [PLANT_RADIUS] Ring-based search to favor closer cells
+                # Radius 1-10 cells
+                for r in range(1, PLANT_RADIUS + 1):
+                    ring_candidates = []
+                    # Sample points at exactly distance r (square ring)
+                    # Vertical edges
+                    for dy in range(-r, r + 1):
+                        for dx in [-r, r]:
+                            gx, gy = center_gx + dx, center_gy + dy
+                            if grid.is_within_bounds(gx, gy) and not grid.is_occupied(gx, gy):
+                                if Sapling.can_place_at(world, gx, gy):
+                                    ring_candidates.append((gx, gy))
+                    # Horizontal edges (excluding corners already added)
+                    for dx in range(-(r-1), r):
+                        for dy in [-r, r]:
+                            gx, gy = center_gx + dx, center_gy + dy
+                            if grid.is_within_bounds(gx, gy) and not grid.is_occupied(gx, gy):
+                                if Sapling.can_place_at(world, gx, gy):
+                                    ring_candidates.append((gx, gy))
+                    
+                    if ring_candidates:
+                        self.goal_cell = random.choice(ring_candidates)
+                        break
                 
-                if candidates:
-                    self.goal_cell = random.choice(candidates)
+                if self.goal_cell:
                     start_gx, start_gy = grid.world_to_grid(self.x, self.y)
                     self.is_calculating = True
                     self.path = pathfinding_system.find_path((start_gx, start_gy), self.goal_cell, grid)
                     self.path_index = 0
                 else:
-                    # No spots found, loiter for a bit
+                    # No spots found in any ring, rest for a bit
                     self.start_rest()
                     return
 
@@ -368,7 +381,13 @@ class Critter(Entity):
             if self.path:
                 self._follow_path(dt, world)
                 if self.path is None:
-                    # Arrived at planting spot
+                    # [PLANT_REVALIDATE] Arrived: re-verify spot is still valid
+                    gx, gy = self.goal_cell
+                    if grid.is_occupied(gx, gy) or not Sapling.can_place_at(world, gx, gy):
+                        # Spot invalidated while walking; pick a new one next tick
+                        self.goal_cell = None
+                        return
+                        
                     self.gathering = True # Use gathering flag for interaction phase
                     self.interaction_progress = 0.0
 
@@ -377,12 +396,16 @@ class Critter(Entity):
                 duration = 1.0 / self.get_interaction_speed_multiplier()
                 self.interaction_progress += dt / duration
                 if self.interaction_progress >= 1.0:
-                    # Logic to plant sapling
-                    from sapling import Sapling
+                    # [PLANT_REVALIDATE] Final check before adding to world
                     gx, gy = self.goal_cell
-                    new_sapling = Sapling(gx, gy, self.cell_size)
-                    world.add_object(new_sapling)
-                    self.inventory.remove(ITEM_SAPLING, 1)
+                    if not grid.is_occupied(gx, gy) and Sapling.can_place_at(world, gx, gy):
+                        # [PLANT_WORLD_ADD] Place object and ensure grid registration
+                        new_sapling = Sapling(gx, gy, self.cell_size)
+                        if world.add_object(new_sapling):
+                            self.inventory.remove(ITEM_SAPLING, 1)
+                        else:
+                            # Registration failed (unlikely due to check, but possible if world state changed)
+                            pass
                     
                     self.gathering = False
                     self.interaction_progress = 0.0
