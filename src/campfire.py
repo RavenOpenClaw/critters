@@ -3,11 +3,11 @@ Campfire: A building that provides a Strength buff (increased gathering) when in
 """
 from building import Building
 from buff import Buff
-from constants import BUFF_NAME_WARM, ITEM_WOOD, ITEM_STONE
+from constants import BUFF_NAME_WARM, ITEM_WOOD, ITEM_STONE, BUILDING_CAMPFIRE_COST
 
 class Campfire(Building):
     """Campfire building (2x2) that grants the Strength gather buff."""
-    cost = {ITEM_WOOD: 5, ITEM_STONE: 2}  # class attribute for UI display
+    cost = BUILDING_CAMPFIRE_COST  # class attribute for UI display
 
     def __init__(self, gx, gy, cell_size):
         super().__init__(gx, gy, width=2, height=2, cell_size=cell_size, cost=self.cost)

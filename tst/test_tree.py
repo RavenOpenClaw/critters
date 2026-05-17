@@ -5,7 +5,7 @@ import pytest
 from hypothesis import given, strategies as st
 from tree import Tree
 from inventory import Inventory
-from constants import ITEM_WOOD
+from constants import ITEM_WOOD, PROMPT_CHOP
 
 class TestTreeInstantiation:
     """Unit tests for Tree construction."""
@@ -99,4 +99,4 @@ class TestTreeInteraction:
 
     def test_tree_get_interaction_text(self):
         tree = Tree(0, 0, cell_size=1.0)
-        assert tree.get_interaction_text() == "Chop Wood: E"
+        assert tree.get_interaction_text() == PROMPT_CHOP

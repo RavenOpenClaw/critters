@@ -3,11 +3,11 @@ Chair: A building that provides a Rested buff (movement speed increase) when int
 """
 from building import Building
 from buff import Buff
-from constants import PROMPT_REST, BUFF_NAME_RESTED, ITEM_WOOD
+from constants import PROMPT_REST, BUFF_NAME_RESTED, ITEM_WOOD, BUILDING_CHAIR_COST
 
 class Chair(Building):
     """Chair building (1x1) that grants the Rested speed buff."""
-    cost = {ITEM_WOOD: 2}  # class attribute for UI display
+    cost = BUILDING_CHAIR_COST  # class attribute for UI display
 
     def __init__(self, gx, gy, cell_size):
         super().__init__(gx, gy, width=1, height=1, cell_size=cell_size, cost=self.cost)

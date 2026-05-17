@@ -4,7 +4,7 @@ Tests for Stick world object (Task 33.3).
 import pytest
 from stick import Stick
 from inventory import Inventory
-from constants import ITEM_WOOD
+from constants import ITEM_WOOD, PROMPT_GATHER
 
 class TestStickInstantiation:
     def test_stick_creates_with_valid_parameters(self):
@@ -42,4 +42,4 @@ class TestStickInteraction:
 
     def test_stick_get_interaction_text(self):
         stick = Stick(0, 0, cell_size=1.0)
-        assert stick.get_interaction_text() == "Pick up: E"
+        assert stick.get_interaction_text() == PROMPT_GATHER

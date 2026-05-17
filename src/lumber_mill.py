@@ -5,11 +5,11 @@ from building import Building
 from inventory import Inventory
 from entity import Player
 from tree import Tree
-from constants import MSG_ASSIGN_GATHERING, PROMPT_WITHDRAW, ITEM_WOOD, ITEM_SAPLING
+from constants import MSG_ASSIGN_GATHERING, PROMPT_WITHDRAW, ITEM_WOOD, ITEM_SAPLING, BUILDING_LUMBER_MILL_COST
 
 class LumberMill(Building):
     """Lumber Mill building (3x3) with storage and critter assignment for wood."""
-    cost = {ITEM_WOOD: 20} # Costs only wood
+    cost = BUILDING_LUMBER_MILL_COST # Costs only wood
 
     def __init__(self, gx, gy, cell_size):
         super().__init__(gx, gy, width=3, height=3, cell_size=cell_size, cost=self.cost)

@@ -4,14 +4,13 @@ ReleaseBuilding: A 2x2 building that formalizes critter-to-candy conversion.
 import pygame
 import random
 from building import Building
-from constants import ITEM_CANDY_STR, ITEM_CANDY_SPD, ITEM_CANDY_END, ITEM_WOOD, ITEM_STONE, MESSAGE_RELEASE_SUCCESS
+from constants import ITEM_CANDY_STR, ITEM_CANDY_SPD, ITEM_CANDY_END, ITEM_WOOD, ITEM_STONE, MESSAGE_RELEASE_SUCCESS, BUILDING_RELEASE_ALTAR_COST
 
 class ReleaseBuilding(Building):
     """A 2x2 altar where critters can be released for candies."""
+    cost = BUILDING_RELEASE_ALTAR_COST
     def __init__(self, gx, gy, cell_size):
-        # Cost: 10 wood, 10 stone (placeholder/standard for 2x2)
-        cost = {ITEM_WOOD: 10, ITEM_STONE: 10}
-        super().__init__(gx, gy, width=2, height=2, cell_size=cell_size, cost=cost)
+        super().__init__(gx, gy, width=2, height=2, cell_size=cell_size, cost=self.cost)
         self.assigned_critters = [] # Not really used for long-term, but standard for assignment
 
     def assign_critter(self, critter):

@@ -226,7 +226,7 @@ def test_rock_serialization_roundtrip():
     assert len(rocks) == 1
     r = rocks[0]
     assert r.gx == 3 and r.gy == 4
-    assert r.inventory.get_item_count('stone') == 5
+    assert r.inventory.get_item_count(ITEM_STONE) == 5
 
 def test_stick_serialization_roundtrip():
     cell_size = 32

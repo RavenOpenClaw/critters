@@ -636,8 +636,7 @@ class Critter(Entity):
         base_mult = 0.5 + effective_speed / 100.0
         gather_mult = self._get_gather_multiplier() # Buffs
         mult = base_mult * gather_mult
-        if mult <= 0:
-            return mult
+        return max(0.01, mult) # Ensure non-zero positive
     def _update_gather(self, dt, world, pathfinding_system):
         """GATHER behavior: find resource, pathfind to destination, gather over time, then RETURN."""
         # Acquire target if not set

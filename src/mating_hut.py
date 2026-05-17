@@ -3,11 +3,11 @@ MatingHut: A 2x2 building where critters can be assigned for breeding.
 """
 from building import Building
 from critter import Critter, CritterState
-from constants import PROMPT_BREED, MSG_ASSIGN_MATING, MSG_BREED_NEED_TWO, MSG_BREED_NEED_FOOD, MSG_BREED_SUCCESS, ITEM_FOOD, ITEM_WOOD, ITEM_STONE
+from constants import PROMPT_BREED, MSG_ASSIGN_MATING, MSG_BREED_NEED_TWO, MSG_BREED_NEED_FOOD, MSG_BREED_SUCCESS, ITEM_FOOD, ITEM_WOOD, ITEM_STONE, BUILDING_MATING_HUT_COST
 
 class MatingHut(Building):
     """Mating Hut building (2x2) for critter building."""
-    cost = {ITEM_WOOD: 15, ITEM_STONE: 10}  # class attribute for UI display
+    cost = BUILDING_MATING_HUT_COST  # class attribute for UI display
     BREED_FOOD_COST = 5  # food cost per breeding
 
     def __init__(self, gx, gy, cell_size):
