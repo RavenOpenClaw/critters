@@ -16,6 +16,7 @@ from constants import ITEM_SAPLING
 class TestForester:
     def setup_method(self):
         self.cell_size = 24
+        # Empty world
         self.m = MapData(name="main", width=20, height=20, cell_size=24)
         self.world = World(self.m)
         self.player = Player(100, 100)
@@ -42,26 +43,38 @@ class TestForester:
         assert hut.storage.get_item_count(ITEM_SAPLING) == 4
         
         # 4. Simulate planting
-        # Mock a valid spot within radius
-        # We need a pathfinding mock or a small world where a path is found
         from pathfinding import PathfindingSystem
         ps = PathfindingSystem()
         
-        # Force a goal cell and path
-        critter.goal_cell = (5, 5)
-        critter.path = [(5, 5)]
-        critter.gathering = True # Arrived
+        # Let AI find a spot
+        critter._update_plant(0.1, self.world, ps)
+        assert critter.goal_cell is not None
         
-        # Update to trigger planting
-        critter._update_plant(0.1, self.world, ps) # Progressing...
-        # Cheat to finish interaction
+        # Manually "Move" to the goal cell to satisfy path logic
+        critter.x = critter.goal_cell[0] * self.cell_size + self.cell_size/2
+        critter.y = critter.goal_cell[1] * self.cell_size + self.cell_size/2
+        
+        # Set path and prepare to finish it
+        critter.path = [critter.goal_cell]
+        critter.path_index = 0 
+        
+        # First call finishes the path and sets gathering=True
+        critter._update_plant(0.1, self.world, ps)
+        # Second call clears path if gathering is True (or first call cleared it)
+        # Actually _follow_path clears path when finished.
+        
+        # If path is still there, it's because we haven't checked for arrival yet
+        # _update_plant calls _follow_path, which sets self.path = None upon arrival.
+        assert critter.path is None
+        assert critter.gathering is True
+        
+        # Finish interaction
         critter.interaction_progress = 1.0
         critter._update_plant(0.1, self.world, ps)
         
         # 5. Verify sapling placed
         saplings = [obj for obj in self.world.objects if isinstance(obj, Sapling)]
         assert len(saplings) == 1
-        assert saplings[0].gx == 5 and saplings[0].gy == 5
         assert critter.inventory.get_item_count(ITEM_SAPLING) == 0
         assert critter.state == CritterState.RETURN # Going back for more
 

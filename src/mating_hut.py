@@ -33,7 +33,7 @@ class MatingHut(Building):
         if len(self.assigned_critters) >= 2:
             oldest = self.assigned_critters[0]
             self.unassign_critter(oldest)
-            oldest.start_idle() # Return to wandering
+            oldest.start_rest() # Return to wandering
 
         # Unassign from previous hut if needed
         if critter.assigned_hut is not None and critter.assigned_hut is not self:
@@ -163,7 +163,7 @@ class MatingHut(Building):
         # Create offspring Critter
         offspring = Critter(spawn_x, spawn_y, cell_size=self.cell_size,
                             strength=strength, speed_stat=speed_stat, endurance=endurance)
-        offspring.state = CritterState.IDLE
+        offspring.state = CritterState.REST
         offspring.assigned_hut = None # Start unassigned
 
         # Add to world

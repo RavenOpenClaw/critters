@@ -93,11 +93,7 @@ class GatheringHut(Building):
         return None
 
     def interact(self, player):
-        """Handle interaction: assign following critter or withdraw storage.
-
-        - If player has a following critter, assign it to this hut and clear following state.
-        - Otherwise, transfer all storage contents to player inventory.
-        """
+        """Handle interaction: assign following critter or withdraw storage."""
         if not isinstance(player, Player):
             return
 
@@ -111,10 +107,26 @@ class GatheringHut(Building):
                 self.world.set_message(MSG_ASSIGN_GATHERING, 3.0)
             return
 
-        # Withdraw mode: transfer all storage to player inventory
-        for item_name, count in list(self.storage.items.items()):
-            player.inventory.add(item_name, count)
-            del self.storage.items[item_name]
+        # Always Withdraw via interact (E)
+        if self.storage.items:
+            for item_name, count in list(self.storage.items.items()):
+                player.inventory.add(item_name, count)
+                del self.storage.items[item_name]
+            if hasattr(self, 'world') and self.world:
+                self.world.set_message("Withdrew all food.", 2.0)
+
+    def deposit(self, player):
+        """Explicit deposit logic via F key."""
+        from constants import ITEM_FOOD
+        p_qty = player.inventory.get_item_count(ITEM_FOOD)
+        if p_qty > 0:
+            player.inventory.remove(ITEM_FOOD, p_qty)
+            self.storage.add(ITEM_FOOD, p_qty)
+            if hasattr(self, 'world') and self.world:
+                self.world.set_message(f"Deposited {p_qty} food.", 2.0)
+        else:
+            if hasattr(self, 'world') and self.world:
+                self.world.set_message("No food to deposit.", 2.0)
 
     def can_gather(self):
         """GatheringHut supports resource gathering."""

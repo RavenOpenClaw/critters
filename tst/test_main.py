@@ -8,7 +8,7 @@ class TestMain(unittest.TestCase):
 
     def test_state_colors_defined(self):
         """Test that STATE_COLORS mapping includes all CritterStates."""
-        self.assertIn(CritterState.IDLE, STATE_COLORS)
+        self.assertIn(CritterState.REST, STATE_COLORS)
         self.assertIn(CritterState.GATHER, STATE_COLORS)
         self.assertIn(CritterState.RETURN, STATE_COLORS)
 

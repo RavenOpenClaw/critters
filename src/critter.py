@@ -8,7 +8,7 @@ from buff import Buff  # for apply_buff and buff handling
 
 class CritterState(Enum):
     """State machine states for critter AI."""
-    IDLE = auto()
+    REST = auto()
     GATHER = auto()
     PLANT = auto() # Planting saplings
     RETURN = auto()
@@ -28,7 +28,7 @@ class Critter(Entity):
             cell_size: Size of a grid cell in pixels (used to set radius: 0.4 * cell_size).
             strength: Resource gathering effectiveness (1-100).
             speed_stat: Movement speed stat (1-100).
-            endurance: Determines carry capacity and idle duration (1-100).
+            endurance: Determines carry capacity and rest duration (1-100).
         """
         radius = cell_size * 0.4
         super().__init__(x, y, radius)
@@ -36,7 +36,7 @@ class Critter(Entity):
         self.speed_stat = speed_stat
         self.endurance = endurance
         self.cell_size = cell_size
-        self.state = CritterState.IDLE
+        self.state = CritterState.REST
         self.assigned_hut = None
         self.target_resource = None
         from inventory import Inventory
@@ -48,7 +48,7 @@ class Critter(Entity):
         self.interaction_radius = cell_size * 1.5
         # Debug: flag for pathfinding activity (set during calls to find_path)
         self.is_calculating = False
-        # Loiter movement timer (for idle wandering)
+        # Loiter movement timer (for rest wandering)
         self.loiter_timer = 0.0
         # Follow state
         self.following_player = None
@@ -65,7 +65,7 @@ class Critter(Entity):
         self.goal_cell = None
         # Trample tracking: last cell where damage was applied
         self.last_trampled_cell = None
-        self.start_idle()
+        self.start_rest()
 
     def interact(self, player):
         """Toggle follow state when player interacts (E key). Provides feedback via player.world if available."""
@@ -162,23 +162,27 @@ class Critter(Entity):
         gather_mult = self._get_gather_multiplier()
         return base * gather_mult
 
-    def get_idle_duration(self):
+    def get_gather_multiplier(self):
+        """Public alias for compatibility with resource interaction logic."""
+        return self._get_gather_multiplier()
+
+    def get_rest_duration(self):
         """
-        Return base idle duration in seconds before transitioning to GATHER.
+        Return base rest duration in seconds before transitioning to GATHER.
         Scales linearly with endurance from 8 (endurance 1) to 12 (endurance 100).
         """
         # Map endurance [1,100] to [8,12]
         return 8.0 + (self.endurance - 1) * (4.0 / 99.0)
 
     # State machine methods
-    def start_idle(self):
-        """Enter IDLE state: reset idle timer, loiter movement, and clear path/gathering."""
-        self.state = CritterState.IDLE
-        base_duration = self.get_idle_duration()
+    def start_rest(self):
+        """Enter REST state: reset rest timer, loiter movement, and clear path/gathering."""
+        self.state = CritterState.REST
+        base_duration = self.get_rest_duration()
         # Add ±1 second random jitter to desynchronize critters
-        self.idle_timer = base_duration + random.uniform(-1.0, 1.0)
-        if self.idle_timer < 0.1:
-            self.idle_timer = 0.1
+        self.rest_timer = base_duration + random.uniform(-1.0, 1.0)
+        if self.rest_timer < 0.1:
+            self.rest_timer = 0.1
         self.path = None
         self.path_index = 0
         self.target_resource = None
@@ -205,7 +209,7 @@ class Critter(Entity):
     def start_breed(self):
         """Enter BREED state: loiter specifically around the Mating Hut."""
         self.state = CritterState.BREED
-        self.idle_timer = 0.0
+        self.rest_timer = 0.0
         self.path = None
         self.path_index = 0
         self.target_resource = None
@@ -257,12 +261,12 @@ class Critter(Entity):
         self.loiter_target = None
 
     def stop_follow(self):
-        """Cease following and return to IDLE."""
+        """Cease following and return to REST."""
         if self.state == CritterState.FOLLOW:
             if self.following_player:
                 if self in self.following_player.following_critters:
                     self.following_player.following_critters.remove(self)
-            self.state = CritterState.IDLE
+            self.state = CritterState.REST
             self.following_player = None
             self.follow_timer = 0.0
             self.follow_goal = None
@@ -290,10 +294,10 @@ class Critter(Entity):
         self.is_calculating = False
         # Update active buffs and remove expired ones
         self._update_buffs(dt)
-        if self.state == CritterState.IDLE:
+        if self.state == CritterState.REST:
             self.interaction_progress = 0.0
             self.active_target = None
-            self._update_idle(dt, world)
+            self._update_rest(dt, world)
         elif self.state == CritterState.GATHER:
             self._update_gather(dt, world, pathfinding_system)
         elif self.state == CritterState.RETURN:
@@ -326,83 +330,119 @@ class Critter(Entity):
 
         grid = world.grid
         
-        # 1. Seek spot if we don't have one
-        if self.goal_cell is None:
-            from forester_hut import ForesterHut
-            if not isinstance(self.assigned_hut, ForesterHut):
-                self.start_idle()
-                return
+        # 1. Seek spot if we don't have one and HAVE a sapling
+        if self.inventory.get_item_count(ITEM_SAPLING) > 0:
+            if self.goal_cell is None:
+                # Seek planting spot
+                from forester_hut import ForesterHut
+                if not isinstance(self.assigned_hut, ForesterHut):
+                    self.start_rest()
+                    return
+                    
+                hut_cx, hut_cy = self.assigned_hut.get_center()
+                center_gx, center_gy = grid.world_to_grid(hut_cx, hut_cy)
+                radius = int(self.assigned_hut.gathering_radius / self.cell_size)
                 
-            hut_cx, hut_cy = self.assigned_hut.get_center()
-            center_gx, center_gy = grid.world_to_grid(hut_cx, hut_cy)
-            radius = int(self.assigned_hut.gathering_radius / self.cell_size)
-            
-            # Look for random empty cells within radius
-            from sapling import Sapling
-            candidates = []
-            for _ in range(20): # Try 20 random spots
-                gx = center_gx + random.randint(-radius, radius)
-                gy = center_gy + random.randint(-radius, radius)
-                if grid.is_within_bounds(gx, gy) and not grid.is_occupied(gx, gy):
-                    if Sapling.can_place_at(world, gx, gy):
-                        candidates.append((gx, gy))
-            
-            if candidates:
-                self.goal_cell = random.choice(candidates)
-            else:
-                # No spots found, loiter for a bit
-                self.start_idle()
-                return
+                # Look for random empty cells within radius
+                from sapling import Sapling
+                candidates = []
+                for _ in range(20): # Try 20 random spots
+                    gx = center_gx + random.randint(-radius, radius)
+                    gy = center_gy + random.randint(-radius, radius)
+                    if grid.is_within_bounds(gx, gy) and not grid.is_occupied(gx, gy):
+                        if Sapling.can_place_at(world, gx, gy):
+                            candidates.append((gx, gy))
+                
+                if candidates:
+                    self.goal_cell = random.choice(candidates)
+                    start_gx, start_gy = grid.world_to_grid(self.x, self.y)
+                    self.is_calculating = True
+                    self.path = pathfinding_system.find_path((start_gx, start_gy), self.goal_cell, grid)
+                    self.path_index = 0
+                else:
+                    # No spots found, loiter for a bit
+                    self.start_rest()
+                    return
 
-        # 2. Pathfind to spot
-        if self.path is None:
-            start_gx, start_gy = grid.world_to_grid(self.x, self.y)
-            self.is_calculating = True
-            self.path = pathfinding_system.find_path((start_gx, start_gy), self.goal_cell, grid)
-            if self.path is None:
-                self.goal_cell = None
-                return
-            self.path_index = 0
+            # Follow path to planting spot
+            if self.path:
+                self._follow_path(dt, world)
+                if self.path is None:
+                    # Arrived at planting spot
+                    self.gathering = True # Use gathering flag for interaction phase
+                    self.interaction_progress = 0.0
 
-        # 3. Follow path
-        if self.path:
-            self._follow_path(dt, world)
-            # Check arrival
-            if self.path is None:
-                self.gathering = True # Use 'gathering' as generic interaction flag
-                self.interaction_progress = 0.0
-                # Snap to center
-                self.x = self.goal_cell[0] * self.cell_size + self.cell_size/2
-                self.y = self.goal_cell[1] * self.cell_size + self.cell_size/2
-
-        # 4. Interact (Planting)
-        if self.gathering:
-            # Re-verify spot is still empty (neighbor check)
-            from sapling import Sapling
-            if not Sapling.can_place_at(world, self.goal_cell[0], self.goal_cell[1]):
-                self.gathering = False
-                self.goal_cell = None
-                return
-
-            duration = 2.0 / self.get_interaction_speed_multiplier()
-            self.interaction_progress += dt / duration
-            
-            if self.interaction_progress >= 1.0:
-                # Actual planting
-                new_sapling = Sapling(self.goal_cell[0], self.goal_cell[1], self.cell_size)
-                if world.add_object(new_sapling):
+            # Planting Interaction
+            if self.gathering:
+                duration = 1.0 / self.get_interaction_speed_multiplier()
+                self.interaction_progress += dt / duration
+                if self.interaction_progress >= 1.0:
+                    # Logic to plant sapling
+                    from sapling import Sapling
+                    gx, gy = self.goal_cell
+                    new_sapling = Sapling(gx, gy, self.cell_size)
+                    world.add_object(new_sapling)
                     self.inventory.remove(ITEM_SAPLING, 1)
-                
-                self.gathering = False
-                self.interaction_progress = 0.0
-                self.goal_cell = None
-                self.path = None
-                
-                if self.inventory.get_item_count(ITEM_SAPLING) <= 0:
+                    
+                    self.gathering = False
+                    self.interaction_progress = 0.0
+                    self.goal_cell = None
+                    # Transition back to RETURN to check for more saplings in hut
                     self.start_return()
+        else:
+            # We are empty, we need to FETCH from a target (Hut or Mill)
+            if self.target_resource is None:
+                if isinstance(self.assigned_hut, ForesterHut):
+                    self.target_resource = self.assigned_hut.find_resource_in_radius(world, self)
+            
+            if self.target_resource is None:
+                self.start_rest()
+                return
 
-    def _update_idle(self, dt, world):
-        """IDLE behavior: loiter near hut with smooth movement, wait for idle duration, then transition to GATHER or PLANT."""
+            # Pathfind to FETCH target
+            if self.path is None:
+                start_gx, start_gy = grid.world_to_grid(self.x, self.y)
+                # Find free cell near target
+                tx, ty = self.target_resource.get_center()
+                tgx, tgy = grid.world_to_grid(tx, ty)
+                self.goal_cell = self._find_free_cell_near(grid, tgx, tgy)
+                if self.goal_cell:
+                    self.is_calculating = True
+                    self.path = pathfinding_system.find_path((start_gx, start_gy), self.goal_cell, grid)
+                if self.path is None:
+                    self.goal_cell = None
+                    self.target_resource = None
+                    return
+                self.path_index = 0
+
+            # Follow path to FETCH target
+            if self.path:
+                self._follow_path(dt, world)
+                if self.path is None:
+                    self.gathering = True # Trigger interaction
+            
+            # Interaction (Fetching)
+            if self.gathering:
+                # Use same interaction logic as gathering but for fetching
+                duration = 1.0 / self.get_interaction_speed_multiplier()
+                self.interaction_progress += dt / duration
+                if self.interaction_progress >= 1.0:
+                    # Logic to take sapling from target storage
+                    source_inv = getattr(self.target_resource, 'storage', None)
+                    if source_inv is None: source_inv = getattr(self.target_resource, 'inventory', None)
+                    
+                    if source_inv and source_inv.get_item_count(ITEM_SAPLING) > 0:
+                        source_inv.remove(ITEM_SAPLING, 1)
+                        self.inventory.add(ITEM_SAPLING, 1)
+                    
+                    self.gathering = False
+                    self.interaction_progress = 0.0
+                    self.target_resource = None
+                    self.goal_cell = None
+                    # Next update will seek a planting spot because we now have a sapling
+
+    def _update_rest(self, dt, world):
+        """REST behavior: loiter near hut with smooth movement, wait for rest duration, then transition to GATHER or PLANT."""
         # If we have a loiter_target, move towards it smoothly
         if self.loiter_target is not None:
             tx, ty = self.loiter_target
@@ -434,9 +474,9 @@ class Critter(Entity):
                 # Reset timer regardless to stagger attempts; if no target, we'll try again later
                 self.loiter_timer = random.uniform(3.0, 5.0)
 
-        # Idle timer counts down to transition
-        self.idle_timer -= dt
-        if self.idle_timer <= 0:
+        # Rest timer counts down to transition
+        self.rest_timer -= dt
+        if self.rest_timer <= 0:
             from forester_hut import ForesterHut
             from obstacle import Obstacle
             from constants import ITEM_SAPLING
@@ -456,7 +496,7 @@ class Critter(Entity):
                         else:
                             self.start_return() 
                     else:
-                        self.idle_timer = random.uniform(5.0, 10.0)
+                        self.rest_timer = random.uniform(5.0, 10.0)
             
             # Gathering Priority
             elif self.assigned_hut and isinstance(self.assigned_hut, Obstacle):
@@ -464,17 +504,17 @@ class Critter(Entity):
             elif self.assigned_hut and self.assigned_hut.can_gather():
                 self.start_gather(None)
             else:
-                # No valid gathering; remain idle with extended timer to avoid constant re-evaluation
-                self.idle_timer = random.uniform(10.0, 20.0)
+                # No valid gathering; remain in REST with extended timer to avoid constant re-evaluation
+                self.rest_timer = random.uniform(10.0, 20.0)
 
     def _update_breed(self, dt, world):
         """BREED behavior: loiter specifically near the assigned Mating Hut."""
         from mating_hut import MatingHut
         if not self.assigned_hut or not isinstance(self.assigned_hut, MatingHut):
-            self.start_idle()
+            self.start_rest()
             return
 
-        # Smooth loiter movement (same logic as IDLE but tighter radius)
+        # Smooth loiter movement (same logic as REST but tighter radius)
         if self.loiter_target is not None:
             tx, ty = self.loiter_target
             dx = tx - self.x
@@ -565,7 +605,7 @@ class Critter(Entity):
         if self.state in (CritterState.GATHER, CritterState.RETURN):
             # Action: left/right wobble (1-pixel shift)
             return (-1, 0) if self.animation_frame == 0 else (1, 0)
-        else:  # IDLE, BREED, FOLLOW
+        else:  # REST, BREED, FOLLOW
             # Subtle hop
             return (0, -2) if self.animation_frame == 1 else (0, 0)
 
@@ -632,7 +672,7 @@ class Critter(Entity):
         if self.target_resource is None and self.assigned_hut is not None:
             self.target_resource = self.assigned_hut.find_resource_in_radius(world, self)
         if self.target_resource is None:
-            self.start_idle()
+            self.start_rest()
             return
 
         # If not currently gathering, ensure we have a path to the goal cell
@@ -651,7 +691,7 @@ class Critter(Entity):
                 if not candidates:
                     goal_cell = self._find_free_cell_within_radius(grid, target_gx, target_gy, self.target_resource, max_radius=5)
                     if goal_cell is None:
-                        self.start_idle()
+                        self.start_rest()
                         return
                 else:
                     goal_cell = random.choice(candidates)
@@ -662,7 +702,7 @@ class Critter(Entity):
                 self.path_index = 0
                 self.goal_cell = goal_cell
                 if self.path is None or not self.path:
-                    self.start_idle()
+                    self.start_rest()
                     return
 
             # Follow the path if we have one and not yet gathering
@@ -720,7 +760,7 @@ class Critter(Entity):
     def _update_return(self, dt, world, pathfinding_system):
         """RETURN behavior: pathfind back to hut and deposit when adjacent."""
         if self.assigned_hut is None:
-            self.start_idle()
+            self.start_rest()
             return
 
         grid = world.grid
@@ -756,7 +796,7 @@ class Critter(Entity):
         # If we don't have a path yet and we have a pathfinding system, compute it
         if not hasattr(self, 'path') or not self.path:
             if pathfinding_system is None:
-                self.start_idle()
+                self.start_rest()
                 return
             # Target: a free cell adjacent to the hut (including diagonals) to allow immediate deposit
             hut_cells = self.assigned_hut.get_occupied_cells()
@@ -767,7 +807,7 @@ class Critter(Entity):
                     if grid.is_within_bounds(cx, cy) and not grid.is_occupied(cx, cy):
                         adjacent_cells.add((cx, cy))
             if not adjacent_cells:
-                self.start_idle()
+                self.start_rest()
                 return
             goal_cell = random.choice(list(adjacent_cells))
             start_gx, start_gy = critter_gx, critter_gy
@@ -775,7 +815,7 @@ class Critter(Entity):
             self.path = pathfinding_system.find_path((start_gx, start_gy), goal_cell, world.grid)
             self.path_index = 0
             if self.path is None:
-                self.start_idle()
+                self.start_rest()
                 return
 
         # Follow the path
@@ -784,7 +824,7 @@ class Critter(Entity):
     def _update_follow(self, dt, world, pathfinding_system):
         """FOLLOW behavior: stay near the player using pathfinding."""
         if self.following_player is None:
-            self.start_idle()
+            self.start_rest()
             return
         player = self.following_player
         self.follow_timer -= dt
@@ -819,7 +859,7 @@ class Critter(Entity):
 
 
     def _perform_loiter_move(self, world):
-        """Pick a nearby free cell (1-2 steps) and set loiter_target to its center; movement happens in _update_idle."""
+        """Pick a nearby free cell (1-2 steps) and set loiter_target to its center; movement happens in _update_rest."""
         if self.assigned_hut is None:
             return
         grid = world.grid
@@ -839,7 +879,7 @@ class Critter(Entity):
         # else: no valid target; loiter_target stays None; timer will retry later
 
     def _deposit_at_hut(self):
-        """Deposit held resources at the assigned hut and transition to IDLE, BREED, or FETCH."""
+        """Deposit held resources at the assigned hut and transition to REST, BREED, or FETCH."""
         from constants import ITEM_SAPLING
         from forester_hut import ForesterHut
         
@@ -866,11 +906,11 @@ class Critter(Entity):
                 self.inventory.add(ITEM_SAPLING, 1)
                 self.start_plant()
             else:
-                self.start_idle()
+                self.start_rest()
         elif isinstance(self.assigned_hut, MatingHut):
             self.start_breed()
         else:
-            self.start_idle()
+            self.start_rest()
 
     def _is_adjacent_to_hut(self, critter_gx, critter_gy):
         """Check if the critter is adjacent (including diagonally) to any cell occupied by the assigned hut."""
@@ -975,47 +1015,39 @@ class Critter(Entity):
         return random.choice(candidates)
 
     def _harvest_target(self, world):
-        """Harvest one resource from current target or apply work to obstacle."""
+        """Harvest resources from current target or apply work to obstacle."""
         target = self.target_resource
         from obstacle import Obstacle
-        if isinstance(target, Obstacle):
-            target.interact(self) # Applies work based on strength
-            if target.work_units <= 0:
-                self.target_resource = None
-                self.start_idle()
-            else:
-                # After one "cycle" of work, take a break (transition to IDLE)
-                # This prevents critters from clearing huge obstacles instantly
-                # and allows others to join/check requirements.
-                self.start_idle()
-            return
 
+        # Prefer using the target's interact method (handles Trees, Bushes, Rocks, Obstacles)
+        if hasattr(target, 'interact'):
+            target.interact(self)
+
+            # 1. Check if target was removed (e.g., Tree chopped down)
+            if target not in world.objects:
+                self.target_resource = None
+                self._continue_gathering_or_return(world)
+                return
+
+            # 2. Obstacle specific post-interaction logic
+            if isinstance(target, Obstacle):
+                if target.work_units <= 0:
+                    self.target_resource = None
+                self.start_rest()
+                return
+
+        # Fallback for objects without interact or for direct inventory check
         if not (hasattr(target, 'inventory') and target.inventory.items):
             self.target_resource = None
             self._continue_gathering_or_return(world)
             return
 
-        resource_type = next(iter(target.inventory.items))
-        
-        # Only harvest if we haven't reached capacity for THIS resource type and target has at least one
-        held_count = self.inventory.get_item_count(resource_type)
-        if held_count < self.carry_capacity and target.inventory.has(resource_type, 1):
-            target.inventory.remove(resource_type, 1)
-            self.inventory.add(resource_type, 1)
-            held_count += 1
-
-        # Check exit conditions: capacity for this resource reached OR target depleted
-        if held_count >= self.carry_capacity:
+        # Check exit conditions: total capacity reached
+        if self.inventory.get_total_quantity() >= self.carry_capacity:
             self.start_return()
             return
 
-        if not target.inventory.has(resource_type, 1):
-            self.target_resource = None
-            self._continue_gathering_or_return(world)
-            return
-
         # Otherwise, continue gathering (stay in GATHER, will harvest again next frame)
-
     def _continue_gathering_or_return(self, world):
         """After a resource is depleted, either find a new target if not full, or return to hut."""
         if self.inventory.get_total_quantity() < self.carry_capacity and self.assigned_hut is not None:
@@ -1036,7 +1068,7 @@ class Critter(Entity):
         if self.state in (CritterState.GATHER, CritterState.RETURN):
             # Action: left/right wobble (1-pixel shift)
             return (-1, 0) if self.animation_frame == 0 else (1, 0)
-        else:  # IDLE (and any others)
+        else:  # REST (and any others)
             return (0, -2) if self.animation_frame == 1 else (0, 0)
 
 

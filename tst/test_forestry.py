@@ -91,7 +91,7 @@ class TestForestry:
         # 3. Simulate AI cycle
         # Force critter to arrived at mill
         critter.x, critter.y = mill.get_center()
-        self.world.update(0.1) # Transition to IDLE/GATHER
+        self.world.update(0.1) # Transition to REST/GATHER
         
         # Find target
         target = mill.find_resource_in_radius(self.world, critter)

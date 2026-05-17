@@ -152,7 +152,7 @@ def _serialize_critter(critter: Critter) -> Dict[str, Any]:
         "inventory": _serialize_inventory(critter.inventory),
         "loiter_timer": critter.loiter_timer,
         "loiter_target": loiter_target,
-        "idle_timer": critter.idle_timer,
+        "rest_timer": critter.rest_timer,
         "path": path,
         "path_index": path_index,
         # Follow state
@@ -171,12 +171,16 @@ def _deserialize_critter(data: Dict[str, Any]) -> Critter:
         speed_stat=data["speed_stat"],
         endurance=data["endurance"],
     )
-    critter.state = CritterState[data["state"]]
+    # Migrate legacy state names from before the IDLE→REST rename
+    _STATE_MIGRATIONS = {"IDLE": "REST"}
+    state_name = data["state"]
+    state_name = _STATE_MIGRATIONS.get(state_name, state_name)
+    critter.state = CritterState[state_name]
     critter.is_well_fed = data["is_well_fed"]
     critter.loiter_timer = data["loiter_timer"]
     lt = data["loiter_target"]
     critter.loiter_target = tuple(lt) if lt is not None else None
-    critter.idle_timer = data["idle_timer"]
+    critter.rest_timer = data.get("rest_timer", data.get("idle_timer", 0.0))
     critter.path = [tuple(p) for p in data.get("path", [])]
     critter.path_index = data.get("path_index", 0)
     

@@ -52,6 +52,7 @@ MESSAGE_RELEASE_SUCCESS = "Critter released. Received {candy}."
 # --- Building Interaction Prompts ---
 PROMPT_GATHER = "Press E to collect resources"
 PROMPT_WITHDRAW = "Withdraw (E)"
+PROMPT_DEPOSIT = "Deposit (F)"
 PROMPT_BREED = "Press E to breed critters"
 PROMPT_REST = "Rest on Chair (E)"
 PROMPT_ASSIGN = "Assign: E"
@@ -66,7 +67,9 @@ BUILDING_FORESTER_HUT_COST = {"wood": 15, "stone": 5}
 BUILDING_CHAIR_COST = {"wood": 4}
 BUILDING_CAMPFIRE_COST = {"wood": 2, "stone": 2}
 
-# --- Item Types ---
+# --- Resource Respawn Durations ---
+BERRY_BUSH_RESPAWN_DURATION = 100.0
+TREE_RESPAWN_DURATION = 300.0  # Placeholder, trees are currently destroyed
 ITEM_FOOD = "food"
 ITEM_WOOD = "wood"
 ITEM_STONE = "stone"

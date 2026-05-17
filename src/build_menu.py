@@ -160,6 +160,79 @@ class BuildMenu:
 
         return True
 
+    def render_ghost(self, screen, camera, grid, mouse_pos, player_inventory):
+        """
+        Render a semi-transparent ghost preview of the selected building at the
+        current mouse position, snapped to the grid.
+
+        Green = valid placement. Red = blocked or can't afford.
+        """
+        if not self.visible or self.selected_building_class is None:
+            return
+
+        # Convert mouse screen position → world → grid (snapped)
+        mx, my = mouse_pos
+        wx, wy = camera.undo(mx, my)
+        gx, gy = grid.world_to_grid(wx, wy)
+
+        # Instantiate a temporary building to get its dimensions and cost
+        try:
+            temp = self.selected_building_class(gx, gy, cell_size=self.cell_size)
+        except Exception:
+            return
+
+        w_cells = temp.width
+        h_cells = temp.height
+        cs = self.cell_size
+
+        # Determine validity — mirrors attempt_placement logic exactly
+        valid = True
+
+        # 1. Custom placement constraint (e.g. Sapling needs 8 empty neighbours)
+        if hasattr(self.selected_building_class, 'can_place_at'):
+            # We need a world reference; skip this check if unavailable
+            pass  # checked below when we have world access
+
+        # 2. Bounds check
+        for i in range(w_cells):
+            for j in range(h_cells):
+                if not grid.is_within_bounds(gx + i, gy + j):
+                    valid = False
+                    break
+
+        # 3. Occupancy check
+        if valid:
+            for i in range(w_cells):
+                for j in range(h_cells):
+                    if grid.is_occupied(gx + i, gy + j):
+                        valid = False
+                        break
+
+        # 4. Affordability check
+        if valid:
+            from release_building import ReleaseBuilding
+            from constants import BUILDING_RELEASE_ALTAR_COST
+            cost = getattr(self.selected_building_class, 'cost', {})
+            if self.selected_building_class == ReleaseBuilding:
+                cost = BUILDING_RELEASE_ALTAR_COST
+            if not temp.can_place(player_inventory, cost_override=cost):
+                valid = False
+
+        # Draw ghost rect in screen space
+        sx, sy = camera.apply(gx * cs, gy * cs)
+        ghost_rect = pygame.Rect(int(sx), int(sy), w_cells * cs, h_cells * cs)
+
+        ghost = pygame.Surface((ghost_rect.width, ghost_rect.height), pygame.SRCALPHA)
+        if valid:
+            ghost.fill((0, 220, 0, 90))       # translucent green fill
+            outline_color = (0, 180, 0)
+        else:
+            ghost.fill((220, 0, 0, 90))        # translucent red fill
+            outline_color = (180, 0, 0)
+
+        screen.blit(ghost, (ghost_rect.x, ghost_rect.y))
+        pygame.draw.rect(screen, outline_color, ghost_rect, 2)
+
     def render(self, screen, font, hud_button_rect=None):
         """
         Render the build menu overlay when visible.

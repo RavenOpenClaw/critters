@@ -18,7 +18,7 @@ class TestCritterAnimation:
         # Prevent state transitions that require world/pathfinding by freezing timers
         critter.loiter_target = None
         critter.loiter_timer = 1000.0
-        critter.idle_timer = 1000.0
+        critter.rest_timer = 1000.0
         # Initial frame 0
         assert critter.animation_frame == 0
 
@@ -38,12 +38,12 @@ class TestCritterAnimation:
         critter.update(0.1, None, None)
         assert critter.animation_frame == 0
 
-    def test_get_render_offset_idle_frame0(self):
+    def test_get_render_offset_rest_frame0(self):
         critter = Critter(0, 0, cell_size=32)
         critter.animation_frame = 0
         assert critter.get_render_offset() == (0, 0)
 
-    def test_get_render_offset_idle_frame1(self):
+    def test_get_render_offset_rest_frame1(self):
         critter = Critter(0, 0, cell_size=32)
         critter.animation_frame = 1
         assert critter.get_render_offset() == (0, -2)

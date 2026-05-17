@@ -25,8 +25,8 @@ from constants import MESSAGE_FOLLOW_START, MESSAGE_FOLLOW_STOP
 class TestCritterState:
     """Unit tests for CritterState enum."""
 
-    def test_enum_has_idle(self):
-        assert CritterState.IDLE is not None
+    def test_enum_has_rest(self):
+        assert CritterState.REST is not None
 
     def test_enum_has_gather(self):
         assert CritterState.GATHER is not None
@@ -55,7 +55,7 @@ class TestCritterAttributes:
         assert c.strength == 50
         assert c.speed_stat == 50
         assert c.endurance == 50
-        assert c.state == CritterState.IDLE
+        assert c.state == CritterState.REST
         assert c.assigned_hut is None
         assert c.target_resource is None
         assert c.inventory.get_total_quantity() == 0
@@ -134,12 +134,12 @@ def test_speed_stat_movement_speed_monotonic(speed1, delta):
     st.integers(min_value=1, max_value=99),
     st.integers(min_value=2, max_value=100)
 )
-def test_endurance_idle_duration_monotonic(e1, delta):
-    """Property 20: Endurance Affects Idle Duration Monotonically."""
+def test_endurance_rest_duration_monotonic(e1, delta):
+    """Property 20: Endurance Affects Rest Duration Monotonically."""
     e2 = e1 + delta
     c1 = Critter(0, 0, cell_size=24, endurance=e1)
     c2 = Critter(0, 0, cell_size=24, endurance=e2)
-    assert c1.get_idle_duration() < c2.get_idle_duration()
+    assert c1.get_rest_duration() < c2.get_rest_duration()
 
 
 def test_well_fed_buff_multiplier_and_cap():
@@ -189,10 +189,10 @@ def test_critter_carry_capacity():
 
 # Additional tests for Task 14 (Critter AI state machine)
 
-def test_idle_state_spatial_constraint():
+def test_rest_state_spatial_constraint():
     """
-    Property 12: IDLE State Spatial Constraint – IDLE critters stay near their hut.
-    We'll test that after calling start_idle(), the critter's position remains within a small
+    Property 12: REST State Spatial Constraint – REST critters stay near their hut.
+    We'll test that after calling start_rest(), the critter's position remains within a small
     radius of the hut's center (or exactly at the hut position if not moving).
     """
     cell_size = 32
@@ -208,7 +208,7 @@ def test_idle_state_spatial_constraint():
     # Simulate several updates; position should not change significantly
     initial_x, initial_y = critter.x, critter.y
     for _ in range(10):
-        critter.update(0.1, world, None)  # pathfinding not needed for IDLE
+        critter.update(0.1, world, None)  # pathfinding not needed for REST
 
     # Critter should still be very close to initial position (within epsilon)
     assert abs(critter.x - initial_x) < 1e-6
@@ -326,21 +326,21 @@ def test_return_navigation_to_hut():
     # Simulate several updates
     for _ in range(100):
         critter.update(0.05, world, pathfinding)
-        # If it reaches IDLE again, deposit completed; stop early
-        if critter.state == CritterState.IDLE:
+        # If it reaches REST again, deposit completed; stop early
+        if critter.state == CritterState.REST:
             break
 
     dx1 = critter.x - hut_cx
     dy1 = critter.y - hut_cy
     dist1 = (dx1*dx1 + dy1*dy1) ** 0.5
 
-    # Distance should have decreased (or reached zero and become IDLE)
+    # Distance should have decreased (or reached zero and become REST)
     assert dist1 <= dist0 + 1e-6, f"Distance did not decrease: {dist0} -> {dist1}"
 
 
 def test_deposit_completes_cycle():
     """
-    Property 16: Deposit Completes Cycle – deposit transfers resource and returns to IDLE.
+    Property 16: Deposit Completes Cycle – deposit transfers resource and returns to REST.
     """
     cell_size = 32
     grid = GridSystem(cell_size=cell_size, width=50, height=50)
@@ -369,7 +369,7 @@ def test_deposit_completes_cycle():
     # Using 2.0s to be safe
     critter.update(2.0, world, None)
 
-    assert critter.state == CritterState.IDLE
+    assert critter.state == CritterState.REST
     assert critter.inventory.get_total_quantity() == 0
     assert hut.storage.has('berry', 1)
 
@@ -513,7 +513,7 @@ class TestCritterFollow:
         assert critter.state == CritterState.FOLLOW
         assert player.following_critter is critter
         critter.stop_follow()
-        assert critter.state == CritterState.IDLE
+        assert critter.state == CritterState.REST
         assert player.following_critter is None
 
     def test_follow_moves_towards_player(self):
@@ -550,7 +550,7 @@ class TestCritterFollow:
         assert critter in hut.assigned_critters
 
     def test_mating_hut_assigned_critter_gather_safety(self):
-        """A critter assigned to MatingHut should not crash when entering GATHER; it should return to IDLE."""
+        """A critter assigned to MatingHut should not crash when entering GATHER; it should return to REST."""
         from grid_system import GridSystem
         from world import World
         from mating_hut import MatingHut
@@ -568,11 +568,11 @@ class TestCritterFollow:
         class DummyPathfinder:
             def find_path(self, start, goal, grid):
                 return None  # no path
-        # Update critter: should attempt to find resource (None), then transition to IDLE without crash
+        # Update critter: should attempt to find resource (None), then transition to REST without crash
         critter.update(dt=1.0, world=world, pathfinding_system=DummyPathfinder())
-        assert critter.state == CritterState.IDLE
+        assert critter.state == CritterState.REST
 
-    def test_mating_hut_assigned_critter_idle_safety(self):
+    def test_mating_hut_assigned_critter_rest_safety(self):
         """A critter assigned to MatingHut should transition to RETURN state and not crash."""
         from mating_hut import MatingHut
         class DummyPathfinder:
@@ -663,7 +663,7 @@ class TestCritterInteract:
         critter = Critter(120, 100, cell_size=24)
         world.add_object(critter)
         # Initial state
-        assert critter.state == CritterState.IDLE
+        assert critter.state == CritterState.REST
         assert not player.following_critters
         # First interaction: start follow
         player.interact(world)
@@ -672,7 +672,7 @@ class TestCritterInteract:
         assert world.message == MESSAGE_FOLLOW_START
         # Second interaction: stop follow
         player.interact(world)
-        assert critter.state == CritterState.IDLE
+        assert critter.state == CritterState.REST
         assert not player.following_critters
         assert world.message == MESSAGE_FOLLOW_STOP
 

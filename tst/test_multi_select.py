@@ -99,4 +99,4 @@ def test_mass_assignment_fifo():
     assert c1 not in hut.assigned_critters
     assert c2 in hut.assigned_critters
     assert c3 in hut.assigned_critters
-    assert c1.state == CritterState.IDLE
+    assert c1.state == CritterState.REST

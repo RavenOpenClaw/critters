@@ -32,7 +32,7 @@ def test_mating_hut_assignment_limit():
     
     # Check evicted critter state
     assert c1.assigned_hut is None
-    assert c1.state == CritterState.IDLE
+    assert c1.state == CritterState.REST
 
 if __name__ == "__main__":
     test_mating_hut_assignment_limit()

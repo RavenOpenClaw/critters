@@ -66,10 +66,31 @@ class LumberMill(Building):
                 self.world.set_message("Critter assigned to Lumber Mill.", 3.0)
             return
 
-        # Withdraw all storage
+        # Always Withdraw via interact (E)
         for item, qty in list(self.storage.items.items()):
             player.inventory.add(item, qty)
             del self.storage.items[item]
+        if hasattr(self, 'world') and self.world:
+            self.world.set_message("Withdrew all wood and saplings.", 2.0)
+
+    def deposit(self, player):
+        """Explicit deposit logic via F key."""
+        from constants import ITEM_WOOD, ITEM_SAPLING
+        # Transfer all wood and saplings from player to storage
+        deposited = False
+        for res in [ITEM_WOOD, ITEM_SAPLING]:
+            qty = player.inventory.get_item_count(res)
+            if qty > 0:
+                player.inventory.remove(res, qty)
+                self.storage.add(res, qty)
+                deposited = True
+        
+        if deposited:
+            if hasattr(self, 'world') and self.world:
+                self.world.set_message("Deposited resources.", 2.0)
+        else:
+            if hasattr(self, 'world') and self.world:
+                self.world.set_message("Nothing to deposit (Wood/Saplings).", 2.0)
 
     def can_gather(self):
         """Supports automated gathering."""

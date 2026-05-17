@@ -26,7 +26,7 @@ class TestBreeding(unittest.TestCase):
         self.assertIsNone(result)
 
     def test_breed_creates_offspring_adjacent_to_hut(self):
-        """Offspring is placed adjacent to the hut and in IDLE state."""
+        """Offspring is placed adjacent to the hut and in REST state."""
         hut = MatingHut(10, 20, cell_size=32)
         # Add two critters
         c1 = Critter(0, 0, cell_size=32)
@@ -51,7 +51,7 @@ class TestBreeding(unittest.TestCase):
             offspring = hut.breed(world)
 
         self.assertIsNotNone(offspring)
-        self.assertEqual(offspring.state, CritterState.IDLE)
+        self.assertEqual(offspring.state, CritterState.REST)
         self.assertIsNone(offspring.assigned_hut)
         
         # Position should be adjacent to hut (not exactly at center anymore)

@@ -24,7 +24,7 @@ RESOURCE_COLORS = {
 
 # Legacy variables for test compatibility
 STATE_COLORS = {
-    CritterState.IDLE: (100, 100, 100),
+    CritterState.REST: (100, 100, 100),
     CritterState.GATHER: (255, 255, 0),
     CritterState.RETURN: (0, 255, 255),
     CritterState.FOLLOW: (255, 0, 255),

@@ -94,6 +94,13 @@ class GameEngine:
         # Update movement vector from held keys (WASD)
         self.input_handler.update_movement()
         
+        # --- Interaction ---
+        # 1. Deposit Interaction (F Key)
+        if self.input_handler.f_pressed:
+            target = self.player.get_interactable_target(self.world)
+            if target and hasattr(target, 'deposit'):
+                target.deposit(self.player)
+
         # Debug: print movement state if non-zero
         if self.input_handler.move_x != 0 or self.input_handler.move_y != 0:
             pass # print(f"Move input: ({self.input_handler.move_x}, {self.input_handler.move_y})")
@@ -273,11 +280,21 @@ class GameEngine:
     def _render(self):
         self.screen.fill((200, 200, 200)) # Background
         self.world.draw(self.screen, self.camera)
+
+        # Building placement ghost (rendered in world-space, under HUD)
+        if self.build_menu.visible and self.build_menu.selected_building_class:
+            self.build_menu.render_ghost(
+                self.screen,
+                self.camera,
+                self.world.grid,
+                pygame.mouse.get_pos(),
+                self.player.inventory,
+            )
         
         # Interaction Tooltips (Hover prompts)
         target_obj = self.player.get_interactable_target(self.world)
         if target_obj:
-            from constants import PROMPT_ASSIGN
+            from constants import PROMPT_ASSIGN, PROMPT_DEPOSIT
             if hasattr(target_obj, 'get_center'):
                 ox, oy = target_obj.get_center()
             else:
@@ -294,6 +311,13 @@ class GameEngine:
                 sox, soy = self.camera.apply(ox, oy)
                 text_rect = text_surface.get_rect(center=(sox, soy - 30))
                 self.screen.blit(text_surface, text_rect)
+                
+            # Secondary Deposit Prompt
+            if hasattr(target_obj, 'deposit'):
+                dep_text = self.font.render(PROMPT_DEPOSIT, True, (50, 50, 50))
+                sox, soy = self.camera.apply(ox, oy)
+                dep_rect = dep_text.get_rect(center=(sox, soy - 10))
+                self.screen.blit(dep_text, dep_rect)
 
         # Player render
         spx, spy = self.camera.apply(self.player.x, self.player.y)
