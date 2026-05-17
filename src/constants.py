@@ -50,13 +50,13 @@ ITEM_CANDY_END = "Endurance Candy"
 MESSAGE_RELEASE_SUCCESS = "Critter released. Received {candy}."
 
 # --- Building Interaction Prompts ---
-PROMPT_GATHER = "Press E to collect resources"
+PROMPT_GATHER = "Gather (E)"
 PROMPT_WITHDRAW = "Withdraw (E)"
 PROMPT_DEPOSIT = "Deposit (F)"
-PROMPT_BREED = "Press E to breed critters"
-PROMPT_REST = "Rest on Chair (E)"
-PROMPT_ASSIGN = "Assign: E"
-PROMPT_DIRECT_ASSIGN = "Right-click: Assign"
+PROMPT_BREED = "Breed (E)"
+PROMPT_REST = "Rest (E)"
+PROMPT_ASSIGN = "Assign critter (E)"
+PROMPT_DIRECT_ASSIGN = "Asign critter (Right-click)"
 
 # --- Building Costs ---
 BUILDING_GATHERING_HUT_COST = {"wood": 10, "stone": 5}
@@ -73,10 +73,10 @@ PLANT_RADIUS = 10  # Max distance from Forester Hut for planting (in cells)
 # --- Resource Respawn Durations ---
 BERRY_BUSH_RESPAWN_DURATION = 100.0
 TREE_RESPAWN_DURATION = 300.0  # Placeholder, trees are currently destroyed
-ITEM_FOOD = "food"
-ITEM_WOOD = "wood"
-ITEM_STONE = "stone"
-ITEM_SAPLING = "sapling"
+ITEM_FOOD = "Food"
+ITEM_WOOD = "Wood"
+ITEM_STONE = "Stone"
+ITEM_SAPLING = "Sapling"
 ITEM_STICK = "stick"
 
 # --- Building Labels ---

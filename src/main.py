@@ -12,11 +12,11 @@ from critter import CritterState
 
 # Centralized Resource Colors for UI components
 RESOURCE_COLORS = {
-    "food": (255, 0, 0),      # Red square for berries/food
-    "wood": (101, 67, 33),    # Brown for wood
-    "stone": (128, 128, 128), # Gray for stone
-    "stick": (210, 180, 140), # Tan for sticks
-    "sapling": (34, 139, 34), # Forest green for saplings
+    "Food": (255, 0, 0),      # Red square for berries/food
+    "Wood": (101, 67, 33),    # Brown for wood
+    "Stone": (128, 128, 128), # Gray for stone
+    "Stick": (210, 180, 140), # Tan for sticks
+    "Sapling": (34, 139, 34), # Forest green for saplings
     "Strength Candy": (255, 100, 100), # Light Red
     "Speed Candy": (100, 255, 100),   # Light Green
     "Endurance Candy": (100, 100, 255), # Light Blue
