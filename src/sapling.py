@@ -43,8 +43,14 @@ class Sapling(WorldObject):
 
     @classmethod
     def can_place_at(cls, world, gx, gy):
-        """Custom placement check: must have 8 empty surrounding cells."""
+        """
+        Custom placement check: 
+        1. Must have 8 empty surrounding cells.
+        2. Cannot be within 2 radius of any player (prevents trapping).
+        """
         grid = world.grid
+        
+        # 1. Check surrounding cells (standard 3x3 clearance)
         for dy in range(-1, 2):
             for dx in range(-1, 2):
                 if dx == 0 and dy == 0:
@@ -52,6 +58,22 @@ class Sapling(WorldObject):
                 nx, ny = gx + dx, gy + dy
                 if not grid.is_within_bounds(nx, ny) or grid.is_occupied(nx, ny):
                     return False
+        
+        # 2. Check for player proximity (2 cells)
+        from entity import Player
+        # Use world.players if available, otherwise fallback to finding in objects
+        players = []
+        if hasattr(world, 'players'):
+            players = world.players
+        else:
+            players = [obj for obj in world.objects if isinstance(obj, Player)]
+            
+        for p in players:
+            pgx, pgy = grid.world_to_grid(p.x, p.y)
+            # Distance check in grid cells (Euclidean or Manhattan? 2 cells is small enough)
+            if abs(gx - pgx) <= 2 and abs(gy - pgy) <= 2:
+                return False
+
         return True
 
     def render(self, screen, camera=None):

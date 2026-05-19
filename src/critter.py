@@ -384,11 +384,12 @@ class Critter(Entity):
         # 3. Check for arrival (path finished or already there)
         if self.path is None and not self.gathering and self.goal_cell is not None:
             gx, gy = self.goal_cell
-            # [PLANT_REVALIDATE] Arrived: re-verify spot is still valid
+            # [PLANT_REVALIDATE] Arrived: re-verify spot is still valid (includes Player proximity check)
             if grid.is_occupied(gx, gy) or not Sapling.can_place_at(world, gx, gy):
+                world.set_message("Critter spot invalidated (Player too close)", 1.5)
                 self.goal_cell = None
                 return
-                
+
             self.gathering = True # Use gathering flag for interaction phase
             self.interaction_progress = 0.0
 
@@ -396,7 +397,8 @@ class Critter(Entity):
         if self.gathering:
             mult = self.get_interaction_speed_multiplier()
             duration = 1.0 / mult
-            self.interaction_progress += dt / duration            
+            self.interaction_progress += dt / duration
+
             if self.interaction_progress >= 1.0:
                 # [PLANT_REVALIDATE] Final check before adding to world
                 gx, gy = self.goal_cell
@@ -410,6 +412,7 @@ class Critter(Entity):
                         world.set_message("Critter failed to plant (blocked)", 2.0)
                 else:
                     world.set_message("Critter spot invalidated", 2.0)
+
                 
                 self.gathering = False
                 self.interaction_progress = 0.0
