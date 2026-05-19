@@ -6,17 +6,17 @@ import sys
 from game_engine import GameEngine
 from game_state import new_game, load_game
 from title_screen import TitleScreen
-from constants import WINDOW_WIDTH, WINDOW_HEIGHT
+from constants import WINDOW_WIDTH, WINDOW_HEIGHT, ITEM_FOOD, ITEM_WOOD, ITEM_STONE, ITEM_SAPLING
 
 from critter import CritterState
 
 # Centralized Resource Colors for UI components
 RESOURCE_COLORS = {
-    "Food": (255, 0, 0),      # Red square for berries/food
-    "Wood": (101, 67, 33),    # Brown for wood
-    "Stone": (128, 128, 128), # Gray for stone
+    ITEM_FOOD: (255, 0, 0),      # Red square for berries/food
+    ITEM_WOOD: (101, 67, 33),    # Brown for wood
+    ITEM_STONE: (128, 128, 128), # Gray for stone
     "Stick": (210, 180, 140), # Tan for sticks
-    "Sapling": (34, 139, 34), # Forest green for saplings
+    ITEM_SAPLING: (34, 139, 34), # Forest green for saplings
     "Strength Candy": (255, 100, 100), # Light Red
     "Speed Candy": (100, 255, 100),   # Light Green
     "Endurance Candy": (100, 100, 255), # Light Blue

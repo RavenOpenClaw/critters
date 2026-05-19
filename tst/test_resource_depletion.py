@@ -8,7 +8,7 @@ from stick import Stick
 from rock import Rock
 from berry_bush import BerryBush
 from inventory import Inventory
-from constants import ITEM_WOOD, ITEM_STONE
+from constants import ITEM_WOOD, ITEM_STONE, ITEM_FOOD
 
 class MockPlayer:
     def __init__(self):
@@ -39,7 +39,7 @@ def test_rock_removed_when_depleted():
     # interact twice to deplete (multiplier 1 takes 1 each)
     rock.interact(player)
     rock.interact(player)
-    assert rock.inventory.get_item_count('stone') == 0
+    assert rock.inventory.get_item_count(ITEM_STONE) == 0
     assert rock in world.current_map.objects
     world.cleanup_depleted_resources()
     assert rock not in world.current_map.objects
@@ -65,6 +65,6 @@ def test_berry_bush_not_removed_when_depleted():
     world.add_object(bush)
     player = MockPlayer()
     bush.interact(player)  # deplete
-    assert bush.inventory.get_item_count('berry') == 0
+    assert bush.inventory.get_item_count(ITEM_FOOD) == 0
     world.cleanup_depleted_resources()
     assert bush in world.current_map.objects

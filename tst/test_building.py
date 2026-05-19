@@ -14,7 +14,7 @@ from world import World
 from build_menu import BuildMenu
 from entity import Player
 from critter import Critter
-from constants import ITEM_WOOD, ITEM_STONE
+from constants import ITEM_WOOD, ITEM_STONE, ITEM_FOOD
 
 class TestBuilding(unittest.TestCase):
     def test_building_base_find_resource_in_radius_returns_none(self):
@@ -29,16 +29,16 @@ class TestBuilding(unittest.TestCase):
 
     def test_can_place_with_insufficient_one_resource(self):
         """Building.can_place returns False when any resource is insufficient."""
-        cost = {ITEM_WOOD: 5, 'stone': 3}
+        cost = {ITEM_WOOD: 5, ITEM_STONE: 3}
         building = Building(0, 0, width=2, height=2, cell_size=1.0, cost=cost)
         player_inv = Inventory()
         player_inv.add(ITEM_WOOD, 10)
-        player_inv.add('stone', 2)  # Not enough stone
+        player_inv.add(ITEM_STONE, 2)  # Not enough stone
         self.assertFalse(building.can_place(player_inv))
 
     def test_can_place_with_missing_resource(self):
         """Building.can_place returns False when a required resource is absent."""
-        cost = {ITEM_WOOD: 5, 'stone': 3}
+        cost = {ITEM_WOOD: 5, ITEM_STONE: 3}
         building = Building(0, 0, width=2, height=2, cell_size=1.0, cost=cost)
         player_inv = Inventory()
         player_inv.add(ITEM_WOOD, 10)
@@ -63,7 +63,7 @@ class TestBuildingPlacement(unittest.TestCase):
         world = World(grid)
         # Define a test building class with fixed cost and size (1x1) that matches BuildMenu signature
         class TestBuilding(Building):
-            cost = {ITEM_WOOD: 5, 'stone': 3}
+            cost = {ITEM_WOOD: 5, ITEM_STONE: 3}
             def __init__(self, gx, gy, cell_size):
                 super().__init__(gx, gy, width=1, height=1, cell_size=cell_size, cost=self.cost)
             def render(self, screen):
@@ -75,15 +75,15 @@ class TestBuildingPlacement(unittest.TestCase):
         # Player with given resources
         player = Player(0, 0, radius=20)
         player.inventory.add(ITEM_WOOD, wood)
-        player.inventory.add('stone', stone)
+        player.inventory.add(ITEM_STONE, stone)
         starting_wood = player.inventory.get_item_count(ITEM_WOOD)
-        starting_stone = player.inventory.get_item_count('stone')
+        starting_stone = player.inventory.get_item_count(ITEM_STONE)
         # Attempt placement at grid (10, 10) – empty area
         success = menu.attempt_placement(player, world, grid, 10, 10)
         self.assertTrue(success, "Placement should succeed with sufficient resources")
         # Verify deduction
         self.assertEqual(player.inventory.get_item_count(ITEM_WOOD), starting_wood - 5)
-        self.assertEqual(player.inventory.get_item_count('stone'), starting_stone - 3)
+        self.assertEqual(player.inventory.get_item_count(ITEM_STONE), starting_stone - 3)
 
 class TestGatheringHut(unittest.TestCase):
     def test_gathering_hut_dimensions(self):
@@ -95,7 +95,7 @@ class TestGatheringHut(unittest.TestCase):
     def test_gathering_hut_storage_inventory(self):
         """GatheringHut initializes with empty storage inventory."""
         hut = GatheringHut(0, 0, cell_size=1.0)
-        self.assertEqual(hut.storage.get_item_count('berry'), 0)
+        self.assertEqual(hut.storage.get_item_count(ITEM_FOOD), 0)
 
     def test_gathering_hut_assigned_critters_list(self):
         """GatheringHut starts with empty assigned_critters list."""

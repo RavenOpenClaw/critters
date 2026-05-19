@@ -321,7 +321,7 @@ def test_return_navigation_to_hut():
 
     # Force critter into RETURN state directly to test navigation
     # We'll set held_resource and then call start_return()
-    critter.inventory.add('berry', 1)
+    critter.inventory.add(ITEM_FOOD, 1)
     critter.start_return()
 
     pathfinding = PathfindingSystem()
@@ -364,7 +364,7 @@ def test_deposit_completes_cycle():
     # Directly simulate a deposit without moving: place critter at hut center and set state to RETURN with held resource
     critter.x = hut.x + (hut.width * hut.cell_size)/2
     critter.y = hut.y + (hut.height * hut.cell_size)/2
-    critter.inventory.add('berry', 1)
+    critter.inventory.add(ITEM_FOOD, 1)
     critter.start_return()
 
     # Run update; should detect arrival and start interaction
@@ -381,7 +381,7 @@ def test_deposit_completes_cycle():
 
     assert critter.state == CritterState.REST
     assert critter.inventory.get_total_quantity() == 0
-    assert hut.storage.has('berry', 1)
+    assert hut.storage.has(ITEM_FOOD, 1)
 
 
 def test_gathering_hut_filters_to_berry_bushes_only():

@@ -30,14 +30,14 @@ def test_deconstruct_refund_half_round_up():
     world = DummyWorld()
     player = Player(0, 0, radius=20, speed=200)
     # cost: food=10 -> 5, wood=5 -> 3, stone=1 -> 1
-    building = Building(0, 0, 1, 1, cell_size, cost={ITEM_FOOD: 10, ITEM_WOOD: 5, 'stone': 1})
+    building = Building(0, 0, 1, 1, cell_size, cost={ITEM_FOOD: 10, ITEM_WOOD: 5, ITEM_STONE: 1})
     world.objects.append(building)
 
     building.deconstruct(world, player)
 
     assert player.inventory.items[ITEM_FOOD] == 5
     assert player.inventory.items[ITEM_WOOD] == 3
-    assert player.inventory.items['stone'] == 1
+    assert player.inventory.items[ITEM_STONE] == 1
     assert building not in world.objects
 
 

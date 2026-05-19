@@ -9,6 +9,7 @@ from constants import PROMPT_WITHDRAW, ITEM_SAPLING, BUILDING_FORESTER_HUT_COST
 class ForesterHut(Building):
     """Forester's Hut (3x3) with storage for saplings and critter assignment."""
     cost = BUILDING_FORESTER_HUT_COST
+    requested_resources = [ITEM_SAPLING]
 
     def __init__(self, gx, gy, cell_size):
         super().__init__(gx, gy, width=3, height=3, cell_size=cell_size, cost=self.cost)
@@ -79,20 +80,21 @@ class ForesterHut(Building):
                 self.world.set_message("Withdrew all resources from Hut.", 2.0)
 
     def deposit(self, player):
-        """Explicit deposit logic via F key: transfers all resources from player."""
+        """Explicit deposit logic via F key: transfers only requested resources."""
         deposited = False
-        for item, qty in list(player.inventory.items.items()):
+        for res in self.requested_resources:
+            qty = player.inventory.get_item_count(res)
             if qty > 0:
-                player.inventory.remove(item, qty)
-                self.storage.add(item, qty)
+                player.inventory.remove(res, qty)
+                self.storage.add(res, qty)
                 deposited = True
         
         if deposited:
             if hasattr(self, 'world') and self.world:
-                self.world.set_message("Deposited all resources.", 2.0)
+                self.world.set_message(f"Deposited {', '.join(self.requested_resources)}.", 2.0)
         else:
             if hasattr(self, 'world') and self.world:
-                self.world.set_message("Nothing to deposit.", 2.0)
+                self.world.set_message(f"No {', '.join(self.requested_resources)} to deposit.", 2.0)
 
     def can_gather(self):
         """Returns True so critters know they have work logic here."""
