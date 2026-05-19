@@ -133,8 +133,8 @@ class CritterInspector:
         # Prepare stats text
         from constants import (
             INSPECTOR_TITLE, LABEL_STATE, LABEL_STRENGTH, LABEL_SPEED,
-            LABEL_ENDURANCE, LABEL_CAPACITY, LABEL_HELD, LABEL_GATHER_SPEED,
-            LABEL_MOVE_SPEED, ITEM_CANDY_STR, ITEM_CANDY_SPD, ITEM_CANDY_END
+            LABEL_ENDURANCE, LABEL_CAPACITY, LABEL_HELD, LABEL_GATHER_AMOUNT,
+            LABEL_INTERACT_SPEED, LABEL_MOVE_SPEED, ITEM_CANDY_STR, ITEM_CANDY_SPD, ITEM_CANDY_END
         )
         c = self.selected_critter
         
@@ -193,7 +193,8 @@ class CritterInspector:
             der_lines.append(f"  (none)")
             
         der_lines.extend([
-            f"{LABEL_GATHER_SPEED}{c.get_gather_speed():.2f}/s",
+            f"{LABEL_GATHER_AMOUNT} {c.get_gather_multiplier():.0f}",
+            f"{LABEL_INTERACT_SPEED} {c.get_interaction_speed_multiplier():.2f}x",
             f"{LABEL_MOVE_SPEED}{c.get_movement_speed():.1f}",
         ])
         

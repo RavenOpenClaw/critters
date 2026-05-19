@@ -151,20 +151,24 @@ class Critter(Entity):
             
         return final_speed
 
-    def get_gather_speed(self):
+    def get_gather_multiplier(self):
         """
-        Return gather speed in resources per second.
-        Formula: strength * 0.1. Well-fed multiplies strength by 1.1 (capped at 100).
-        Buff multipliers are applied multiplicatively.
+        Calculate total gather multiplier based on strength and buffs.
+        Defined in CRITTER_STATS_BIBLE.md:
+        1-40 strength: 1 item (1.0x)
+        41-80 strength: 2 items (2.0x)
+        81-100 strength: 3 items (3.0x)
         """
         effective_strength = self._effective_stat(self.strength)
-        base = effective_strength * 0.1
-        gather_mult = self._get_gather_multiplier()
-        return base * gather_mult
-
-    def get_gather_multiplier(self):
-        """Public alias for compatibility with resource interaction logic."""
-        return self._get_gather_multiplier()
+        if effective_strength <= 40:
+            base_mult = 1.0
+        elif effective_strength <= 80:
+            base_mult = 2.0
+        else:
+            base_mult = 3.0
+            
+        buff_mult = self._get_gather_multiplier()
+        return base_mult * buff_mult
 
     def get_rest_duration(self):
         """

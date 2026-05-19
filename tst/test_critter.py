@@ -107,14 +107,23 @@ def test_stat_bounds(strength, speed_stat, endurance):
 
 @given(
     st.integers(min_value=1, max_value=99),
-    st.integers(min_value=2, max_value=100)
+    st.integers(min_value=1, max_value=20)
 )
-def test_strength_gather_speed_monotonic(s1, delta):
-    """Property 18: Strength Affects Gather Speed Monotonically."""
-    s2 = s1 + delta
+def test_strength_gather_multiplier_non_decreasing(s1, delta):
+    """Property 18: Strength Affects Gather Multiplier (Non-Decreasing)."""
+    s2 = min(100, s1 + delta)
     c1 = Critter(0, 0, cell_size=24, strength=s1)
     c2 = Critter(0, 0, cell_size=24, strength=s2)
-    assert c1.get_gather_speed() < c2.get_gather_speed()
+    assert c1.get_gather_multiplier() <= c2.get_gather_multiplier()
+
+def test_strength_discrete_buckets():
+    """Verify discrete STRbuckets from Bible: 1-40 (1), 41-80 (2), 81-100 (3)."""
+    c1 = Critter(0, 0, strength=10)
+    assert c1.get_gather_multiplier() == 1.0
+    c2 = Critter(0, 0, strength=50)
+    assert c2.get_gather_multiplier() == 2.0
+    c3 = Critter(0, 0, strength=90)
+    assert c3.get_gather_multiplier() == 3.0
 
 
 @given(
@@ -145,11 +154,11 @@ def test_endurance_rest_duration_monotonic(e1, delta):
 def test_well_fed_buff_multiplier_and_cap():
     """Property 21: Well-Fed Buff Multiplier – applies 1.1×, capped at 100."""
     # Strength case: below cap
-    c = Critter(0, 0, cell_size=24, strength=50)
-    base = c.get_gather_speed()  # 5.0
+    # 37 * 1.1 = 40.7 (moves to 2.0 bucket)
+    c = Critter(0, 0, cell_size=24, strength=37)
+    assert c.get_gather_multiplier() == 1.0
     c.is_well_fed = True
-    well_fed = c.get_gather_speed()
-    assert well_fed == pytest.approx(min(50 * 1.1, 100) * 0.1)  # 5.5
+    assert c.get_gather_multiplier() == 2.0
 
     # Speed case: below cap
     c2 = Critter(0, 0, cell_size=24, speed_stat=50)
@@ -157,12 +166,13 @@ def test_well_fed_buff_multiplier_and_cap():
     c2.is_well_fed = True
     well_fed_speed = c2.get_movement_speed()
     assert well_fed_speed == pytest.approx(50 + min(50 * 1.1, 100) * 2)  # 50+110=160
-
-    # Cap case: strength=100 -> effective strength = 100 after cap, gather stays 10.0
+    # Cap case: strength=100 -> effective strength = 100 after cap, gather stays 3.0
     c3 = Critter(0, 0, cell_size=24, strength=100)
-    base3 = c3.get_gather_speed()  # 10.0
+    base3 = c3.get_gather_multiplier()  # 3.0
     c3.is_well_fed = True
-    assert c3.get_gather_speed() == pytest.approx(10.0)
+    well_fed3 = c3.get_gather_multiplier()
+    assert well_fed3 == 3.0
+
     # Verify stat itself didn't exceed 100
     assert c3._effective_stat(c3.strength) == 100
 
@@ -448,12 +458,14 @@ def test_critter_update_removes_expired_buffs():
     assert b1 not in critter.active_buffs
     assert b2 in critter.active_buffs
 
-def test_critter_buff_affects_gather_speed():
+def test_critter_buff_affects_gather_multiplier():
     critter = Critter(0, 0, cell_size=24, strength=50)
-    assert critter.get_gather_speed() == pytest.approx(5.0)
+    # 50 strength -> 2.0x base multiplier
+    assert critter.get_gather_multiplier() == 2.0
     buff = Buff("Strength", {'gather': 2.0}, 30.0)
     critter.apply_buff(buff)
-    assert critter.get_gather_speed() == pytest.approx(10.0)
+    # 2.0 (base) * 2.0 (buff) = 4.0
+    assert critter.get_gather_multiplier() == pytest.approx(4.0)
 
 def test_critter_buff_affects_movement_speed():
     critter = Critter(0, 0, cell_size=24, speed_stat=50)
