@@ -344,25 +344,17 @@ class Critter(Entity):
             hut_cx, hut_cy = self.assigned_hut.get_center()
             center_gx, center_gy = grid.world_to_grid(hut_cx, hut_cy)
             
-            # [PLANT_RADIUS] Ring-based search to favor closer cells
-            for r in range(1, PLANT_RADIUS + 1):
-                ring_candidates = []
-                for dy in range(-r, r + 1):
-                    for dx in [-r, r]:
-                        gx, gy = center_gx + dx, center_gy + dy
-                        if grid.is_within_bounds(gx, gy) and not grid.is_occupied(gx, gy):
-                            if Sapling.can_place_at(world, gx, gy):
-                                ring_candidates.append((gx, gy))
-                for dx in range(-(r-1), r):
-                    for dy in [-r, r]:
-                        gx, gy = center_gx + dx, center_gy + dy
-                        if grid.is_within_bounds(gx, gy) and not grid.is_occupied(gx, gy):
-                            if Sapling.can_place_at(world, gx, gy):
-                                ring_candidates.append((gx, gy))
-                
-                if ring_candidates:
-                    self.goal_cell = random.choice(ring_candidates)
-                    break
+            # [PLANT_RADIUS] Find ALL valid spots within radius and pick one randomly
+            all_candidates = []
+            for dx in range(-PLANT_RADIUS, PLANT_RADIUS + 1):
+                for dy in range(-PLANT_RADIUS, PLANT_RADIUS + 1):
+                    gx, gy = center_gx + dx, center_gy + dy
+                    if grid.is_within_bounds(gx, gy) and not grid.is_occupied(gx, gy):
+                        if Sapling.can_place_at(world, gx, gy):
+                            all_candidates.append((gx, gy))
+            
+            if all_candidates:
+                self.goal_cell = random.choice(all_candidates)
             
             if self.goal_cell:
                 start_gx, start_gy = grid.world_to_grid(self.x, self.y)

@@ -16,8 +16,8 @@ class LumberMill(Building):
         super().__init__(gx, gy, width=3, height=3, cell_size=cell_size, cost=self.cost)
         self.storage = Inventory()
         self.assigned_critters = []
-        # Large radius for forestry (double the old default)
-        self.gathering_radius = 20.0 * cell_size
+        # Buffed radius to cover wider forests (30 cells)
+        self.gathering_radius = 30.0 * cell_size
 
     def assign_critter(self, critter):
         """Always stop following and transition to RETURN when assigned."""
