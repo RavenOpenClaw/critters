@@ -113,20 +113,23 @@ class GatheringHut(Building):
                 player.inventory.add(item_name, count)
                 del self.storage.items[item_name]
             if hasattr(self, 'world') and self.world:
-                self.world.set_message("Withdrew all food.", 2.0)
+                self.world.set_message("Withdrew all resources from Hut.", 2.0)
 
     def deposit(self, player):
-        """Explicit deposit logic via F key."""
-        from constants import ITEM_FOOD
-        p_qty = player.inventory.get_item_count(ITEM_FOOD)
-        if p_qty > 0:
-            player.inventory.remove(ITEM_FOOD, p_qty)
-            self.storage.add(ITEM_FOOD, p_qty)
+        """Explicit deposit logic via F key: transfers all resources from player."""
+        deposited = False
+        for item, qty in list(player.inventory.items.items()):
+            if qty > 0:
+                player.inventory.remove(item, qty)
+                self.storage.add(item, qty)
+                deposited = True
+        
+        if deposited:
             if hasattr(self, 'world') and self.world:
-                self.world.set_message(f"Deposited {p_qty} food.", 2.0)
+                self.world.set_message("Deposited all resources.", 2.0)
         else:
             if hasattr(self, 'world') and self.world:
-                self.world.set_message("No food to deposit.", 2.0)
+                self.world.set_message("Nothing to deposit.", 2.0)
 
     def can_gather(self):
         """GatheringHut supports resource gathering."""

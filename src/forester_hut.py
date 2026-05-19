@@ -54,12 +54,12 @@ class ForesterHut(Building):
     def get_interaction_text(self):
         """Standard withdrawal prompt."""
         from constants import PROMPT_WITHDRAW
-        if self.storage.get_item_count(ITEM_SAPLING) > 0:
+        if self.storage.items:
             return PROMPT_WITHDRAW
         return None
 
     def interact(self, player):
-        """Handle sapling withdrawal or assignment."""
+        """Handle resource withdrawal or assignment."""
         if not isinstance(player, Player):
             return
             
@@ -70,25 +70,29 @@ class ForesterHut(Building):
                 self.world.set_message("Critter assigned to Forester Hut.", 3.0)
             return
 
-        # Always Withdraw via interact (E)
-        qty = self.storage.get_item_count(ITEM_SAPLING)
-        if qty > 0:
-            player.inventory.add(ITEM_SAPLING, qty)
-            self.storage.remove(ITEM_SAPLING, qty)
+        # Withdraw all resources via interact (E)
+        if self.storage.items:
+            for item, qty in list(self.storage.items.items()):
+                player.inventory.add(item, qty)
+                del self.storage.items[item]
             if hasattr(self, 'world') and self.world:
-                self.world.set_message(f"Withdrew {qty} saplings.", 2.0)
+                self.world.set_message("Withdrew all resources from Hut.", 2.0)
 
     def deposit(self, player):
-        """Explicit deposit logic via F key."""
-        p_qty = player.inventory.get_item_count(ITEM_SAPLING)
-        if p_qty > 0:
-            player.inventory.remove(ITEM_SAPLING, p_qty)
-            self.storage.add(ITEM_SAPLING, p_qty)
+        """Explicit deposit logic via F key: transfers all resources from player."""
+        deposited = False
+        for item, qty in list(player.inventory.items.items()):
+            if qty > 0:
+                player.inventory.remove(item, qty)
+                self.storage.add(item, qty)
+                deposited = True
+        
+        if deposited:
             if hasattr(self, 'world') and self.world:
-                self.world.set_message(f"Deposited {p_qty} saplings.", 2.0)
+                self.world.set_message("Deposited all resources.", 2.0)
         else:
             if hasattr(self, 'world') and self.world:
-                self.world.set_message("No saplings to deposit.", 2.0)
+                self.world.set_message("Nothing to deposit.", 2.0)
 
     def can_gather(self):
         """Returns True so critters know they have work logic here."""

@@ -67,30 +67,28 @@ class LumberMill(Building):
             return
 
         # Always Withdraw via interact (E)
-        for item, qty in list(self.storage.items.items()):
-            player.inventory.add(item, qty)
-            del self.storage.items[item]
-        if hasattr(self, 'world') and self.world:
-            self.world.set_message("Withdrew all wood and saplings.", 2.0)
+        if self.storage.items:
+            for item, qty in list(self.storage.items.items()):
+                player.inventory.add(item, qty)
+                del self.storage.items[item]
+            if hasattr(self, 'world') and self.world:
+                self.world.set_message("Withdrew all resources from Mill.", 2.0)
 
     def deposit(self, player):
-        """Explicit deposit logic via F key."""
-        from constants import ITEM_WOOD, ITEM_SAPLING
-        # Transfer all wood and saplings from player to storage
+        """Explicit deposit logic via F key: transfers all resources from player."""
         deposited = False
-        for res in [ITEM_WOOD, ITEM_SAPLING]:
-            qty = player.inventory.get_item_count(res)
+        for item, qty in list(player.inventory.items.items()):
             if qty > 0:
-                player.inventory.remove(res, qty)
-                self.storage.add(res, qty)
+                player.inventory.remove(item, qty)
+                self.storage.add(item, qty)
                 deposited = True
         
         if deposited:
             if hasattr(self, 'world') and self.world:
-                self.world.set_message("Deposited resources.", 2.0)
+                self.world.set_message("Deposited all resources.", 2.0)
         else:
             if hasattr(self, 'world') and self.world:
-                self.world.set_message("Nothing to deposit (Wood/Saplings).", 2.0)
+                self.world.set_message("Nothing to deposit.", 2.0)
 
     def can_gather(self):
         """Supports automated gathering."""
